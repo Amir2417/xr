@@ -243,14 +243,14 @@
         }
 
         function getCharges(selectedType,enterAmount){
-            let findPercentCharge       = enterAmount / 100;
             var senderCurrencyRate      = acceptVar().senderCurrencyRate;
             var senderCurrency          = acceptVar().senderCurrency;
             var receiverCurrency        = acceptVar().receiverCurrency;
             var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
             var senderRate              = senderCurrencyRate / senderCurrencyRate;
             var recieverRate            = receiverCurrencyRate / senderCurrencyRate;
-
+            
+            let findPercentCharge       = (enterAmount / senderCurrencyRate) / 100;
 
             let fixedCharge             = selectedType.fixed_charge;
             let percentCharge           = selectedType.percent_charge;
@@ -260,15 +260,11 @@
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
             var totalChargeAmount  = totalCharge * senderCurrencyRate;
 
-            let payableAmount = enterAmount + totalCharge;
-            
+            let payableAmount = parseFloat(enterAmount) + parseFloat(totalChargeAmount);
             if(enterAmount == "") enterAmount = 0;
             if (enterAmount != 0) {
                 let convertAmount = enterAmount;
-                
-
-                let receivedMoney = convertAmount ;
-                
+                let receivedMoney = convertAmount * parseFloat(recieverRate).toFixed(2);
                 var intervals = selectedType.intervals;
                 
                 $.each(intervals,function(index,item){
@@ -282,9 +278,11 @@
                         totalChargeAmount  = totalCharge * senderCurrencyRate;
 
                         convertAmount = parseFloat(enterAmount);
-                        recieverRate            = receiverCurrencyRate / senderCurrencyRate;
+                        recieverRate  = receiverCurrencyRate / senderCurrencyRate;
                         payableAmount = parseFloat(enterAmount) + totalChargeAmount;
+                        
                         receivedMoney = convertAmount * recieverRate;
+                        
                     }
                 });
 
@@ -297,10 +295,10 @@
                 $('#get-amount').text(parseFloat(receivedMoney).toFixed(2) + " " + receiverCurrency);
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
 
-                $('#receive_money').val(receivedMoney.toFixed(2));
-                $('#charge').val(totalChargeAmount.toFixed(2));
-                $('#convert--amount').val(convertAmount.toFixed(2));
-                $('#payable--amount').val(payableAmount.toFixed(2));
+                $('#receive_money').val(parseFloat(receivedMoney).toFixed(2));
+                $('#charge').val(parseFloat(totalChargeAmount).toFixed(2));
+                $('#convert--amount').val(parseFloat(convertAmount).toFixed(2));
+                $('#payable--amount').val(parseFloat(payableAmount).toFixed(2));
                 $('.sender-ex-rate').val(parseFloat(senderRate).toFixed(2));
                 $('.sender-base-rate').val(parseFloat(senderCurrencyRate).toFixed(2));
                 $('.receiver-ex-rate').val(parseFloat(recieverRate).toFixed(2));
@@ -353,7 +351,7 @@
             
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
             var totalChargeAmount  = totalCharge * senderCurrencyRate;
-            let payableAmount = senderAmount + totalCharge;
+            let payableAmount = senderAmount + totalChargeAmount;
             
             if(senderAmount == "") senderAmount = 0;
             if (senderAmount != 0) {
