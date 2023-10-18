@@ -61,16 +61,21 @@ class SendRemittanceController extends Controller
 
         $validated['identifier']    = Str::uuid();
         $data = [
-            'type'               => $validated['type'],
-            'identifier'         => $validated['identifier'],
-            'data'               => [
-                'send_money'     => $validated['send_money'],
-                'fees'           => $request->fees,
-                'convert_amount' => $request->convert_amount,
-                'payable_amount' => $request->payable,
-                'receive_money'  => $request->receive_money,
-                'sender_name'    => auth()->user()->fullname,
-                'sender_email'   => auth()->user()->email,
+            'type'                  => $validated['type'],
+            'identifier'            => $validated['identifier'],
+            'data'                  => [
+                'send_money'        => $validated['send_money'],
+                'fees'              => $request->fees,
+                'convert_amount'    => $request->convert_amount,
+                'payable_amount'    => $request->payable,
+                'receive_money'     => $request->receive_money,
+                'sender_name'       => auth()->user()->fullname,
+                'sender_email'      => auth()->user()->email,
+                'sender_currency'   => $request->sender_currency,
+                'receiver_currency' => $request->receiver_currency,
+                'sender_ex_rate'    => $request->sender_ex_rate,
+                'sender_base_rate'    => $request->sender_base_rate,
+                'receiver_ex_rate'  => $request->receiver_ex_rate,
             ],
             
         ];
@@ -140,6 +145,11 @@ class SendRemittanceController extends Controller
             'data'                    => [
                 'sender_name'         => auth()->user()->fullname,
                 'sender_email'        => auth()->user()->email,
+                'sender_currency'     => $temporary_data->data->sender_currency,
+                'receiver_currency'   => $temporary_data->data->receiver_currency,
+                'sender_ex_rate'      => $temporary_data->data->sender_ex_rate,
+                'sender_base_rate'    => $temporary_data->data->sender_base_rate,
+                'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,
@@ -149,8 +159,8 @@ class SendRemittanceController extends Controller
                 'state'               => $temporary_data->data->state,
                 'zip_code'            => $temporary_data->data->zip_code,
                 'phone'               => $temporary_data->data->phone,
-                'method_name'           => $temporary_data->data->method_name,
-                'account_number'         => $temporary_data->data->account_number,
+                'method_name'         => $temporary_data->data->method_name,
+                'account_number'      => $temporary_data->data->account_number,
                 'address'             => $temporary_data->data->address,
                 'document_type'       => $temporary_data->data->document_type,
                 'sending_purpose'     => [

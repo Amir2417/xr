@@ -174,6 +174,11 @@ class RecipientController extends Controller
             'data'                  => [
                 'sender_name'       => auth()->user()->fullname,
                 'sender_email'      => auth()->user()->email,
+                'sender_currency'   => $temporary_data->data->sender_currency,
+                'receiver_currency' => $temporary_data->data->receiver_currency,
+                'sender_ex_rate'    => $temporary_data->data->sender_ex_rate,
+                'sender_base_rate'  => $temporary_data->data->sender_base_rate,
+                'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
                 'first_name'        => $recipient->first_name,
                 'middle_name'       => $recipient->middle_name ?? '',
                 'last_name'         => $recipient->last_name,

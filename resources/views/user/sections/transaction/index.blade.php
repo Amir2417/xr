@@ -59,8 +59,8 @@
                             </div>
                         </div>
                         <div class="dashboard-list-right">
-                            <h4 class="main-money text--base">{{ get_amount($item->will_get_amount) ?? '' }} {{ $receiver_currency->code ?? '' }}</h4>
-                            <h6 class="exchange-money">{{ get_amount($item->request_amount) ?? '' }} {{ $sender_currency->code ?? '' }}</h6>
+                            <h4 class="main-money text--base">{{ get_amount($item->will_get_amount) ?? '' }} {{ $item->remittance_data->receiver_currency ?? '' }}</h4>
+                            <h6 class="exchange-money">{{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }}</h6>
                         </div>
                     </div>
                     <div class="preview-list-wrapper">
@@ -76,7 +76,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ $item->trx_id ?? '' }}</span>
+                                <span>{{ $item->trx_id ?? 'N/A' }}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ $item->remittance_data->type ?? '' }}</span>
+                                <span>{{ $item->remittance_data->type ?? 'N/A' }}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ $item->remittance_data->method_name}}</span>
+                                <span>{{ $item->remittance_data->method_name ?? 'N/A'}}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ $item->remittance_data->account_number }}</span>
+                                <span>{{ $item->remittance_data->account_number ?? 'N/A'}}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -136,7 +136,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($item->request_amount) ?? '' }} {{ $sender_currency->code ?? '' }}</span>
+                                <span>{{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -151,7 +151,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code }} = {{ get_amount($receiver_currency->rate) ?? "" }} {{ $receiver_currency->code }}</span>
+                                <span>{{ $item->remittance_data->sender_ex_rate }} {{ $item->remittance_data->sender_currency }} = {{ $item->remittance_data->receiver_ex_rate }} {{ $item->remittance_data->receiver_currency }}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($item->fees ?? '') }} {{ $sender_currency->code ?? '' }}</span>
+                                <span>{{ get_amount($item->fees ?? '') }} {{ $item->remittance_data->sender_currency ?? '' }}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -244,7 +244,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($item->payable) ?? '' }} {{ $item->remittance_data->currency->code ?? '' }}</span>
+                                <span>{{ get_amount($item->payable / $item->remittance_data->sender_base_rate) ?? '' }} {{ $item->remittance_data->currency->code ?? '' }}</span>
                             </div>
                         </div>
                         <div class="receipt-download" style="text-align: center; padding-top: 20px;">

@@ -28,7 +28,7 @@
                                         <h4 class="title">{{ __("Remittance Summary") }}</h4>
                                     </div>
                                     @php
-                                        $send_money      = get_amount(floatval($temporary_data->data->payable_amount)) ?? "";
+                                        $send_money      = get_amount(floatval($temporary_data->data->payable_amount) / $temporary_data->data->sender_base_rate) ?? "";
                                         $exchange_rate   = get_amount(floatval($temporary_data->data->currency->rate)) ?? "";
                                         $payable_amount  = $send_money * $exchange_rate;
                                     @endphp
@@ -45,7 +45,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--success">{{ $temporary_data->data->send_money ?? "" }} {{ $sender_currency->code }}</span>
+                                            <span class="text--success">{{ $temporary_data->data->send_money ?? "" }} {{ $temporary_data->data->sender_currency }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -60,7 +60,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code}}</span>
+                                            <span>{{ $temporary_data->data->sender_ex_rate }} {{ $temporary_data->data->sender_currency }} = {{ $temporary_data->data->receiver_ex_rate }} {{ $temporary_data->data->receiver_currency }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -75,7 +75,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--warning">{{ $temporary_data->data->fees ?? "" }} {{ $sender_currency->code }}</span>
+                                            <span class="text--warning">{{ $temporary_data->data->fees ?? "" }} {{ $temporary_data->data->sender_currency }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -90,7 +90,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--danger">{{ $temporary_data->data->convert_amount ?? "" }} {{ $sender_currency->code }}</span>
+                                            <span class="text--danger">{{ $temporary_data->data->convert_amount ?? "" }} {{ $temporary_data->data->sender_currency }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -105,7 +105,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--info">{{ $temporary_data->data->receive_money ?? "" }} {{ $receiver_currency->code }}</span>
+                                            <span class="text--info">{{ $temporary_data->data->receive_money ?? "" }} {{ $temporary_data->data->receiver_currency }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -120,7 +120,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--danger">{{ $temporary_data->data->sending_purpose->name ?? "" }}</span>
+                                            <span class="text--danger">{{ $temporary_data->data->sending_purpose->name ?? "N/A" }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -135,7 +135,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--danger">{{ $temporary_data->data->source->name ?? "" }}</span>
+                                            <span class="text--danger">{{ $temporary_data->data->source->name ?? "N/A" }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                                             </div>
                                         </div>
                                         <div class="preview-list-right">
-                                            <span class="text--success">{{ $temporary_data->data->first_name ?? "" }} {{ $temporary_data->data->middle_name ?? "" }} {{ $temporary_data->data->last_name ?? "" }}</span>
+                                            <span class="text--success">{{ $temporary_data->data->first_name ?? "N/A" }} {{ $temporary_data->data->middle_name ?? "N/A" }} {{ $temporary_data->data->last_name ?? "N/A" }}</span>
                                         </div>
                                     </div>
                                     <div class="preview-list-item">
@@ -270,7 +270,7 @@
                                         </div>
                                     </div>
                                     <div class="preview-list-right">
-                                        <span class="text--success">{{ $temporary_data->type ?? "" }}</span>
+                                        <span class="text--success">{{ $temporary_data->type ?? "N/A" }}</span>
                                     </div>
                                 </div>
                                 <div class="preview-list-item">
