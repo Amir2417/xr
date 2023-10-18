@@ -26,8 +26,8 @@ class SendRemittanceController extends Controller
     public function index(){
         $page_title           = "| Send Remittance";
         $transaction_settings = TransactionSetting::where('status',true)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
+        $sender_currency      = Currency::where('status',true)->where('sender',true)->get();
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
         $client_ip            = request()->ip() ?? false;
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $user                 = auth()->user();

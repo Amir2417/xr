@@ -26,15 +26,41 @@
                                 <div class="banner-form">
                                     <div class="top mb-20">
                                         <p>{{__("Exchange Rate")}}</p>
-                                        <h3 class="title">{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code}}</h3>
+                                        {{-- <h3 class="title">{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code}}</h3> --}}
                                     </div>
                                     <div class="col-12 pb-20">
                                         <div class="row">
                                             <h3 class="fs-6">{{__("You send exactly")}}</h3>
                                             <div class="col-12 from-cruncy">
-                                                <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
-                                                <div class="cruncy">
-                                                    <img src="{{ get_image($sender_currency->flag ?? null ,'currency-flag')}}" alt="image"> {{ $sender_currency->code }}
+                                                <div class="input-group">
+                                                    <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
+                                                    <div class="ad-select">
+                                                        <div class="custom-select">
+                                                            <div class="custom-select-inner">
+                                                                <input type="hidden" name="sender_currency">
+                                                                <span class="custom-currency">--</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="custom-select-wrapper">
+                                                            <div class="custom-select-search-box">
+                                                                <div class="custom-select-search-wrapper">
+                                                                    <button type="submit" class="search-btn"><i class="las la-search"></i></button>
+                                                                    <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                                </div>
+                                                            </div>
+                                                            <div class="custom-select-list-wrapper">
+                                                                <ul class="custom-select-list">
+                                                                    @foreach ($sender_currency as $item)
+                                                                        <li class="custom-option" data-item='{{ json_encode($item) }}'>
+                                                                            <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                            <span class="custom-country">{{ $item->name }}</span>
+                                                                            <span class="custom-currency">{{ $item->code }}</span>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -70,9 +96,35 @@
                                         <div class="row">
                                             <h3 class="fs-6">{{__("Recipient gets")}}</h3>
                                             <div class="col-12 from-cruncy">
-                                                <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money">
-                                                <div class="cruncy">
-                                                    <img src="{{ get_image($receiver_currency->flag ?? null ,'currency-flag')}}" alt="image">{{$receiver_currency->code}}
+                                                <div class="input-group">
+                                                    <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money">
+                                                    <div class="ad-select">
+                                                        <div class="custom-select">
+                                                            <div class="custom-select-inner">
+                                                                <input type="hidden" name="receiver_currency">
+                                                                <span class="custom-currency">--</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="custom-select-wrapper">
+                                                            <div class="custom-select-search-box">
+                                                                <div class="custom-select-search-wrapper">
+                                                                    <button type="submit" class="search-btn"><i class="las la-search"></i></button>
+                                                                    <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                                </div>
+                                                            </div>
+                                                            <div class="custom-select-list-wrapper">
+                                                                <ul class="custom-select-list">
+                                                                    @foreach ($receiver_currency as $item)
+                                                                        <li class="custom-option" data-item='{{ json_encode($item) }}'>
+                                                                            <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                            <span class="custom-country">{{ $item->name }}</span>
+                                                                            <span class="custom-currency">{{ $item->code }}</span>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -141,7 +193,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code}}</span>
+                                {{-- <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code}}</span> --}}
                             </div>
                         </div>
                         <div class="preview-list-item">
@@ -200,6 +252,23 @@
 
 @push('script')
 <script>
+    $(".ad-select .custom-select-search").keyup(function(){
+            var searchText = $(this).val().toLowerCase();
+            var itemList =  $(this).parents(".ad-select").find(".custom-option");
+            $.each(itemList,function(index,item){
+                var text = $(item).find(".custom-currency").text().toLowerCase();
+                var country = $(item).find(".custom-country").text().toLowerCase();
+                var match = text.match(searchText);
+                var countryMatch = country.match(searchText);
+                if(match == null && countryMatch == null) {
+                    $(item).addClass("d-none");
+                }else {
+                    $(item).removeClass("d-none");
+                }
+            });
+        });
+</script>
+<script>
 
     $(document).ready(function () {
         var enterAmount = $('#send_money').val(100);
@@ -235,7 +304,7 @@
                 let convertAmount = enterAmount;
                 
 
-                let receivedMoney = convertAmount * '{{ $receiver_currency->rate }}';
+                let receivedMoney = convertAmount ;
                 
                 var intervals = selectedType.intervals;
                 
@@ -251,23 +320,21 @@
                         convertAmount = parseFloat(enterAmount);
 
                         payableAmount = parseFloat(enterAmount) + totalCharge;
-                        receivedMoney = convertAmount * '{{ $receiver_currency->rate }}';
+                        receivedMoney = convertAmount ;
                     }
                 });
 
 
-                $("#fees").text('+'+totalCharge.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
                 $('#charge').val(totalCharge.toFixed(2));
                 $('#convert--amount').val(convertAmount.toFixed(2));
-                $('#convert-amount').text(convertAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
                 $('#payable--amount').val(payableAmount.toFixed(2));
-                $('#payable').text(payableAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
+                $('#payable').text(payableAmount.toFixed(2) + ' ' + );
                 $('#receive_money').val(receivedMoney.toFixed(2));
 
-                $('#sending_amount').text(enterAmount + ' ' + '{{ $sender_currency->code }}');
-                $('#fees-and-charges').text(totalCharge.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
-                $('#convert_amount').text(convertAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
-                $('#get-amount').text(receivedMoney.toFixed(2) + ' ' + '{{ $receiver_currency->code }}');
+                $('#sending_amount').text(enterAmount + ' ' + );
+                $('#fees-and-charges').text(totalCharge.toFixed(2) + ' ' + );
+                $('#convert_amount').text(convertAmount.toFixed(2) + ' ' + );
+                $('#get-amount').text(receivedMoney.toFixed(2) + ' ' + );
             }else{
                 $("#fees").text('');
                 $('#convert-amount').text('');
@@ -285,7 +352,7 @@
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
         
         var receiveAmount = $('#receive_money').val();
-        var enterAmount   = receiveAmount / '{{ $receiver_currency->rate }}';
+        var enterAmount   = receiveAmount ;
  
         $("#feature-list").html(selectedType.feature_text);
 
@@ -304,7 +371,7 @@
             if (enterAmount != 0) {
                 let convertAmount = enterAmount;
                 
-                let receivedMoney = convertAmount * '{{ $receiver_currency->rate }}';
+                let receivedMoney = convertAmount ;
                 
                 var intervals = selectedType.intervals;
                 
@@ -319,23 +386,23 @@
                         
                         convertAmount = parseFloat(enterAmount);
                         payableAmount = parseFloat(enterAmount) + totalCharge;
-                        receivedMoney = convertAmount * '{{ $receiver_currency->rate }}';
+                        receivedMoney = convertAmount ;
                     }
                 });
 
 
                 
-                $('#sending_amount').text(enterAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
-                $("#fees").text('+'+totalCharge.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
+                $('#sending_amount').text(enterAmount.toFixed(2) + ' ' + );
+                $("#fees").text('+'+totalCharge.toFixed(2) + ' ' + );
                 $('#charge').val(totalCharge.toFixed(2));
                 $('#convert--amount').val(convertAmount.toFixed(2));
-                $('#convert-amount').text(convertAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
-                $('#payable').text(payableAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
+                $('#convert-amount').text(convertAmount.toFixed(2) + ' ' + );
+                $('#payable').text(payableAmount.toFixed(2) + ' ' + );
                 $('#payable--amount').val(payableAmount.toFixed(2));
                 $('#send_money').val(enterAmount.toFixed(2));
-                $('#fees-and-charges').text(totalCharge.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
-                $('#convert_amount').text(convertAmount.toFixed(2) + ' ' + '{{ $sender_currency->code }}');
-                $('#get-amount').text(receivedMoney.toFixed(2) + ' ' + '{{ $receiver_currency->code }}');
+                $('#fees-and-charges').text(totalCharge.toFixed(2) + ' ' + );
+                $('#convert_amount').text(convertAmount.toFixed(2) + ' ' + );
+                $('#get-amount').text(receivedMoney.toFixed(2) + ' ' + );
             }else{
                 $('#send_money').val('');
                 $("#fees").text('');
