@@ -28,9 +28,20 @@
 @section('content')
     <div class="table-area">
         <div class="table-wrapper">
-            
+            @includeUnless($default_currency,'admin.components.alerts.warning',['message' => "There is no default currency in your system."])
             <div class="table-header">
                 <h5 class="title">{{ __("Setup Currency") }}</h5>
+                <div class="table-btn-area">
+                    @include('admin.components.search-input',[
+                        'name'  => 'currency_search',
+                    ])
+                    @include('admin.components.link.add-default',[
+                        'text'          => "Add Currency",
+                        'href'          => "#currency-add",
+                        'class'         => "modal-btn",
+                        'permission'    => "admin.currency.store",
+                    ])
+                </div>
             </div>
             <div class="table-responsive">
                 @include('admin.components.data-table.currency-table',[
@@ -43,6 +54,9 @@
 
     {{-- Currency Edit Modal --}}
     @include('admin.components.modals.edit-currency')
+
+    {{-- Currency Add Modal --}}
+    @include('admin.components.modals.add-currency')
 
 @endsection
 
@@ -59,7 +73,7 @@
                 var currencyName = $(".country-select :selected").attr("data-currency-name");
                 var currencyCode = $(".country-select :selected").attr("data-currency-code");
                 var currencySymbol = $(".country-select :selected").attr("data-currency-symbol");
-                
+
                 var currencyType = selectedValue.parents("form").find("input[name=type],input[name=currency_type]").val();
                 var readOnly = true;
                 if(currencyType == "CRYPTO") {
@@ -67,12 +81,11 @@
                     readOnly = false;
                     console.log(readOnly);
                 }
-                
+
                 selectedValue.parents("form").find("input[name=name],input[name=currency_name]").val(currencyName).prop("readonly",readOnly);
                 selectedValue.parents("form").find("input[name=code],input[name=currency_code]").val(currencyCode).prop("readonly",readOnly);
                 selectedValue.parents("form").find("input[name=symbol],input[name=currency_symbol]").val(currencySymbol).prop("readonly",readOnly);
-                selectedValue.parents("form").find(".selcted-currency, .selcted-currency-edit").text(currencyCode);
-                selectedValue.parents("form").find("#rate_currency, .sender_currency_rate").text("1"+ " " + currencyCode + " =");
+                selectedValue.parents("form").find(".selcted-currency,.selcted-currency-edit").text(currencyCode);
             });
 
         });
@@ -100,9 +113,19 @@
             selectedValue.parents("form").find("input[name=name],input[name=currency_name]").prop("readonly",readOnly);
             selectedValue.parents("form").find("input[name=code],input[name=currency_code]").prop("readonly",readOnly);
             selectedValue.parents("form").find("input[name=symbol],input[name=currency_symbol]").prop("readonly",readOnly);
-            
+           
         }
 
-        
+        $(".delete-modal-button").click(function(){
+            var oldData = JSON.parse($(this).parents("tr").attr("data-item"));
+
+            var actionRoute =  "{{ setRoute('admin.currency.delete') }}";
+            var target      = oldData.code;
+            var message     = `Are you sure to delete <strong>${oldData.code}</strong> currency?`;
+
+            openDeleteModal(actionRoute,target,message);
+        });
+
+        itemSearch($("input[name=currency_search]"),$(".currency-search-table"),"{{ setRoute('admin.currency.search') }}",1);
     </script>
 @endpush

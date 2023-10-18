@@ -60,22 +60,31 @@
                                 'value'         => old('currency_symbol'),
                             ])
                         </div>
-                        <div class="col-xl-12 col-lg-12 form-group sender">
+                        <div class="col-xl-12 col-lg-12 form-group">
                             <label>{{ __("Rate*") }}</label>
                             <div class="input-group">
-                                <span class="input-group-text sender_currency_rate append" id="rate_currency">{{ old('currency_code') }}</span>
-                                <input type="text" class="form--control number-input" value="{{ old('currency_rate') }}" name="currency_rate">
+                                <span class="input-group-text append">1 {{ get_default_currency_code($default_currency) }} = </span>
+                                <input type="number" class="form--control" value="{{ old('currency_rate') }}" name="currency_rate" step="any">
                                 <span class="input-group-text selcted-currency-edit">{{ old('currency_code') }}</span>
                             </div>
                         </div>
-                        <div class="col-xl-12 col-lg-12 form-group receiver">
-                            <label>{{ __("Rate*") }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text append">1 {{ $sender_currency->code }} =</span>
-                                <input type="text" class="form--control number-input" value="{{ old('currency_rate') }}" name="currency_rate">
-                                <span class="input-group-text selcted-currency-edit">{{ old('currency_code') }}</span>
-                            </div>
+                        <div class="col-xl-12 col-lg-12 form-group">
+                            @include('admin.components.form.radio-button',[
+                                'label'         => 'Role*',
+                                'name'          => 'currency_role',
+                                'value'         => old('currency_role'),
+                                'options'       => ['Both' => 'both', 'Sender' => 'sender', 'Receiver' => 'receiver'],
+                            ])
                         </div>
+                        <div class="col-xl-12 col-lg-12 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => 'Option*',
+                                'name'          => 'currency_option',
+                                'value'         => old('currency_option'),
+                                'options'       => ['Optional' => 0,'Default' => 1],
+                            ])
+                        </div>
+
                         <div class="col-xl-12 col-lg-12 form-group d-flex align-items-center justify-content-between mt-4">
                             <button type="button" class="btn btn--danger modal-close">{{ __("Cancel") }}</button>
                             <button type="submit" class="btn btn--base">{{ __("Update") }}</button>
@@ -88,31 +97,14 @@
 
     @push("script")
         <script>
-
-        // var oldData = JSON.parse($(this).parents("tr").attr("data-item"));
-        var openModalData = "";
-
             $(document).ready(function(){
                 reloadAllCountries("select[name=currency_country]");
                 openModalWhenError("currency_edit","#currency-edit");
-
                 $(document).on("click",".edit-modal-button",function(){
                     var oldData = JSON.parse($(this).parents("tr").attr("data-item"));
-                    openModalData = oldData;
-                    
-                    
                     var editModal = $("#currency-edit");
 
                     var readOnly = true;
-
-                    if(oldData.role == "sender"){
-                        editModal.find('.sender').show();
-                        editModal.find('.receiver').hide();
-                    }else{
-                        editModal.find('.sender').hide();
-                        editModal.find('.receiver').show();
-                    }
-
                     if(oldData.type == "CRYPTO") {
                         readOnly = false;
                     }
@@ -129,10 +121,8 @@
                     editModal.find("input[name=currency_flag]").attr("data-preview-name",oldData.flag);
                     editModal.find("input[name=currency_option]").val(oldData.option);
                     editModal.find(".selcted-currency-edit").text(oldData.code);
-                    editModal.find("#rate_currency").text('1 ' + oldData.code +' =');
                     editModal.find("select[name=currency_country]").attr("data-old",oldData.country);
 
-                   
                     selectFormRadio("#currency-edit input[name=currency_role]",oldData.role);
                     reloadAllCountries("select[name=currency_country]");
                     fileHolderPreviewReInit("#currency-edit input[name=currency_flag]");
@@ -140,8 +130,6 @@
                     openModalBySelector("#currency-edit");
 
                 });
-
-
             });
         </script>
     @endpush
