@@ -34,19 +34,19 @@
 <table>
   <tr>
     <td>Sending Amount</td>
-    <td>{{ $identifier_data['data']->send_money }} {{ $data['amount']->sender_cur_code }}</td>
+    <td>{{ $identifier_data['data']->send_money }} {{ $identifier_data['data']->sender_currency }}</td>
     <td>Exchange Rate</td>
-    <td>1 {{ $data['amount']->default_currency }} = {{ getAmount($receiver_currency->rate) }} {{ $receiver_currency->code }}</td>
+    <td>{{ $identifier_data['data']->sender_ex_rate }} {{ $identifier_data['data']->sender_currency }} = {{ $identifier_data['data']->receiver_ex_rate }} {{ $identifier_data['data']->receiver_currency }}</td>
   </tr>
   <tr>
     <td>Total Fees and Charges</td>
-    <td>{{ getAmount($data['amount']->total_charge, 2) }} {{ $data['amount']->sender_cur_code }}</td>
+    <td>{{ getAmount($data['amount']->total_charge, 2) }} {{ $identifier_data['data']->sender_currency }}</td>
     <td>Amount We’ll Convert</td>
-    <td>{{ getAmount($identifier_data['data']->convert_amount, 2) }} {{ $data['amount']->sender_cur_code }}</td>
+    <td>{{ getAmount($identifier_data['data']->convert_amount, 2) }} {{ $identifier_data['data']->sender_currency }}</td>
   </tr>
   <tr>
     <td>Will Get Amount</td>
-    <td>{{ getAmount($data['amount']->will_get, 2) }} {{ $receiver_currency->code }}</td>
+    <td>{{ getAmount($data['amount']->will_get, 2) }} {{ $identifier_data['data']->receiver_currency }}</td>
     <td>Sending Purpose</td>
     <td>{{ $identifier_data['data']->sending_purpose->name }}</td>
   </tr>

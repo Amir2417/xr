@@ -25,8 +25,8 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-12">
                         <div class="input-group pt-4">
-                            <input type="text" class="form--control box" value="{{ setRoute('share.link',$transaction->trx_id) }}" readonly>
-                            <div class="input-group-text copy"><i class="las la-copy"></i></div>
+                            <input type="text" class="form--control box" value="{{ setRoute('share.link',$transaction->trx_id) }}" readonly id="remittanceURL">
+                            <div class="input-group-text" id="copyBoard"><i class="las la-copy"></i></div>
                         </div>
                         <div class="payment-recipt pt-4">
                             <div class="receipt-dawonload">
@@ -57,17 +57,12 @@
 @endsection
 @push('script')
     <script>
-        $('.copy').on('click',function(){
-            
-            let input = $('.box').val();
-            navigator.clipboard.writeText(input)
-            .then(function() {
-                
-                $('.copy').text("Copied");
-            })
-            .catch(function(err) {
-                console.error('Copy failed:', err);
-            });
+        $('#copyBoard').on('click',function(){
+            var copyText = document.getElementById("remittanceURL");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            throwMessage('success',["Copied: " + copyText.value]);
         });
     </script>
 @endpush

@@ -335,7 +335,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ get_amount($transaction->request_amount) }} {{ $sender_currency->code }}</span>
+                                                    <span><span class="text--base">{{ get_amount($transaction->request_amount) }} {{ $transaction->remittance_data->sender_currency }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -347,7 +347,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ get_amount($transaction->will_get_amount) }} {{ $receiver_currency->code }}</span>
+                                                    <span><span class="text--base">{{ get_amount($transaction->will_get_amount) }} {{ $transaction->remittance_data->receiver_currency }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -359,7 +359,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code }} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code }}</span>
+                                                    <span>{{ $transaction->remittance_data->sender_ex_rate }} {{ $transaction->remittance_data->sender_currency }} = {{ $transaction->remittance_data->receiver_ex_rate }} {{ $transaction->remittance_data->receiver_currency }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -371,7 +371,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ get_amount($transaction->fees) }} {{ $sender_currency->code }}</span>
+                                                    <span>{{ get_amount($transaction->fees) }} {{ $transaction->remittance_data->sender_currency }}</span>
                                                 </div>
                                             </div>
                                         </div>
