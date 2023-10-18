@@ -166,7 +166,9 @@
                 </div>
             </div>
         @empty
-            <p class="text-center empty-data">{{ __("There is no recipients. Please add a new recipient.") }}</p>
+        <div class="alert alert-primary text-center">
+            {{ __("No Recipient Found!") }}
+        </div>
         @endforelse
     </div>
 

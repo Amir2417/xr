@@ -152,7 +152,9 @@
                 <button type="submit" class="btn--base w-100">Next</button>
             </div>
         @else
-            <p class="text-center empty-data">There is no recipients. Please add a new recipient.</p>
+        <div class="alert alert-primary text-center">
+            {{ __("No Recipient Found!") }}
+        </div>
         @endif
     </form>
 </div>
