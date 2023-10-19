@@ -13,6 +13,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'user/username/check',
-        'user/check/email'
+        'user/check/email',
+        '/send-remittance/sslcommerz/success',
+        '/send-remittance/sslcommerz/cancel',
+        '/send-remittance/sslcommerz/fail',
     ];
 }

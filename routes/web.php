@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Frontend\SiteController;
+use App\Http\Controllers\User\RemittanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,3 +78,11 @@ Route::post("subscribe",[SiteController::class,'subscribe'])->name("subscribe");
 Route::post("contact-request",[SiteController::class,'contactRequest'])->name("contact.request");
 
 Route::get('link/{slug}',[SiteController::class,'link'])->name('link');
+
+
+Route::controller(RemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+    //ssl commerce
+    Route::post('sslcommerz/success','sllCommerzSuccess')->name('ssl.success');
+    Route::post('sslcommerz/fail','sllCommerzFails')->name('ssl.fail');
+    Route::post('sslcommerz/cancel','sllCommerzCancel')->name('ssl.cancel');
+});

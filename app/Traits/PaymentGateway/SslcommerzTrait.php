@@ -262,7 +262,7 @@ trait SslcommerzTrait
     }
 
     public function sslcommerzSuccess($output = null) {
-
+        
         if(!$output) $output = $this->output;
         $token = $this->output['tempData']['identifier'] ?? "";
         if(empty($token)) throw new Exception('Transaction failed. Record didn\'t saved properly. Please try again.');
@@ -270,20 +270,29 @@ trait SslcommerzTrait
     }
 
     public function createTransactionSsl($output) {
+        
         $basic_setting = BasicSettings::first();
         $user = auth()->user();
         $trx_id = 'R'.getTrxNum();
+       
         $inserted_id = $this->insertRecordSsl($output,$trx_id);
-        $this->insertChargesSsl($output,$inserted_id);
-        $this->insertDeviceSsl($output,$inserted_id);
+        // $this->insertChargesSsl($output,$inserted_id);
+        // $this->insertDeviceSsl($output,$inserted_id);
+        
         $this->removeTempDataSsl($output);
-
         if($this->requestIsApiUser()) {
             // logout user
             $api_user_login_guard = $this->output['api_login_guard'] ?? null;
             if($api_user_login_guard != null) {
                 auth()->guard($api_user_login_guard)->logout();
             }
+        }
+        if(auth()->check()){
+            UserNotification::create([
+                'user_id'  => auth()->user()->id,
+                'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount + $output['amount']->total_charge).",
+                Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
+            ]);
         }
         if( $basic_setting->email_notification == true){
             Notification::route("mail",$user->email)->notify(new sendNotification($user,$output,$trx_id));
@@ -292,9 +301,11 @@ trait SslcommerzTrait
     }
 
     public function insertRecordSsl($output,$trx_id) {
-
+        
         $trx_id = $trx_id;
         $token = $this->output['tempData']['identifier'] ?? "";
+        $user_data = TemporaryData::where('identifier',$output['request_data']['identifier'] )->first();
+        $this->output['user_data']  = $user_data;
         DB::beginTransaction();
         try{
             if(Auth::guard(get_auth_guard())->check()){
@@ -356,60 +367,19 @@ trait SslcommerzTrait
                 'created_at'                    => now(),
             ]);
 
-            $this->updateWalletBalanceSsl($output);
+            
             DB::commit();
         }catch(Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+        $this->output['trx_id'] = $trx_id;
         return $id;
     }
 
-    public function updateWalletBalanceSsl($output) {
-        $update_amount = $output['wallet']->balance + $output['amount']->requested_amount;
-        $output['wallet']->update([
-            'balance'   => $update_amount,
-        ]);
-    }
+   
 
-    public function insertChargesSsl($output,$id) {
-        if(Auth::guard(get_auth_guard())->check()){
-            $user = auth()->guard(get_auth_guard())->user();
-        }
-        DB::beginTransaction();
-        try{
-            DB::table('transaction_charges')->insert([
-                'transaction_id'    => $id,
-                'percent_charge'    => $output['amount']->percent_charge,
-                'fixed_charge'      => $output['amount']->fixed_charge,
-                'total_charge'      => $output['amount']->total_charge,
-                'created_at'        => now(),
-            ]);
-            DB::commit();
-
-            //notification
-            $notification_content = [
-                'title'         => "Add Money",
-                'message'       => "Your Wallet (".$output['amount']->receiver_cur_code.") balance  has been added ".$output['amount']->requested_amount.' '. $output['amount']->receiver_cur_code,
-                'time'          => Carbon::now()->diffForHumans(),
-                'image'         =>  get_image($user->image,'user-profile')
-            ];
-
-            if(auth()->check()){
-                UserNotification::create([
-                    'user_id'  => auth()->user()->id,
-                    'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount + $output['amount']->total_charge).",
-                    Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
-                ]);
-            }
-
-             
-            DB::commit();
-        }catch(Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
-        }
-    }
+   
 
     
 

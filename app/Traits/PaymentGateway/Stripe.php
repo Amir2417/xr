@@ -238,7 +238,7 @@ trait Stripe
     }
 
     public function insertRecordStripe($output, $trx_id) {
-
+       
         $trx_id = $trx_id;
         $token = $this->output['tempData']['identifier'] ?? "";
         

@@ -103,12 +103,4 @@ Route::prefix("user")->name("user.")->group(function(){
     });
 });
 
-Route::controller(RemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
-    //ssl commerce
-    Route::post('sslcommerz/success',function(Request $request){
-        dd("test");
-    })->name('ssl.success');
-    Route::post('sslcommerz/fail','sllCommerzFails')->name('ssl.fail');
-    Route::post('sslcommerz/cancel','sllCommerzCancel')->name('ssl.cancel');
-});
 

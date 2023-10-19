@@ -183,11 +183,11 @@ class RemittanceController extends Controller
     }
     //sslcommerz success
     public function sllCommerzSuccess(Request $request){
-        dd("test");
+        
         $data = $request->all();
-        dd($data);
         $token = $data['tran_id'];
         $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        // dd($checkTempData);
         if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
         $checkTempData = $checkTempData->toArray();
         $creator_id = $checkTempData['data']->creator_id ?? null;
@@ -199,7 +199,9 @@ class RemittanceController extends Controller
         }
         try{
             $transaction= PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            
         }catch(Exception $e) {
+            
             return back()->with(['error' => ["Something Is Wrong..."]]);
         }
         return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance Money']]);

@@ -243,6 +243,7 @@ class PaymentGateway {
             }
         }elseif($type == 'sslcommerz'){
             if(method_exists(SslcommerzTrait::class,$method_name)) {
+                
                 return $this->$method_name($this->output);
             }
         }else{

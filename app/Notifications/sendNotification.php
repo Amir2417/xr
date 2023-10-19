@@ -38,6 +38,7 @@ class sendNotification extends Notification
         $user = $this->user;
         $data = $this->data;
         $identifier_data = TemporaryData::where('identifier',$data['request_data']['identifier'])->first();
+        dd($identifier_data);
         $trx_id = $this->trx_id;
         $date = Carbon::now();
         $datetime = dateFormat('Y-m-d h:i:s A', $date);
