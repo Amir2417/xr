@@ -388,4 +388,103 @@
         });
     });
 </script>
+<script>
+
+    $(".logout-btn").click(function(){
+        var actionRoute =  "{{ setRoute('user.logout') }}";
+        var target      = 1;
+        var message     = `Are you sure to <strong>Logout</strong>?`;
+
+        openAlertModal(actionRoute,target,message,"Logout","POST");
+    });
+
+
+    var chart1 = $('#chart1');
+    var chart_one_data = chart1.data('chart_one_data');
+    var month_day = chart1.data('month_day');
+
+    var options = {
+      series: [{
+          name: 'Pending',
+          color: "#8358ff",
+          data: chart_one_data.pending_data
+      }, {
+          name: 'Complete',
+          data: chart_one_data.complete_data
+      }],
+      chart: {
+          height: 350,
+          type: 'area',
+          toolbar: {
+              show: false
+          },
+      },
+      dataLabels: {
+          enabled: false
+      },
+      stroke: {
+          curve: 'smooth'
+      },
+      xaxis: {
+          type: 'datetime',
+          categories: month_day,
+      },
+      tooltip: {
+          x: {
+              format: 'dd/MM/yy HH:mm'
+          },
+      },
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chart1"), options);
+  chart.render();
+
+
+  var options = {
+      series: [{
+          data: [44, 55, 41, 64, 22, 43, 21],
+          color: "#8358ff"
+      }, {
+          data: [53, 32, 33, 52, 13, 44, 32]
+      }],
+      chart: {
+          type: 'bar',
+          toolbar: {
+              show: false
+          },
+          height: 350
+      },
+      plotOptions: {
+          bar: {
+              horizontal: true,
+              dataLabels: {
+                  position: 'top',
+              },
+          }
+      },
+      dataLabels: {
+          enabled: true,
+          offsetX: -6,
+          style: {
+              fontSize: '12px',
+              colors: ['#fff']
+          }
+      },
+      stroke: {
+          show: true,
+          width: 1,
+          colors: ['#fff']
+      },
+      tooltip: {
+          shared: true,
+          intersect: false
+      },
+      xaxis: {
+          categories: [2001, 2002, 2003, 2004, 2005, 2006, 2007],
+      },
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chart2"), options);
+  chart.render();
+</script>
 @endpush

@@ -21,7 +21,7 @@ class CurrencyController extends Controller
     public function index()
     {
         $page_title = "Setup Currency";
-        $currencies = Currency::orderByDesc('default')->paginate(10);
+        $currencies = Currency::orderByDesc('default')->paginate(30);
         return view('admin.sections.currency.index',compact(
             'page_title',
             'currencies'
@@ -186,7 +186,27 @@ class CurrencyController extends Controller
             return back()->withErrors($validator)->withInput()->with('modal','currency_edit');
         }
         $validated = $validator->validate();
-
+        $roles = [
+            'both'  => [
+                'sender'    => true,
+                'receiver'  => true,
+            ],
+            'sender'    => [
+                'sender'    => true,
+                'receiver'  => false,
+            ],
+            'receiver'  => [
+                'sender'    => false,
+                'receiver'  => true,
+            ]
+        ];
+        foreach($roles as $key => $item) {
+            if($key == $validated['currency_role']) {
+                foreach($item as $column => $value) {
+                    $validated[$column] = $value;
+                }
+            }   
+        }
         $default = [
             '1' => true,
             '0'  => false,

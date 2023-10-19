@@ -80,6 +80,20 @@ function get_country_phone_code($country) {
     return $phone_code;
 }
 
+function generateTransactionReference()
+{
+    return 'TXREF_' . time();
+}
+function getTrxNum($length = 8)
+{
+    $characters = '123456789';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
 function get_all_timezones()
 {
     $countries = json_decode(file_get_contents(resource_path('world/countries.json')), true);

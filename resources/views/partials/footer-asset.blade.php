@@ -8,8 +8,7 @@
 <script src="{{ asset('public/frontend/js/lightcase.js')}}"></script>
 <!-- smooth scroll js -->
 <script src="{{ asset('public/frontend/js/smoothscroll.js')}}"></script>
-<!-- viewport js -->
-<script src="{{ asset('public/frontend/js/viewport.jquery.js') }}"></script>
+
 <!-- pace js-->
 <script src="{{ asset('public/frontend/js/pace.js') }}"></script>
 <!-- apexcharts js -->

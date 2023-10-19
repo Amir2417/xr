@@ -181,10 +181,12 @@ class PaymentGateway {
     }
 
     public function responseReceive($type = null) {
+       
         $tempData = $this->request_data;
         if(empty($tempData) || empty($tempData['type'])) throw new Exception('Transaction faild. Record didn\'t saved properly. Please try again.');
         
         $method_name = $tempData['type']."Success";
+        
         
         if($this->requestIsApiUser()) {
            
@@ -217,14 +219,21 @@ class PaymentGateway {
             
             'identifier'                => $tempData['data']->user_record,
         ];
+        
         $this->request_data = $validator_data;
         
         $this->gateway();
         $this->output['tempData'] = $tempData;
-
+        
+        $type = $tempData['type'];
         if($type == 'flutterWave'){
             if(method_exists(FlutterwaveTrait::class,$method_name)) {
                 
+                return $this->$method_name($this->output);
+            }
+        }elseif($type == 'stripe'){
+            if(method_exists(Stripe::class,$method_name)) {
+               
                 return $this->$method_name($this->output);
             }
         }else{

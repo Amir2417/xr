@@ -889,6 +889,9 @@ blockquote .quote-icon {
           align-items: center;
   padding: 5px 16px;
 }
+.ad-select .custom-select-inner{
+  height: 45px;
+}
 .custom-select .custom-select-inner::before, .custom-select .custom-select-inner::after {
   content: "";
   display: block;

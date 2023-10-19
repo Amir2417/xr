@@ -27,6 +27,7 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::get('receipt-payment/{identifier}','receiptPayment')->name('receipt.payment');
         Route::post('receipant-payment-store/{identifier}','receipantPaymentStore')->name('receipant.payment.store');
         Route::get('receipt-preview/{identifier}','receiptPreview')->name('receipt.preview');
+        
     });
 
     //transaction
@@ -60,6 +61,7 @@ Route::prefix("user")->name("user.")->group(function(){
 
         //stripe
         Route::get('payment/{gateway}','payment')->name('send.remittance.payment');
+        Route::get('stripe/payment/success/{trx}','stripePaymentSuccess')->name('send.remittance.stripe.payment.success');
         Route::post('stripe/payment/confirm','paymentConfirmed')->name('stripe.payment.confirmed'); 
 
         //flutterwave

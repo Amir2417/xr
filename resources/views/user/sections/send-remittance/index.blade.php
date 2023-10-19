@@ -37,16 +37,34 @@
                                             <div class="col-12 from-cruncy">
                                                 <div class="input-group">
                                                     <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
-                                                    <select class="form--control nice-select sender-currency" name="sender_currency">
-                                                        @foreach ($sender_currency as $item)
-                                                            <option value="{{ $item->code }}"
-                                                                data-code="{{ $item->code }}"
-                                                                data-symbol="{{ $item->symbol }}"
-                                                                data-rate="{{ $item->rate }}"
-                                                                data-name="{{ $item->country }}">{{ $item->code }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                                    
+                                                    <div class="ad-select">
+                                                        <div class="custom-select">
+                                                            <div class="custom-select-inner">
+                                                                <input type="hidden" name="sender_currency" class="sender_currency">
+                                                                <span class="custom-currency">--</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="custom-select-wrapper">
+                                                            <div class="custom-select-search-box">
+                                                                <div class="custom-select-search-wrapper">
+                                                                    <button type="submit" class="search-btn"><i class="las la-search"></i></button>
+                                                                    <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                                </div>
+                                                            </div>
+                                                            <div class="custom-select-list-wrapper">
+                                                                <ul class="custom-select-list">
+                                                                    @foreach ($sender_currency as $item)
+                                                                        <li class="custom-option" data-item='{{ json_encode($item) }}'>
+                                                                            <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                            <span class="custom-country">{{ $item->name }}</span>
+                                                                            <span class="custom-currency">{{ $item->code }}</span>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,16 +102,34 @@
                                             <div class="col-12 from-cruncy">
                                                 <div class="input-group">
                                                     <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money">
-                                                    <select class="form--control nice-select receiver-currency" name="receiver_currency">
-                                                        @foreach ($receiver_currency as $item)
-                                                            <option value="{{ $item->code }}"
-                                                                data-code="{{ $item->code }}"
-                                                                data-symbol="{{ $item->symbol }}"
-                                                                data-rate="{{ $item->rate }}"
-                                                                data-name="{{ $item->country }}">{{ $item->code }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                                    
+                                                    <div class="ad-select">
+                                                        <div class="custom-select">
+                                                            <div class="custom-select-inner">
+                                                                <input type="hidden" name="receiver_currency" class="receiver_currency">
+                                                                <span class="custom-currency">--</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="custom-select-wrapper">
+                                                            <div class="custom-select-search-box">
+                                                                <div class="custom-select-search-wrapper">
+                                                                    <button type="submit" class="search-btn"><i class="las la-search"></i></button>
+                                                                    <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                                </div>
+                                                            </div>
+                                                            <div class="custom-select-list-wrapper">
+                                                                <ul class="custom-select-list">
+                                                                    @foreach ($receiver_currency as $item)
+                                                                        <li class="custom-option" data-item='{{ json_encode($item) }}'>
+                                                                            <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                            <span class="custom-country">{{ $item->name }}</span>
+                                                                            <span class="custom-currency">{{ $item->code }}</span>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,11 +242,27 @@
 @push('script')
 
 <script>
+    $(".ad-select .custom-select-search").keyup(function(){
+        var searchText = $(this).val().toLowerCase();
+        var itemList =  $(this).parents(".ad-select").find(".custom-option");
+        $.each(itemList,function(index,item){
+            var text = $(item).find(".custom-currency").text().toLowerCase();
+            var country = $(item).find(".custom-country").text().toLowerCase();
+            var match = text.match(searchText);
+            var countryMatch = country.match(searchText);
+            if(match == null && countryMatch == null) {
+                $(item).addClass("d-none");
+            }else {
+                $(item).removeClass("d-none");
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function(){
 
-    $(document).ready(function () {
-        var enterAmount = $('#send_money').val(100);
-        run();
-        
+        var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
+        $("#feature-list").html(selectedType.feature_text);
     });
     $('.trx-type-select').on('change',function(){
         run();
@@ -221,19 +273,19 @@
     $('.receiver-currency').on('change',function(){ 
         runReverse();
     });
-    function run(){
+    function run(selectedItem,receiver = false){
+        
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
+       
         
         var enterAmount = $('#send_money').val();
  
         $("#feature-list").html(selectedType.feature_text);
-
         function acceptVar() {
-           
-            var senderCurrency          = $("select[name=sender_currency] :selected").attr("data-code");
-            var senderCurrencyRate      = $("select[name=sender_currency] :selected").attr("data-rate");
-            var receiverCurrency        = $("select[name=receiver_currency] :selected").attr("data-code");
-            var receiverCurrencyRate    = $("select[name=receiver_currency] :selected").attr("data-rate");
+            var senderCurrency          = selectedItem.code;
+            var senderCurrencyRate      = selectedItem.rate;
+            var receiverCurrency        = receiver.code;
+            var receiverCurrencyRate    = receiver.rate;
             return {
                 senderCurrency:senderCurrency,
                 senderCurrencyRate:senderCurrencyRate,
@@ -302,6 +354,8 @@
                 $('.sender-ex-rate').val(parseFloat(senderRate).toFixed(2));
                 $('.sender-base-rate').val(parseFloat(senderCurrencyRate).toFixed(2));
                 $('.receiver-ex-rate').val(parseFloat(recieverRate).toFixed(2));
+                $('.sender_currency').val(senderCurrency);
+                $('.receiver_currency').val(receiverCurrency);
                 
             }else{
                 $("#fees").text('');
@@ -316,7 +370,7 @@
         }
         getCharges(selectedType,enterAmount);
     }
-    function runReverse(){
+    function runReverse(selectedItem,receiver = false){
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
         
         var receiveAmount = $('#receive_money').val();
@@ -324,10 +378,10 @@
         $("#feature-list").html(selectedType.feature_text);
         function acceptVar() {
            
-           var senderCurrency          = $("select[name=sender_currency] :selected").attr("data-code");
-           var senderCurrencyRate      = $("select[name=sender_currency] :selected").attr("data-rate");
-           var receiverCurrency        = $("select[name=receiver_currency] :selected").attr("data-code");
-           var receiverCurrencyRate    = $("select[name=receiver_currency] :selected").attr("data-rate");
+            var senderCurrency          = selectedItem.code;
+            var senderCurrencyRate      = selectedItem.rate;
+            var receiverCurrency        = receiver.code;
+            var receiverCurrencyRate    = receiver.rate;
            return {
                senderCurrency:senderCurrency,
                senderCurrencyRate:senderCurrencyRate,
@@ -414,10 +468,24 @@
         getReverseCharges(selectedType,receiveAmount);
     }
     $("#send_money").keyup(function(){
-        run();
+        run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
     });
     $("#receive_money").keyup(function(){
-        runReverse();
+        runReverse(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+    });
+
+    function adSelectActiveItem(input) {
+        var adSelect        = $(input).parents(".ad-select");
+        var selectedItem    = adSelect.find(".custom-option.active");
+        
+        if(selectedItem.length > 0) {
+            return selectedItem.attr("data-item");
+        }
+        return false;
+    }
+
+    $(document).on("click",".custom-option",function() {
+        run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
     });
 
 </script>

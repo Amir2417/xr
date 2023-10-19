@@ -49,10 +49,10 @@ class sendNotification extends Notification
         return (new MailMessage)
             ->subject("Your Recent Remittance - MTCN: ". $trx_id)
             ->view('frontend.email.confirmation', [
-                'identifier_data' => $identifier_data,
-                'data'            => $data,
-                'user'            => $user,
-                'trx_id'          => $trx_id,
+                'identifier_data'   => $identifier_data,
+                'data'              => $data,
+                'user'              => $user,
+                'trx_id'            => $trx_id,
                 'receiver_currency' => $receiver_currency,
                 'contact'           => $contact,
                 'basic_settings'    => $basic_settings

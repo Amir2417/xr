@@ -51,7 +51,7 @@ class BasicSettingsSeeder extends Seeder
             'site_logo'         => 'seeder/logo-white.png',
             'site_fav_dark'     => 'seeder/favicon.png',
             'site_fav'          => 'seeder/favicon.png',
-            'web_version'       => '1.0.0',
+            'web_version'       => '2.0.0',
         ];
 
         BasicSettings::firstOrCreate($data);

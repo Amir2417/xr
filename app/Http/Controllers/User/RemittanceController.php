@@ -58,7 +58,23 @@ class RemittanceController extends Controller
         
         return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully send remittance']]);
     }
+    public function stripePaymentSuccess($trx){
+        
+        $token = $trx;
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::STRIPE)->where("identifier",$token)->first();
+        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
+        $checkTempData = $checkTempData->toArray();
+        
 
+        try{
+            $transaction = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive(); 
+            
+        }catch(Exception $e) {
+            
+            return back()->with(['error' => ["Something Is Wrong..."]]);
+        }
+        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully send remittance']]);
+    }
     /**
      * This method for cancel alert of PayPal
      * @method POST
