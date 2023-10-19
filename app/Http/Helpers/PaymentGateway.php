@@ -15,12 +15,13 @@ use Illuminate\Support\Facades\Validator;
 use App\Traits\PaymentGateway\FlutterwaveTrait;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use App\Traits\PaymentGateway\SslcommerzTrait;
 
 use App\Models\TemporaryData;
 
 class PaymentGateway {
 
-    use Paypal,Stripe,Manual,FlutterwaveTrait;
+    use Paypal,Stripe,Manual,FlutterwaveTrait,SslcommerzTrait;
 
     protected $request_data;
     protected $output;
@@ -87,10 +88,15 @@ class PaymentGateway {
         if(!$gateway) $gateway = $this->output['gateway'];
         $alias = Str::lower($gateway->alias);
         if($gateway->type == PaymentGatewayConst::AUTOMATIC){
+            
             $method = PaymentGatewayConst::register($alias);
+            
         }elseif($gateway->type == PaymentGatewayConst::MANUAL){
+            
             $method = PaymentGatewayConst::register(strtolower($gateway->type));
         }
+
+        
 
         if(method_exists($this,$method)) {
             return $method;
@@ -175,7 +181,6 @@ class PaymentGateway {
                 break;
             }
         }
-
         $distributeMethod = $this->output['distribute'];
         return $this->$distributeMethod($output) ?? throw new Exception("Something went worng! Please try again.");
     }
@@ -234,6 +239,10 @@ class PaymentGateway {
         }elseif($type == 'stripe'){
             if(method_exists(Stripe::class,$method_name)) {
                
+                return $this->$method_name($this->output);
+            }
+        }elseif($type == 'sslcommerz'){
+            if(method_exists(SslcommerzTrait::class,$method_name)) {
                 return $this->$method_name($this->output);
             }
         }else{

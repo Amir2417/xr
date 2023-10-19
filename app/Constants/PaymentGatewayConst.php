@@ -19,7 +19,7 @@ class PaymentGatewayConst {
     const SEND = "SEND";
     const RECEIVED = "RECEIVED";
     const MANUA_GATEWAY = 'manual';
-
+    const SSLCOMMERZ = 'sslcommerz';
     //transaction type
 
     const TRANSACTION_TYPE_BANK                 = "Bank Transfer";
@@ -46,6 +46,7 @@ class PaymentGatewayConst {
             self::STRIPE => "stripeInit",
             self::MANUA_GATEWAY => "manualInit",
             self::FLUTTER_WAVE => 'flutterwaveInit',
+            self::SSLCOMMERZ => 'sslcommerzInit'
         ];
 
         if($alias == null) {

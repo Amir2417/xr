@@ -20,10 +20,12 @@ use App\Traits\PaymentGateway\FlutterwaveTrait;
 use KingFlamez\Rave\Facades\Rave as Flutterwave;
 use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
 use App\Providers\Admin\BasicSettingsProvider;
+use App\Traits\PaymentGateway\SslcommerzTrait;
+use Illuminate\Support\Facades\Auth;
 
 class RemittanceController extends Controller
 {
-    use Stripe,Manual,FlutterwaveTrait;
+    use Stripe,Manual,FlutterwaveTrait,SslcommerzTrait;
 
     /**
      * Method for submit money
@@ -179,7 +181,61 @@ class RemittanceController extends Controller
             'notifications'
         ));
     }
+    //sslcommerz success
+    public function sllCommerzSuccess(Request $request){
+        dd("test");
+        $data = $request->all();
+        dd($data);
+        $token = $data['tran_id'];
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
+        $checkTempData = $checkTempData->toArray();
+        $creator_id = $checkTempData['data']->creator_id ?? null;
+        $creator_guard = $checkTempData['data']->creator_guard ?? null;
 
+        $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
+        if( $data['status'] != "VALID"){
+            return redirect()->route("user.send.remittance.index")->with(['error' => ['Send Remittance Failed']]);
+        }
+        try{
+            $transaction= PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+        }catch(Exception $e) {
+            return back()->with(['error' => ["Something Is Wrong..."]]);
+        }
+        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance Money']]);
+    }
+    //sslCommerz fails
+    public function sllCommerzFails(Request $request){
+        $data = $request->all();
+        $token = $data['tran_id'];
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
+        $checkTempData = $checkTempData->toArray();
+        $creator_id = $checkTempData['data']->creator_id ?? null;
+        $creator_guard = $checkTempData['data']->creator_guard ?? null;
+        $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
+        if( $data['status'] == "FAILED"){
+            TemporaryData::destroy($checkTempData['id']);
+            return redirect()->route("user.send.remittance.index")->with(['error' => ['Added Money Failed']]);
+        }
+
+    }
+    //sslCommerz canceled
+    public function sllCommerzCancel(Request $request){
+        $data = $request->all();
+        $token = $data['tran_id'];
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
+        $checkTempData = $checkTempData->toArray();
+        $creator_id = $checkTempData['data']->creator_id ?? null;
+        $creator_guard = $checkTempData['data']->creator_guard ?? null;
+        $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
+        if( $data['status'] != "VALID"){
+            TemporaryData::destroy($checkTempData['id']);
+            return redirect()->route("user.send.remittance.index")->with(['error' => ['Added Money Canceled']]);
+        }
+
+    }
     public function paymentConfirmation(Request $request,$trx_id){
         $page_title    = "| Payment Confirmation";
         $client_ip     = request()->ip() ?? false;

@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\User\AuthorizationController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\SecurityController;
+use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\RecipientController;
 use App\Http\Controllers\User\RemittanceController;
-use App\Http\Controllers\User\SecurityController;
-use App\Http\Controllers\User\SendRemittanceController;
-use App\Http\Controllers\User\SupportTicketController;
 use App\Http\Controllers\User\TransactionController;
+use App\Http\Controllers\User\AuthorizationController;
+use App\Http\Controllers\User\SupportTicketController;
+use App\Http\Controllers\User\SendRemittanceController;
 
 Route::prefix("user")->name("user.")->group(function(){
     Route::controller(DashboardController::class)->group(function(){
@@ -71,6 +72,8 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::post('manual/payment/confirmed','manualPaymentConfirmed')->name('send.remittance.manual.payment.confirmed');
 
         Route::get('payment-confirmation/{trx_id}','paymentConfirmation')->name('payment.confirmation');
+
+        
     });
 
     Route::controller(ProfileController::class)->prefix("profile")->name("profile.")->group(function(){
@@ -98,5 +101,14 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::get('kyc','showKycFrom')->name('kyc');
         Route::post('kyc/submit','kycSubmit')->name('kyc.submit');
     });
+});
+
+Route::controller(RemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+    //ssl commerce
+    Route::post('sslcommerz/success',function(Request $request){
+        dd("test");
+    })->name('ssl.success');
+    Route::post('sslcommerz/fail','sllCommerzFails')->name('ssl.fail');
+    Route::post('sslcommerz/cancel','sllCommerzCancel')->name('ssl.cancel');
 });
 

@@ -19,7 +19,6 @@ use Stripe\Stripe as StripePackage;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\PaymentGatewayConst;
 use App\Notifications\sendNotification;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
@@ -224,6 +223,13 @@ trait Stripe
             if($api_user_login_guard != null) {
                 auth()->guard($api_user_login_guard)->logout();
             }
+        }
+        if(auth()->check()){
+            UserNotification::create([
+                'user_id'  => auth()->user()->id,
+                'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount + $output['amount']->total_charge).",
+                Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
+            ]);
         }
         if( $basic_setting->email_notification == true){
             Notification::route("mail",$user->email)->notify(new sendNotification($user,$output,$trx_id));

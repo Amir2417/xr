@@ -39,14 +39,19 @@ Route::post('frontend/request/send-money',function(Request $request) {
     $validated['identifier']    = Str::uuid();
     
     $data = [
-        'type'               => $validated['type'],
-        'identifier'         => $validated['identifier'],
-        'data'               => [
-            'send_money'     => $validated['send_money'],
-            'fees'           => $request->fees,
-            'convert_amount' => $request->convert_amount,
-            'payable_amount' => $request->payable,
-            'receive_money'  => $request->receive_money,
+        'type'                  => $validated['type'],
+        'identifier'            => $validated['identifier'],
+        'data'                  => [
+            'send_money'        => $validated['send_money'],
+            'fees'              => $request->fees,
+            'convert_amount'    => $request->convert_amount,
+            'payable_amount'    => $request->payable,
+            'receive_money'     => $request->receive_money,
+            'sender_currency'   => $request->sender_currency,
+            'receiver_currency' => $request->receiver_currency,
+            'sender_ex_rate'    => $request->sender_ex_rate,
+            'sender_base_rate'  => $request->sender_base_rate,
+            'receiver_ex_rate'  => $request->receiver_ex_rate,
         ],
         
     ];

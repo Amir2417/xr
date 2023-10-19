@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Validator;
 class SiteController extends Controller{
     public function index(){
         $transaction_settings = TransactionSetting::where('status',true)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
+        $sender_currency      = Currency::where('status',true)->where('sender',true)->get();
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
         $banner_section_slug  = Str::slug(SiteSectionConst::BANNER_SECTION);
         $banner               = SiteSections::getData($banner_section_slug)->first();
         $feature_section_slug = Str::slug(SiteSectionConst::FEATURE_SECTION);
