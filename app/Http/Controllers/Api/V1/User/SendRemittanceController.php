@@ -533,11 +533,11 @@ class SendRemittanceController extends Controller
             'data'                    => [
                 'sender_name'         => auth()->user()->fullname,
                 'sender_email'        => auth()->user()->email,
-                'sender_currency'       => $temporary_data->data->sender_currency,
-                'receiver_currency' => $temporary_data->data->receiver_currency,
-                'sender_ex_rate'    => $temporary_data->data->sender_ex_rate,
-                'sender_base_rate'  => $temporary_data->data->sender_base_rate,
-                'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
+                'sender_currency'     => $temporary_data->data->sender_currency,
+                'receiver_currency'   => $temporary_data->data->receiver_currency,
+                'sender_ex_rate'      => $temporary_data->data->sender_ex_rate,
+                'sender_base_rate'    => $temporary_data->data->sender_base_rate,
+                'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,
@@ -566,14 +566,6 @@ class SendRemittanceController extends Controller
                     'code'            => $currency->currency_code,
                     'alias'           => $currency->alias,
                     'rate'            => $currency->rate,
-                ],
-                'sender_currency'     => [
-                    'rate'            => $sender_currency->rate,
-                    'code'            => $sender_currency->code,
-                ],
-                'receiver_currency'     => [
-                    'rate'            => $receiver_currency->rate,
-                    'code'            => $receiver_currency->code,
                 ],
                 'payment_gateway'     => $validated['payment_gateway'],
                 'front_image'         => $temporary_data->data->front_image,
@@ -772,7 +764,7 @@ class SendRemittanceController extends Controller
         
           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceiveApi();
        } catch (Exception $e) {
-        dd($e->getMessage());
+        
            $message = ['error' => [$e->getMessage()]];
            return Response::error($message);
        }
@@ -810,12 +802,13 @@ class SendRemittanceController extends Controller
 
         $checkTempData = $checkTempData->toArray();
         try{
-           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive('flutterWave');
+           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+          
         }catch(Exception $e) {
             $message = ['error' => [$e->getMessage()]];
             Response::error($message);
         }
-
+dd($data);
         $share_link   = route('share.link',$data);
        $download_link   = route('download.pdf',$data);
        return Response::success(["Payment successful, please go back your app"],[

@@ -231,9 +231,10 @@ class PaymentGateway {
         $this->output['tempData'] = $tempData;
         
         $type = $tempData['type'];
-        if($type == 'flutterWave'){
+        
+        if($type == 'flutterwave'){
             if(method_exists(FlutterwaveTrait::class,$method_name)) {
-                
+               
                 return $this->$method_name($this->output);
             }
         }elseif($type == 'stripe'){

@@ -389,10 +389,6 @@
     });
 </script>
 <script>
-
-    
-
-
     var chart1 = $('#chart1');
     var chart_one_data = chart1.data('chart_one_data');
     var month_day = chart1.data('month_day');

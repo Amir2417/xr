@@ -138,7 +138,8 @@ class RemittanceController extends Controller
             $checkTempData = $checkTempData->toArray();
 
             try{
-                $transaction = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive('flutterWave');
+                
+                $transaction = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
             }catch(Exception $e) {
                 return back()->with(['error' => [$e->getMessage()]]);
             }

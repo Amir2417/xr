@@ -241,7 +241,7 @@ trait Paypal
             $basic_settings = BasicSettingsProvider::get();
             $user = auth()->user();
             
-            // Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id));
+            Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id));
             
             if(auth()->check()){
                 UserNotification::create([
@@ -283,7 +283,7 @@ trait Paypal
         $trx_id =  $trx_id;
        
         DB::beginTransaction();
-        
+       
         try{
             $id = DB::table("transactions")->insertGetId([
                 'user_id'                       => auth()->user()->id,
