@@ -145,8 +145,7 @@ use ControlDynamicInputFields, Transaction;
                     'trx_id'                        => $trx_id,
                     'request_amount'                => $this->output['user_data']->data->send_money,
                     'exchange_rate'                 => $output['amount']->sender_cur_rate,
-                    'payable'                       => ($this->output['user_data']->data->send_money + $output['amount']->total_charge ) * $this->output['user_data']->data->currency->rate,
-
+                    'payable'                       => $output['amount']->total_amount,
                     'fees'                          => $output['amount']->total_charge,
                     'convert_amount'                => $output['amount']->convert_amount,
                     'will_get_amount'               => $output['amount']->will_get,

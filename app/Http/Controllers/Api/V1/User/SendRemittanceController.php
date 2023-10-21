@@ -808,7 +808,6 @@ class SendRemittanceController extends Controller
             $message = ['error' => [$e->getMessage()]];
             Response::error($message);
         }
-dd($data);
         $share_link   = route('share.link',$data);
        $download_link   = route('download.pdf',$data);
        return Response::success(["Payment successful, please go back your app"],[
