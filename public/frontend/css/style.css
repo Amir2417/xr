@@ -5777,6 +5777,8 @@ display: flex;
   top: 47px;
   right: 0;
   width: 280px;
+  max-height: 300px;
+  overflow-y: auto;
   background-color: #ffffff;
   border: 1px solid rgba(57, 57, 57, 0.2);
   border-radius: 10px;
@@ -7221,3 +7223,184 @@ input[type=number] {
   color: #000000;
   opacity: 0.5;
 }
+
+
+/* rtl */
+
+.rtl {
+  direction: rtl;
+}
+.rtl .header-bottom-area .navbar-collapse .main-menu li:last-child {
+  padding-right: 20px;
+}
+.rtl .from-cruncy .cruncy {
+  left: 12px;
+  right: auto;
+  border-radius: 15px 0px 0px 15px;
+}
+.rtl .from-cruncy input {
+  padding-left: 100px;
+  padding-right: 25px;
+}
+.rtl .features .card .thumb {
+  margin-left: 13px;
+  margin-right: 0px;
+}
+.rtl .swiper-wrapper {
+  direction: ltr;
+}
+.rtl .la-arrow-right {
+  display: contents;
+}
+.rtl .footer-section .footer-widget-heading h3::before {
+  right: 0;
+}
+.rtl .subscribe-form button {
+  left: 5px;
+  right: auto;
+  border-radius: 999px 0px 0px 999px;
+}
+.rtl .footer-section .subscribe-form input {
+  border-radius: 0px 999px 999px 0px;
+}
+.rtl .info-card .card .icon i {
+  margin-left: 20px;
+  margin-right: 0px;
+}
+.rtl .footer-section .footer-social-icon a {
+  margin-left: 15px;
+  margin-right: 0px;
+}
+.rtl .show_hide_password input {
+  padding-left: 45px;
+  padding-right: 25px;
+}
+.rtl .form-group .icon {
+  left: 22px;
+  right: auto !important;
+}
+.rtl .custom-check-group label::before {
+  margin-right: 0px;
+  margin-left: 8px;
+}
+.rtl .sidebar {
+  right: 0;
+}
+@media only screen and (max-width: 1199px) {
+  .rtl .sidebar {
+    right: -300px;
+  }
+}
+@media only screen and (max-width: 1199px) {
+  .rtl .sidebar.active {
+    right: 0px;
+  }
+}
+.rtl .body-wrapper {
+  padding-right: 285px;
+  padding-left: 20px;
+}
+@media only screen and (max-width: 1199px) {
+  .rtl .body-wrapper {
+    padding-right: 15px;
+  }
+}
+.rtl .body-wrapper.active {
+  padding-right: 85px;
+  padding-left: 10px;
+}
+.rtl .navbar-wrapper {
+  margin-right: 250px;
+  margin-left: 0px;
+}
+@media only screen and (max-width: 1199px) {
+  .rtl .navbar-wrapper {
+    margin-right: 0;
+  }
+}
+.rtl .navbar-wrapper.active {
+  margin-right: 85px;
+}
+@media only screen and (max-width: 1199px) {
+  .rtl .navbar-wrapper.active {
+    margin-right: 65px;
+  }
+}
+.rtl .notification-wrapper {
+  left: 0;
+  right: auto;
+}
+.rtl .notification-wrapper .notification-list li .content {
+  padding-right: 10px;
+}
+.rtl .dashboard-list-user-wrapper .dashboard-list-user-content {
+  padding-right: 20px;
+}
+.rtl .preview-list-user-wrapper .preview-list-user-content {
+  padding-right: 20px;
+  padding-left: 0px;
+}
+@media only screen and (max-width: 575px) {
+  .rtl .preview-list-user-wrapper .preview-list-user-content {
+    padding-right: 8px;
+  }
+}
+.rtl .sidebar-menu .menu-title {
+  padding-right: 10px;
+}
+.rtl .f-dropdown > span::before {
+  left: 16px;
+  right: auto;
+}
+.rtl .f-dropdown > span::after {
+  left: 18px;
+  right: auto;
+}
+.rtl .f-dropdown ul li a img {
+  margin-left: 15px;
+  margin-right: 0px;
+}
+.rtl .input-group-text {
+  border-radius: 15px 0px 0px 15px !important;
+}
+.rtl .payment-area .input-group input {
+  border-radius: 0px 15px 15px 0px !important;
+}
+.rtl .dashboard-list-user-content .badge {
+  margin-right: 6px;
+  margin-left: 0px !important;
+}
+.rtl .card-form .input-group input {
+  border-radius: 0px 15px 15px 0px !important;
+}
+.rtl .form-group .show-pass {
+  left: 32px;
+  right: auto;
+}
+.rtl .show_hide_password-2 input {
+  padding-left: 45px;
+  padding-right: 25px;
+}
+.rtl .show_hide_password-3 input {
+  padding-left: 45px;
+  padding-right: 25px;
+}
+.rtl .modal-header .btn-close {
+  margin: 0;
+}
+.rtl .card-header-user-area .card-header-user-content {
+  padding-right: 15px;
+  padding-left: 0px;
+}
+.rtl .card-header:first-child {
+  border-radius: 0px;
+}
+.rtl .custom-check-group input:checked + label::after {
+  right: 7px;
+}
+
+
+
+
+
+

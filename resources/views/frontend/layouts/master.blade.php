@@ -20,7 +20,7 @@
     @stack('css')
 </head>
 
-<body>
+<body class="{{ get_default_language_dir() }}">
     
     @include('frontend.partials.preloader')
 

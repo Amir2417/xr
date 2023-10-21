@@ -18,6 +18,7 @@ class Language extends Model
     protected $casts = [
         'name'         => 'string',
         'code'         => 'string',
+        'dir'          => 'string',
         'status'       => 'integer',
         'last_edit_by' => 'integer',
         'created_at'   => 'date:Y-m-d',

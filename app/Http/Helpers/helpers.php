@@ -1530,3 +1530,7 @@ function files_asset_path_basename($slug) {
 function get_only_numeric_data($string) {
     return preg_replace("/[^0-9]/","",$string);
 }
+
+function get_default_language_dir() {
+    return session()->get('local_dir') ?? "ltr";
+}

@@ -11,7 +11,7 @@
     @stack('css')
 </head>
 
-<body>
+<body class="{{ get_default_language_dir() }}">
 
     
     <div id="preloader"></div>

@@ -27,6 +27,7 @@ use Database\Seeders\Admin\RemittanceBankSeeder;
 use Database\Seeders\Admin\SendingPurposeSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
+use Database\Seeders\User\NotificationSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -67,6 +68,7 @@ class DatabaseSeeder extends Seeder
             TransactionSeeder::class,
             BeneficiarySeeder::class,
             DemoFixSeeder::class,
+            NotificationSeeder::class
 
         ]);
     }
