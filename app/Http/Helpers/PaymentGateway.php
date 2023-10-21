@@ -318,6 +318,16 @@ class PaymentGateway {
             if(method_exists(FlutterwaveTrait::class,$method_name)) {
                 return $this->$method_name($this->output);
             }
+        }elseif($type == 'stripe'){
+            if(method_exists(Stripe::class,$method_name)) {
+               
+                return $this->$method_name($this->output);
+            }
+        }elseif($type == 'sslcommerz'){
+            if(method_exists(SslcommerzTrait::class,$method_name)) {
+                
+                return $this->$method_name($this->output);
+            }
         }else{
             if(method_exists(Paypal::class,$method_name)) {
                 return $this->$method_name($this->output);

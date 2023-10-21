@@ -33,7 +33,6 @@ trait Stripe
 
         $basic_settings = BasicSettingsProvider::get();
         if(!$output) $output = $this->output;
-        $gatewayAlias = $output['gateway']['alias'];
         $credentials = $this->getStripeCredentials($output);
         $reference = generateTransactionReference();
         $amount = $output['amount']->total_amount ? number_format($output['amount']->total_amount,2,'.','') : 0;
@@ -322,110 +321,90 @@ trait Stripe
     }
     // for api
     public function stripeInitApi($output = null) {
+        $basic_settings = BasicSettingsProvider::get();
         if(!$output) $output = $this->output;
-        $gatewayAlias = $output['gateway']['alias'];
-        $identifier = generate_unique_string("transactions","trx_id",16);
-        $this->stripeJunkInsert($identifier);
-        $response=[
-            'trx' => $identifier,
+        $credentials = $this->getStripeCredentials($output);
+        $reference = generateTransactionReference();
+        $amount = $output['amount']->total_amount ? number_format($output['amount']->total_amount,2,'.','') : 0;
+        $currency = $output['currency']['currency_code']??"USD";
+
+        if(auth()->guard(get_auth_guard())->check()){
+            $user = auth()->guard(get_auth_guard())->user();
+            $user_email = $user->email;
+            $user_phone = $user->full_mobile ?? '';
+            $user_name = $user->firstname.' '.$user->lastname ?? '';
+        }
+
+        $return_url = route('api.user.send-remittance.stripe.payment.success', $reference."?r-source=".PaymentGatewayConst::APP);
+
+
+         // Enter the details of the payment
+         $data = [
+            'payment_options' => 'card',
+            'amount'          => $amount,
+            'email'           => $user_email,
+            'tx_ref'          => $reference,
+            'currency'        =>  $currency,
+            'redirect_url'    => $return_url,
+            'customer'        => [
+                'email'        => $user_email,
+                "phone_number" => $user_phone,
+                "name"         => $user_name
+            ],
+            "customizations" => [
+                "title"       => "Add Money",
+                "description" => dateFormat('d M Y', Carbon::now()),
+            ]
         ];
-        return $response;
-    }
 
-    public function paymentConfirmedApi(Request $request){
+       //start stripe pay link
+       $stripe = new \Stripe\StripeClient($credentials->secret_key);
 
-         $validator = Validator::make($request->all(), [
-            'track'      => 'required',
-            'name'       => 'required',
-            'cardNumber' => 'required',
-            'cardExpiry' => 'required',
-            'cardCVC'    => 'required',
-        ]);
-        if($validator->fails()){
-            $error =  ['error'=>$validator->errors()->all()];
-            return Response::validation($error);
-        }
-        $track = $request->track;
-       
-        $data = TemporaryData::where('identifier',$track)->first();
-        
-        if(!$data){
-            
-            return Response::error(["Sorry, your payment information is invalid"],[]);
-        }
-        $payment_gateway_currency = PaymentGatewayCurrency::where('id', $data->data->currency)->first();
-        $convert_amount = $data->data->amount->convert_amount;
-        $total_charge   = $data->data->amount->total_charge;
-       
-        $gateway_request = ['currency' => $payment_gateway_currency->alias, 'amount'    => $data->data->amount->requested_amount,'fees' => $total_charge,'convert_amount' => $convert_amount, 'receive_money' => $data->data->amount->will_get,'identifier' => $data->data->user_data];
-        
-        $output = PaymentGatewayHelper::init($gateway_request)->gateway()->get();
-        
-        $credentials = $this->getStripeCredetials($output);
-        $cc = $request->cardNumber;
-        $exp = $request->cardExpiry;
-        $cvc = $request->cardCVC;
-
-        $exp = explode("/", $request->cardExpiry);
-        $emo = trim($exp[0]);
-        $eyr = trim($exp[1]);
-        $cnts = round($data->data->amount->total_amount, 2) * 100;
-
-        StripePackage::setApiKey(@$credentials->secret_key);
-        StripePackage::setApiVersion("2020-03-02");
-
-        try {
-            
-            $token = Token::create(array(
-                    "card" => array(
-                    "number" => "$cc",
-                    "exp_month" => $emo,
-                    "exp_year" => $eyr,
-                    "cvc" => "$cvc"
-                )
-            ));
-            try {
-                
-                $charge = Charge::create(array(
-                    'card' => $token['id'],
-                    'currency' => $data->data->amount->sender_cur_code,
-                    'amount' => $cnts,
-                    'description' => 'item',
-                ));
-                
-                if ($charge['status'] == 'succeeded') {
-                    
-                    $trx_id = $trx_id = generateTrxString('transactions', 'trx_id', 'R', 8);
-                    $this->createTransactionStripe($output,$trx_id);
-                    $user = auth()->user();
-                    Notification::route("mail",$user->email)->notify(new sendNotification($user,$output,$trx_id));
-                
-                if(auth()->check()){
-                    UserNotification::create([
-                        'user_id'  => auth()->user()->id,
-                        'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount + $output['amount']->total_charge).",
-                        Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
-                    ]);
-                }
-                $share_link   = route('share.link',$trx_id);
-                $download_link   = route('download.pdf',$trx_id);
-                $data->delete();
-                return Response::success(['Send Money Successfull'],[
-                    'share-link'   => $share_link,
-                    'download_link' => $download_link,
-                ],200);
-                }
-            } catch (\Exception $e) {
+       //create product for Product Id
+       try{
+            $product_id = $stripe->products->create([
+                'name' => 'Send Remittance( '.$basic_settings->site_name.' )',
+            ]);
+       }catch(Exception $e){
             $error = ['error'=>[$e->getMessage()]];
             return Response::error($error);
-
-            }
-        } catch (\Exception $e) {
-        $error = ['error'=>[$e->getMessage()]];
-        return Response::error($error);
+       }
+       //create price for Price Id
+       try{
+            $price_id =$stripe->prices->create([
+                'currency' =>  $currency,
+                'unit_amount' => $amount*100,
+                'product' => $product_id->id??""
+              ]);
+       }catch(Exception $e){
+            $error = ['error'=>["Something Is Wrong, Please Contact With Owner"]];
+            return Response::error($error);
+       }
+       //create payment live links
+       try{
+            $payment_link = $stripe->paymentLinks->create([
+                'line_items' => [
+                [
+                    'price' => $price_id->id,
+                    'quantity' => 1,
+                ],
+                ],
+                'after_completion' => [
+                'type' => 'redirect',
+                'redirect' => ['url' => $return_url],
+                ],
+            ]);
+        }catch(Exception $e){
+            $error = ['error'=>["Something Is Wrong, Please Contact With Owner"]];
+            return Response::error($error);
         }
+        $data['link'] =  $payment_link->url;
+        $data['trx'] =  $reference;
 
-
+        $this->stripeJunkInsert($data);
+        return $data;
     }
+
+    
 
 }

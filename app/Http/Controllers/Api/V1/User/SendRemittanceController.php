@@ -617,7 +617,7 @@ class SendRemittanceController extends Controller
             $error = ['error'=>['Gateway Information is not available. Please provide payment gateway currency alias']];
             return Response::error($error);
        }
-
+       $user = auth()->user();
        try{
            $instance = PaymentGatewayHelper::init($request->all())->gateway()->api()->get();
            $trx = $instance['response']['id']??$instance['response']['trx'];
@@ -631,25 +631,7 @@ class SendRemittanceController extends Controller
            if($payment_gateway->type == "AUTOMATIC") {
                if($temData->type == PaymentGatewayConst::STRIPE) {
 
-                   $card = [
-                       [
-                           'field_name' => "name",
-                           'label_name' => "Name",
-                       ],
-                       [
-                           'field_name' => "cardNumber",
-                           'label_name' => "Card Number",
-                       ],
-                       [
-                           'field_name' => "cardExpiry",
-                           'label_name' => "Expire Date",
-                       ],
-                       [
-                           'field_name' => "cardCVC",
-                           'label_name' => "CVC Code",
-                       ],
-                   ];
-                   $card2 = (array) $card;
+                   
                    $payment_informations =[
                        'trx' =>  $temData->identifier,
                        'gateway_currency_name' =>  $payment_gateway_currency->name,
@@ -664,10 +646,9 @@ class SendRemittanceController extends Controller
                         'gateway_currency_name' => $payment_gateway_currency->name,
                         'alias'                 => $payment_gateway_currency->alias,
                         'identify'              => $temData->type,
-                        'input_fields'          => $card2,
                         'payment_informations'  => $payment_informations,
-                        'url'                   => route('api.user.stripe.payment.confirmed'),
-                        'method'                => "post",
+                        'url'                   => @$temData->data->response->link."?prefilled_email=".@$user->email,
+                        'method'                => "get",
                    ];
 
                    return Response::success(['Send Remittance Inserted Successfully'], $data);
@@ -822,5 +803,29 @@ class SendRemittanceController extends Controller
         Response::error(['Payment Failed']);
     }
    }
+     //stripe success
+    public function stripePaymentSuccess($trx){
+        $token = $trx;
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::STRIPE)->where("identifier",$token)->first();
+        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
+
+        if(!$checkTempData) return Response::error($message);
+        $checkTempData = $checkTempData->toArray();
+
+        try{
+            
+            $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+        }catch(Exception $e) {
+            $message = ['error' => ["Something Is Wrong..."]];
+            return Response::error($message);
+        }
+        $share_link   = route('share.link',$data);
+       $download_link   = route('download.pdf',$data);
+       return Response::success(["Payment successful, please go back your app"],[
+        'share-link'   => $share_link,
+        'download_link' => $download_link,
+       ],200);
+
+    }
    
 }
