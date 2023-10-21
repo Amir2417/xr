@@ -45,6 +45,7 @@ class LanguageController extends Controller
         $validator = Validator::make($request->all(),[
             'name'      => 'required|string|max:80|unique:languages,name',
             'code'      => 'required|string|max:20|unique:languages,code',
+            'dir'       => 'required|string|max:20|in:ltr,rtl',
         ]);
 
         if($validator->fails()) {
@@ -83,6 +84,7 @@ class LanguageController extends Controller
             'target'        => 'required|numeric|exists:languages,id',
             'edit_name'     => ["required","string","max:80",Rule::unique("languages","name")->ignore($request->target)],
             'edit_code'     => ["required","string","max:80",Rule::unique("languages","code")->ignore($request->target)],
+            'edit_dir'      => ["required","string","max:20","in:ltr,rtl"],
         ]);
 
         if($validator->fails()) {

@@ -24,6 +24,14 @@
                                 'value'         => old('edit_code')
                             ])
                         </div>
+                        <div class="col-xl-12 col-lg-12 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __('Direction').'*',
+                                'name'          => 'edit_dir',
+                                'value'         => old('edit_dir'),
+                                'options'       => ['LTR' => 'ltr','RTL' => 'rtl'],
+                            ])
+                        </div>
                         <div class="col-xl-12 col-lg-12 form-group d-flex align-items-center justify-content-between mt-4">
                             <button type="button" class="btn btn--danger modal-close">{{ __("Cancel") }}</button>
                             <button type="submit" class="btn btn--base">{{ __("Update") }}</button>
@@ -44,7 +52,9 @@
                 editModal.find("form").first().find("input[name=target]").val(oldData.id);
                 editModal.find("input[name=edit_name]").val(oldData.name);
                 editModal.find("input[name=edit_code]").val(oldData.code);
-
+                editModal.find("input[name=edit_dir]").val(oldData.dir);
+                
+                refreshSwitchers("#language-edit");
                 openModalBySelector("#language-edit");
             });
         </script>

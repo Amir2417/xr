@@ -137,6 +137,7 @@ class GlobalController extends Controller
         return back()->with(['error' => ['Oops! Language not found!']]);
         }
         Session::put('local',$code);
+        Session::put('local_dir',$language->dir);
         return back()->with(['success' => ['Language switch to ' . $language->name ]]);
         }
         

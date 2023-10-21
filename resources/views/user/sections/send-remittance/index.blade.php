@@ -303,10 +303,9 @@
             var recieverRate            = receiverCurrencyRate / senderCurrencyRate;
             
             let findPercentCharge       = (enterAmount / senderCurrencyRate) / 100;
-
+            
             let fixedCharge             = selectedType.fixed_charge;
             let percentCharge           = selectedType.percent_charge;
-            
             let totalPercentCharge      = parseFloat(findPercentCharge) * parseFloat(percentCharge);
             
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);

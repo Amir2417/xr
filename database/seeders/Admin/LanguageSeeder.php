@@ -21,10 +21,17 @@ class LanguageSeeder extends Seeder
                 'status'            => 1,
                 'last_edit_by'      => 1,
                 'dir'               =>'ltr'
-            ], 
+            ],
             [
                 'name'              => "Spanish",
                 'code'              => "es",
+                'status'            => 0,
+                'last_edit_by'      => 1,
+                'dir'               =>'ltr'
+            ],
+            [
+                'name'              => "Arabic",
+                'code'              => "ar",
                 'status'            => 0,
                 'last_edit_by'      => 1,
                 'dir'               =>'rtl'

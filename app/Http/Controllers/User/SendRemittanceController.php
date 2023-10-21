@@ -74,7 +74,7 @@ class SendRemittanceController extends Controller
                 'sender_currency'   => $request->sender_currency,
                 'receiver_currency' => $request->receiver_currency,
                 'sender_ex_rate'    => $request->sender_ex_rate,
-                'sender_base_rate'    => $request->sender_base_rate,
+                'sender_base_rate'  => $request->sender_base_rate,
                 'receiver_ex_rate'  => $request->receiver_ex_rate,
             ],
             

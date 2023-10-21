@@ -143,6 +143,7 @@ class RegisterController extends Controller
         try{
             return redirect()->intended(route('user.dashboard'));
         }catch(Exception $e) {
+            dd($e->getMessage());
             return redirect()->route("user.login")->with(['error' => [$e->getMessage()]]);
         }
         

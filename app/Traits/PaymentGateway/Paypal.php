@@ -63,7 +63,7 @@ trait Paypal
     public function paypalInitApi($output = null) {
         if(!$output) $output = $this->output;
         $credentials = $this->getPaypalCredetials($output);
-
+        
         $config = $this->paypalConfig($credentials,$output['amount']);
         $paypalProvider = new PayPalClient;
         $paypalProvider->setApiCredentials($config);
@@ -241,7 +241,7 @@ trait Paypal
             $basic_settings = BasicSettingsProvider::get();
             $user = auth()->user();
             
-            Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id));
+            // Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id));
             
             if(auth()->check()){
                 UserNotification::create([

@@ -274,6 +274,7 @@ class PaymentGateway {
             
             return Response::error(['Transaction faild. Record didn\'t saved properly. Please try again.']);
         }
+        $method_name = $tempData['type']."Success";
         if($this->requestIsApiUser()) {
             $creator_table = $tempData['data']->creator_table ?? null;
             $creator_id = $tempData['data']->creator_id ?? null;
@@ -289,7 +290,7 @@ class PaymentGateway {
             }
         }
 
-        $method_name = $tempData['type']."Success";
+        
 
 
         $currency_id = $tempData['data']->currency ?? "";
@@ -311,6 +312,7 @@ class PaymentGateway {
         $this->request_data = $validator_data;
         $this->gateway();
         $this->output['tempData'] = $tempData;
+        $type = $tempData['type'];
         if($type == 'flutterWave'){
             if(method_exists(FlutterwaveTrait::class,$method_name)) {
                 return $this->$method_name($this->output);

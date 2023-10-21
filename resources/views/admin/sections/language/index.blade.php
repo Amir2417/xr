@@ -52,9 +52,10 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Status</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Code") }}</th>
+                            <th>{{ __("Direction") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -63,6 +64,7 @@
                             <tr data-item="{{ $item->editData }}">
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->code }}</td>
+                                <td>{{ Str::upper($item->dir) }}</td>
                                 <td>
                                     @include('admin.components.form.switcher',[
                                         'name'          => 'status',

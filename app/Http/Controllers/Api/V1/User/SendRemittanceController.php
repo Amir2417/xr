@@ -86,26 +86,41 @@ class SendRemittanceController extends Controller
      * Method for store send remittance data in temporary datas
      */
     public function store(Request $request){
-        $validator           = Validator::make($request->all(),[
-            'type'           => 'required',
-            'send_money'     => 'required',
-            
+        $validator              = Validator::make($request->all(),[
+            'type'              => 'required',
+            'send_money'        => 'required',
+            'sender_currency'   => 'required',
+            'receiver_currency' => 'required',
         ]);
         if($validator->fails()){
             return Response::error($validator->errors()->all(),[]);
         }
         $validated            = $validator->validate();
         $transaction_type     = TransactionSetting::where('status',true)->where('title','like','%'.$request->type.'%')->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
+        $sender_currency        = Currency::where('status',true)->where('sender',true)->where('id',$request->sender_currency)->first();
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('id',$request->receiver_currency)->first();
       
         if($request->type == PaymentGatewayConst::TRANSACTION_TYPE_BANK || $request->type == PaymentGatewayConst::TRANSACTION_TYPE_MOBILE){
-            $enter_amount         = floatval($request->send_money);
-            $find_percent_charge  = $enter_amount / 100;
-            $fixed_charge         = $transaction_type->fixed_charge;
-            $percent_charge       = $transaction_type->percent_charge;
-            $total_percent_charge = $find_percent_charge * $percent_charge;
-            $total_charge         = $fixed_charge + $total_percent_charge;  
-            $payable_amount       = $enter_amount + $total_charge;
+            $sender_currency_code   = $sender_currency->code;
+            $sender_currency_rate   = $sender_currency->rate;
+            $sender_rate            = $sender_currency_rate / $sender_currency_rate;
+            $receiver_currency_code = $receiver_currency->code;
+            $receiver_currency_rate = $receiver_currency->rate;
+
+            $enter_amount           = floatval($request->send_money) / $sender_currency_rate;
+           
+            $find_percent_charge    = ($enter_amount) / 100;
+           
+            $fixed_charge           = $transaction_type->fixed_charge;
+           
+            $percent_charge         = $transaction_type->percent_charge;
+            
+            $total_percent_charge   = $find_percent_charge * $percent_charge;
+            $total_charge           = $fixed_charge + $total_percent_charge; 
+            $total_charge_amount    = $total_charge * $sender_currency_rate;
+            
+             
+            $payable_amount       = $enter_amount + $total_charge_amount;
             if ($request->send_money == 0) {
                 return Response::error(['Send Money must be greater than 0.'], [], 400);
             }
@@ -114,7 +129,7 @@ class SendRemittanceController extends Controller
             }
             if($enter_amount != 0){
                 $convert_amount = $enter_amount;
-                $receive_money  = $convert_amount * $receiver_currency->rate;
+                $receive_money  = $convert_amount * $receiver_currency_rate;
                 $intervals      = $transaction_type->intervals;
                 foreach($intervals as $index => $item){
                     if($enter_amount >= $item->min_limit && $enter_amount <= $item->max_limit){
@@ -122,9 +137,11 @@ class SendRemittanceController extends Controller
                         $percent_charge       = $item->percent;
                         $total_percent_charge = $find_percent_charge * $percent_charge;
                         $total_charge         = $fixed_charge + $total_percent_charge;
-                        $convert_amount       = $enter_amount;
-                        $payable_amount       = $enter_amount + $total_charge;
-                        $receive_money        = $convert_amount * $receiver_currency->rate;
+                        $total_charge_amount    = $total_charge * $sender_currency_rate;
+                        $convert_amount       = floatval($request->send_money);
+                        $payable_amount       = $request->send_money + $total_charge_amount;
+                        $reciver_rate           = $receiver_currency_rate / $sender_currency_rate;
+                        $receive_money        = $convert_amount * $reciver_rate;
                     }
                 }
             }
@@ -136,12 +153,16 @@ class SendRemittanceController extends Controller
             'data'               => [
                 'sender_name'    => auth()->user()->fullname,
                 'sender_email'   => auth()->user()->email,
-                'send_money'     => $enter_amount,
-                'fees'           => $total_charge,
+                'send_money'     => floatval($request->send_money),
+                'fees'           => $total_charge_amount,
                 'convert_amount' => $convert_amount,
                 'payable_amount' => $payable_amount,
                 'receive_money'  => $receive_money,
-                
+                'sender_currency'   => $sender_currency_code,
+                'receiver_currency' => $receiver_currency_code,
+                'sender_ex_rate'    => $sender_rate,
+                'receiver_ex_rate'  => $reciver_rate,
+                'sender_base_rate'  => floatval($sender_currency_rate)    
             ],
             
         ];
@@ -304,7 +325,7 @@ class SendRemittanceController extends Controller
                 'phone'           => 'nullable|string',
                 'method'          => 'required|string',
                 'bank_name'       => 'required|string',
-                'iban_number'     => ['required', 'regex:/^[A-Za-z0-9]{24}$/'],
+                'iban_number'     => 'required',
                 'address'         => 'nullable|string',
                 'document_type'   => 'nullable|string',
                 'front_image'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
@@ -330,7 +351,7 @@ class SendRemittanceController extends Controller
             $validated['user_id'] = auth()->user()->id;
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             
@@ -343,59 +364,7 @@ class SendRemittanceController extends Controller
                 'beneficiary'       => $beneficiary,
                 'temporary_data'      => $temporary_data
             ],200);
-        }if($request->method == global_const()::BENEFICIARY_METHOD_CASH_PICK_UP){
-            $validator      = Validator::make($request->all(),[
-                'first_name'      => 'required|string',
-                'middle_name'     => 'nullable|string',
-                'last_name'       => 'required|string',
-                'email'           => 'nullable|email',
-                'country'         => 'nullable|string',
-                'city'            => 'nullable|string',
-                'state'           => 'nullable|string',
-                'zip_code'        => 'nullable|string',
-                'phone'           => 'nullable|string',
-                'method'          => 'required|string',
-                'bank_name'       => 'required|string',
-                'iban_number'     => ['required', 'regex:/^[A-Za-z0-9]{24}$/'],
-                'address'         => 'nullable|string',
-                'document_type'   => 'nullable|string',
-                'front_image'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
-                'back_image'      => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
-            ]);
-            if($validator->fails()){
-                return Response::error($validator->errors()->all(),[]);
-            }
-            $validated   = $validator->validate();
-            if($request->hasFile('front_image')){
-                $image = upload_file($validated['front_image'],'junk-files');
-                $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'site-section');
-                chmod(get_files_path('site-section') . '/' . $upload_image, 0644);
-                $validated['front_image']     = $upload_image;
-                
-            }
-            if($request->hasFile('back_image')){
-                $back_image = upload_file($validated['back_image'],'junk-files');
-                $back_upload_image = upload_files_from_path_dynamic([$back_image['dev_path']],'site-section');
-                chmod(get_files_path('site-section') . '/' . $back_upload_image, 0644);
-                $validated['back_image']     = $back_upload_image;
-            }
-            $validated['user_id'] = auth()->user()->id;
-            if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
-                ]);
-            }
-            try{
-                $beneficiary  = Recipient::create($validated);
-            }catch(Exception $e){
-                return Response::error(['Something went wrong! Please try again.'],[],404);
-            }
-            return Response::success(['Beneficiary'],[
-                'beneficiary'       => $beneficiary,
-                'temporary_data'      => $temporary_data
-            ],200);
-        }
-        if($request->method == global_const()::BENEFICIARY_METHOD_MOBILE_MONEY){
+        }if($request->method == global_const()::BENEFICIARY_METHOD_MOBILE_MONEY){
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -434,7 +403,7 @@ class SendRemittanceController extends Controller
             $validated['user_id'] = auth()->user()->id;
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -462,7 +431,7 @@ class SendRemittanceController extends Controller
         }
         $beneficiary = Recipient::where('id',$request->beneficiary_id)->first();
         if(!$beneficiary){
-            return Response::error(['Beneficiary Not exists!'],[],404);
+            return Response::error(['Recipient Not exists!'],[],404);
         }
         $temporary_data = TemporaryData::where('identifier',$request->identifier)->first();
         $data = [
@@ -471,6 +440,11 @@ class SendRemittanceController extends Controller
             'data'                  => [
                 'sender_name'       => $temporary_data->data->sender_name,
                 'sender_email'      => $temporary_data->data->sender_email,
+                'sender_currency'   => $temporary_data->data->sender_currency,
+                'receiver_currency' => $temporary_data->data->receiver_currency,
+                'sender_ex_rate'    => $temporary_data->data->sender_ex_rate,
+                'sender_base_rate'  => $temporary_data->data->sender_base_rate,
+                'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
                 'first_name'        => $beneficiary->first_name,
                 'middle_name'       => $beneficiary->middle_name ?? '',
                 'last_name'         => $beneficiary->last_name,
@@ -485,7 +459,7 @@ class SendRemittanceController extends Controller
                 'address'           => $beneficiary->address ?? '',
                 'document_type'     => $beneficiary->document_type ?? '',
                 'front_image'       => $beneficiary->front_image ?? '',
-                'back_image'       => $beneficiary->back_image ?? '',
+                'back_image'        => $beneficiary->back_image ?? '',
                 'send_money'        => $temporary_data->data->send_money,
                 'fees'              => $temporary_data->data->fees,
                 'convert_amount'    => $temporary_data->data->convert_amount,
@@ -559,6 +533,11 @@ class SendRemittanceController extends Controller
             'data'                    => [
                 'sender_name'         => auth()->user()->fullname,
                 'sender_email'        => auth()->user()->email,
+                'sender_currency'       => $temporary_data->data->sender_currency,
+                'receiver_currency' => $temporary_data->data->receiver_currency,
+                'sender_ex_rate'    => $temporary_data->data->sender_ex_rate,
+                'sender_base_rate'  => $temporary_data->data->sender_base_rate,
+                'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,
@@ -790,8 +769,10 @@ class SendRemittanceController extends Controller
        $checkTempData = $checkTempData->toArray();
 
        try {
+        
           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceiveApi();
        } catch (Exception $e) {
+        dd($e->getMessage());
            $message = ['error' => [$e->getMessage()]];
            return Response::error($message);
        }

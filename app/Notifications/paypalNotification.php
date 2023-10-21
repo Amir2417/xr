@@ -39,24 +39,24 @@ class paypalNotification extends Notification
 
     public function toMail($notifiable)
     {
-        $user = $this->user;
-        $data = $this->data;
-        $identifier_data = TemporaryData::where('identifier',$data['tempData']['data']->user_record)->first();
-        $trx_id = $this->trx_id;
-        $date = Carbon::now();
-        $datetime = dateFormat('Y-m-d h:i:s A', $date);
-        $basic_settings = BasicSettingsProvider::get();
-        $contact_section_slug = Str::slug(SiteSectionConst::CONTACT_SECTION);
-        $contact              = SiteSections::getData($contact_section_slug)->first();
+        $user                   = $this->user;
+        $data                   = $this->data;
+        $identifier_data        = TemporaryData::where('identifier',$data['tempData']['data']->user_record)->first();
+        $trx_id                 = $this->trx_id;
+        $date                   = Carbon::now();
+        $datetime               = dateFormat('Y-m-d h:i:s A', $date);
+        $basic_settings         = BasicSettingsProvider::get();
+        $contact_section_slug   = Str::slug(SiteSectionConst::CONTACT_SECTION);
+        $contact                = SiteSections::getData($contact_section_slug)->first();
+        $receiver_currency      = Currency::where('status',true)->where('receiver',true)->first();
 
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
         return (new MailMessage)
             ->subject("Your Recent Remittance - MTCN: ". $trx_id)
             ->view('frontend.email.confirmation', [
-                'identifier_data' => $identifier_data,
-                'data'            => $data,
-                'user'            => $user,
-                'trx_id'          => $trx_id,
+                'identifier_data'   => $identifier_data,
+                'data'              => $data,
+                'user'              => $user,
+                'trx_id'            => $trx_id,
                 'receiver_currency' => $receiver_currency,
                 'contact'           => $contact,
                 'basic_settings'    => $basic_settings
