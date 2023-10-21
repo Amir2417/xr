@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\User;
 
 use Exception;
+use App\Models\Recipient;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
@@ -10,10 +11,12 @@ use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\Admin\MobileMethod;
 use App\Models\Admin\SourceOfFund;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\PaymentGateway;
 use App\Models\Admin\RemittanceBank;
 use App\Models\Admin\SendingPurpose;
+use Illuminate\Support\Facades\Auth;
 use App\Traits\PaymentGateway\Manual;
 use App\Traits\PaymentGateway\Stripe;
 use App\Constants\PaymentGatewayConst;
@@ -23,7 +26,6 @@ use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Validation\ValidationException;
 use KingFlamez\Rave\Facades\Rave as Flutterwave;
 use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
-use App\Models\Recipient;
 
 class SendRemittanceController extends Controller
 {
@@ -604,6 +606,7 @@ class SendRemittanceController extends Controller
            $error =  ['error'=>$validator->errors()->all()];
            return Response::validation($error);
        }
+       
        $temporary_data  = TemporaryData::where('identifier',$request->identifier)->first();
        $alias = $temporary_data->data->currency->alias;
        $amount = $temporary_data->data->payable_amount * $temporary_data->data->currency->rate;
@@ -622,6 +625,7 @@ class SendRemittanceController extends Controller
            $instance = PaymentGatewayHelper::init($request->all())->gateway()->api()->get();
            $trx = $instance['response']['id']??$instance['response']['trx'];
             $temData = TemporaryData::where('identifier',$trx)->first();
+            
            if(!$temData){
                $error = ['error'=>["Invalid Request"]];
                return Response::error($error);
@@ -694,7 +698,29 @@ class SendRemittanceController extends Controller
                    ];
 
                    return Response::success(['Send Remittance Inserted Successfully'], $data);
-               }
+                }elseif($temData->type == PaymentGatewayConst::SSLCOMMERZ) {
+                    
+                    $payment_informations =[
+                        'trx'                   =>  $temData->identifier,
+                        'gateway_currency_name' =>  $payment_gateway_currency->name,
+                        'request_amount'        => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
+                        'exchange_rate'         => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
+                        'total_charge'          => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
+                        'will_get'              => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
+                        'payable_amount'        =>  get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
+                    ];
+                    $data =[
+                        'gateway_type' => $payment_gateway->type,
+                        'gateway_currency_name' => $payment_gateway_currency->name,
+                        'alias' => $payment_gateway_currency->alias,
+                        'identify' => $temData->type,
+                        'payment_informations' => $payment_informations,
+                        'url' => $instance['response']['link'],
+                        'method' => "get",
+                    ];
+                    $message =  ['success'=>['Send Remittance Inserted Successfully']];
+                    return Response::success($data,$message);
+                }
            }elseif($payment_gateway->type == "MANUAL"){
             
                 $payment_informations =[
@@ -826,6 +852,102 @@ class SendRemittanceController extends Controller
         'download_link' => $download_link,
        ],200);
 
+    }
+
+    //sslcommerz success
+    public function sllCommerzSuccess(Request $request){
+        
+        $data = $request->all();
+        $token = $data['tran_id'];
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
+        if(!$checkTempData) return Response::error($message);
+        $checkTempData = $checkTempData->toArray();
+
+        $creator_table = $checkTempData['data']->creator_table ?? null;
+        $creator_id = $checkTempData['data']->creator_id ?? null;
+        $creator_guard = $checkTempData['data']->creator_guard ?? null;
+        $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
+        if($creator_table != null && $creator_id != null && $creator_guard != null) {
+            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
+            $creator = DB::table($creator_table)->where("id",$creator_id)->first();
+            if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
+            $api_user_login_guard = $api_authenticated_guards[$creator_guard];
+            Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
+        }
+        if( $data['status'] != "VALID"){
+            $message = ['error' => ["Added Money Failed"]];
+            return Response::error($message);
+        }
+        try{
+           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+        }catch(Exception $e) {
+            $message = ['error' => ["Something Is Wrong..."]];
+            return Response::error($message);
+        }
+        $share_link   = route('share.link',$data);
+        $download_link   = route('download.pdf',$data);
+        return Response::success(["Payment successful, please go back your app"],[
+            'share-link'   => $share_link,
+            'download_link' => $download_link,
+        ],200);
+    }
+    //sslCommerz fails
+    public function sllCommerzFails(Request $request){
+        $data = $request->all();
+
+        $token = $data['tran_id'];
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
+        if(!$checkTempData) return Response::error($message);
+        $checkTempData = $checkTempData->toArray();
+
+        $creator_table = $checkTempData['data']->creator_table ?? null;
+        $creator_id = $checkTempData['data']->creator_id ?? null;
+        $creator_guard = $checkTempData['data']->creator_guard ?? null;
+
+        $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
+        if($creator_table != null && $creator_id != null && $creator_guard != null) {
+            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
+            $creator = DB::table($creator_table)->where("id",$creator_id)->first();
+            if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
+            $api_user_login_guard = $api_authenticated_guards[$creator_guard];
+            Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
+        }
+        if( $data['status'] == "FAILED"){
+            TemporaryData::destroy($checkTempData['id']);
+            $message = ['error' => ["Added Money Failed"]];
+            return Response::error($message);
+        }
+
+    }
+    //sslCommerz canceled
+    public function sllCommerzCancel(Request $request){
+        $data = $request->all();
+        $token = $data['tran_id'];
+        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
+        if(!$checkTempData) return Response::error($message);
+        $checkTempData = $checkTempData->toArray();
+
+
+        $creator_table = $checkTempData['data']->creator_table ?? null;
+        $creator_id = $checkTempData['data']->creator_id ?? null;
+        $creator_guard = $checkTempData['data']->creator_guard ?? null;
+
+        $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
+        if($creator_table != null && $creator_id != null && $creator_guard != null) {
+            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
+            $creator = DB::table($creator_table)->where("id",$creator_id)->first();
+            if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
+            $api_user_login_guard = $api_authenticated_guards[$creator_guard];
+            Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
+        }
+        if( $data['status'] != "VALID"){
+            TemporaryData::destroy($checkTempData['id']);
+            $message = ['error' => ["Added Money Canceled"]];
+            return Response::error($message);
+        }
     }
    
 }

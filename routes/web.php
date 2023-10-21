@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\User\SendRemittanceController;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
@@ -82,6 +83,14 @@ Route::get('link/{slug}',[SiteController::class,'link'])->name('link');
 
 Route::controller(RemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
     //ssl commerce
+    Route::post('sslcommerz/success','sllCommerzSuccess')->name('ssl.success');
+    Route::post('sslcommerz/fail','sllCommerzFails')->name('ssl.fail');
+    Route::post('sslcommerz/cancel','sllCommerzCancel')->name('ssl.cancel');
+});
+
+//for sslcommerz callback urls(api)
+Route::controller(SendRemittanceController::class)->prefix("api-send-remittance")->name("api.send.remittance.")->group(function(){
+    //sslcommerz
     Route::post('sslcommerz/success','sllCommerzSuccess')->name('ssl.success');
     Route::post('sslcommerz/fail','sllCommerzFails')->name('ssl.fail');
     Route::post('sslcommerz/cancel','sllCommerzCancel')->name('ssl.cancel');

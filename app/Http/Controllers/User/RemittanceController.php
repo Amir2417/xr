@@ -188,7 +188,7 @@ class RemittanceController extends Controller
         $data = $request->all();
         $token = $data['tran_id'];
         $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        // dd($checkTempData);
+        
         if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
         $checkTempData = $checkTempData->toArray();
         $creator_id = $checkTempData['data']->creator_id ?? null;

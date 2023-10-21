@@ -17,5 +17,10 @@ class VerifyCsrfToken extends Middleware
         '/send-remittance/sslcommerz/success',
         '/send-remittance/sslcommerz/cancel',
         '/send-remittance/sslcommerz/fail',
+        
+        '/api-send-remittance/sslcommerz/success',
+        '/api-send-remittance/sslcommerz/cancel',
+        '/api-send-remittance/sslcommerz/fail',
+        '/api-send-remittance/sslcommerz/ipn'
     ];
 }

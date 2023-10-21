@@ -406,11 +406,11 @@ trait SslcommerzTrait
         $post_data['total_amount'] =$amount;
         $post_data['currency'] = $currency;
         $post_data['tran_id'] =  $reference;
-        $post_data['success_url'] =  route('api.add.money.ssl.success',"?r-source=".PaymentGatewayConst::APP);
-        $post_data['fail_url'] = route('api.add.money.ssl.fail',"?r-source=".PaymentGatewayConst::APP);
-        $post_data['cancel_url'] = route('api.add.money.ssl.cancel',"?r-source=".PaymentGatewayConst::APP);
+        $post_data['success_url'] =  route('api.send.remittance.ssl.success',"?r-source=".PaymentGatewayConst::APP);
+        $post_data['fail_url'] = route('api.send.remittance.ssl.fail',"?r-source=".PaymentGatewayConst::APP);
+        $post_data['cancel_url'] = route('api.send.remittance.ssl.cancel',"?r-source=".PaymentGatewayConst::APP);
         # $post_data['multi_card_name'] = "mastercard,visacard,amexcard";  # DISABLE TO DISPLAY ALL AVAILABLE
-
+        
         # EMI INFO
         $post_data['emi_option'] = "1";
         $post_data['emi_max_inst_option'] = "9";
