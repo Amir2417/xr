@@ -24,7 +24,7 @@
                             <div class="col-xl-6 col-lg-6 form-group">
                                 <label>{{ __("Sending Purpose ") }}<span>*</span></label>
                                 <select class="form--control select2-basic" name="sending_purpose">
-                                    <option selected>Select Purpose</option>
+                                    <option selected disabled>{{ __("Select Purpose") }}</option>
                                     @foreach ($sending_purposes as $item)
                                         
                                         <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
@@ -36,7 +36,7 @@
                             <div class="col-xl-6 col-lg-6 form-group">
                                 <label>{{ __("Source Of Fund") }} <span>*</span></label>
                                 <select class="form--control select2-basic" name="source">
-                                    <option selected>Select Source</option>
+                                    <option selected disabled>{{ __("Select Source") }}</option>
                                     @foreach ($source_of_funds as $item)
                                         <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
@@ -49,7 +49,7 @@
                             <div class="col-xl-12 col-lg-12 form-group">
                                 <label>{{ __("Payment Gateway") }} <span>*</span></label>
                                 <select class="form--control select2-basic" name="payment_gateway">
-                                    <option selected>Select Gateway</option>
+                                    <option selected disabled>{{ __("Select Gateway") }}</option>
                                     @foreach ($payment_gateway as $item)
                                         
                                     <option 

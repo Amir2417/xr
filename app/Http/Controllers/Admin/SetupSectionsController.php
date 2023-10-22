@@ -82,6 +82,10 @@ class SetupSectionsController extends Controller
                 'view'         => "footerView",
                 'update'       => "footerUpdate",    
             ],
+            'subscribe'          => [
+                'view'         => "subscribeView",
+                'update'       => "subscribeUpdate",    
+            ],
             'contact'          => [
                 'view'         => "contactView",
                 'update'       => "contactUpdate",    
@@ -1021,6 +1025,54 @@ class SetupSectionsController extends Controller
 
         return back()->with(['success' => ['Section Updated Successfully!']]);
      
+    }
+    /**
+     * Method for show subscribe section page
+     * @param string $slug
+     * @return view
+     */
+    public function subscribeView($slug){
+        $page_title     = "Subscribe Section";
+        $section_slug   = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
+        $data           = SiteSections::getData($section_slug)->first();
+        $languages      = $this->languages;
+
+        return view('admin.sections.setup-sections.subscribe-section',compact(
+            'page_title',
+            'data',
+            'languages',
+            'slug',
+        ));
+    }
+    /**
+     * Method for update subscribe section information
+     * @param string $slug
+     * @param \Illuminate\Http\Request $request 
+     */
+    public function subscribeUpdate(Request $request,$slug){
+        $basic_field_name    = [
+            'title'          => 'required|string|max:100',
+            'description'    => 'required|string',
+            
+        ];
+        $slug           = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
+        $section        = SiteSections::where("key",$slug)->first();
+        if($section != null ){
+            $data       = json_decode(json_encode($section->value),true);
+        }else{
+            $data       = [];
+        }
+
+        $data['language']      = $this->contentValidate($request,$basic_field_name);
+        $update_data['key']    = $slug;
+        $update_data['value']  = $data;
+        // dd($update_data);
+        try{
+            SiteSections::updateOrCreate(['key'=>$slug],$update_data);
+        }catch(Exception $e){
+            return back()->with(['error'=>'Something went wrong! Please try again.']);
+        }
+        return back()->with(['success'  =>  ['Section updated successfully']]);
     }
     /**
      * Method for show footer section 

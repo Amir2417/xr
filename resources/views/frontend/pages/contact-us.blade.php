@@ -30,7 +30,7 @@
                                 <i class="las la-phone"></i>
                             </div>
                             <div class="content">
-                                <h3>Contact</h3>
+                                <h3>{{ __("Contact") }}</h3>
                                 <p class="m-0">{{ __("Mobile:") }} {{ $contact->value->phone ?? "" }}</p>
                                 <p class="m-0">{{ __("E-mail:") }} {{ $contact->value->email ?? "" }} </p>
                             </div>
@@ -82,21 +82,21 @@
                                 <div class="row justify-content-center mb-10-none">
                                     <div class="col-xl-6 col-lg-6 col-md-12 form-group">
                                         <input type="text" name="name" class="form--control"
-                                            placeholder="Enter your name">
+                                            placeholder="{{ __("Name") }}...">
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-12 form-group">
                                         <input type="email" name="email" class="form--control"
-                                            placeholder="Enter your email">
+                                            placeholder="{{ __("Email") }}...">
                                     </div>
                                     <div class="col-12 form-group">
-                                        <input type="text" name="subject" class="form--control" placeholder="Subject">
+                                        <input type="text" name="subject" class="form--control" placeholder="{{ __("Subject") }}...">
                                     </div>
                                     <div class="col-lg-12 form-group">
-                                        <textarea name="message" class="form--control text-area" placeholder="Enter your message"
+                                        <textarea name="message" class="form--control text-area" placeholder="{{ __("Message") }}..."
                                             rows="3"></textarea>
                                     </div>
                                     <div class="col-lg-12 form-group text-center">
-                                        <button type="submit" class="btn--base mt-30 w-100">Send Message</button>
+                                        <button type="submit" class="btn--base mt-30 w-100">{{ __("Send Message") }}</button>
                                     </div>
                                 </div>
                             </form>

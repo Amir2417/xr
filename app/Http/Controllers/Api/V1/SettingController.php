@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api\V1;
 
 
+use Exception;
 use App\Http\Helpers\Response;
-use App\Models\Admin\Language;
+use App\Models\Admin\UsefulLink;
 use App\Models\Admin\AppSettings;
+use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AppOnboardScreens;
-use App\Models\Admin\BasicSettings;
-use App\Models\Admin\UsefulLink;
 
 
 class SettingController extends Controller
@@ -17,18 +17,13 @@ class SettingController extends Controller
 
 
     public function languages(){
-        $languages = Language::orderBy("id")->get()->map(function($data){
-            return [
-                'id'            => $data->id,
-                'name'          => $data->name,
-                'code'          => $data->code,
-                'status'        => $data->status,
-                'last_edit_by'  => $data->last_edit_by,
-                'created_at'    => $data->created_at,
-            ];
-        });
-        return Response::success(['Language data fetch successfully.'],[
-            'languages' => $languages,
+        try{
+            $api_languages = get_api_languages();
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()],[],500);
+        }
+        return Response::success([__("Language data fetch successfully!")],[
+            'languages' => $api_languages,
         ],200);
     }
 

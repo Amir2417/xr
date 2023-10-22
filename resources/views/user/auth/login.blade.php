@@ -24,12 +24,12 @@
                         @csrf
                         <div class="form-group ">
                             <label for="email">{{ __("Email") }}</label>
-                            <input type="email" class="form--control" id="email" name="credentials" placeholder="{{ __("Enter Your Email") }}">
+                            <input type="email" class="form--control" id="email" name="credentials" placeholder="{{ __("Enter Your Email") }}...">
 
                         </div>
                         <div class="form-group show_hide_password">
                             <label>{{ __("Password") }}</label>
-                            <input type="password" class="form--control" name="password" placeholder="{{ __("Enter Password") }}...">
+                            <input type="password" class="form--control" name="password" placeholder="{{ __("Enter Your Password") }}...">
                             <a href="javascript:void(0)" class="show-pass icon field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                         </div>
                         <div class="forgot-item text-end">

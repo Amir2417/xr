@@ -68,7 +68,7 @@
                                 </td>
                             </tr>
                         @empty
-                            @include('admin.components.alerts.empty',['colspan' => 2])
+                            @include('admin.components.alerts.empty',['colspan' => 3])
                         @endforelse
                     </tbody>
                 </table>

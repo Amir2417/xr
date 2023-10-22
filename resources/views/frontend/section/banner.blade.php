@@ -79,7 +79,7 @@
                             </div>
                             <div class="exchange-charge d-flex justify-content-between">
                                 <div class="left-side">
-                                <p><i class="las la-dot-circle"></i> {{ __("Fees & Charge") }}</p>
+                                <p><i class="las la-dot-circle"></i> {{ __("Fees & Charges") }}</p>
                                 </div>
                                 <div class="right-side">
                                     <input type="hidden" name="fees" id="charge">

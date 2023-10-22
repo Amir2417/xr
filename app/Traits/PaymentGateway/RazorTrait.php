@@ -131,6 +131,7 @@ trait RazorTrait
 
     }
     public function razorJunkInsert($response) {
+        dd($response);
         $output = $this->output;
         $user = auth()->guard(get_auth_guard())->user();
         $creator_table = $creator_id = $wallet_table = $wallet_id = null;
@@ -148,7 +149,7 @@ trait RazorTrait
             'creator_id'    => $creator_id,
             'creator_guard' => get_auth_guard(),
         ];
-
+        dd($response);
         Session::put('identifier',$response['reference_id']);
         Session::put('output',$output);
 
@@ -280,6 +281,7 @@ trait RazorTrait
     // ********* For API **********
     public function razorInitApi($output = null) {
         if(!$output) $output = $this->output;
+        
         $credentials = $this->getCredentials($output);
         $api_key = $credentials->public_key;
         $api_secret = $credentials->secret_key;
@@ -319,9 +321,11 @@ trait RazorTrait
             "callback_url"=> $return_url,
             "callback_method"=> "get"
         );
+        
 
         $payment_data_string = json_encode($data);
         $payment_ch = curl_init($payment_link);
+        
         curl_setopt($payment_ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($payment_ch, CURLOPT_POSTFIELDS, $payment_data_string);
         curl_setopt($payment_ch, CURLOPT_RETURNTRANSFER, true);
@@ -336,8 +340,10 @@ trait RazorTrait
             $message = ['error' => [$payment_data['error']['description']]];
             Response::error($message);
         }
+        
         $this->razorJunkInsert($payment_data);
         $data['short_url'] = $payment_data['short_url'];
+        
         return $data;
     }
 }

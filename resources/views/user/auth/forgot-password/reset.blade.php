@@ -47,11 +47,11 @@
                 @csrf
                 <div class="row ml-b-20">
                     <div class="col-xl-12 col-lg-12 form-group show_hide_password">
-                        <input type="password" name="password" class="form--control" placeholder="{{ __("New password") }}">
+                        <input type="password" name="password" class="form--control" placeholder="{{ __("New password") }}...">
                         <a href="" class="show-pass"></a>
                     </div>
                     <div class="col-xl-12 col-lg-12 form-group show_hide_password">
-                        <input type="password" name="password_confirmation" class="form--control" placeholder="{{ __("Confirm password") }}">
+                        <input type="password" name="password_confirmation" class="form--control" placeholder="{{ __("Confirm password") }}...">
                         <a href="" class="show-pass"></a>
                     </div>
                     <div class="col-lg-12 form-group text-center">

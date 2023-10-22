@@ -26,103 +26,103 @@
 
                 @include('admin.components.side-nav.link',[
                     'route'     => 'admin.dashboard',
-                    'title'     => "Dashboard",
+                    'title'     => __("Dashboard"),
                     'icon'      => "menu-icon las la-rocket",
                 ])
                 
                 {{-- Section Default --}}
                 @include('admin.components.side-nav.link-group',[
-                    'group_title'       => "Default",
+                    'group_title'       => __("Default"),
                     'group_links'       => [
                         [
-                            'title'     => "Setup Currency",
+                            'title'     => __("Setup Currency"),
                             'route'     => "admin.currency.index",
                             'icon'      => "menu-icon las la-coins",
                         ],
                         [
-                            'title'     => "Fees & Charges",
+                            'title'     => __("Fees & Charges"),
                             'route'     => "admin.trx.settings.index",
                             'icon'      => "menu-icon las la-wallet",
                         ]
                     ]
                 ])
                 @include('admin.components.side-nav.link-group',[
-                    'group_title'       => "Remittance Settings",
+                    'group_title'       => __("Remittance Settings"),
                     'group_links'       => [
                         [
-                            'title'     => "Remittance Bank",
+                            'title'     => __("Remittance Bank"),
                             'route'     => "admin.remittance.bank.index",
                             'icon'      => "menu-icon las la-university",
                         ],
                         [
-                            'title'     => "Mobile Method",
+                            'title'     => __("Mobile Method"),
                             'route'     => "admin.mobile.method.index",
                             'icon'      => "menu-icon las la-money-bill-alt",
                         ],
                         [
-                            'title'     => "Source of Fund",
+                            'title'     => __("Source of Fund"),
                             'route'     => "admin.source.fund.index",
                             'icon'      => "menu-icon las la-wallet",
                         ],
                         [
-                            'title'     => "Sending Purpose",
+                            'title'     => __("Sending Purpose"),
                             'route'     => "admin.sending.purpose.index",
                             'icon'      => 'menu-icon las la-share-alt'
                         ]
                         
                     ]
                 ])
-                {{-- Section Transaction & Logs --}}
+                
                 @include('admin.components.side-nav.link-group',[
-                    'group_title'       => "Transactions & Logs",
+                    'group_title'       => __("Transactions & Logs"),
                     'group_links'       => [
                         'dropdown'      => [
                             [
-                                'title'     => "Remittance",
+                                'title'     => __("Remittance"),
                                 'icon'      => "menu-icon las la-calculator",
                                 'links'     => [
                                     [
-                                        'title'     => "Review Payment Logs",
+                                        'title'     => __("Review Payment Logs"),
                                         'route'     => "admin.send.remittance.review.payment",
                                     ],
                                     [
-                                        'title'     => "Pending Logs",
+                                        'title'     => __("Pending Logs"),
                                         'route'     => "admin.send.remittance.pending",
                                     ],
                                     [
-                                        'title'     => "Confirm Payment Logs",
+                                        'title'     => __("Confirm Payment Logs"),
                                         'route'     => "admin.send.remittance.confirm.payment", 
                                     ],
                                     [
-                                        'title'     => "On Hold Logs",
+                                        'title'     => __("On Hold Logs"),
                                         'route'     => "admin.send.remittance.hold", 
                                     ],
                                     [
-                                        'title'     => "Settled Logs",
+                                        'title'     => __("Settled Logs"),
                                         'route'     => "admin.send.remittance.settled", 
                                     ],
                                     [
-                                        'title'     => "Complete Logs",
+                                        'title'     => __("Complete Logs"),
                                         'route'     => "admin.send.remittance.complete", 
                                     ],
                                     [
-                                        'title'     => "Canceled Logs",
+                                        'title'     => __("Canceled Logs"),
                                         'route'     => "admin.send.remittance.canceled", 
                                     ],
                                     [
-                                        'title'     => "Failed Logs",
+                                        'title'     => __("Failed Logs"),
                                         'route'     => "admin.send.remittance.failed", 
                                     ],
                                     [
-                                        'title'     => "Refunded Logs",
+                                        'title'     => __("Refunded Logs"),
                                         'route'     => "admin.send.remittance.refunded", 
                                     ],
                                     [
-                                        'title'     => "Delayed Logs",
+                                        'title'     => __("Delayed Logs"),
                                         'route'     => "admin.send.remittance.delayed", 
                                     ],
                                     [
-                                        'title'     => "All Logs",
+                                        'title'     => __("All Logs"),
                                         'route'     => "admin.send.remittance.index", 
                                     ]
                                 ],
@@ -288,7 +288,7 @@
                             setRoute('admin.setup.sections.section','journal'),
                             setRoute('admin.setup.sections.section','app-download'),
                             setRoute('admin.setup.sections.section','footer'),
-                            
+                            setRoute('admin.setup.sections.section','subscribe'),
                             setRoute('admin.setup.sections.section','contact'),
                             
                         ];
@@ -342,6 +342,10 @@
                                 <a href="{{ setRoute('admin.setup.sections.section','footer') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','footer')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>
                                     <span class="menu-title">{{__("Footer Section")}}</span>
+                                </a>
+                                <a href="{{ setRoute('admin.setup.sections.section','subscribe') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','subscribe')) active @endif">
+                                    <i class="menu-icon las la-ellipsis-h"></i>
+                                    <span class="menu-title">{{__("Subscribe Section")}}</span>
                                 </a>
                                 <a href="{{ setRoute('admin.setup.sections.section','contact') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','contact')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>

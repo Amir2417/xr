@@ -39,35 +39,34 @@
             <div class="account-logo text-center">
                 <a class="site-logo" href="{{ setRoute('index') }}"><img src="{{ get_logo($basic_settings,"dark") }}" alt="logo"></a>
             </div>
-            <h5 class="title text-center">Please enter the code</h5>
-            <p class="d-block text-center">We sent a 6 digit code here <strong>{{ $user_email ?? ""}}</strong></p>
+            <h5 class="title text-center">{{ __("Please enter the code") }}</h5>
+            <p class="d-block text-center">{{ __("We sent a 6 digit code here") }}<strong>{{ $user_email ?? ""}}</strong></p>
             <form class="account-form" action="{{ setRoute('user.password.forgot.verify.code',$token) }}" method="POST">
                 @csrf
                 <div class="row ml-b-20">
                     <div class="col-lg-12 form-group">
-                        <input class="otp" type="text"  name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(1)'
+                        <input class="otp" type="text" name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(1)'
                             maxlength=1 required>
-                        <input class="otp" type="text"  name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(2)'
+                        <input class="otp" type="text" name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(2)'
                             maxlength=1 required>
-                        <input class="otp" type="text"  name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(3)'
+                        <input class="otp" type="text" name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(3)'
                             maxlength=1 required>
-                        <input class="otp" type="text"  name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(4)'
+                        <input class="otp" type="text" name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(4)'
                             maxlength=1 required>
-                        <input class="otp" type="text"  name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(5)'
+                        <input class="otp" type="text" name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(5)'
                             maxlength=1 required>
-                        <input class="otp" type="text"  name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(6)'
+                        <input class="otp" type="text" name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(6)'
                             maxlength=1 required>
                     </div>
                     <div class="col-lg-12 form-group text-end">
-                        <div class="time-area">You can resend the code after <span id="time"></span></div>
+                        <div class="time-area">{{ __("You can resend the code after") }} <span id="time"></span></div>
                     </div>
                     <div class="col-lg-12 form-group text-center">
-                        <button type="submit" class="btn--base w-100">Submit</button>
+                        <button type="submit" class="btn--base w-100">{{ __("Submit") }}</button>
                     </div>
                     <div class="col-lg-12 text-center">
                         <div class="account-item">
-                            <label>Already Have An Account? <a href="{{ setRoute('user.login') }}" class="account-control-btn">Login
-                                    Now</a></label>
+                            <label>{{ __("Already Have An Account?") }}<a href="{{ setRoute('user.login') }}" class="account-control-btn">{{ __("Login Now") }}</a></label>
                         </div>
                     </div>
                 </div>
@@ -127,7 +126,7 @@
                 
                 clearInterval(x);
                 
-                document.querySelector(".time-area").innerHTML = `Didn't get the code? <a class='text--danger' href='${resendCodeLink}'>Resend</a>`;
+                document.querySelector(".time-area").innerHTML = `{{ __("Didn't get the code?") }} <a class='text--danger' href='${resendCodeLink}'>{{ __("Resend") }}</a>`;
             }
             second--
         }, 1000);

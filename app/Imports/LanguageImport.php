@@ -64,4 +64,19 @@ class LanguageImport
 
         throw new Exception('Pelase Call columnData() Function Before Calling getArray()');
     }
+
+    public static function getKeys() {
+        $file_name = "predefined_keys.json";
+        $file_dir_location = base_path('lang');
+        $file_path = $file_dir_location . "/" . $file_name;
+        $get_keys = file_get_contents($file_path);
+
+        try{
+            $keys_array = json_decode($get_keys,true);
+        }catch(Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return $keys_array;
+    }
 }

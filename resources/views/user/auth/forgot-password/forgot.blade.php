@@ -32,7 +32,7 @@
                 @csrf
                 <div class="row ml-b-20">
                     <div class="col-xl-12 col-lg-12 form-group">
-                        <input type="email" name="credentials" class="form--control" placeholder="{{ __("Email") }}">
+                        <input type="email" name="credentials" class="form--control" placeholder="{{ __("Email") }}...">
                     </div>
                     <div class="col-lg-12 form-group text-center">
                         <button type="submit" class="btn--base w-100">{{ __("Send OTP") }}</button>
