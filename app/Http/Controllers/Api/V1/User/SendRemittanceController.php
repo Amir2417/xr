@@ -916,7 +916,7 @@ class SendRemittanceController extends Controller
         }
         if( $data['status'] == "FAILED"){
             TemporaryData::destroy($checkTempData['id']);
-            $message = ['error' => ["Added Money Failed"]];
+            $message = ['error' => ["Send Remittance Failed"]];
             return Response::error($message);
         }
 
@@ -945,7 +945,7 @@ class SendRemittanceController extends Controller
         }
         if( $data['status'] != "VALID"){
             TemporaryData::destroy($checkTempData['id']);
-            $message = ['error' => ["Added Money Canceled"]];
+            $message = ['error' => ["Send Remittance Canceled"]];
             return Response::error($message);
         }
     }
