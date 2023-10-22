@@ -3,27 +3,19 @@
 namespace App\Traits\PaymentGateway;
 
 use Exception;
-use Stripe\Token;
-use Stripe\Charge;
 use App\Traits\Transaction;
 use Illuminate\Support\Str;
-use Jenssegers\Agent\Agent;
-use Illuminate\Http\Request;
 use App\Models\TemporaryData;
 use App\Http\Helpers\Response;
 use Illuminate\Support\Carbon;
 use App\Models\UserNotification;
 use Illuminate\Support\Facades\DB;
 use App\Models\Admin\BasicSettings;
-use Stripe\Stripe as StripePackage;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\PaymentGatewayConst;
 use App\Notifications\sendNotification;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
 use App\Providers\Admin\BasicSettingsProvider;
-use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
 
 trait Stripe
 {

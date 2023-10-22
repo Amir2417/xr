@@ -256,7 +256,9 @@
                 </div>
             </div>
             @empty
-                <p class="text-center empty-data">There is no transactions log. Please create a new transaction log.</p>
+            <div class="alert alert-primary text-center">
+                {{ __("No Transaction Found!") }}
+            </div>
             @endforelse
         </div>
     </div>

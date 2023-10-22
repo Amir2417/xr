@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
-use Exception;
 use PDF;
+use Exception;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
@@ -12,20 +12,21 @@ use App\Models\Admin\SetupKyc;
 use App\Models\UserNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\PaymentGateway;
+use Illuminate\Support\Facades\Auth;
 use App\Traits\PaymentGateway\Manual;
 use App\Traits\PaymentGateway\Stripe;
 use App\Constants\PaymentGatewayConst;
 use Illuminate\Support\Facades\Session;
+use App\Traits\PaymentGateway\RazorTrait;
+use App\Providers\Admin\BasicSettingsProvider;
+use App\Traits\PaymentGateway\SslcommerzTrait;
 use App\Traits\PaymentGateway\FlutterwaveTrait;
 use KingFlamez\Rave\Facades\Rave as Flutterwave;
 use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
-use App\Providers\Admin\BasicSettingsProvider;
-use App\Traits\PaymentGateway\SslcommerzTrait;
-use Illuminate\Support\Facades\Auth;
 
 class RemittanceController extends Controller
 {
-    use Stripe,Manual,FlutterwaveTrait,SslcommerzTrait;
+    use Stripe,Manual,FlutterwaveTrait,SslcommerzTrait,RazorTrait;
 
     /**
      * Method for submit money
@@ -66,7 +67,6 @@ class RemittanceController extends Controller
         $checkTempData = TemporaryData::where("type",PaymentGatewayConst::STRIPE)->where("identifier",$token)->first();
         if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
         $checkTempData = $checkTempData->toArray();
-        
 
         try{
             $transaction = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive(); 
@@ -117,9 +117,8 @@ class RemittanceController extends Controller
             'notifications'
         ));
     }
-
-    public function flutterwaveCallback()
-    {
+    //flutterwave callback
+    public function flutterwaveCallback(){
 
         $status = request()->status;
         //if payment is successful
@@ -147,7 +146,7 @@ class RemittanceController extends Controller
 
         }
         elseif ($status ==  'cancelled'){
-            return redirect()->route('user.send.remittance.index')->with(['error' => ['Add money cancelled']]);
+            return redirect()->route('user.send.remittance.index')->with(['error' => ['Send Remittance cancelled']]);
         }
         else{
             return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction failed']]);
@@ -160,16 +159,16 @@ class RemittanceController extends Controller
      * @method GET
      */
     public function manualPayment(){
-        $tempData = Session::get('identifier');
-        $hasData = TemporaryData::where('identifier', $tempData)->first();
-        $gateway = PaymentGateway::manual()->where('slug',PaymentGatewayConst::remittance_money_slug())->where('id',$hasData->data->gateway)->first();
+        $tempData       = Session::get('identifier');
+        $hasData        = TemporaryData::where('identifier', $tempData)->first();
+        $gateway        = PaymentGateway::manual()->where('slug',PaymentGatewayConst::remittance_money_slug())->where('id',$hasData->data->gateway)->first();
         
-        $page_title = "Manual Payment".' ( '.$gateway->name.' )';
-        $client_ip     = request()->ip() ?? false;
-        $user_country  = geoip()->getLocation($client_ip)['country'] ?? "";
-        $kyc_data      = SetupKyc::userKyc()->first();
-        $user          = auth()->user();
-        $notifications = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+        $page_title     = "Manual Payment".' ( '.$gateway->name.' )';
+        $client_ip      = request()->ip() ?? false;
+        $user_country   = geoip()->getLocation($client_ip)['country'] ?? "";
+        $kyc_data       = SetupKyc::userKyc()->first();
+        $user           = auth()->user();
+        $notifications  = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         if(!$hasData){
             return redirect()->route('user.send.remittance.index');
         }
@@ -185,14 +184,14 @@ class RemittanceController extends Controller
     //sslcommerz success
     public function sllCommerzSuccess(Request $request){
         
-        $data = $request->all();
-        $token = $data['tran_id'];
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        $data           = $request->all();
+        $token          = $data['tran_id'];
+        $checkTempData  = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
         
         if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
-        $checkTempData = $checkTempData->toArray();
-        $creator_id = $checkTempData['data']->creator_id ?? null;
-        $creator_guard = $checkTempData['data']->creator_guard ?? null;
+        $checkTempData  = $checkTempData->toArray();
+        $creator_id     = $checkTempData['data']->creator_id ?? null;
+        $creator_guard  = $checkTempData['data']->creator_guard ?? null;
 
         $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
         if( $data['status'] != "VALID"){
@@ -219,23 +218,23 @@ class RemittanceController extends Controller
         $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
         if( $data['status'] == "FAILED"){
             TemporaryData::destroy($checkTempData['id']);
-            return redirect()->route("user.send.remittance.index")->with(['error' => ['Added Money Failed']]);
+            return redirect()->route("user.send.remittance.index")->with(['error' => ['Send Remittance Failed']]);
         }
 
     }
     //sslCommerz canceled
     public function sllCommerzCancel(Request $request){
-        $data = $request->all();
-        $token = $data['tran_id'];
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
+        $data           = $request->all();
+        $token          = $data['tran_id'];
+        $checkTempData  = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
         if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
-        $checkTempData = $checkTempData->toArray();
-        $creator_id = $checkTempData['data']->creator_id ?? null;
-        $creator_guard = $checkTempData['data']->creator_guard ?? null;
-        $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
+        $checkTempData  = $checkTempData->toArray();
+        $creator_id     = $checkTempData['data']->creator_id ?? null;
+        $creator_guard  = $checkTempData['data']->creator_guard ?? null;
+        $user           = Auth::guard($creator_guard)->loginUsingId($creator_id);
         if( $data['status'] != "VALID"){
             TemporaryData::destroy($checkTempData['id']);
-            return redirect()->route("user.send.remittance.index")->with(['error' => ['Added Money Canceled']]);
+            return redirect()->route("user.send.remittance.index")->with(['error' => ['Send Remittance Canceled']]);
         }
 
     }
@@ -257,22 +256,46 @@ class RemittanceController extends Controller
     }
 
     /**
+     * razor pay payment gateway callback
+     */
+    public function razorCallback(){
+        $request_data = request()->all();
+        //if payment is successful
+        if ($request_data['razorpay_payment_link_status'] ==  'paid') {
+            $token = $request_data['razorpay_payment_link_reference_id'];
+
+            $checkTempData = TemporaryData::where("type",PaymentGatewayConst::RAZORPAY)->where("identifier",$token)->first();
+            if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
+            $checkTempData = $checkTempData->toArray();
+            try{
+                $transaction = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            }catch(Exception $e) {
+                return back()->with(['error' => [$e->getMessage()]]);
+            }
+            return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance']]);
+
+        }
+        else{
+            return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction failed']]);
+        }
+    }
+    /**
      * Method for share link page
      * @param string $trx_id
      * @param \Illuminate\Http\Request $request
      */
     public function shareLink(Request $request,$trx_id){
-        $page_title   = "| Information";
-        $transaction  = Transaction::where('trx_id',$trx_id)->first();
-        $sender_currency         = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency       = Currency::where('status',true)->where('receiver',true)->first();
+        $page_title         = "| Information";
+        $transaction        = Transaction::where('trx_id',$trx_id)->first();
+        $sender_currency    = Currency::where('status',true)->where('sender',true)->first();
+        $receiver_currency  = Currency::where('status',true)->where('receiver',true)->first();
+
         return view('share-link.index',compact(
             'page_title',
             'transaction',
             'sender_currency',
             'receiver_currency',
-        ));
-        
+        ));   
     }
 
     public function downloadPdf($trx_id)

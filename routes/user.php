@@ -54,26 +54,34 @@ Route::prefix("user")->name("user.")->group(function(){
 
     //payment
     Route::controller(RemittanceController::class)->group(function(){
+        Route::controller(RemittanceController::class)->name('send.remittance.')->group(function(){
+            //paypal
+            Route::get('success/response/{gateway}','success')->name('payment.success');
+            Route::get("cancel/response/{gateway}",'cancel')->name('payment.cancel');
+
+            //stripe
+            Route::get('payment/{gateway}','payment')->name('payment');
+            Route::get('stripe/payment/success/{trx}','stripePaymentSuccess')->name('stripe.payment.success');
+
+            //flutterwave
+            Route::get('/flutterwave/callback', 'flutterwaveCallback')->name('flutterwave.callback');
+
+            //manual
+            Route::get('manual/payment','manualPayment')->name('manual.payment');
+            Route::post('manual/payment/confirmed','manualPaymentConfirmed')->name('manual.payment.confirmed');
+
+            //razor pay
+            Route::get('razor/callback', 'razorCallback')->name('razor.callback');
+        });
 
         //paypal
         Route::post('money-submit','submit')->name('money.submit');
-        Route::get('success/response/{gateway}','success')->name('send.remittance.payment.success');
-        Route::get("cancel/response/{gateway}",'cancel')->name('send.remittance.payment.cancel');
 
         //stripe
-        Route::get('payment/{gateway}','payment')->name('send.remittance.payment');
-        Route::get('stripe/payment/success/{trx}','stripePaymentSuccess')->name('send.remittance.stripe.payment.success');
         Route::post('stripe/payment/confirm','paymentConfirmed')->name('stripe.payment.confirmed'); 
 
-        //flutterwave
-        Route::get('/flutterwave/callback', 'flutterwaveCallback')->name('send.remittance.flutterwave.callback');
-
-        Route::get('manual/payment','manualPayment')->name('send.remittance.manual.payment');
-        Route::post('manual/payment/confirmed','manualPaymentConfirmed')->name('send.remittance.manual.payment.confirmed');
-
-        Route::get('payment-confirmation/{trx_id}','paymentConfirmation')->name('payment.confirmation');
-
-        
+        //payment confirmation
+        Route::get('payment-confirmation/{trx_id}','paymentConfirmation')->name('payment.confirmation');  
     });
 
     Route::controller(ProfileController::class)->prefix("profile")->name("profile.")->group(function(){

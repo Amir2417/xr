@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits\PaymentGateway;
+
 use Exception;
 use App\Traits\Transaction;
 use Illuminate\Support\Str;

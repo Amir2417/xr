@@ -2,25 +2,17 @@
 
 namespace App\Traits\PaymentGateway;
 
-use App\Constants\NotificationConst;
-use App\Constants\PaymentGatewayConst;
-use App\Http\Helpers\Api\Helpers;
-use App\Models\Admin\AdminNotification;
-use App\Models\Admin\BasicSettings;
+use Exception;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use App\Models\TemporaryData;
 use App\Models\UserNotification;
-use App\Notifications\User\AddMoney\ApprovedMail;
-use App\Providers\Admin\BasicSettingsProvider;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
+use Illuminate\Support\Facades\Auth;
+use App\Constants\PaymentGatewayConst;
 use App\Notifications\sendNotification;
 use Illuminate\Support\Facades\Notification;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Jenssegers\Agent\Agent;
-use Illuminate\Support\Str;
-use App\Events\User\NotificationEvent as UserNotificationEvent;
 
 
 trait SslcommerzTrait
@@ -243,11 +235,11 @@ trait SslcommerzTrait
         $creator_id = auth()->guard(get_auth_guard())->user()->id;
        
             $data = [
-                'gateway'      => $output['gateway']->id,
-                'currency'     => $output['currency']->id,
-                'amount'       => json_decode(json_encode($output['amount']),true),
-                'response'     => $response,
-                'user_record' => $output['request_data']['identifier'],
+                'gateway'       => $output['gateway']->id,
+                'currency'      => $output['currency']->id,
+                'amount'        => json_decode(json_encode($output['amount']),true),
+                'response'      => $response,
+                'user_record'   => $output['request_data']['identifier'],
                 'creator_table' => $creator_table,
                 'creator_id'    => $creator_id,
                 'creator_guard' => get_auth_guard(),
@@ -276,8 +268,7 @@ trait SslcommerzTrait
         $trx_id = 'R'.getTrxNum();
        
         $inserted_id = $this->insertRecordSsl($output,$trx_id);
-        // $this->insertChargesSsl($output,$inserted_id);
-        // $this->insertDeviceSsl($output,$inserted_id);
+        
         
         $this->removeTempDataSsl($output);
         if($this->requestIsApiUser()) {
@@ -431,9 +422,9 @@ trait SslcommerzTrait
 
 
         # PRODUCT INFORMATION
-        $post_data['product_name'] = "Add Money";
-        $post_data['product_category'] = "Add Money";
-        $post_data['product_profile'] = "Add Money";
+        $post_data['product_name'] = "Send Remittance";
+        $post_data['product_category'] = "Send Remittance";
+        $post_data['product_profile'] = "Send Remittance";
         # SHIPMENT INFORMATION
         $post_data['shipping_method'] = "NO";
 
@@ -449,7 +440,7 @@ trait SslcommerzTrait
                 "name"         => $user_name
             ],
             "customizations" => [
-                "title"       => "Add Money",
+                "title"       => "Send Remittance",
                 "description" => dateFormat('d M Y', Carbon::now()),
             ]
         ];
