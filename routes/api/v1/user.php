@@ -16,6 +16,9 @@ Route::prefix("user")->name("api.user.")->group(function(){
         Route::get("cancel/response/{gateway}",'cancel')->name('payment.cancel');
         Route::get('/flutterwave/callback', 'flutterwaveCallback')->name('flutterwave.callback');
         Route::get('stripe/payment/success/{trx}','stripePaymentSuccess')->name('stripe.payment.success');
+
+        //razor pay
+        Route::get('razor/callback', 'razorCallback')->name('razor.callback');
     });
 
 

@@ -291,7 +291,7 @@ trait RazorTrait
             $user_name = $user->firstname.' '.$user->lastname ?? '';
         }
 
-        $return_url = route('api.razor.callback', "r-source=".PaymentGatewayConst::APP);
+        $return_url = route('api.user.send-remittance.razor.callback', "r-source=".PaymentGatewayConst::APP);
 
         $payment_link = "https://api.razorpay.com/v1/payment_links";
 

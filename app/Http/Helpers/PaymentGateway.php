@@ -280,6 +280,10 @@ class PaymentGateway {
             if(method_exists(SslcommerzTrait::class,$method_name)) {
                 return $this->$method_name($this->output);
             }
+        }elseif($type == 'razorpay'){
+            if(method_exists(RazorTrait::class,$method_name)) {
+                return $this->$method_name($this->output);
+            }
         }else{
             if(method_exists(Paypal::class,$method_name)) {
                 return $this->$method_name($this->output);

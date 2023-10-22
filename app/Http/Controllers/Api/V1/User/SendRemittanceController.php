@@ -949,5 +949,39 @@ class SendRemittanceController extends Controller
             return Response::error($message);
         }
     }
+    /**
+     * razor pay callback
+     */
+    public function razorCallback(){
+        $request_data = request()->all();
+        //if payment is successful
+        if ($request_data['razorpay_payment_link_status'] ==  'paid') {
+            $token = $request_data['razorpay_payment_link_reference_id'];
+
+            $checkTempData = TemporaryData::where("type",PaymentGatewayConst::RAZORPAY)->where("identifier",$token)->first();
+            if(!$checkTempData) {
+                
+                return Response::error(['Transaction Failed. Record didn\'t saved properly. Please try again.'],404);
+            }
+            $checkTempData = $checkTempData->toArray();
+            try{
+                $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            }catch(Exception $e) {
+                $message = ['error' => [$e->getMessage()]];
+                return Response::error($message);
+            }
+            $share_link   = route('share.link',$data);
+            $download_link   = route('download.pdf',$data);
+            return Response::success(["Payment successful, please go back your app"],[
+                'share-link'   => $share_link,
+                'download_link' => $download_link,
+            ],200);
+
+        }
+        else{
+            $message = ['error' => ['Payment Failed']];
+            return Response::error($message);
+        }
+    }
    
 }
