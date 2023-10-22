@@ -42,7 +42,8 @@
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">
                                                                 <input type="hidden" name="sender_currency" class="sender_currency">
-                                                                <span class="custom-currency">--</span>
+                                                                <img src="{{ get_image(@$sender_currency_first->flag,'currency-flag') }}" alt="">
+                                                                <span class="custom-currency">{{ @$sender_currency_first->code }}</span>
                                                             </div>
                                                         </div>
                                                         <div class="custom-select-wrapper">
@@ -55,7 +56,11 @@
                                                             <div class="custom-select-list-wrapper">
                                                                 <ul class="custom-select-list">
                                                                     @foreach ($sender_currency as $item)
-                                                                        <li class="custom-option" data-item='{{ json_encode($item) }}'>
+                                                                        <li class="custom-option 
+                                                                        @if($item->code == $sender_currency_first->code) 
+                                                                        active
+                                                                        @endif" 
+                                                                        data-item='{{ json_encode($item) }}' >
                                                                             <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
                                                                             <span class="custom-country">{{ $item->name }}</span>
                                                                             <span class="custom-currency">{{ $item->code }}</span>
@@ -106,8 +111,9 @@
                                                     <div class="ad-select">
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">
-                                                                <input type="hidden" name="receiver_currency" class="receiver_currency">
-                                                                <span class="custom-currency">--</span>
+                                                                <input type="hidden" name="receiver_currency" class="receiver_currency ">
+                                                                <img src="{{ get_image(@$receiver_currency_first->flag,'currency-flag') }}" alt="">
+                                                                <span class="custom-currency">{{ @$receiver_currency_first->code }}</span>
                                                             </div>
                                                         </div>
                                                         <div class="custom-select-wrapper">
@@ -120,7 +126,10 @@
                                                             <div class="custom-select-list-wrapper">
                                                                 <ul class="custom-select-list">
                                                                     @foreach ($receiver_currency as $item)
-                                                                        <li class="custom-option" data-item='{{ json_encode($item) }}'>
+                                                                        <li class="custom-option 
+                                                                            @if($item->code == $receiver_currency_first->code) 
+                                                                            active 
+                                                                            @endif" data-item='{{ json_encode($item) }}'>
                                                                             <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
                                                                             <span class="custom-country">{{ $item->name }}</span>
                                                                             <span class="custom-currency">{{ $item->code }}</span>
@@ -260,9 +269,10 @@
 </script>
 <script>
     $(document).ready(function(){
-
+        $("#send_money").val(100);
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
         $("#feature-list").html(selectedType.feature_text);
+        run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
     });
     $('.trx-type-select').on('change',function(){
         run();

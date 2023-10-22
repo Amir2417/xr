@@ -20,31 +20,33 @@ use Illuminate\Support\Facades\Validator;
 
 class SiteController extends Controller{
     public function index(){
-        $transaction_settings = TransactionSetting::where('status',true)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->get();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-        $banner_section_slug  = Str::slug(SiteSectionConst::BANNER_SECTION);
-        $banner               = SiteSections::getData($banner_section_slug)->first();
-        $feature_section_slug = Str::slug(SiteSectionConst::FEATURE_SECTION);
-        $feature              = SiteSections::getData($feature_section_slug)->first();
-        $how_its_work_slug    = Str::slug(SiteSectionConst::HOW_ITS_WORK_SECTION);
-        $how_its_work         = SiteSections::getData($how_its_work_slug)->first();
-        $testimonial_slug     = Str::slug(SiteSectionConst::TESTIMONIAL_SECTION);
-        $testimonial          = SiteSections::getData($testimonial_slug)->first();
-        $choose_section_slug  = Str::slug(SiteSectionConst::CHOOSE_US_SECTION);
-        $choose               = SiteSections::getData($choose_section_slug)->first();
-        $app_download_slug    = Str::slug(SiteSectionConst::APP_DOWNLOAD_SECTION);
-        $app_download         = SiteSections::getData($app_download_slug)->first();
-        $journal_section_slug = Str::slug(SiteSectionConst::JOURNAL_SECTION);
-        $journal_section      = SiteSections::getData($journal_section_slug)->first();
-        $journals             = Journal::where('status',true)->get();
-        $brand_section_slug   = Str::slug(SiteSectionConst::BRAND_SECTION);
-        $brand                = SiteSections::getData($brand_section_slug)->first();
-        $footer_section_slug  = Str::slug(SiteSectionConst::FOOTER_SECTION);
-        $footer               = SiteSections::getData($footer_section_slug)->first();
-        $subscribe_slug       = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
-        $subscribe            = SiteSections::getData($subscribe_slug)->first();
-        $useful_link          = UsefulLink::where('status',true)->get();
+        $transaction_settings       = TransactionSetting::where('status',true)->get();
+        $sender_currency            = Currency::where('status',true)->where('sender',true)->get();
+        $receiver_currency          = Currency::where('status',true)->where('receiver',true)->get();
+        $sender_currency_first      = Currency::where('status',true)->where('sender',true)->first();
+        $receiver_currency_first    = Currency::where('status',true)->where('receiver',true)->first();
+        $banner_section_slug        = Str::slug(SiteSectionConst::BANNER_SECTION);
+        $banner                     = SiteSections::getData($banner_section_slug)->first();
+        $feature_section_slug       = Str::slug(SiteSectionConst::FEATURE_SECTION);
+        $feature                    = SiteSections::getData($feature_section_slug)->first();
+        $how_its_work_slug          = Str::slug(SiteSectionConst::HOW_ITS_WORK_SECTION);
+        $how_its_work               = SiteSections::getData($how_its_work_slug)->first();
+        $testimonial_slug           = Str::slug(SiteSectionConst::TESTIMONIAL_SECTION);
+        $testimonial                = SiteSections::getData($testimonial_slug)->first();
+        $choose_section_slug        = Str::slug(SiteSectionConst::CHOOSE_US_SECTION);
+        $choose                     = SiteSections::getData($choose_section_slug)->first();
+        $app_download_slug          = Str::slug(SiteSectionConst::APP_DOWNLOAD_SECTION);
+        $app_download               = SiteSections::getData($app_download_slug)->first();
+        $journal_section_slug       = Str::slug(SiteSectionConst::JOURNAL_SECTION);
+        $journal_section            = SiteSections::getData($journal_section_slug)->first();
+        $journals                   = Journal::where('status',true)->get();
+        $brand_section_slug         = Str::slug(SiteSectionConst::BRAND_SECTION);
+        $brand                      = SiteSections::getData($brand_section_slug)->first();
+        $footer_section_slug        = Str::slug(SiteSectionConst::FOOTER_SECTION);
+        $footer                     = SiteSections::getData($footer_section_slug)->first();
+        $subscribe_slug             = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
+        $subscribe                  = SiteSections::getData($subscribe_slug)->first();
+        $useful_link                = UsefulLink::where('status',true)->get();
 
 
         return view('frontend.index',compact(
@@ -62,7 +64,9 @@ class SiteController extends Controller{
             'brand',
             'footer',
             'subscribe',
-            'useful_link'
+            'useful_link',
+            'sender_currency_first',
+            'receiver_currency_first'
         ));
     }
     public function about(){

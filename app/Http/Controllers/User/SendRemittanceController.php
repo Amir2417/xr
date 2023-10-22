@@ -24,14 +24,16 @@ class SendRemittanceController extends Controller
      * @return view
      */
     public function index(){
-        $page_title           = "| Send Remittance";
-        $transaction_settings = TransactionSetting::where('status',true)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->get();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-        $client_ip            = request()->ip() ?? false;
-        $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
-        $user                 = auth()->user();
-        $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+        $page_title                 = "| Send Remittance";
+        $transaction_settings       = TransactionSetting::where('status',true)->get();
+        $sender_currency            = Currency::where('status',true)->where('sender',true)->get();
+        $receiver_currency          = Currency::where('status',true)->where('receiver',true)->get();
+        $sender_currency_first      = Currency::where('status',true)->where('sender',true)->first();
+        $receiver_currency_first    = Currency::where('status',true)->where('receiver',true)->first();
+        $client_ip                  = request()->ip() ?? false;
+        $user_country               = geoip()->getLocation($client_ip)['country'] ?? "";
+        $user                       = auth()->user();
+        $notifications              = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
 
         return view('user.sections.send-remittance.index',compact(
             'page_title',
@@ -40,7 +42,9 @@ class SendRemittanceController extends Controller
             'receiver_currency',
             'user_country',
             'user',
-            'notifications'
+            'notifications',
+            'sender_currency_first',
+            'receiver_currency_first'
         ));
     }
     /**

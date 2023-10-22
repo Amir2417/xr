@@ -23,147 +23,154 @@
                 </div>
             </div>
             <div class="col-lg-5 col-md-8 col-12">
-                
-                    <form method="POST" action="{{ setRoute('frontend.request.send.money') }}">
-                        @csrf
-                        <div class="col-lg-12">
-                            <div class="banner-form">
-                                <div class="top mb-20">
-                                    <p>{{__("Exchange Rate")}}</p>
-                                    <h3 class="title exchange_rate">--</h3>
-                                    <input type="hidden" name="sender_ex_rate" class="sender-ex-rate">
-                                    <input type="hidden" name="sender_base_rate" class="sender-base-rate">
-                                    <input type="hidden" name="receiver_ex_rate" class="receiver-ex-rate">
-                                </div>
-                                <div class="col-12 pb-20">
-                                    <div class="row">
-                                        <h3 class="fs-6">{{__("You send exactly")}}</h3>
-                                        <div class="col-12 from-cruncy">
-                                            <div class="input-group">
-                                                <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
-                                                
-                                                <div class="ad-select">
-                                                    <div class="custom-select">
-                                                        <div class="custom-select-inner">
-                                                            <input type="hidden" name="sender_currency" class="sender_currency">
-                                                            <span class="custom-currency">--</span>
+                <form method="POST" action="{{ setRoute('frontend.request.send.money') }}">
+                    @csrf
+                    <div class="col-lg-12">
+                        <div class="banner-form">
+                            <div class="top mb-20">
+                                <p>{{__("Exchange Rate")}}</p>
+                                <h3 class="title exchange_rate">--</h3>
+                                <input type="hidden" name="sender_ex_rate" class="sender-ex-rate">
+                                <input type="hidden" name="sender_base_rate" class="sender-base-rate">
+                                <input type="hidden" name="receiver_ex_rate" class="receiver-ex-rate">
+                            </div>
+                            <div class="col-12 pb-20">
+                                <div class="row">
+                                    <h3 class="fs-6">{{__("You send exactly")}}</h3>
+                                    <div class="col-12 from-cruncy">
+                                        <div class="input-group">
+                                            <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
+                                            
+                                            <div class="ad-select">
+                                                <div class="custom-select">
+                                                    <div class="custom-select-inner">
+                                                        <input type="hidden" name="sender_currency" class="sender_currency">
+                                                        <img src="{{ get_image(@$sender_currency_first->flag,'currency-flag') }}" alt="">
+                                                        <span class="custom-currency">{{ @$sender_currency_first->code }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="custom-select-wrapper">
+                                                    <div class="custom-select-search-box">
+                                                        <div class="custom-select-search-wrapper">
+                                                            <button type="submit" class="search-btn"><i class="las la-search"></i></button>
+                                                            <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
                                                         </div>
                                                     </div>
-                                                    <div class="custom-select-wrapper">
-                                                        <div class="custom-select-search-box">
-                                                            <div class="custom-select-search-wrapper">
-                                                                <button type="submit" class="search-btn"><i class="las la-search"></i></button>
-                                                                <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
-                                                            </div>
-                                                        </div>
-                                                        <div class="custom-select-list-wrapper">
-                                                            <ul class="custom-select-list">
-                                                                @foreach ($sender_currency as $item)
-                                                                    <li class="custom-option" data-item='{{ json_encode($item) }}'>
-                                                                        <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">{{ $item->name }}</span>
-                                                                        <span class="custom-currency">{{ $item->code }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
+                                                    <div class="custom-select-list-wrapper">
+                                                        <ul class="custom-select-list">
+                                                            @foreach ($sender_currency as $item)
+                                                                <li class="custom-option 
+                                                                @if($item->code == $sender_currency_first->code) 
+                                                                active
+                                                                @endif"
+                                                                data-item='{{ json_encode($item) }}'>
+                                                                    <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                    <span class="custom-country">{{ $item->name }}</span>
+                                                                    <span class="custom-currency">{{ $item->code }}</span>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="exchange-charge d-flex justify-content-between">
-                                    <div class="left-side">
-                                    <p><i class="las la-dot-circle"></i> {{ __("Fees & Charge") }}</p>
-                                    </div>
-                                    <div class="right-side">
-                                        <input type="hidden" name="fees" id="charge">
-                                        <p id="fees"></p>
-                                    </div>
-                                </div>
-                                <div class="exchange-charge d-flex justify-content-between">
-                                    <div class="left-side">
-                                        <p><i class="las la-dot-circle"></i> {{ __("Amount will convert") }}</p>
-                                    </div>
-                                    <div class="right-side">
-                                        <input type="hidden" name="convert_amount" id="convert--amount">
-                                        <p id="convert-amount"></p>
-                                    </div>
-                                </div>
-                                <div class="exchange-charge d-flex justify-content-between pb-10">
-                                    <div class="left-side">
-                                        <p><i class="las la-dot-circle"></i> {{ __("Total Payable Amount") }}</p>
-                                    </div>
-                                    <div class="right-side">
-                                        <input type="hidden" name="payable" id="payable--amount">
-                                        <p id="payable"> </p>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-4 pb-10">
-                                    <div class="row">
-                                        <h3 class="fs-6">{{__("Recipient gets")}}</h3>
-                                        <div class="col-12 from-cruncy">
-                                            <div class="input-group">
-                                                <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money">
-                                                
-                                                <div class="ad-select">
-                                                    <div class="custom-select">
-                                                        <div class="custom-select-inner">
-                                                            <input type="hidden" name="receiver_currency" class="receiver_currency">
-                                                            <span class="custom-currency">--</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="custom-select-wrapper">
-                                                        <div class="custom-select-search-box">
-                                                            <div class="custom-select-search-wrapper">
-                                                                <button type="submit" class="search-btn"><i class="las la-search"></i></button>
-                                                                <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
-                                                            </div>
-                                                        </div>
-                                                        <div class="custom-select-list-wrapper">
-                                                            <ul class="custom-select-list">
-                                                                @foreach ($receiver_currency as $item)
-                                                                    <li class="custom-option" data-item='{{ json_encode($item) }}'>
-                                                                        <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">{{ $item->name }}</span>
-                                                                        <span class="custom-currency">{{ $item->code }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group transaction-type">
-                                    <div class="transaction-title">
-                                        <label>{{__("Receive Method")}}</label>
-                                    </div>
-                                    <div class="transaction-type-select">
-                                        <select class="nice-select trx-type-select" name="type">
-                                            @foreach ($transaction_settings as $item) 
-                                                <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ $item->title ?? ''}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-footer-content mt-10-none mb-20">
-                                    <div class="note send-form-footer-note" id="feature-list">
-                                        <div class="left-side">
-                                            <p><i class="las la-dot-circle"></i></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button type="submit" class="btn--base btn--base-e text-center w-100 ">{{ __("Send Now") }}</button>
                                 </div>
                             </div>
+                            <div class="exchange-charge d-flex justify-content-between">
+                                <div class="left-side">
+                                <p><i class="las la-dot-circle"></i> {{ __("Fees & Charge") }}</p>
+                                </div>
+                                <div class="right-side">
+                                    <input type="hidden" name="fees" id="charge">
+                                    <p id="fees"></p>
+                                </div>
+                            </div>
+                            <div class="exchange-charge d-flex justify-content-between">
+                                <div class="left-side">
+                                    <p><i class="las la-dot-circle"></i> {{ __("Amount will convert") }}</p>
+                                </div>
+                                <div class="right-side">
+                                    <input type="hidden" name="convert_amount" id="convert--amount">
+                                    <p id="convert-amount"></p>
+                                </div>
+                            </div>
+                            <div class="exchange-charge d-flex justify-content-between pb-10">
+                                <div class="left-side">
+                                    <p><i class="las la-dot-circle"></i> {{ __("Total Payable Amount") }}</p>
+                                </div>
+                                <div class="right-side">
+                                    <input type="hidden" name="payable" id="payable--amount">
+                                    <p id="payable"> </p>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4 pb-10">
+                                <div class="row">
+                                    <h3 class="fs-6">{{__("Recipient gets")}}</h3>
+                                    <div class="col-12 from-cruncy">
+                                        <div class="input-group">
+                                            <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money">
+                                            
+                                            <div class="ad-select">
+                                                <div class="custom-select">
+                                                    <div class="custom-select-inner">
+                                                        <input type="hidden" name="receiver_currency" class="receiver_currency">
+                                                        <img src="{{ get_image(@$receiver_currency_first->flag,'currency-flag') }}" alt="">
+                                                        <span class="custom-currency">{{ @$receiver_currency_first->code }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="custom-select-wrapper">
+                                                    <div class="custom-select-search-box">
+                                                        <div class="custom-select-search-wrapper">
+                                                            <button type="submit" class="search-btn"><i class="las la-search"></i></button>
+                                                            <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                        </div>
+                                                    </div>
+                                                    <div class="custom-select-list-wrapper">
+                                                        <ul class="custom-select-list">
+                                                            @foreach ($receiver_currency as $item)
+                                                                <li class="custom-option 
+                                                                    @if($item->code == $receiver_currency_first->code) 
+                                                                    active 
+                                                                    @endif" data-item='{{ json_encode($item) }}'>
+                                                                    <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                    <span class="custom-country">{{ $item->name }}</span>
+                                                                    <span class="custom-currency">{{ $item->code }}</span>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group transaction-type">
+                                <div class="transaction-title">
+                                    <label>{{__("Receive Method")}}</label>
+                                </div>
+                                <div class="transaction-type-select">
+                                    <select class="nice-select trx-type-select" name="type">
+                                        @foreach ($transaction_settings as $item) 
+                                            <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ $item->title ?? ''}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-footer-content mt-10-none mb-20">
+                                <div class="note send-form-footer-note" id="feature-list">
+                                    <div class="left-side">
+                                        <p><i class="las la-dot-circle"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn--base btn--base-e text-center w-100 ">{{ __("Send Now") }}</button>
+                            </div>
                         </div>
-                    </form>
-                
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -192,9 +199,10 @@
 </script>
 <script>
     $(document).ready(function(){
-
+        $("#send_money").val(100);
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
         $("#feature-list").html(selectedType.feature_text);
+        run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
     });
     $('.trx-type-select').on('change',function(){
         run();
