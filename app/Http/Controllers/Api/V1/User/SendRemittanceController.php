@@ -718,8 +718,8 @@ class SendRemittanceController extends Controller
                         'url' => $instance['response']['link'],
                         'method' => "get",
                     ];
-                    $message =  ['success'=>['Send Remittance Inserted Successfully']];
-                    return Response::success($data,$message);
+                    
+                    return Response::success(['Send Remittance Inserted Successfully'],$data);
                 }
            }elseif($payment_gateway->type == "MANUAL"){
             
