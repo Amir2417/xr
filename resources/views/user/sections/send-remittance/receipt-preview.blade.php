@@ -29,7 +29,6 @@
                                     </div>
                                     @php
                                         $send_money      = get_amount(floatval($temporary_data->data->payable_amount) / $temporary_data->data->sender_base_rate) ?? "";
-                                       
                                         $exchange_rate   = get_amount(floatval($temporary_data->data->currency->rate)) ?? "";
                                         $payable_amount  = floatval($send_money) * floatval($exchange_rate);
                                     @endphp
