@@ -13,7 +13,7 @@
 
 <div class="body-wrapper">
     <div class="add-recipient-btn text-end pb-3">
-        <a href="{{ setRoute('user.recipient.create') }}" class="btn--base">{{ __("+ Add New Recipient") }} </a>
+        <a href="{{ setRoute('user.recipient.create') }}" class="btn--base">+{{ __("Add New Recipient") }} </a>
     </div>
     <div class="dashboard-list-wrapper">
         <input type="hidden" class="hidden-value" name="id">
@@ -156,7 +156,7 @@
                     <h4 class="title">{{ __("Are you sure to delete this Recipient?") }}</h4>  
                     </div>
                     <div class="modal-footer justify-content-between border-0">
-                        <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">{{ __("Close") }}</button>
                         <form action="{{ setRoute('user.recipient.delete',$item->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn--base">{{ __("Confirm") }}</button>

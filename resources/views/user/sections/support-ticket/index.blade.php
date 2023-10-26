@@ -22,7 +22,7 @@
                 <div class="dashboard-btn-wrapper">
                     <div class="dashboard-btn">
                         <a href="{{ route('user.support.ticket.create') }}" class="btn--base"><i class="las la-plus me-1"></i>
-                            Add New</a>
+                            {{ __("Add New") }}</a>
                     </div>
                 </div>
             </div>
@@ -30,12 +30,12 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Ticket ID</th>
-                            <th>User (username) </th>
-                            <th>Subject</th>
-                            <th>Message</th>
-                            <th>Status</th>
-                            <th>Last Reply</th>
+                            <th>{{ __("Ticket ID") }}</th>
+                            <th>{{ __("User") }} ({{ __("Username") }})</th>
+                            <th>{{ __("Subject") }}</th>
+                            <th>{{ __("Message") }}</th>
+                            <th>{{ __("Status") }}</th>
+                            <th>{{ __("Last Reply") }}</th>
                             <th></th>
                         </tr>
                     </thead>

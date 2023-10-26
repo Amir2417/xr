@@ -28,10 +28,9 @@ class SettingController extends Controller
     }
 
     public function basicSettings() {
-       
         $basic_settings  = BasicSettings::orderBy("id")->get()->map(function($data){
 
-            
+
             return [
                 'id'                          => $data->id,
                 'site_name'                   => $data->site_name,
@@ -40,20 +39,20 @@ class SettingController extends Controller
                 'site_logo'                   => $data->site_logo,
                 'site_fav_dark'               => $data->site_fav_dark,
                 'site_fav'                    => $data->site_fav,
+                'email_verification'          => $data->email_verification,
                 'created_at'                  => $data->created_at,
-                
+
             ];
         });
         $basic_seetings_image_paths = [
             'base_url'         => url("/"),
             'path_location'    => files_asset_path_basename("image-assets"),
             'default_image'    => files_asset_path_basename("default"),
-            
         ];
         // splash screen
 
         $splash_screen   = AppSettings::orderBy("id")->get()->map(function($data){
-           
+
             return [
                 'id'                          => $data->id,
                 'version'                     => $data->version,
@@ -61,11 +60,11 @@ class SettingController extends Controller
                 'created_at'                  => $data->created_at,
             ];
         });
-        
+
         // onboard screen
 
         $onboard_screen   = AppOnboardScreens::where('status',true)->orderBy("id")->get()->map(function($data){
-            
+
             return [
                 'id'                           => $data->id,
                 'title'                        => $data->title,
@@ -74,17 +73,17 @@ class SettingController extends Controller
                 'status'                       => $data->status,
                 'last_edit_by'                 => $data->last_edit_by,
                 'created_at'                   => $data->created_at,
-                
+
             ];
         });
 
         // web links
 
         $about_page_link   = url('about');
-       
+
         $privacy_policy = UsefulLink::where('slug','privacy-policy')->first();
         $privacy_policy_link = route('link',$privacy_policy->slug);
-        
+
         $web_links =[
             [
                 'name' => "About Us",
@@ -108,9 +107,9 @@ class SettingController extends Controller
             'web_links'                    => $web_links,
             'basic_seetings_image_paths'   => $basic_seetings_image_paths,
             'app_image_path'               => $screen_image_path,
-            
+
         ],200);
     }
 
-    
+
 }

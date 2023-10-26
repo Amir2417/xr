@@ -2,9 +2,9 @@
     <h3 class="title">{{ __("KYC Information") }} &nbsp; <span class="{{ auth()->user()->kycStringStatus->class }}">{{ auth()->user()->kycStringStatus->value }}</span></h3>
 
     @if (auth()->user()->kyc_verified == global_const()::PENDING)
-        <div class="pending text--warning kyc-text">Your KYC information is submited. Please wait for admin confirmation. When you are KYC verified you will show your submited information here.</div>
+        <div class="pending text--warning kyc-text">{{ __("Your KYC information is submited. Please wait for admin confirmation. When you are KYC verified you will show your submited information here.") }}</div>
     @elseif (auth()->user()->kyc_verified == global_const()::APPROVED)
-        <div class="approved text--success kyc-text">Your KYC information is verified</div>
+        <div class="approved text--success kyc-text">{{ __("Your KYC information is verified") }}</div>
         <ul class="kyc-data">
             @foreach (auth()->user()->kyc->data ?? [] as $item)
                 <li>
@@ -52,7 +52,7 @@
 
             <div class="col-lg-12 form-group">
                 <div class="forgot-item">
-                    <label>{{ __("Back to ") }}<a href="{{ setRoute('user.dashboard') }}" class="text--base">{{ __("Dashboard") }}</a></label>
+                    <label>{{ __("Back to") }} <a href="{{ setRoute('user.dashboard') }}" class="text--base">{{ __("Dashboard") }}</a></label>
                 </div>
             </div>
             <div class="col-lg-12 form-group text-center">

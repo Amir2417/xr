@@ -82,7 +82,7 @@ class ProfileController extends Controller
         try{
             auth()->user()->update($validated);
         }catch(Exception $e) {
-            return back()->with(['error' => ['Something went wrong! Please try again']]);
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
 
         return back()->with(['success' => ['Profile successfully updated!']]);
@@ -131,7 +131,7 @@ class ProfileController extends Controller
             Auth::logout();
             return redirect()->route('index')->with(['success' => ['Your account deleted successfully!']]);
         }catch(Exception $e) {
-            return back()->with(['error' => ['Something went worng! Please try again.']]);
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
     }
 }

@@ -110,7 +110,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('status/update','statusUpdate')->name('status.update');
     });
 
-    //Send Remittance 
+    //Send Remittance
     Route::controller(RemittanceLogController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
         Route::get('/','index')->name('index');
         Route::get('details/{trx_id}','details')->name('details');
@@ -150,7 +150,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('index', 'index')->name('index');
         Route::put('charges/update', 'trxChargeUpdate')->name('charges.update');
     });
-    
+
     // User Care Section
     Route::controller(UserCareController::class)->prefix('users')->name('users.')->group(function () {
         Route::get('index', 'index')->name('index');
@@ -226,7 +226,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::controller(AppSettingsController::class)->group(function () {
             Route::get('splash-screen', 'splashScreen')->name('splash.screen');
             Route::put('splash-screen/update', 'splashScreenUpdate')->name('splash.screen.update');
-            
+            Route::get('urls', 'urls')->name('urls');
+            Route::put('urls/update', 'urlsUpdate')->name('urls.update');
+
         });
 
         Route::controller(AppOnboardScreensController::class)->name('onboard.')->group(function () {
@@ -280,14 +282,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('item/delete/{slug}','sectionItemDelete')->name('section.item.delete');
 
         Route::controller(JournalController::class)->prefix('journal')->name('journal.')->group(function () {
-            
+
             Route::get('create','journalCreate')->name('create');
             Route::post('store','journalStore')->name('store');
             Route::put('status/update','journalStatusUpdate')->name('status.update');
             Route::delete('delete','journalDelete')->name('delete');
             Route::get('edit/{id}','journalEdit')->name('edit');
             Route::post('update/{id}','journalUpdate')->name('update');
-            
+
         });
 
         //Web journal category controller

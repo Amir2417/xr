@@ -164,10 +164,10 @@ class AuthorizationController extends Controller
                 'kyc_verified'  => GlobalConst::DEFAULT,
             ]);
             $this->generatedFieldsFilesDelete($get_values);
-            return back()->with(['error' => ['Something went wrong! Please try again']]);
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
 
-        return redirect()->route("user.profile.index")->with(['success' => ['KYC information successfully submited']]);
+        return redirect()->route("user.profile.index")->with(['success' => ['KYC information successfully submitted']]);
     }
     /**
      * Googel 2FA Form

@@ -22,7 +22,7 @@
                     <form class="card-form">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 form-group">
-                                <label>QRcode Share</label>
+                                <label>{{ __("QRcode Share") }}</label>
                                 <div class="input-group">
                                     <input type="text" class="form--control" value="{{ auth()->user()->two_factor_secret }}" readonly>
                                     <div class="input-group-text"><i class="las la-copy"></i></div>
@@ -50,19 +50,15 @@
         <div class="col-xl-6 col-lg-6 mb-20">
             <div class="custom-card mt-10">
                 <div class="dashboard-header-wrapper">
-                    <h4 class="title">Google Authenticator</h4>
+                    <h4 class="title">{{ __("Google Authenticator") }}</h4>
                 </div>
                 <div class="card-body">
-                    <h4 class="mb-3 fatitle">Download Google Authenticator App</h4>
-                    <p>Google Authenticator is a product based authenticator by Google that executes
-                        two-venture
-                        confirmation administrations for verifying clients of any programming
-                        applications.</p>
+                    <h4 class="mb-3 fatitle">{{ __("Download Google Authenticator App") }}</h4>
+                    <p>{{ __("Google Authenticator is a product based authenticator by Google that executes two-venture confirmation administrations for verifying clients of any programming applications.") }}</p>
                     <div class="play-store-thumb text-center mb-20">
                         <img class="mx-auto" src="{{ asset('public/frontend/') }}/images/element/play-store.png">
                     </div>
-                    <a href="https://www.apple.com/app-store/" class="btn--base mt-10 w-100">Download
-                        App</a>
+                    <a href="https://www.apple.com/app-store/" class="btn--base mt-10 w-100">{{ __("Download App") }}</a>
                 </div>
             </div>
         </div>

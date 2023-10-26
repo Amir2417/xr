@@ -25,91 +25,91 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'First Name*',
+                                        'label'           => __('First Name').'*',
                                         'type'            => 'text',
                                         'name'            => 'first_name',
                                         'value'           => old('first_name'),
-                                        'placeholder'     => "Enter First Name..."
+                                        'placeholder'     => __("Enter First Name")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'Middle Name',
+                                        'label'           => __('Middle Name'),
                                         'type'            => 'text',
                                         'name'            => 'middle_name',
                                         'value'           => old('middle_name'),
-                                        'placeholder'     => "Enter Middle Name..."
+                                        'placeholder'     => __("Enter Middle Name")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'Last Name*',
+                                        'label'           => __('Last Name').'*',
                                         'type'            => 'text',
                                         'name'            => 'last_name',
                                         'value'           => old('last_name'),
-                                        'placeholder'     => "Enter Last Name..."
+                                        'placeholder'     => __("Enter Last Name")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'Email',
+                                        'label'           => __('Email'),
                                         'type'            => 'email',
                                         'name'            => 'email',
                                         'value'           => old('email'),
-                                        'placeholder'     => "Enter Email..."
+                                        'placeholder'     => __("Enter Email")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'Country',
+                                        'label'           => __('Country'),
                                         'type'            => 'country',
                                         'name'            => 'country',
                                         'value'           => $receiver_currency->country,
                                         'attribute'       => 'readonly',
-                                        'placeholder'     => "Enter Country..."
+                                        'placeholder'     => __("Enter Country")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'City',
+                                        'label'           => __('City'),
                                         'type'            => 'text',
                                         'name'            => 'city',
                                         'value'           => old('city'),
-                                        'placeholder'     => "Enter City..."
+                                        'placeholder'     => __("Enter City")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'State',
+                                        'label'           => __('State'),
                                         'type'            => 'text',
                                         'name'            => 'state',
                                         'value'           => old('state'),
-                                        'placeholder'     => "Enter State..."
+                                        'placeholder'     => __("Enter State")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'Zip Code',
+                                        'label'           => __('Zip Code'),
                                         'type'            => 'text',
                                         'name'            => 'zip_code',
                                         'value'           => old('zip_code'),
-                                        'placeholder'     => "Enter Zip Code..."
+                                        'placeholder'     => __("Enter Zip Code")."..."
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'           => 'Phone',
+                                        'label'           => __('Phone'),
                                         'type'            => 'number',
                                         'name'            => 'phone',
                                         'value'           => old('phone'),
-                                        'placeholder'     => "Enter Phone..."
+                                        'placeholder'     => __("Enter Phone")."..."
                                     ])
                                 </div>
                                 <div class="form-group transaction-type">
-                                    <label>Transaction Type <span>*</span></label>
+                                    <label>{{ __("Transaction Type") }} <span>*</span></label>
                                     <select class="form--control trx-type-select select2-basic" name="method">
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">Bank Transfer</option>
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">Mobile Money</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
                                     </select>
                                 </div>
                                 <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" style="display: none;">
@@ -117,24 +117,24 @@
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Mobile Method") }}<span>*</span></label>
                                             <select class="form--control select2-basic" name="mobile_name">
-                                                <option selected>Select Method</option>
+                                                <option selected disabled>{{ __("Select Method") }}</option>
                                                 @foreach ($mobile_methods as $item)
                                                     <option value="{{ $item->name }}">{{ $item->name }} </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>Account Number<span>*</span></label>
-                                            <input type="number" class="form--control" name="account_number" placeholder="Enter Number...">
+                                            <label>{{ __("Account Number") }}<span>*</span></label>
+                                            <input type="number" class="form--control" name="account_number" placeholder="{{ __("Enter Number") }}...">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_BANK }}-view" style="display: block;">
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>{{__("Bank Name*")}}</label>
+                                            <label>{{ __("Bank Name") }}*</label>
                                             <select class="form--control select2-basic" name="bank_name">
-                                                <option selected>Select Bank</option> 
+                                                <option selected disabled>{{ __("Select Bank") }}</option> 
                                                 @foreach ($banks as $item)
                                                     <option value="{{ $item->name }}">{{ $item->name }}</option>  
                                                 @endforeach
@@ -142,20 +142,20 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'           => 'IBAN Number*',
+                                                'label'           => __('IBAN Number').'*',
                                                 'type'            => 'text',
                                                 'name'            => 'iban_number',
                                                 'value'           => old('iban_number'),
-                                                'placeholder'     => "Enter IBAN Number..."
+                                                'placeholder'     => __("Enter IBAN Number")."..."
                                             ])
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     @include('admin.components.form.textarea',[
-                                        'label'           => 'Address',
+                                        'label'           => __('Address'),
                                         'name'            => 'address',
-                                        'placeholder'     => 'Write Here...'
+                                        'placeholder'     => __('Write Here').'...'
                                     ])
                                 </div>
                                 <div class="document-id ptb-30">
@@ -164,7 +164,7 @@
                                             <div class="col-lg-4 pb-20">
                                                 <label class="title">{{ __("Document type") }}</label>
                                                 <select class="nice-select" name="document_type">
-                                                    <option selected disabled>Select Document Type</option>
+                                                    <option selected disabled>{{ __("Select Document Type") }}</option>
                                                     <option value="{{ global_const()::DOCUMENT_TYPE_NID }}">{{ global_const()::DOCUMENT_TYPE_NID }}</option>
                                                     <option value="{{ global_const()::DOCUMENT_TYPE_DRIVING_LICENCE }}">{{ global_const()::DOCUMENT_TYPE_DRIVING_LICENCE }}</option>
                                                     <option value="{{ global_const()::DOCUMENT_TYPE_PASSPORT }}">{{ global_const()::DOCUMENT_TYPE_PASSPORT }}</option>
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                         <div class="col-xl-12 col-lg-12">
-                            <button type="submit" class="btn--base w-100">Confirm</button>
+                            <button type="submit" class="btn--base w-100">{{ __("Confirm") }}</button>
                         </div>
                     </form>
                 </div>

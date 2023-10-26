@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Api\V1\User\SendRemittanceController;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use App\Models\Admin\TransactionSetting;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Frontend\SiteController;
 use App\Http\Controllers\User\RemittanceController;
+use App\Http\Controllers\Api\V1\User\SendRemittanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,29 +39,46 @@ Route::post('frontend/request/send-money',function(Request $request) {
     
     $validated = $validator->validate();
 
-    $validated['identifier']    = Str::uuid();
-    
-    $data = [
-        'type'                  => $validated['type'],
-        'identifier'            => $validated['identifier'],
-        'data'                  => [
-            'send_money'        => $validated['send_money'],
-            'fees'              => $request->fees,
-            'convert_amount'    => $request->convert_amount,
-            'payable_amount'    => $request->payable,
-            'receive_money'     => $request->receive_money,
-            'sender_currency'   => $request->sender_currency,
-            'receiver_currency' => $request->receiver_currency,
-            'sender_ex_rate'    => $request->sender_ex_rate,
-            'sender_base_rate'  => $request->sender_base_rate,
-            'receiver_ex_rate'  => $request->receiver_ex_rate,
-        ],
+    $send_money = $validated['send_money'] / $request->sender_base_rate;
         
-    ];
+    $limit_amount = TransactionSetting::where('title',$validated['type'])->first();
+    $isWithinLimits = false;
+    foreach($limit_amount->intervals as $item){
+        $min_limit = $item->min_limit;
+        $max_limit = $item->max_limit;
+        if($send_money >= $min_limit && $send_money <= $max_limit){
+            $isWithinLimits = true;
+            break; 
+        }
+    }
+    if ($isWithinLimits) {
+        $validated['identifier']    = Str::uuid();
     
-    $record = TemporaryData::create($data);
+        $data = [
+            'type'                  => $validated['type'],
+            'identifier'            => $validated['identifier'],
+            'data'                  => [
+                'send_money'        => $validated['send_money'],
+                'fees'              => $request->fees,
+                'convert_amount'    => $request->convert_amount,
+                'payable_amount'    => $request->payable,
+                'receive_money'     => $request->receive_money,
+                'sender_currency'   => $request->sender_currency,
+                'receiver_currency' => $request->receiver_currency,
+                'sender_ex_rate'    => $request->sender_ex_rate,
+                'sender_base_rate'  => $request->sender_base_rate,
+                'receiver_ex_rate'  => $request->receiver_ex_rate,
+            ],
+            
+        ];
+        
+        $record = TemporaryData::create($data);
 
-    return redirect()->route('user.recipient.index',$record->identifier);
+        return redirect()->route('user.recipient.index',$record->identifier);
+    }else {
+        return back()->with(['error' => ['Please follow the transaction limit']]);
+    } 
+    
 
 })->name('frontend.request.send.money');
 

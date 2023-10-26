@@ -96,7 +96,7 @@ class LanguageController extends Controller
         $validated = Arr::except($validated,['target']);
 
         $language = Language::find($request->target);
-        
+
         try{
             $language->update($validated);
         }catch(Exception $e) {
@@ -104,7 +104,7 @@ class LanguageController extends Controller
         }
 
         return back()->with(['success' => ['Language updated successfully!']]);
-        
+
     }
 
     /**
@@ -125,7 +125,7 @@ class LanguageController extends Controller
         }
 
         try{
-           $language->delete(); 
+           $language->delete();
         }catch(Exception $e) {
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
@@ -226,11 +226,12 @@ class LanguageController extends Controller
             return back()->with(['error' => [$e->getMessage()]]);
         }
 
-        
+
 
         $filter_with_database_lang = array_intersect_key($sheets,[$validated['language'] => "value"]);
 
         $get_predefine_keys = LanguageImport::getKeys();
+
 
         foreach($filter_with_database_lang as $code => $item) {
 

@@ -34,7 +34,7 @@ class SendRemittanceController extends Controller
      * Method for get the transaction type data
      */
     public function index(Request $request){
-        
+
         $transaction_type  = TransactionSetting::where('status',true)->get();
         if($transaction_type->isEmpty()) {
             return Response::error(['Transaction Type not found!'],[],404);
@@ -73,7 +73,7 @@ class SendRemittanceController extends Controller
             'base_url'         => url("/"),
             'path_location'    => files_asset_path_basename("currency-flag"),
             'default_image'    => files_asset_path_basename("default"),
-            
+
         ];
 
 
@@ -101,7 +101,7 @@ class SendRemittanceController extends Controller
         $transaction_type     = TransactionSetting::where('status',true)->where('title','like','%'.$request->type.'%')->first();
         $sender_currency        = Currency::where('status',true)->where('sender',true)->where('id',$request->sender_currency)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('id',$request->receiver_currency)->first();
-      
+
         if($request->type == PaymentGatewayConst::TRANSACTION_TYPE_BANK || $request->type == PaymentGatewayConst::TRANSACTION_TYPE_MOBILE){
             $sender_currency_code   = $sender_currency->code;
             $sender_currency_rate   = $sender_currency->rate;
@@ -110,18 +110,18 @@ class SendRemittanceController extends Controller
             $receiver_currency_rate = $receiver_currency->rate;
 
             $enter_amount           = floatval($request->send_money) / $sender_currency_rate;
-           
+
             $find_percent_charge    = ($enter_amount) / 100;
-           
+
             $fixed_charge           = $transaction_type->fixed_charge;
-           
+
             $percent_charge         = $transaction_type->percent_charge;
-            
+
             $total_percent_charge   = $find_percent_charge * $percent_charge;
-            $total_charge           = $fixed_charge + $total_percent_charge; 
+            $total_charge           = $fixed_charge + $total_percent_charge;
             $total_charge_amount    = $total_charge * $sender_currency_rate;
-            
-             
+
+
             $payable_amount       = $enter_amount + $total_charge_amount;
             if ($request->send_money == 0) {
                 return Response::error(['Send Money must be greater than 0.'], [], 400);
@@ -139,7 +139,7 @@ class SendRemittanceController extends Controller
                         $percent_charge       = $item->percent;
                         $total_percent_charge = $find_percent_charge * $percent_charge;
                         $total_charge         = $fixed_charge + $total_percent_charge;
-                        $total_charge_amount    = $total_charge * $sender_currency_rate;
+                        $total_charge_amount  = $total_charge * $sender_currency_rate;
                         $convert_amount       = floatval($request->send_money);
                         $payable_amount       = $request->send_money + $total_charge_amount;
                         $reciver_rate           = $receiver_currency_rate / $sender_currency_rate;
@@ -164,9 +164,9 @@ class SendRemittanceController extends Controller
                 'receiver_currency' => $receiver_currency_code,
                 'sender_ex_rate'    => $sender_rate,
                 'receiver_ex_rate'  => $reciver_rate,
-                'sender_base_rate'  => floatval($sender_currency_rate)    
+                'sender_base_rate'  => floatval($sender_currency_rate)
             ],
-            
+
         ];
         try {
             $temporary_data = TemporaryData::create($data);
@@ -179,7 +179,7 @@ class SendRemittanceController extends Controller
         ],200);
     }
     /**
-    * Method for calculate send remittance 
+    * Method for calculate send remittance
     */
     public function sendMoney(Request $request){
         $validator           = Validator::make($request->all(),[
@@ -199,7 +199,7 @@ class SendRemittanceController extends Controller
             $fixed_charge         = $transaction_type->fixed_charge;
             $percent_charge       = $transaction_type->percent_charge;
             $total_percent_charge = $find_percent_charge * $percent_charge;
-            $total_charge         = $fixed_charge + $total_percent_charge;  
+            $total_charge         = $fixed_charge + $total_percent_charge;
             $payable_amount       = $enter_amount + $total_charge;
             if ($request->send_money == 0) {
                 return Response::error(['Send Money must be greater than 0.'], [], 400);
@@ -224,7 +224,7 @@ class SendRemittanceController extends Controller
                 }
             }
         }
-            
+
         $validated['identifier']    = Str::uuid();
         $data = [
             'type'               => $validated['type'],
@@ -236,7 +236,7 @@ class SendRemittanceController extends Controller
                 'payable_amount' => $payable_amount,
                 'receive_money'  => $receive_money,
             ],
-            
+
         ];
         try {
             $temporary_data = TemporaryData::create($data);
@@ -247,10 +247,10 @@ class SendRemittanceController extends Controller
         return Response::success(['Send Money'],[
             'temporary_data'      => $temporary_data
         ],200);
-        
+
     }
     /**
-     * Method for show send remittance beneficiary 
+     * Method for show send remittance beneficiary
      * @param $identifier
      * @param Illuminate\Http\Request $request
      */
@@ -278,7 +278,7 @@ class SendRemittanceController extends Controller
         if($validator->fails()){
             return Response::error($validator->errors()->all(),[]);
         }
-        
+
         $receiver_country     = Currency::where('receiver',true)->first();
         $banks                = RemittanceBank::where('country',$receiver_country->country)->where('status',true)->get()->map(function($data){
             return [
@@ -302,13 +302,13 @@ class SendRemittanceController extends Controller
                 'updated_at'         => $data->updated_at ?? '',
             ];
         });
-        
+
         return Response::success(['Bank and Mobile Data fetch successfully.'],[
             'banks'           => $banks,
             'mobile_method'   => $mobile_methods,
         ],200);
     }
-    
+
     public function beneficiaryStore(Request $request){
         $validator  = Validator::make($request->all(),[
             'identifier'      => 'required',
@@ -342,7 +342,7 @@ class SendRemittanceController extends Controller
                 $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'site-section');
                 chmod(get_files_path('site-section') . '/' . $upload_image, 0644);
                 $validated['front_image']     = $upload_image;
-                
+
             }
             if($request->hasFile('back_image')){
                 $back_image = upload_file($validated['back_image'],'junk-files');
@@ -356,7 +356,7 @@ class SendRemittanceController extends Controller
                     'name'  => "Recipient already exists!",
                 ]);
             }
-            
+
             try{
                 $beneficiary  = Recipient::create($validated);
             }catch(Exception $e){
@@ -394,7 +394,7 @@ class SendRemittanceController extends Controller
                 $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'site-section');
                 chmod(get_files_path('site-section') . '/' . $upload_image, 0644);
                 $validated['front_image']     = $upload_image;
-                
+
             }
             if($request->hasFile('back_image')){
                 $back_image = upload_file($validated['back_image'],'junk-files');
@@ -417,7 +417,7 @@ class SendRemittanceController extends Controller
                 'beneficiary'       => $beneficiary,
                 'temporary_data'      => $temporary_data
             ],200);
-        } 
+        }
         return Response::error(['Something went wrong! Please try again.'],[],404);
     }
     /**
@@ -578,7 +578,7 @@ class SendRemittanceController extends Controller
                 'payable_amount'      => $temporary_data->data->payable_amount,
                 'receive_money'       => $temporary_data->data->receive_money,
             ],
-            
+
         ];
         try{
             $temporary_data->update($data);
@@ -606,8 +606,9 @@ class SendRemittanceController extends Controller
            $error =  ['error'=>$validator->errors()->all()];
            return Response::validation($error);
        }
-       
+
        $temporary_data  = TemporaryData::where('identifier',$request->identifier)->first();
+
        $alias = $temporary_data->data->currency->alias;
        $amount = $temporary_data->data->payable_amount * $temporary_data->data->currency->rate;
 
@@ -623,9 +624,9 @@ class SendRemittanceController extends Controller
        $user = auth()->user();
        try{
            $instance = PaymentGatewayHelper::init($request->all())->gateway()->api()->get();
-           $trx = $instance['response']['id']??$instance['response']['trx'];
-            $temData = TemporaryData::where('identifier',$trx)->first();
-            
+           $trx = $instance['response']['id']??$instance['response']['trx']??$instance['response']['reference_id']??$instance['response'];;
+           $temData = TemporaryData::where('identifier',$trx)->first();
+
            if(!$temData){
                $error = ['error'=>["Invalid Request"]];
                return Response::error($error);
@@ -634,8 +635,6 @@ class SendRemittanceController extends Controller
            $payment_gateway = PaymentGateway::where('id', $temData->data->gateway)->first();
            if($payment_gateway->type == "AUTOMATIC") {
                if($temData->type == PaymentGatewayConst::STRIPE) {
-
-                   
                    $payment_informations =[
                        'trx' =>  $temData->identifier,
                        'gateway_currency_name' =>  $payment_gateway_currency->name,
@@ -656,7 +655,28 @@ class SendRemittanceController extends Controller
                    ];
 
                    return Response::success(['Send Remittance Inserted Successfully'], $data);
-               }else if($temData->type == PaymentGatewayConst::PAYPAL) {
+               }elseif($temData->type == PaymentGatewayConst::RAZORPAY) {
+                $payment_informations =[
+                    'trx' =>  $temData->identifier,
+                    'gateway_currency_name' =>  $payment_gateway_currency->name,
+                    'request_amount' => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
+                    'exchange_rate' => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
+                    'total_charge' => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
+                    'will_get' => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
+                    'payable_amount' =>  get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
+                ];
+                $data =[
+                     'gategay_type'          => $payment_gateway->type,
+                     'gateway_currency_name' => $payment_gateway_currency->name,
+                     'alias'                 => $payment_gateway_currency->alias,
+                     'identify'              => $temData->type,
+                     'payment_informations'  => $payment_informations,
+                     'url' => @$instance['response']['short_url'],
+                     'method' => "get",
+                ];
+
+                return Response::success(['Send Remittance Inserted Successfully'], $data);
+            }else if($temData->type == PaymentGatewayConst::PAYPAL) {
                    $payment_informations = [
                         'trx'                   => $temData->identifier,
                         'gateway_currency_name' => $payment_gateway_currency->name,
@@ -699,7 +719,7 @@ class SendRemittanceController extends Controller
 
                    return Response::success(['Send Remittance Inserted Successfully'], $data);
                 }elseif($temData->type == PaymentGatewayConst::SSLCOMMERZ) {
-                    
+
                     $payment_informations =[
                         'trx'                   =>  $temData->identifier,
                         'gateway_currency_name' =>  $payment_gateway_currency->name,
@@ -718,14 +738,14 @@ class SendRemittanceController extends Controller
                         'url' => $instance['response']['link'],
                         'method' => "get",
                     ];
-                    
+
                     return Response::success(['Send Remittance Inserted Successfully'],$data);
                 }
            }elseif($payment_gateway->type == "MANUAL"){
-            
+
                 $payment_informations =[
                     'trx'                   => $temData->identifier,
-                    
+
                     'gateway_currency_name' => $payment_gateway_currency->name,
                     'request_amount'        => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
                     'exchange_rate'         => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
@@ -768,10 +788,10 @@ class SendRemittanceController extends Controller
        $checkTempData = $checkTempData->toArray();
 
        try {
-        
+
           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceiveApi();
        } catch (Exception $e) {
-        
+
            $message = ['error' => [$e->getMessage()]];
            return Response::error($message);
        }
@@ -810,7 +830,7 @@ class SendRemittanceController extends Controller
         $checkTempData = $checkTempData->toArray();
         try{
            $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
-          
+
         }catch(Exception $e) {
             $message = ['error' => [$e->getMessage()]];
             Response::error($message);
@@ -839,7 +859,7 @@ class SendRemittanceController extends Controller
         $checkTempData = $checkTempData->toArray();
 
         try{
-            
+
             $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
         }catch(Exception $e) {
             $message = ['error' => ["Something Is Wrong..."]];
@@ -856,7 +876,7 @@ class SendRemittanceController extends Controller
 
     //sslcommerz success
     public function sllCommerzSuccess(Request $request){
-        
+
         $data = $request->all();
         $token = $data['tran_id'];
         $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
@@ -960,7 +980,7 @@ class SendRemittanceController extends Controller
 
             $checkTempData = TemporaryData::where("type",PaymentGatewayConst::RAZORPAY)->where("identifier",$token)->first();
             if(!$checkTempData) {
-                
+
                 return Response::error(['Transaction Failed. Record didn\'t saved properly. Please try again.'],404);
             }
             $checkTempData = $checkTempData->toArray();
@@ -983,5 +1003,5 @@ class SendRemittanceController extends Controller
             return Response::error($message);
         }
     }
-   
+
 }

@@ -24,6 +24,11 @@ class ForgotPasswordController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $basic_settings;
+    public function __construct()
+    {
+        $this->basic_settings = BasicSettingsProvider::get();
+    }
     public function showForgotForm()
     {
         $page_title = setPageTitle("Forgot Password");
@@ -38,6 +43,7 @@ class ForgotPasswordController extends Controller
      */
     public function sendCode(Request $request)
     {
+
         $request->validate([
             'credentials'   => "required|string|max:100",
         ]);
@@ -52,7 +58,7 @@ class ForgotPasswordController extends Controller
 
         $token = generate_unique_string("user_password_resets","token",80);
         $code = generate_random_code();
-        
+
         try{
             UserPasswordReset::where("user_id",$user->id)->delete();
             $password_reset = UserPasswordReset::create([
@@ -60,7 +66,10 @@ class ForgotPasswordController extends Controller
                 'token'         => $token,
                 'code'          => $code,
             ]);
-            $user->notify(new PasswordResetEmail($user,$password_reset));
+            if($this->basic_settings->email_notification == true && $this->basic_settings->email_verification == true){
+                $user->notify(new PasswordResetEmail($user,$password_reset));
+            }
+
         }catch(Exception $e) {
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }

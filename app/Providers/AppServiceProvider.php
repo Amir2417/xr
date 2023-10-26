@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 ini_set('memory_limit','-1');
+ini_set('serialize_precision','-1');
 
 class AppServiceProvider extends ServiceProvider
 {

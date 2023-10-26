@@ -38,7 +38,7 @@ trait RazorTrait
             "accept_partial" => false,
             "first_min_partial_amount" => 100,
             "reference_id" =>getTrxNum(),
-            "description" => "Payment For Quickei  Add Balance",
+            "description" => "Payment For XRemit  Add Balance",
             "customer" => array(
                 "name" => $user_name ,
                 "contact" => $user_phone,
@@ -50,7 +50,7 @@ trait RazorTrait
             ),
             "reminder_enable" => true,
             "notes" => array(
-                "policy_name"=> "Quickei "
+                "policy_name"=> "XRemit "
             ),
             "callback_url"=> $return_url,
             "callback_method"=> "get"
@@ -131,14 +131,13 @@ trait RazorTrait
 
     }
     public function razorJunkInsert($response) {
-        dd($response);
         $output = $this->output;
         $user = auth()->guard(get_auth_guard())->user();
         $creator_table = $creator_id = $wallet_table = $wallet_id = null;
 
         $creator_table = auth()->guard(get_auth_guard())->user()->getTable();
         $creator_id = auth()->guard(get_auth_guard())->user()->id;
-        
+
         $data = [
             'gateway'       => $output['gateway']->id,
             'currency'      => $output['currency']->id,
@@ -149,7 +148,7 @@ trait RazorTrait
             'creator_id'    => $creator_id,
             'creator_guard' => get_auth_guard(),
         ];
-        dd($response);
+
         Session::put('identifier',$response['reference_id']);
         Session::put('output',$output);
 
@@ -171,7 +170,7 @@ trait RazorTrait
         $user = auth()->user();
         $trx_id = 'R'.getTrxNum();
         $inserted_id = $this->insertRecordRazor($output,$trx_id);
-        
+
         $this->removeTempDataRazor($output);
         if($this->requestIsApiUser()) {
             // logout user
@@ -184,7 +183,7 @@ trait RazorTrait
             UserNotification::create([
                 'user_id'  => auth()->user()->id,
                 'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount + $output['amount']->total_charge).",
-                Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
+                Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.",
             ]);
         }
 
@@ -205,7 +204,7 @@ trait RazorTrait
                 $user_id = auth()->guard(get_auth_guard())->user()->id;
             }
                 // send remittance
-                
+
                 $id = DB::table("transactions")->insertGetId([
                     'user_id'                       => auth()->user()->id,
                 'payment_gateway_currency_id'   => $output['currency']->id,
@@ -254,7 +253,7 @@ trait RazorTrait
                 'fees'                          => $output['amount']->total_charge,
                 'convert_amount'                => $output['amount']->convert_amount,
                 'will_get_amount'               => $output['amount']->will_get,
-                
+
                 'remark'                        => $output['gateway']->name,
                 'details'                       => "COMPLETED",
                 'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
@@ -271,7 +270,7 @@ trait RazorTrait
         $this->output['trx_id'] = $trx_id;
         return $id;
     }
-   
+
 
     public function removeTempDataRazor($output) {
         TemporaryData::where("identifier",$output['tempData']['identifier'])->delete();
@@ -280,8 +279,9 @@ trait RazorTrait
 
     // ********* For API **********
     public function razorInitApi($output = null) {
+
         if(!$output) $output = $this->output;
-        
+
         $credentials = $this->getCredentials($output);
         $api_key = $credentials->public_key;
         $api_secret = $credentials->secret_key;
@@ -295,16 +295,20 @@ trait RazorTrait
 
         $return_url = route('api.user.send-remittance.razor.callback', "r-source=".PaymentGatewayConst::APP);
 
+
         $payment_link = "https://api.razorpay.com/v1/payment_links";
 
         // Enter the details of the payment
+        // Convert the decimal amount to paise (multiply by 100)
+        // $amountInDecimal =$amount;  // Your original amount
+        // $amountInPaise = (int) ($amountInDecimal * 100);
         $data = array(
             "amount" => $amount * 100,
             "currency" => $output['amount']->sender_cur_code,
             "accept_partial" => false,
             "first_min_partial_amount" => 100,
             "reference_id" =>getTrxNum(),
-            "description" => "Payment For Quickei  Add Balance",
+            "description" => "Payment For XRemit  Add Balance",
             "customer" => array(
                 "name" => $user_name ,
                 "contact" => $user_phone,
@@ -316,16 +320,15 @@ trait RazorTrait
             ),
             "reminder_enable" => true,
             "notes" => array(
-                "policy_name"=> "Quickei "
+                "policy_name"=> "XRemit "
             ),
             "callback_url"=> $return_url,
             "callback_method"=> "get"
         );
-        
 
         $payment_data_string = json_encode($data);
         $payment_ch = curl_init($payment_link);
-        
+
         curl_setopt($payment_ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($payment_ch, CURLOPT_POSTFIELDS, $payment_data_string);
         curl_setopt($payment_ch, CURLOPT_RETURNTRANSFER, true);
@@ -340,10 +343,10 @@ trait RazorTrait
             $message = ['error' => [$payment_data['error']['description']]];
             Response::error($message);
         }
-        
+
         $this->razorJunkInsert($payment_data);
         $data['short_url'] = $payment_data['short_url'];
-        
+
         return $data;
     }
 }

@@ -18,7 +18,7 @@
                     <img class="avatar" src="{{ auth()->user()->userImage ?? "" }}" alt="client">
                     <div class="card-header-user-content">
                         <h6 class="title">{{ $support_ticket->user->fullname ?? "" }}</h6>
-                        <span class="sub-title">Ticket ID : <span
+                        <span class="sub-title">{{ __("Ticket ID") }} : <span
                                 class="text--warning">#{{ $support_ticket->token }}</span></span>
                     </div>
                 </div>
@@ -30,15 +30,13 @@
                 <div class="chat-container messages">
                     <ul>
                         @foreach ($support_ticket->conversations ?? [] as $item)
-                                <li class="media media-chat @if ($item->receiver_type != "USER") media-chat-reverse sent @else replies @endif">
-                                    <img class="avatar" src="{{ $item->senderImage }}" alt="user">
-                                    <div class="media-body">
-                                        <p>{{ $item->message }}</p>
-                                    </div>
-                                </li>
-                            @endforeach
-                       
-                        
+                            <li class="media media-chat @if ($item->receiver_type != "USER") media-chat-reverse sent @else replies @endif">
+                                <img class="avatar" src="{{ $item->senderImage }}" alt="user">
+                                <div class="media-body">
+                                    <p>{{ $item->message }}</p>
+                                </div>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
                 @include('user.components.support-ticket.conversation-message-input',['support_ticket' => $support_ticket])   

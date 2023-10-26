@@ -9,12 +9,12 @@
         </div>
     </div>
     <div class="support-profile-body">
-        <h5 class="title">Support Details</h5>
+        <h5 class="title">{{ __("Support Details") }}</h5>
         <ul class="support-profile-list">
-            <li>Subject : <span>{{ $support_ticket->subject ?? ""}}</span></li>
-            <li>Description : <span>{{ $support_ticket->desc ?? ""}}</span></li>
+            <li>{{ __("Subject") }} : <span>{{ $support_ticket->subject ?? ""}}</span></li>
+            <li>{{ __("Description") }} : <span>{{ $support_ticket->desc ?? ""}}</span></li>
             @foreach ($support_ticket->attachments as $key => $item)
-                <li>Attachments - {{ $key + 1 }} : 
+                <li>{{ __("Attachments") }} - {{ $key + 1 }} : 
                     <span class="text--danger">
                         <a href="{{ setRoute('file.download',['support-attachment',$item->attachment]) }}">
                             {{ Str::words($item->attachment_info->original_base_name ?? "", 5, '...' . $item->attachment_info->extension ?? "" ) }}

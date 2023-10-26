@@ -274,7 +274,7 @@
                                     <i class="las la-battery-half"></i>
                                 </div>
                                 <div class="preview-list-user-content">
-                                    <span>{{ __("Fees & Charge") }}</span>
+                                    <span>{{ __("Fees & Charges") }}</span>
                                 </div>
                             </div>
                         </div>
@@ -361,7 +361,7 @@
                         </div>
                     </div>
                     <div class="receipt-download" style="text-align: center; padding-top: 20px;">
-                        <a href="{{ setRoute('download.pdf',$item->trx_id) }}" class="btn btn--base">Download Receipt</a>
+                        <a href="{{ setRoute('download.pdf',$item->trx_id) }}" class="btn btn--base">{{ __("Download Receipt") }}</a>
                         <input type="hidden" name="" class="box" value="{{ setRoute('share.link',$item->trx_id) }}">
                         <div class="btn btn--base copy">{{ __("Copy Link") }}</div>
                     </div>

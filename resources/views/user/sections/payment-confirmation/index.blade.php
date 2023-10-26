@@ -30,7 +30,7 @@
                         </div>
                         <div class="payment-recipt pt-4">
                             <div class="receipt-dawonload">
-                                <a href="{{ setRoute('download.pdf',$transaction->trx_id) }}" class="btn--base"> <i class="las la-file-pdf"></i> Download Receipt PDF<i class="las la-arrow-down"></i></a>
+                                <a href="{{ setRoute('download.pdf',$transaction->trx_id) }}" class="btn--base"> <i class="las la-file-pdf"></i> {{ __("Download Receipt PDF") }}<i class="las la-arrow-down"></i></a>
                             </div>
                         </div>
                     </div>
@@ -39,12 +39,12 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="payment-conformation-footer">
-                                <a href="{{ setRoute('user.send.remittance.index') }}" class="btn--base w-100"> Send Another Remittance</a>
+                                <a href="{{ setRoute('user.send.remittance.index') }}" class="btn--base w-100">{{ __("Send Another Remittance") }}</a>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="payment-conformation-footer">
-                                <a href="{{ setRoute('user.dashboard') }}" class="btn--base w-100">Go To Dashboard</a>
+                                <a href="{{ setRoute('user.dashboard') }}" class="btn--base w-100">{{ __("Go To Dashboard") }}</a>
                             </div>
                         </div>
                     </div>

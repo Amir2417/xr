@@ -62,34 +62,48 @@ class SendRemittanceController extends Controller
             return back()->with(['error' => ['Please enter send money.']]);
         }
         $validated = $validator->validate();
-
-        $validated['identifier']    = Str::uuid();
-        $data = [
-            'type'                  => $validated['type'],
-            'identifier'            => $validated['identifier'],
-            'data'                  => [
-                'send_money'        => $validated['send_money'],
-                'fees'              => $request->fees,
-                'convert_amount'    => $request->convert_amount,
-                'payable_amount'    => $request->payable,
-                'receive_money'     => $request->receive_money,
-                'sender_name'       => auth()->user()->fullname,
-                'sender_email'      => auth()->user()->email,
-                'sender_currency'   => $request->sender_currency,
-                'receiver_currency' => $request->receiver_currency,
-                'sender_ex_rate'    => $request->sender_ex_rate,
-                'sender_base_rate'  => $request->sender_base_rate,
-                'receiver_ex_rate'  => $request->receiver_ex_rate,
-            ],
-            
-        ];
-        try {
-            $temporary_data = TemporaryData::create($data);
-        } catch (Exception $e) {
-            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        $send_money = $validated['send_money'] / $request->sender_base_rate;
+        
+        $limit_amount = TransactionSetting::where('title',$validated['type'])->first();
+        $isWithinLimits = false;
+        foreach($limit_amount->intervals as $item){
+            $min_limit = $item->min_limit;
+            $max_limit = $item->max_limit;
+            if($send_money >= $min_limit && $send_money <= $max_limit){
+                $isWithinLimits = true;
+                break; 
+            }
         }
-        return redirect()->route('user.recipient.index',$temporary_data->identifier);
-       
+        if ($isWithinLimits) {
+            $validated['identifier']    = Str::uuid();
+            $data = [
+                'type'                  => $validated['type'],
+                'identifier'            => $validated['identifier'],
+                'data'                  => [
+                    'send_money'        => $validated['send_money'],
+                    'fees'              => $request->fees,
+                    'convert_amount'    => $request->convert_amount,
+                    'payable_amount'    => $request->payable,
+                    'receive_money'     => $request->receive_money,
+                    'sender_name'       => auth()->user()->fullname,
+                    'sender_email'      => auth()->user()->email,
+                    'sender_currency'   => $request->sender_currency,
+                    'receiver_currency' => $request->receiver_currency,
+                    'sender_ex_rate'    => $request->sender_ex_rate,
+                    'sender_base_rate'  => $request->sender_base_rate,
+                    'receiver_ex_rate'  => $request->receiver_ex_rate,
+                ],
+                
+            ];
+            try {
+                $temporary_data = TemporaryData::create($data);
+            } catch (Exception $e) {
+                return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            }
+            return redirect()->route('user.recipient.index',$temporary_data->identifier);
+        }else {
+            return back()->with(['error' => ['Please follow the transaction limit']]);
+        }   
     }
     
     /**

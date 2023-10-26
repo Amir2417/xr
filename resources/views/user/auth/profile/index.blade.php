@@ -57,17 +57,17 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "First Name<span>*</span>",
+                                        'label'         => __("First Name")."<span>*</span>",
                                         'name'          => "firstname",
-                                        'placeholder'   => "Enter First Name...",
+                                        'placeholder'   => __("Enter First Name")."...",
                                         'value'         => old('firstname',auth()->user()->firstname)
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "Last Name<span>*</span>",
+                                        'label'         => __("Last Name")."<span>*</span>",
                                         'name'          => "lastname",
-                                        'placeholder'   => "Enter Last Name...",
+                                        'placeholder'   => __("Enter Last Name")."...",
                                         'value'         => old('lastname',auth()->user()->lastname)
                                     ])
                                 </div>
@@ -77,42 +77,42 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "Phone<span>*</span>",
+                                        'label'         => __("Phone"),
                                         'name'          => "phone",
                                         'type'          => "number",
-                                        'placeholder'   => "Enter Number...",
+                                        'placeholder'   => __("Enter Number")."...",
                                         'value'         => old('full_mobile',auth()->user()->full_mobile ?? "" )
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "Address",
+                                        'label'         => __("Address"),
                                         'name'          => "address",
-                                        'placeholder'   => "Enter Address...",
+                                        'placeholder'   => __("Enter Address")."...",
                                         'value'         => old('address',auth()->user()->address->address ?? "")
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "City",
+                                        'label'         => __("City"),
                                         'name'          => "city",
-                                        'placeholder'   => "Enter City...",
+                                        'placeholder'   => __("Enter City")."...",
                                         'value'         => old('city',auth()->user()->address->city ?? "")
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "State",
+                                        'label'         => __("State"),
                                         'name'          => "state",
-                                        'placeholder'   => "Enter State...",
+                                        'placeholder'   => __("Enter State")."...",
                                         'value'         => old('state',auth()->user()->address->state ?? "")
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "Zip Code",
+                                        'label'         => __("Zip Code"),
                                         'name'          => "zip_code",
-                                        'placeholder'   => "Enter Zip...",
+                                        'placeholder'   => __("Enter Zip")."...",
                                         'value'         => old('zip_code',auth()->user()->address->zip ?? "")
                                     ])
                                 </div>
@@ -147,7 +147,7 @@
                                 <a href="javascript:void(0)" class="show-pass field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group show_hide_password">
-                                <label>Confirm Password<span>*</span></label>
+                                <label>{{ __("Confirm Password") }}<span>*</span></label>
                                 <input type="password" class="form--control" name="password_confirmation" placeholder="{{ __("Enter Password") }}...">
                                 <a href="javascript:void(0)" class="show-pass field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>
@@ -172,7 +172,7 @@
           
         </div>
         <div class="modal-footer justify-content-between border-0">
-            <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">{{ __("Close") }}</button>
             <form action="{{ setRoute('user.profile.delete',auth()->user()->id) }}" method="POST">
                 @csrf
                 <button type="submit" class="btn--base">{{ __("Confirm") }}</button>

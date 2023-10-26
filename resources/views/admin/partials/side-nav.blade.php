@@ -29,7 +29,7 @@
                     'title'     => __("Dashboard"),
                     'icon'      => "menu-icon las la-rocket",
                 ])
-                
+
                 {{-- Section Default --}}
                 @include('admin.components.side-nav.link-group',[
                     'group_title'       => __("Default"),
@@ -69,10 +69,10 @@
                             'route'     => "admin.sending.purpose.index",
                             'icon'      => 'menu-icon las la-share-alt'
                         ]
-                        
+
                     ]
                 ])
-                
+
                 @include('admin.components.side-nav.link-group',[
                     'group_title'       => __("Transactions & Logs"),
                     'group_links'       => [
@@ -91,39 +91,39 @@
                                     ],
                                     [
                                         'title'     => __("Confirm Payment Logs"),
-                                        'route'     => "admin.send.remittance.confirm.payment", 
+                                        'route'     => "admin.send.remittance.confirm.payment",
                                     ],
                                     [
                                         'title'     => __("On Hold Logs"),
-                                        'route'     => "admin.send.remittance.hold", 
+                                        'route'     => "admin.send.remittance.hold",
                                     ],
                                     [
                                         'title'     => __("Settled Logs"),
-                                        'route'     => "admin.send.remittance.settled", 
+                                        'route'     => "admin.send.remittance.settled",
                                     ],
                                     [
                                         'title'     => __("Complete Logs"),
-                                        'route'     => "admin.send.remittance.complete", 
+                                        'route'     => "admin.send.remittance.complete",
                                     ],
                                     [
                                         'title'     => __("Canceled Logs"),
-                                        'route'     => "admin.send.remittance.canceled", 
+                                        'route'     => "admin.send.remittance.canceled",
                                     ],
                                     [
                                         'title'     => __("Failed Logs"),
-                                        'route'     => "admin.send.remittance.failed", 
+                                        'route'     => "admin.send.remittance.failed",
                                     ],
                                     [
                                         'title'     => __("Refunded Logs"),
-                                        'route'     => "admin.send.remittance.refunded", 
+                                        'route'     => "admin.send.remittance.refunded",
                                     ],
                                     [
                                         'title'     => __("Delayed Logs"),
-                                        'route'     => "admin.send.remittance.delayed", 
+                                        'route'     => "admin.send.remittance.delayed",
                                     ],
                                     [
                                         'title'     => __("All Logs"),
-                                        'route'     => "admin.send.remittance.index", 
+                                        'route'     => "admin.send.remittance.index",
                                     ]
                                 ],
                             ],
@@ -132,7 +132,7 @@
                             'title'             => "Statements",
                             'icon'              => "menu-icon las la-sign-out-alt",
                             'route'             => "admin.statements.index",
-                                
+
                         ],
 
                     ]
@@ -156,7 +156,7 @@
                                     ],
                                     [
                                         'title'     => "KYC Unverified",
-                                        'route'     => "admin.users.kyc.unverified", 
+                                        'route'     => "admin.users.kyc.unverified",
                                     ],
                                     [
                                         'title'     => "All Users",
@@ -186,7 +186,7 @@
                                     ],
                                     [
                                         'title'     => "Role Permission",
-                                        'route'     => "admin.admins.role.permission.index", 
+                                        'route'     => "admin.admins.role.permission.index",
                                     ],
                                     [
                                         'title'     => "Email To Admin",
@@ -218,7 +218,7 @@
                                     ],
                                     [
                                         'title'     => "Setup SEO",
-                                        'route'     => "admin.web.settings.setup.seo", 
+                                        'route'     => "admin.web.settings.setup.seo",
                                     ]
                                 ],
                             ],
@@ -234,12 +234,16 @@
                                         'title'     => "Onboard Screen",
                                         'route'     => "admin.app.settings.onboard.screens",
                                     ],
+                                    [
+                                        'title'     => "App URLs",
+                                        'route'     => "admin.app.settings.urls",
+                                    ],
                                 ],
                             ],
                         ],
                     ]
                 ])
-                
+
                 @include('admin.components.side-nav.link',[
                     'route'     => 'admin.languages.index',
                     'title'     => "Languages",
@@ -290,7 +294,7 @@
                             setRoute('admin.setup.sections.section','footer'),
                             setRoute('admin.setup.sections.section','subscribe'),
                             setRoute('admin.setup.sections.section','contact'),
-                            
+
                         ];
                     @endphp
 
@@ -333,7 +337,7 @@
                                     <i class="menu-icon las la-ellipsis-h"></i>
                                     <span class="menu-title">{{__("Journal Section")}}</span>
                                 </a>
-                                
+
                                 <a href="{{ setRoute('admin.setup.sections.section','app-download') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','app-download')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>
                                     <span class="menu-title">{{__("App Download Section")}}</span>
@@ -355,7 +359,7 @@
                         </ul>
                     </li>
                 @endif
-                
+
                 @include('admin.components.side-nav.link',[
                     'route'     => 'admin.subscriber.index',
                     'title'     => "Subscribe",
@@ -439,9 +443,9 @@
                         'admin.server.info.index',
                         'admin.cache.clear',
                     ];
-                @endphp 
+                @endphp
 
-                @if (admin_permission_by_name_array($bonus_routes))   
+                @if (admin_permission_by_name_array($bonus_routes))
                     <li class="sidebar-menu-header">Bonus</li>
                 @endif
 

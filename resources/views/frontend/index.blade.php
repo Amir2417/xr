@@ -1,10 +1,12 @@
 @extends('frontend.layouts.master')
 
 @push("css")
-    
+
 @endpush
 
-@section('content') 
+@section('content')
+
+
 
     @include('frontend.section.banner')
     @include('frontend.section.feature')
@@ -13,9 +15,9 @@
     @include('frontend.section.choose-us')
     @include('frontend.section.download-app')
     @include('frontend.section.brand')
-    
+
 @endsection
 
 @push("script")
-    
+
 @endpush

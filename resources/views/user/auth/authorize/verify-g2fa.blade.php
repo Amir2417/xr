@@ -33,15 +33,14 @@
                         <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(6)" maxlength="1" required="">
                     </div>
                     <div class="col-lg-12 form-group text-end">
-                        <div class="time-area">Didn't get the code? <span id="time"> </span></div>
+                        <div class="time-area">{{ __("Didn't get the code?") }} <span id="time"> </span></div>
                     </div>
                     <div class="col-lg-12 form-group text-center">
-                        <button type="submit" class="btn--base w-100">Verify Mail</button>
+                        <button type="submit" class="btn--base w-100">{{ __("Verify Mail") }}</button>
                     </div>
                     <div class="col-lg-12 text-center">
                         <div class="account-item">
-                            <label>Already Have An Account? <a href="{{ setRoute('user.login') }}" class="account-control-btn">Login
-                                    Now</a></label>
+                            <label>{{ __("Already Have An Account?") }} <a href="{{ setRoute('user.login') }}" class="account-control-btn">{{ __("Login Now") }}</a></label>
                         </div>
                     </div>
                 </div>

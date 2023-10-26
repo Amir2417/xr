@@ -19,7 +19,7 @@ class Language extends Model
         'name'         => 'string',
         'code'         => 'string',
         'dir'          => 'string',
-        'status'       => 'integer',
+        'status'       => 'boolean',
         'last_edit_by' => 'integer',
         'created_at'   => 'date:Y-m-d',
         'updated_at'   => 'date:Y-m-d',
@@ -27,7 +27,7 @@ class Language extends Model
 
     public function getEditDataAttribute() {
         $data = [];
-        
+
         $data = [
             'id'        => $this->id,
             'name'      => $this->name,

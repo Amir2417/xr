@@ -15,7 +15,7 @@
             <div class="dash-payment-item active">
                 <div class="dash-payment-title-area">
                     <span class="dash-payment-badge">!</span>
-                    <h5 class="title">Proof Of Indentity</h5>
+                    <h5 class="title">{{ __("Proof Of Indentity") }}</h5>
                 </div>
                 <div class="dash-payment-body">
                     @include('user.components.profile.kyc', compact('user_kyc'))

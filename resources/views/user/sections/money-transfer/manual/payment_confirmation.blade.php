@@ -36,11 +36,11 @@
                                             @if($item->required == true)
                                             <span class="text-danger">*</span>
                                             @else
-                                            <span class="">( Optional )</span>
+                                            <span class="">( {{ __("Optional") }} )</span>
                                             @endif
                                         </label>
                                         <select name="{{ $item->name }}" id="{{ $item->name }}" class="form--control nice-select">
-                                            <option selected disabled>Choose One</option>
+                                            <option selected disabled>{{ __("Choose One") }}</option>
                                             @foreach ($item->validation->options as $innerItem)
                                                 <option value="{{ $innerItem }}">{{ $innerItem }}</option>
                                             @endforeach
@@ -52,7 +52,7 @@
                                             @if($item->required == true)
                                             <span class="text-danger">*</span>
                                             @else
-                                            <span class="">( Optional )</span>
+                                            <span class="">( {{ __("Optional") }} )</span>
                                             @endif
                                         </label>
                                         <input type="{{ $item->type }}" class="form--control" name="{{ $item->name }}" value="{{ old($item->name) }}">
@@ -63,7 +63,7 @@
                                             @if($item->required == true)
                                             <span class="text-danger">*</span>
                                             @else
-                                            <span class="">( Optional )</span>
+                                            <span class="">( {{ __("Optional") }} )</span>
                                             @endif
                                         </label>
                                         <input type="{{ $item->type }}" class="form--control" placeholder="{{ ucwords(str_replace('_',' ', $item->name)) }}" name="{{ $item->name }}" value="{{ old($item->name) }}">

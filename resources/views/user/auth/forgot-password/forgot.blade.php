@@ -11,14 +11,14 @@
 </head>
 
 <body>
-    
+
     @include('frontend.partials.preloader')
 
 
     <div id="body-overlay" class="body-overlay"></div>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Start acount  
+    Start acount
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <section class="account forgot">
     <div class="account-area">
@@ -48,11 +48,11 @@
     </div>
 </section>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    End acount  
+    End acount
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 @include('partials.footer-asset')
-
+@include('admin.partials.notify')
 
 <script>
     $(document).ready(function() {

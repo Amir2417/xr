@@ -15,14 +15,14 @@
         <div class="col-xl-12 col-lg-12 mb-20">
             <div class="custom-card mt-10">
                 <div class="dashboard-header-wrapper">
-                    <h4 class="title">{{ __("Receipant Payment") }}</h4>
+                    <h4 class="title">{{ __("Recipient Payment") }}</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ setRoute('user.send.remittance.receipant.payment.store',$temporary_data->identifier) }}" class="card-form" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-xl-6 col-lg-6 form-group">
-                                <label>{{ __("Sending Purpose ") }}<span>*</span></label>
+                                <label>{{ __("Sending Purpose") }}<span>*</span></label>
                                 <select class="form--control select2-basic" name="sending_purpose">
                                     <option selected disabled>{{ __("Select Purpose") }}</option>
                                     @foreach ($sending_purposes as $item)
@@ -43,8 +43,8 @@
                                 </select>
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group">
-                                <label>{{ __("Remarks ") }}<span>({{ __("Optional") }})</span></label>
-                                <textarea class="form--control" name="remark" placeholder="Write Here..."></textarea>
+                                <label>{{ __("Remarks") }}<span>( {{ __("Optional") }} )</span></label>
+                                <textarea class="form--control" name="remark" placeholder="{{ __("Write Here") }}..."></textarea>
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group">
                                 <label>{{ __("Payment Gateway") }} <span>*</span></label>

@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             UsefulLinkSeeder::class,
             AppOnboardScreensSeeder::class,
-            
+
             /**
              * demo
              */
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             TransactionSeeder::class,
             BeneficiarySeeder::class,
             DemoFixSeeder::class,
-           
+
 
         ]);
     }

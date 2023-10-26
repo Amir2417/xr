@@ -14,7 +14,7 @@ class AppSettingsController extends Controller
 
     /**
      * Display The App Splash Screen Settings Page
-     * 
+     *
      * @return view
      */
     public function splashScreen() {
@@ -50,6 +50,39 @@ class AppSettingsController extends Controller
         }
 
         return back()->with(['success' => ['Splash screen updated successfully!']]);
-        
+
+    }
+
+
+    /**
+     * Display The App URL Setting Page
+     *
+     * @return view
+     */
+    public function urls() {
+        $page_title = "App URLs";
+        $app_settings = AppSettings::first();
+        return view('admin.sections.app-settings.urls',compact(
+            'page_title',
+            'app_settings',
+        ));
+    }
+
+
+    public function urlsUpdate(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'url_title'     => 'required|string|max:255',
+            'android_url'   => 'required|string|url|max:255',
+            'iso_url'       => 'nullable|string|url|max:255|different:android_url',
+        ]);
+        $validated = $validator->validate();
+
+        try{
+            $app_settings = AppSettings::updateOrCreate(['id' => 1],$validated);
+        }catch(Exception $e) {
+            return back()->with(['error' => ['Something went worng! Please try again.']]);
+        }
+
+        return back()->with(['success' => ['URL settings updated successfully!']]);
     }
 }

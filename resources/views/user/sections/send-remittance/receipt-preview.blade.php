@@ -16,7 +16,7 @@
         <div class="col-xl-12 col-lg-12 mb-20">
             <div class="custom-card mt-10">
                 <div class="dashboard-header-wrapper">
-                    <h4 class="title">{{ __("Payment preview") }}</h4>
+                    <h4 class="title">{{ __("Payment Preview") }}</h4>
                 </div>
                 <form action="{{ setRoute('user.money.submit') }}" method="POST">
                     @csrf
@@ -29,8 +29,9 @@
                                     </div>
                                     @php
                                         $send_money      = get_amount(floatval($temporary_data->data->payable_amount) / $temporary_data->data->sender_base_rate) ?? "";
+                                       
                                         $exchange_rate   = get_amount(floatval($temporary_data->data->currency->rate)) ?? "";
-                                        $payable_amount  = $send_money * $exchange_rate;
+                                        $payable_amount  = floatval($send_money) * floatval($exchange_rate);
                                     @endphp
                                     <input type="hidden" name="identifier" value="{{ $temporary_data->identifier }}">
                                     <div class="preview-list-item">
@@ -85,7 +86,7 @@
                                                     <i class="lab la-get-pocket"></i>
                                                 </div>
                                                 <div class="preview-list-user-content">
-                                                    <span>{{ __("Amount We’ll Convert") }}</span>
+                                                    <span>{{ __("Amount We Will Convert") }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +183,7 @@
                                                     <i class="las la-phone-alt"></i>
                                                 </div>
                                                 <div class="preview-list-user-content">
-                                                    <span>{{ __("Phone Number") }}</span>
+                                                    <span>{{ __("Phone") }}</span>
                                                 </div>
                                             </div>
                                         </div>

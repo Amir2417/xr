@@ -17,12 +17,26 @@
             @if ($current_url == setRoute('user.transaction.index'))
                 <form class="header-search-wrapper">
                     <div class="position-relative">
-                        <input class="form--control" type="text" placeholder="Ex: Transactions"
+                        <input class="form--control" type="text" placeholder="{{ __("Ex: Transactions") }}"
                             aria-label="Search">
                         <span class="las la-search"></span>
                     </div>
                 </form>
             @endif
+            <div class="header-action">
+                <div class="language-select">
+                    @php
+                        $__current_local = session("local") ?? get_default_language_code();
+                    @endphp
+                    <select class="nice-select" name="lang_switcher" id="">
+                        @foreach ($__languages as $__item)
+                            <option value="{{ $__item->code }}" @if ($__current_local == $__item->code)
+                                @selected(true)
+                            @endif>{{ $__item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>   
+            </div>
             <div class="header-notification-wrapper">
                 <button class="notification-icon">
                     <i class="las la-bell"></i>
@@ -59,3 +73,13 @@
         </div>
     </div>
 </nav>
+@push('script')
+<script>
+    $("select[name=lang_switcher]").change(function(){
+    var selected_value = $(this).val();
+    var submitForm = `<form action="{{ setRoute('frontend.languages.switch') }}" id="local_submit" method="POST"> @csrf <input type="hidden" name="target" value="${$(this).val()}" ></form>`;
+    $("body").append(submitForm);
+    $("#local_submit").submit();
+    });
+</script>
+@endpush

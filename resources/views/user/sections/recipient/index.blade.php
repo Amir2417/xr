@@ -13,7 +13,7 @@
 
 <div class="body-wrapper">
     <div class="add-recipient-btn text-end pb-3">
-        <a href="{{ setRoute('user.recipient.add',$temporary_data->identifier) }}" class="btn--base">+ Add New Recipient </a>
+        <a href="{{ setRoute('user.recipient.add',$temporary_data->identifier) }}" class="btn--base">+ {{ __("Add New Recipient") }} </a>
     </div>
     <form action="{{ setRoute('user.recipient.send',$temporary_data->identifier) }}" method="POST">
         <div class="dashboard-list-wrapper">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="dashboard-list-button">
-                            <button type="button" class="btn btn--base select-btn" data-item='{{ json_encode($item) }}'>select</button>
+                            <button type="button" class="btn btn--base select-btn" data-item='{{ json_encode($item) }}'>{{ __("select") }}</button>
                         </div>
                     </div>
                     <div class="preview-list-wrapper">
@@ -149,7 +149,7 @@
         </div>
         @if (count($recipients) > 0)
             <div class="money-tranasfer-btn text-center">
-                <button type="submit" class="btn--base w-100">Next</button>
+                <button type="submit" class="btn--base w-100">{{ __("Next") }}</button>
             </div>
         @else
         <div class="alert alert-primary text-center">

@@ -20,6 +20,8 @@ class BasicSettings extends Model
         'site_logo'                => 'string',
         'site_fav_dark'            => 'string',
         'site_fav'                 => 'string',
+        'email_notification'          => 'boolean',
+        'email_verification'          => 'boolean',
     ];
 
 }

@@ -15,7 +15,7 @@ class AppSettingsSeeder extends Seeder
     public function run()
     {
         $data = [
-            'version'              => '1.0.1',
+            'version'              => '2.0.0',
             'splash_screen_image'  => 'seeder/splash.webp',
             'created_at'           => now(),
         ];

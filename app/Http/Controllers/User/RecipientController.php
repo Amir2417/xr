@@ -418,7 +418,7 @@ class RecipientController extends Controller
 
                 return back()->with(['error' => ['Something went wrong! Please try again.']]);
             }
-            return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Updated successfully.']]);
+            return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Updated Successfully.']]);
         }else{
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
@@ -460,7 +460,7 @@ class RecipientController extends Controller
 
                 return back()->with(['error' => ['Something went wrong! Please try again.']]);
             }
-            return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Updated successfully.']]);
+            return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Updated Successfully.']]);
         }
     }
     
@@ -472,7 +472,7 @@ class RecipientController extends Controller
         }catch(Exception $e){
             return back()->with(['error' => ['Something went wrong! Please try again']]);
         }
-        return back()->with(['success' => ['Recipient deleted successfully.']]);
+        return back()->with(['success' => ['Recipient Deleted Successfully.']]);
     }
     
     public function imageValidate($request,$input_name,$old_image = null) {

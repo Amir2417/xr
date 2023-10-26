@@ -59,7 +59,7 @@ class RemittanceController extends Controller
             return back()->with(['error' => [$e->getMessage()]]);
         }
         
-        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully send remittance']]);
+        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance']]);
     }
     public function stripePaymentSuccess($trx){
         
@@ -204,7 +204,7 @@ class RemittanceController extends Controller
             
             return back()->with(['error' => ["Something Is Wrong..."]]);
         }
-        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance Money']]);
+        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance']]);
     }
     //sslCommerz fails
     public function sllCommerzFails(Request $request){

@@ -19,6 +19,12 @@ use App\Notifications\User\Auth\PasswordResetEmail;
 
 class ForgotPasswordController extends Controller
 {
+    protected $basic_settings;
+
+    public function __construct()
+    {
+        $this->basic_settings = BasicSettingsProvider::get();
+    }
     public function findUserSendCode(Request $request) {
         $validator = Validator::make($request->all(),[
             'credentials'       => "required|string|max:50",
@@ -48,8 +54,9 @@ class ForgotPasswordController extends Controller
                 'token'         => $token,
                 'code'          => $code,
             ]);
-            
-            $user->notify(new PasswordResetEmail($user,$password_reset));
+            if($this->basic_settings->email_notification == true && $this->basic_settings->email_verification == true){
+                $user->notify(new PasswordResetEmail($user,$password_reset));
+            }
         }catch(Exception $e) {
             return Response::error(['Something went wrong! Please try again'],[],500);
         }
@@ -66,7 +73,7 @@ class ForgotPasswordController extends Controller
         if($validator->fails()) {
             return Response::error($validator->errors()->all(),[]);
         }
-        
+
         $validated = $validator->validate();
 
         $basic_settings = BasicSettingsProvider::get();
@@ -145,7 +152,7 @@ class ForgotPasswordController extends Controller
             'token'         => "required|string|exists:user_password_resets,token",
             'password'      => $password_rule,
         ]);
-        
+
         if($validator->fails()) {
             return Response::error($validator->errors()->all(),[]);
         }
