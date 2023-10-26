@@ -11,7 +11,7 @@
                 <h3 class="title">{{ $banner->value->language->$app_local->heading ?? "" }}</h3>
                 <p>{{ $banner->value->language->$app_local->sub_heading ?? "" }}</p>
                 <div class="d-flex">
-                    <div class="me-5">
+                    <div class="me-5 banner-join-btn">
                         <a href="{{ setRoute('user.register') }}" class="btn--base mb-4 mb-lg-0 mb-md-0">{{ $banner->value->language->$app_local->button_name ?? "" }}</a>
                     </div>
                     <div class="video-wrapper mt-2">

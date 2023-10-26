@@ -2179,7 +2179,6 @@ option {
   border-radius: 15px;
   padding: 10px 25px;
   width: 100%;
-  padding-right: 47px;
 }
 .form--control:focus {
   background-color: #ffffff;
@@ -4055,10 +4054,20 @@ option {
   font-size: 17px;
   line-height: 25px;
 }
-.blog-details .left-content img {
-  width: 110px;
+.blog-details .blog-sidebar-img {
+  width: 120px;
+  height: 120px;
   height: auto;
+}
+.blog-details .blog-sidebar-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 6px;
+}
+
+.blog-details .left-content .recent-content{
+  width: calc(100% - 20%);
 }
 
 .privacy {
@@ -4192,9 +4201,6 @@ option {
   position: relative;
 }
 
-.from-cruncy input {
-  padding-right: 100px;
-}
 
 .from-cruncy .cruncy {
   position: absolute;
@@ -7233,15 +7239,7 @@ input[type=number] {
 .rtl .header-bottom-area .navbar-collapse .main-menu li:last-child {
   padding-right: 20px;
 }
-.rtl .from-cruncy .cruncy {
-  left: 12px;
-  right: auto;
-  border-radius: 15px 0px 0px 15px;
-}
-.rtl .from-cruncy input {
-  padding-left: 100px;
-  padding-right: 25px;
-}
+
 .rtl .features .card .thumb {
   margin-left: 13px;
   margin-right: 0px;
@@ -7398,9 +7396,45 @@ input[type=number] {
 .rtl .custom-check-group input:checked + label::after {
   right: 7px;
 }
-
-
-
-
-
-
+.rtl .banner-join-btn{
+  margin-right: 0 !important;
+  margin-left: 15px;
+}
+.rtl .custom-select{
+  border-radius: 15px 0px 0px 15px !important;
+}
+.rtl .from-cruncy input{
+  border-radius: 0px 15px 15px 0px !important;
+}
+.rtl .custom-select img{
+  margin-left: 10px !important;
+  margin-right: 0 !important;
+}
+.rtl .custom-select .custom-select-inner::before{
+  left: 9px !important;
+  right: auto !important;
+}
+.rtl .custom-select .custom-select-inner::after{
+  left: 12px;
+  right: auto;
+}
+.rtl .app-btn{
+  margin-right: 0px !important;
+  margin-left: 10px !important;
+}
+.rtl .blog-sidebar-img{
+   padding-left: 15px;
+   margin-right: 0 !important;
+}
+.rtl .navbar-toggler{
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+.rtl .dash-payment-item .dash-payment-title-area .title{
+  padding-left: 0px;
+  padding-right: 20px;
+}
+.rtl .chat-container .media.media-chat-reverse{
+  margin-right: auto !important;
+  margin-left: 0;
+}

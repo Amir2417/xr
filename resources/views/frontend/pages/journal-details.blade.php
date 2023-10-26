@@ -48,10 +48,10 @@
                         <div>
                             @foreach ($recent_posts as $item)
                                 <div class="d-flex mb-4">
-                                    <div class="me-3">
+                                    <div class="me-3 blog-sidebar-img">
                                         <img src="{{ get_image($item->data->image ?? null , 'site-section')}}" alt="image">
                                     </div>
-                                    <div>
+                                    <div class="recent-content">
                                         <p>{{ $item->created_at ?? "" }}</p>
                                         <h4>{{ $item->data->language->$app_local->title ?? "" }}</h4>
                                     </div>

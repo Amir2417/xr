@@ -38,12 +38,12 @@ class BasicSettingsSeeder extends Seeder
             'kyc_verification'  => true,
             'mail_config'       => [
                 "method" => "smtp", 
-                "host" => "smtp.titan.email",
-                "port" => "587", 
+                "host" => "appdevs.net",
+                "port" => "465", 
                 "encryption" => "ssl",
-                "username" => "noreply@appdevs.net",
+                "username" => "system@appdevs.net",
                 "password" => "QP2fsLk?80Ac",
-                "from" => "noreply@appdevs.net", 
+                "from" => "system@appdevs.net", 
                 "app_name" => "XRemit Pro",
             ],
             'email_verification'    => true,
@@ -51,7 +51,7 @@ class BasicSettingsSeeder extends Seeder
             'site_logo'         => 'seeder/logo-white.png',
             'site_fav_dark'     => 'seeder/favicon.png',
             'site_fav'          => 'seeder/favicon.png',
-            'web_version'       => '2.0.0',
+            'web_version'       => '2.0.1',
         ];
 
         BasicSettings::firstOrCreate($data);

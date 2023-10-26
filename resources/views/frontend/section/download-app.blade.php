@@ -17,7 +17,7 @@
                     </p>
                 </div>
                 <div class="d-flex mt-5">
-                    <div class="me-4">
+                    <div class="me-4 app-btn">
                         <a href="{{ $app_download->value->google_play_link ?? "" }}" class="btn--base mb-4 mb-lg-0 mb-md-0" target="_blank"><i class="lab la-google-play"></i>
                             {{ __("Google Play") }}</a>
                     </div>

@@ -19,7 +19,7 @@
                     <p>{!! $choose->value->language->$app_local->sub_heading !!}</p>
                 </div>
                 <div class="d-flex mt-5">
-                    <div class="me-5">
+                    <div class="me-5 banner-join-btn">
                         <a href="javascript:void(0)" class="btn--base mb-4 mb-lg-0 mb-md-0">{{ $choose->value->button_name ?? "" }}</a>
                     </div>
                     <div class="video-wrapper mt-2">
