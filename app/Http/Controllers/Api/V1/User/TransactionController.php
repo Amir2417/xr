@@ -27,6 +27,8 @@ class TransactionController extends Controller
                 'details'             => $data->details,
                 'status'              => $data->status,
                 'attribute'           => $data->attribute,
+                'share_link'          => route('share.link',$data->trx_id),
+                'download_link'       => route('download.pdf',$data->trx_id),
                 'created_at'          => $data->created_at,
                 'updated_at'          => $data->updated_at,
                 
@@ -54,9 +56,10 @@ class TransactionController extends Controller
                 'details'             => $data->details,
                 'status'              => $data->status,
                 'attribute'           => $data->attribute,
+                'share_link'          => route('share.link',$data->trx_id),
+                'download_link'       => route('download.pdf',$data->trx_id),
                 'created_at'          => $data->created_at,
                 'updated_at'          => $data->updated_at,
-                
             ];
         });
         return Response::success(['Transaction Data Fetch Successfully.'],[
