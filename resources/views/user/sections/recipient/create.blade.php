@@ -64,7 +64,6 @@
                                         'placeholder'     => __("Enter Email")."..."
                                     ])
                                 </div>
-                                
                                 <div class="col-xl-4 col-lg-4 col-md-4 form-group">
                                     <label>{{ __("Country") }}<span>*</span></label>
                                     <select class="form--control select2-basic" name="country">
