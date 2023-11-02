@@ -65,14 +65,12 @@
                                     ])
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
-                                    @include('admin.components.form.input',[
-                                        'label'           => __('Country'),
-                                        'type'            => 'country',
-                                        'name'            => 'country',
-                                        'value'           => $receiver_currency->country,
-                                        'attribute'       => 'readonly',
-                                        'placeholder'     => __("Enter Country")."..."
-                                    ])
+                                    <label for="country">{{ __("Country") }}</label>
+                                    <select class="form--control select2-basic" name="country">
+                                        @foreach ($receiver_currency as $item)
+                                            <option value="{{ $item->country }}" @if ($item->country == $recipient->country) selected @endif>{{ $item->country }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
@@ -250,17 +248,12 @@
 </script>
 <script>
     var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
-    $(document).ready(function(){
 
-        setTimeout(() => {
-            getMobile($('select[name="country"]'));
-        }, 400);
-
-        $('select[name="country"]').on('change',function(){
-            getMobile($(this));
-        });
+    $('select[name="country"]').on('change',function(){
+        $("select[name=mobile_name]").html('');
+        getMobile($(this));
     });
-
+    
     function getMobile(select){
         var country = $(select).val();
         if(country == "" || country == null){
@@ -272,59 +265,44 @@
                 $.each(response.data.country,function(index,item){
                     option += `<option value="${item.name}">${item.name}</option>`
                 });
-                $("select[name=method_name]").html(option);
-                $("select[name=method_name]").select2();
+                $("select[name=mobile_name]").html(option);
+                $("select[name=mobile_name]").select2();
             }
         }).fail(function(response){
             var errorText = response.responseJSON;
         });
     }
 </script>
-    <script>
-        getAllCountries("{{ setRoute('global.countries') }}",$(".country-select"));
-        $(document).ready(function(){
+<script>
+    var getBankName = "{{ setRoute('user.get.bank.name') }}";
 
-            $(".country-select").select2();
-
-            $("select[name=country]").change(function(){
-                var phoneCode = $("select[name=country] :selected").attr("data-mobile-code");
-                placePhoneCode(phoneCode);
-            });
-
-            setTimeout(() => {
-                var phoneCodeOnload = $("select[name=country] :selected").attr("data-mobile-code");
-                placePhoneCode(phoneCodeOnload);
-            }, 400);
-        }); 
-    </script>
-    <script>
-        var getBankName = "{{ setRoute('user.get.bank.name') }}";
-        $(document).ready(function(){
-            setTimeout(() => {
-                getBank($('select[name="country"]'));
-            }, 400);
-            $('select[name="country"]').on('change',function(){
-                getBank($(this));
-            });
-        });
-        function getBank(select){
-            var country = $(select).val();
-            if(country == "" || country == null){
-                return false;
-            }
-            $.post(getBankName,{country:country,_token:"{{ csrf_token() }}"},function(response){
-                var option = '';
-                if(response.data.country.length > 0){
-                    $.each(response.data.country,function(index,item){
-                        option += `<option value="${item.name}">${item.name}</option>`
-                    });
-                    $("select[name=bank_name]").html(option);
-                    $("select[name=bank_name]").select2();
-                }
-            }).fail(function(response) {
-                var errorText = response.responseJSON;
-            });
+    $('select[name="country"]').on('change',function(){
+        $("select[name=bank_name]").html('');
+        getBank($(this));
+    });
+   
+    function getBank(select){
+        var country = $(select).val();
+        if(country == "" || country == null){
+            return false;
         }
-    </script>
+        $.post(getBankName,{country:country,_token:"{{ csrf_token() }}"},function(response){
+            var option = '';
+            if(response.data.country.length > 0){
+                $.each(response.data.country,function(index,item){
+                    console.log(item.name);
+                    option += `<option value="${item.name}">${item.name}</option>`
+
+                });
+                $("select[name=bank_name]").html(option);
+                $("select[name=bank_name]").select2();
+            }
+        }).fail(function(response) {
+
+            var errorText = response.responseJSON;
+
+        });
+    }
+</script>
     
 @endpush
