@@ -7,8 +7,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
-use App\Http\Controllers\Controller;
+use App\Models\Admin\Currency;
 use App\Models\Admin\MobileMethod;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -22,10 +23,12 @@ class MobileMethodController extends Controller
     public function index(){
         $page_title     = "Mobile Method";
         $mobile_methods = MobileMethod::orderByDesc('id')->paginate(10);
-
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
+        
         return view('admin.sections.mobile-method.index',compact(
             'page_title',
             'mobile_methods',
+            'receiver_currency'
         ));
     }
     /**

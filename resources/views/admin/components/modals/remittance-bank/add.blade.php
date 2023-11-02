@@ -10,7 +10,12 @@
                     <div class="row mb-10-none">
                         <div class="col-xl-12 col-lg-12 form-group">
                             <label>{{__("Country")}}<span>*</span></label>
-                            <select class="form--control select2-auto-tokenize country-select" data-placeholder="Select Country" data-old="{{ old('country') }}" name="country"></select>
+                            <select class="form--control select2-auto-tokenize" name="country">
+                                <option selected disabled>{{ __("Select Country") }}</option>
+                                @foreach ($receiver_currency as $item)
+                                    <option value="{{ $item->country }}">{{ $item->country }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[

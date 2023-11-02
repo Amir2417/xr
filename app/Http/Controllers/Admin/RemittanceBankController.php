@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 use Exception;
-use App\Http\Controllers\Controller;
-use App\Models\Admin\RemittanceBank;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
+use App\Models\Admin\Currency;
+use App\Http\Controllers\Controller;
+use App\Models\Admin\RemittanceBank;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -21,10 +22,12 @@ class RemittanceBankController extends Controller
     public function index(){
         $page_title       = "Remittance Bank";
         $remittance_banks = RemittanceBank::orderByDesc('id')->paginate(10);
-
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
+        
         return view('admin.sections.remittance-bank.index',compact(
             'page_title',
             'remittance_banks',
+            'receiver_currency'
         ));
     }
     /**

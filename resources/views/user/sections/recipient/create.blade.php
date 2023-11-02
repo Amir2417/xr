@@ -64,15 +64,15 @@
                                         'placeholder'     => __("Enter Email")."..."
                                     ])
                                 </div>
-                                <div class="col-xl-4 col-lg-4 col-md-6 form-group">
-                                    @include('admin.components.form.input',[
-                                        'label'           => __('Country'),
-                                        'type'            => 'country',
-                                        'name'            => 'country',
-                                        'value'           => $receiver_currency->country,
-                                        'attribute'       => 'readonly',
-                                        'placeholder'     => __("Enter Country")."..."
-                                    ])
+                                
+                                <div class="col-xl-4 col-lg-4 col-md-4 form-group">
+                                    <label>{{ __("Country") }}<span>*</span></label>
+                                    <select class="form--control select2-basic" name="country">
+                                        <option selected disabled>{{ __("Select Country") }}</option>
+                                        @foreach ($receiver_currency as $item)
+                                            <option value="{{ $item->country }}">{{ $item->country }} </option>
+                                        @endforeach 
+                                    </select>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[

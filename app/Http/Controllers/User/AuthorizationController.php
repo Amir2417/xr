@@ -57,14 +57,14 @@ class AuthorizationController extends Controller
 
         $otp_exp_sec = BasicSettingsProvider::get()->otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
         $auth_column = UserAuthorization::where("token",$request->token)->where("code",$code)->first();
-
+        
         if(!$auth_column) return back()->with(['error' => ['invalid Token!']]);
 
         if($auth_column->created_at->addSeconds($otp_exp_sec) < now()) {
             $this->authLogout($request);
             return redirect()->route('user.login')->with(['error' => ['Session expired. Please try again']]);
         }
-
+        dd(BasicSettingsProvider::get()->otp_exp_seconds);
         try{
             $auth_column->user->update([
                 'email_verified'    => true,
