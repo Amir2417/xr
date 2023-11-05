@@ -69,7 +69,7 @@ class BeneficiaryController extends Controller
     public function create(){
         
         $receiver_country     = Currency::where('receiver',true)->first();
-        $banks                = RemittanceBank::where('country',$receiver_country->country)->where('status',true)->get()->map(function($data){
+        $banks                = RemittanceBank::where('status',true)->get()->map(function($data){
             return [
                 'id'                 => $data->id,
                 'name'               => $data->name,
@@ -80,7 +80,7 @@ class BeneficiaryController extends Controller
                 'updated_at'         => $data->updated_at ?? '',
             ];
         });
-        $mobile_methods       = MobileMethod::where('country',$receiver_country->country)->where('status',true)->get()->map(function($data){
+        $mobile_methods       = MobileMethod::where('status',true)->get()->map(function($data){
             return [
                 'id'                 => $data->id,
                 'name'               => $data->name,
@@ -106,14 +106,14 @@ class BeneficiaryController extends Controller
                 'middle_name'     => 'nullable|string',
                 'last_name'       => 'required|string',
                 'email'           => 'nullable|email',
-                'country'         => 'nullable|string',
+                'country'         => 'required|string',
                 'city'            => 'nullable|string',
                 'state'           => 'nullable|string',
                 'zip_code'        => 'nullable|string',
                 'phone'           => 'nullable|string',
                 'method'          => 'required|string',
                 'bank_name'       => 'required|string',
-                'iban_number'     => ['required', 'regex:/^[A-Za-z0-9]{24}$/'],
+                'iban_number'     => 'required',
                 'address'         => 'nullable|string',
                 'document_type'   => 'nullable|string',
                 'front_image'     => 'nullable|mimes:png,jpg,webp,jpeg,svg',
@@ -141,7 +141,7 @@ class BeneficiaryController extends Controller
             $validated['user_id'] = auth()->user()->id;
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -149,7 +149,7 @@ class BeneficiaryController extends Controller
             }catch(Exception $e){
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
-            return Response::success(['Beneficiary Stored'],[
+            return Response::success(['Recipient Stored'],[
                 'beneficiary'       => $beneficiary,
             ],200);
         }if($request->method == global_const()::BENEFICIARY_METHOD_CASH_PICK_UP){
@@ -165,7 +165,7 @@ class BeneficiaryController extends Controller
                 'phone'           => 'nullable|string',
                 'method'          => 'required|string',
                 'bank_name'       => 'required|string',
-                'iban_number'     => ['required', 'regex:/^[A-Za-z0-9]{24}$/'],
+                'iban_number'     => 'required',
                 'address'         => 'nullable|string',
                 'document_type'   => 'nullable|string',
                 'front_image'     => 'nullable|mimes:png,jpg,webp,jpeg,svg',
@@ -194,7 +194,7 @@ class BeneficiaryController extends Controller
             $validated['user_id'] = auth()->user()->id;
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -202,7 +202,7 @@ class BeneficiaryController extends Controller
             }catch(Exception $e){
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
-            return Response::success(['Beneficiary Stored'],[
+            return Response::success(['Recipient Stored'],[
                 'beneficiary'       => $beneficiary,
             ],200);
         }
@@ -212,7 +212,7 @@ class BeneficiaryController extends Controller
                 'middle_name'     => 'nullable|string',
                 'last_name'       => 'required|string',
                 'email'           => 'nullable|email',
-                'country'         => 'nullable|string',
+                'country'         => 'required|string',
                 'city'            => 'nullable|string',
                 'state'           => 'nullable|string',
                 'zip_code'        => 'nullable|string',
@@ -247,7 +247,7 @@ class BeneficiaryController extends Controller
             $validated['user_id'] = auth()->user()->id;
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -255,7 +255,7 @@ class BeneficiaryController extends Controller
             }catch(Exception $e){
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
-            return Response::success(['Beneficiary Stored'],[
+            return Response::success(['Recipient Stored'],[
                 'beneficiary'       => $beneficiary,
             ],200);
         }
@@ -279,14 +279,14 @@ class BeneficiaryController extends Controller
                 'middle_name'     => 'nullable|string',
                 'last_name'       => 'required|string',
                 'email'           => 'nullable|email',
-                'country'         => 'nullable|string',
+                'country'         => 'required|string',
                 'city'            => 'nullable|string',
                 'state'           => 'nullable|string',
                 'zip_code'        => 'nullable|string',
                 'phone'           => 'nullable|string',
                 'method'          => 'required|string',
                 'bank_name'       => 'required|string',
-                'iban_number'     => ['required', 'regex:/^[A-Za-z0-9]{24}$/'],
+                'iban_number'     => 'required',
                 'address'         => 'nullable|string',
                 'document_type'   => 'nullable|string',
                 'front_image'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
@@ -317,7 +317,7 @@ class BeneficiaryController extends Controller
             }
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -325,7 +325,7 @@ class BeneficiaryController extends Controller
             }catch(Exception $e){
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
-            return Response::success(['Beneficiary Data Updated Successfully.'],[
+            return Response::success(['Recipient Data Updated Successfully.'],[
                 'beneficiary'       => $beneficiary,
             ],200);;
         }if($request->method == global_const()::BENEFICIARY_METHOD_CASH_PICK_UP){
@@ -335,14 +335,14 @@ class BeneficiaryController extends Controller
                 'middle_name'     => 'nullable|string',
                 'last_name'       => 'required|string',
                 'email'           => 'nullable|email',
-                'country'         => 'nullable|string',
+                'country'         => 'required|string',
                 'city'            => 'nullable|string',
                 'state'           => 'nullable|string',
                 'zip_code'        => 'nullable|string',
                 'phone'           => 'nullable|string',
                 'method'          => 'required|string',
                 'bank_name'       => 'required|string',
-                'iban_number'     => ['required', 'regex:/^[A-Za-z0-9]{24}$/'],
+                'iban_number'     => 'required',
                 'address'         => 'nullable|string',
                 'document_type'   => 'nullable|string',
                 'front_image'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
@@ -372,7 +372,7 @@ class BeneficiaryController extends Controller
             }
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -380,7 +380,7 @@ class BeneficiaryController extends Controller
             }catch(Exception $e){
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
-            return Response::success(['Beneficiary Data Updated Successfully.'],[
+            return Response::success(['Recipient Data Updated Successfully.'],[
                 'beneficiary'       => $beneficiary,
             ],200);;
         }
@@ -427,7 +427,7 @@ class BeneficiaryController extends Controller
             }
             if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->exists()){
                 throw ValidationException::withMessages([
-                    'name'  => "Beneficiary already exists!",
+                    'name'  => "Recipient already exists!",
                 ]);
             }
             try{
@@ -435,7 +435,7 @@ class BeneficiaryController extends Controller
             }catch(Exception $e){
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
-            return Response::success(['Beneficiary Data Updated Successfully.'],[
+            return Response::success(['Recipient Data Updated Successfully.'],[
                 'beneficiary'       => $beneficiary,
             ],200);;
         }
@@ -457,6 +457,6 @@ class BeneficiaryController extends Controller
         }catch(Exception $e){
             return Response::error(['Something went wrong! Please try again.'],[],404);
         }
-        return Response::success(['Beneficiary data deleted successfully.'],[],200);
+        return Response::success(['Recipient data deleted successfully.'],[],200);
     }
 }
