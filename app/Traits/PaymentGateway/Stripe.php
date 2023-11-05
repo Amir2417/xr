@@ -215,10 +215,11 @@ trait Stripe
                 auth()->guard($api_user_login_guard)->logout();
             }
         }
+        
         if(auth()->check()){
             UserNotification::create([
                 'user_id'  => auth()->user()->id,
-                'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount + $output['amount']->total_charge).",
+                'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount).",
                 Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
             ]);
         }

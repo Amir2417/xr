@@ -35,11 +35,11 @@
                         <div class="forgot-item text-end">
                             <label><a href="{{ setRoute('user.password.forgot') }}" class="text--base">{{ __("Forgot Password?") }}</a></label>
                         </div>
-                        <button type="submit" class="btn--base w-100 text-center mt-2">{{ __("Sign In") }}</button>
+                        <button type="submit" class="btn--base w-100 text-center mt-2">{{ __("Login") }}</button>
 
                         <p class="d-block text-center mt-3 create-acc">
                             &mdash; {{ __("Don't have an account?") }}
-                            <a href="{{ setRoute('user.register')}}">{{ __("Sign Up") }}</a>
+                            <a href="{{ setRoute('user.register')}}">{{ __("Register") }}</a>
                             &mdash;
                         </p>
                     </form>

@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->first_name }} {{ $item->middle_name ?? '' }} {{ $item->last_name }}</span>
+                            <span>{{ $item->first_name ?? '' }} {{ $item->middle_name ?? '' }} {{ $item->last_name ?? '' }}</span>
                         </div>
                     </div>
                     <div class="preview-list-item">
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->email }} </span>
+                            <span>{{ $item->email ?? 'N/A'}} </span>
                         </div>
                     </div>
                     <div class="preview-list-item">
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->city }} ({{ $item->state }})</span>
+                            <span>{{ $item->city ?? 'N/A'}} ({{ $item->state ?? 'N/A' }})</span>
                         </div>
                     </div>
                     <div class="preview-list-item">
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->phone }}</span>
+                            <span>{{ $item->phone ?? 'N/A' }}</span>
                         </div>
                     </div>
                     <div class="preview-list-item">

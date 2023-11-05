@@ -16,7 +16,7 @@ class TransactionController extends Controller
      */
     public function transaction(){
         $page_title           = "| Transactions";
-        $transactions         = Transaction::where('user_id',auth()->user()->id)->orderByDESC('id')->get();
+        $transactions         = Transaction::with(['currency'])->where('user_id',auth()->user()->id)->orderByDESC('id')->get();
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
         

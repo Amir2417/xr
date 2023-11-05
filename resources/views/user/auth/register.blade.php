@@ -18,7 +18,7 @@
             <div class="col-lg-6 col-md-12 col-12">
                 <div class="content">
                     <div class="my-3">
-                        <h3 class="pb-2 text-capitalize fw-bold">{{ __("Sign Up") }}</h3>
+                        <h3 class="pb-2 text-capitalize fw-bold">{{ __("Register") }}</h3>
                     </div>
                     <form action="{{ setRoute('user.register.submit') }}" method="POST" autocomplete="on">
                         @csrf
@@ -49,10 +49,10 @@
                                 @endforeach
                             </div>
                         </div>
-                        <button type="submit" class="btn--base w-100 text-center mt-2">{{ __("Sign Up") }}</button>
+                        <button type="submit" class="btn--base w-100 text-center mt-2">{{ __("Register") }}</button>
                         <p class="d-block text-center mt-3 create-acc">
                             &mdash; {{ __("Already Have An Account?") }}
-                            <a href="{{ setRoute('user.login')}}">{{ __("Sign In") }}</a>
+                            <a href="{{ setRoute('user.login')}}">{{ __("Login") }}</a>
                             &mdash;
                         </p>
                     </form>

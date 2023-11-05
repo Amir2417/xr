@@ -64,8 +64,8 @@ class DatabaseSeeder extends Seeder
             MobileMethodSeeder::class,
             SendingPurposeSeeder::class,
             SourceOfFundsSeeder::class,
-            // TransactionSeeder::class,
-            // BeneficiarySeeder::class,
+            TransactionSeeder::class,
+            BeneficiarySeeder::class,
             // DemoFixSeeder::class,
 
 

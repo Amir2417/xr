@@ -64,7 +64,7 @@ class AuthorizationController extends Controller
             $this->authLogout($request);
             return redirect()->route('user.login')->with(['error' => ['Session expired. Please try again']]);
         }
-        dd(BasicSettingsProvider::get()->otp_exp_seconds);
+        
         try{
             $auth_column->user->update([
                 'email_verified'    => true,

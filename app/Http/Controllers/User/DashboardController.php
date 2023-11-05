@@ -26,26 +26,26 @@ class DashboardController extends Controller
         $sender_currency         = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency       = Currency::where('status',true)->where('receiver',true)->first();
         
-        $total_remittances       = Transaction::toBase()->count();
+        $total_remittances       = Transaction::toBase()->where('user_id',auth()->user()->id)->count();
         $user_remittance         = Transaction::orderByDESC('id')->where('user_id',auth()->user()->id)->get();
         $total_amount            = $user_remittance->sum('request_amount');
-        $complete                = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->count();
-        $cancel                  = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_CANCEL)->count();
+        $complete                = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->count();
+        $cancel                  = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_CANCEL)->count();
 
         //ongoing remittance
-        $pending_log             = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_PENDING)->count();
-        $progress_log            = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->count();
-        $settled_log             = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_SETTLED)->count();
-        $under_review_log        = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->count();
-        $hold_log                = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_HOLD)->count();
-        $failed_log              = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_FAILED)->count();
-        $refund_log              = Transaction::toBase()->where('status',global_const()::REMITTANCE_STATUS_REFUND)->count();
+        $pending_log             = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_PENDING)->count();
+        $progress_log            = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->count();
+        $settled_log             = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_SETTLED)->count();
+        $under_review_log        = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->count();
+        $hold_log                = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_HOLD)->count();
+        $failed_log              = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_FAILED)->count();
+        $refund_log              = Transaction::toBase()->where('user_id',auth()->user()->id)->where('status',global_const()::REMITTANCE_STATUS_REFUND)->count();
 
         $ongoing_remittance      = $pending_log + $progress_log + $under_review_log;
         $complete_remittance     = $settled_log + $refund_log + $complete;
         $cancel_remittance       = $cancel + $hold_log;
 
-        $transactions = Transaction::orderByDESC('id')->where('user_id',auth()->user()->id)->latest()->take(3)->get();
+        $transactions = Transaction::with(['currency'])->orderByDESC('id')->where('user_id',auth()->user()->id)->latest()->take(3)->get();
 
         $start = strtotime(date('Y-m-01'));
         $end = strtotime(date('Y-m-31'));

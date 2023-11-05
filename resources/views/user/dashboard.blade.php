@@ -324,7 +324,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->remark ?? '' }}</span>
+                            <span>{{ $item->currency->name ?? '' }}</span>
                         </div>
                     </div>
                     @if ($item->remittance_data->currency->rate ?? false)
@@ -340,7 +340,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code }} = {{ get_amount($item->remittance_data->currency->rate,$item->remittance_data->currency->code) }}</span>
+                                <span>{{ $item->remittance_data->sender_ex_rate }} {{ $item->remittance_data->sender_currency }} = {{ $item->remittance_data->currency->rate / $item->remittance_data->sender_base_rate }} {{ $item->remittance_data->currency->code }}</span>
                             </div>
                         </div>
                     @endif
