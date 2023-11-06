@@ -95,7 +95,7 @@ class SendRemittanceController extends Controller
                 ],
                 
             ];
-            try {
+            try { 
                 $temporary_data = TemporaryData::create($data);
             } catch (Exception $e) {
                 return back()->with(['error' => ['Something went wrong! Please try again.']]);

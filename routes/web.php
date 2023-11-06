@@ -118,6 +118,8 @@ Route::controller(SiteController::class)->name('frontend.')->group(function(){
     Route::get('contact','contact')->name('contact');
 });
 
+Route::post("coupon/apply",[SiteController::class,'couponApply'])->name("coupon.apply");
+
 Route::post("subscribe",[SiteController::class,'subscribe'])->name("subscribe");
 Route::post("contact-request",[SiteController::class,'contactRequest'])->name("contact.request");
 

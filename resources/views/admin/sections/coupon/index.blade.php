@@ -44,9 +44,9 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Status</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Price") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -103,7 +103,6 @@
         });
 
         $(document).ready(function(){
-            // Switcher
             switcherAjax("{{ setRoute('admin.coupon.status.update') }}");
         })
     </script>

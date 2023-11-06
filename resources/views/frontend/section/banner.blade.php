@@ -104,6 +104,25 @@
                                     <p id="payable"> </p>
                                 </div>
                             </div>
+                            <div class="exchange-charge d-flex justify-content-between pb-10">
+                                <div class="left-side">
+                                    <p class="d-none coupon-text" ><i class="las la-dot-circle"></i> {{ __("Coupon Bonus") }}</p>
+                                </div>
+                                <div class="right-side">
+                                    <input type="hidden" id="coupon-price">
+                                    <input type="hidden" name="coupon_id" id="coupon-id">
+                                    <p id="coupon--bonus"></p>
+                                </div>
+                            </div>
+                            <div class="exchange-charge d-flex justify-content-between pb-10">
+                                <div class="left-side">
+                                    <h4 class="text--base remove-coupon">{{ __("Have a coupon code?") }}</h4>
+                                </div>
+                                <div class="right-side">
+                                    <a href="#0" class="btn--base btn apply-button" data-bs-toggle="modal" data-bs-target="#couponcode"> {{ __("Apply") }}</a>
+                                    <span class="d-none applied-button">{{ __("Applied") }}</span>
+                                </div>
+                            </div>
                             <div class="col-12 mb-4 pb-10">
                                 <div class="row">
                                     <h3 class="fs-6">{{__("Recipient gets")}}</h3>
@@ -174,6 +193,30 @@
             </div>
         </div>
     </div>
+    {{-- modal --}}
+    <div class="modal fade" id="couponcode" tabindex="-1" aria-labelledby="couponcode" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ __("Coupon") }}</h4>
+                    <button type="button" class="close"  data-bs-dismiss="modal" aria-label="Close"><i class="las la-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form class="row g-4" onsubmit="applyCoupon(event)">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>{{ __("Enter Your Coupon Code") }}<span></span></label>
+                                <input type="text" name="coupon" class="form--control" id="coupon" placeholder="Enter Coupon">
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn--base w-100">{{ __("Apply") }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>        
+            </div>
+        </div>
+    </div>
 </section>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     End Banner
@@ -213,6 +256,103 @@
     $('.receiver-currency').on('change',function(){ 
         runReverse();
     });
+    
+    function applyCoupon(event){
+        
+        event.preventDefault();
+        var coupon  = $('#coupon').val();
+        var url         = '{{ setRoute("coupon.apply") }}';
+        $.post(url,{coupon:coupon,_token:"{{ csrf_token() }}"},function(response){
+            console.log(response);
+            var couponId    = response.data.coupon.id;
+            var couponName  = response.data.coupon.name;
+            var couponPrice = parseFloat(response.data.coupon.price);
+            
+            $('#coupon-id').val(couponId);
+
+            var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
+            sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+            function sender(selectedItem,receiver = false){
+                function acceptVar() {
+                    var senderCurrency          = selectedItem.code;
+                    var senderCurrencyRate      = selectedItem.rate;
+                    var receiverCurrencyRate    = receiver.rate;
+                    return {
+                        senderCurrency:senderCurrency,
+                        senderCurrencyRate:senderCurrencyRate,
+                        receiverCurrencyRate:receiverCurrencyRate
+                    };
+                }
+                var senderCurrencyRate      = acceptVar().senderCurrencyRate;
+                var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
+                var senderCurrency          = acceptVar().senderCurrency;
+                var receiverRate            = parseFloat(receiverCurrencyRate) / parseFloat(senderCurrencyRate);
+                var bonus                   = parseFloat(couponPrice) * parseFloat(receiverRate);
+                $('#coupon-price').val(bonus);
+                var recieveMoney            = $('#receive_money').val();
+                var totalReceiveMoney       = parseFloat(recieveMoney) + parseFloat(bonus);
+                $('#receive_money').val(totalReceiveMoney);
+                
+                $('.apply-button').addClass("d-none");
+                $('.applied-button').removeClass("d-none");
+                $('.coupon-text').removeClass("d-none");
+                $('#couponcode').modal('hide');
+                $('#coupon').val('');
+                $('#coupon--bonus').text(couponPrice + " " + senderCurrency);
+                var removeCoupon    = `
+                <button onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</button>
+                `;
+                $('.remove-coupon').html(removeCoupon);
+            }
+            
+           
+            
+        }).fail(function(response){
+            var errorText = response.responseJSON;
+        });
+    }
+    function remove(event){
+        event.preventDefault();
+       
+        $('.apply-button').removeClass("d-none");
+        $('.applied-button').addClass("d-none"); 
+        
+        var CouponText    = `
+        <h4 class="text--base remove-coupon">{{ __("Have a coupon code?") }}</h4>
+                `;
+        $('.remove-coupon').html(CouponText);
+        couponId  = 0;
+        $('#coupon-id').val(couponId);
+        $('#coupon--bonus').addClass("d-none");
+        $('.coupon-text').addClass("d-none");
+        var couponPrice = $('#coupon--bonus').text();
+
+        var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
+        removeAmount(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+        function removeAmount(selectedItem,receiver = false){
+            function acceptVar() {
+                
+                var senderCurrencyRate      = selectedItem.rate;
+                var receiverCurrencyRate    = receiver.rate;
+                return {
+                    
+                    senderCurrencyRate:senderCurrencyRate,
+                    receiverCurrencyRate:receiverCurrencyRate
+                };
+            }
+            var senderCurrencyRate      = acceptVar().senderCurrencyRate;
+            var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
+            var senderCurrency          = acceptVar().senderCurrency;
+            var receiverRate            = parseFloat(receiverCurrencyRate) / parseFloat(senderCurrencyRate);
+            var bonus                   = parseFloat(couponPrice) * parseFloat(receiverRate);
+            $('#coupon-price').val(bonus);
+            var recieveMoney            = $('#receive_money').val();
+            var totalReceiveMoney       = parseFloat(recieveMoney) - parseFloat(bonus);
+            $('#receive_money').val(totalReceiveMoney);
+             
+        }
+        
+    };
     function run(selectedItem,receiver = false){
         
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
@@ -286,6 +426,16 @@
                 $('#fees-and-charges').text(parseFloat(totalChargeAmount ).toFixed(2) + " " + senderCurrency);
                 $('#get-amount').text(parseFloat(receivedMoney).toFixed(2) + " " + receiverCurrency);
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
+
+                var coupon      = $('#coupon-id').val();
+                
+                if(coupon   != 0){
+                    var couponPrice     = $('#coupon-price').val();
+                    receivedMoney   = parseFloat(receivedMoney) + parseFloat(couponPrice);
+                }else{
+                    receivedMoney = receivedMoney;
+                }
+                
 
                 $('#receive_money').val(parseFloat(receivedMoney).toFixed(2));
                 $('#charge').val(parseFloat(totalChargeAmount).toFixed(2));

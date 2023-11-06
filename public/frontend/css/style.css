@@ -7438,3 +7438,26 @@ input[type=number] {
   margin-right: auto !important;
   margin-left: 0;
 }
+
+
+/* coupon */
+#couponcode .modal-body .modal-footer {
+  border-top: none !important;
+}
+#couponcode .modal-body .modal-footer .btn {
+  border-radius: 10px;
+}
+#couponcode .modal-header i {
+  background-color: #723eeb;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 6px;
+}
+.exchange-charge {
+  padding-top: 10px;
+}
+.exchange-charge .btn {
+  padding: 6px 20px;
+  font-size: 12px;
+}

@@ -7,12 +7,14 @@ use App\Models\Subscribe;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Admin\Journal;
+use App\Http\Helpers\Response;
+use App\Models\Admin\Currency;
 use App\Models\ContactRequest;
 use App\Models\Admin\UsefulLink;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Currency;
+use App\Models\Admin\Coupon;
 use App\Models\Admin\TransactionSetting;
 use App\Models\Admin\WebJournalCategory;
 use Illuminate\Support\Facades\Validator;
@@ -253,5 +255,31 @@ class SiteController extends Controller{
             return back()->with(['error' => ['Failed to Contact Request. Try again']]);
         }
         return back()->with(['success' => ['Contact Request successfully send!']]);
+    }
+    /**
+     * Method for apply coupon
+     */
+    public function couponApply(Request $request){
+        $validator      = Validator::make($request->all(),[
+            'coupon'    => 'required',
+        ]);
+        if($validator->fails()){
+            return Response::error($validator->errors()->all());
+        }
+        $user   = auth()->user();
+        $coupon = Coupon::where('status',true)->first();
+        if($coupon->name == $request->coupon){
+            if(auth()->check() == true){
+                if($user->coupon_status  == 0){
+                    return Response::success(['Coupon Applied Successfully'],['coupon' => $coupon],200);
+                }else{
+                    return Response::success(['Already Applied The Coupon'],[],200);
+                }
+            }else{
+                return Response::success(['Please Login First'],[],200);
+            }
+        }else{
+            return Response::success(['Coupon not found!'],[],200);
+        }  
     }
 }
