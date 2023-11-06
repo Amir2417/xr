@@ -43,6 +43,11 @@
                             'title'     => __("Fees & Charges"),
                             'route'     => "admin.trx.settings.index",
                             'icon'      => "menu-icon las la-wallet",
+                        ],
+                        [
+                            'title'     => __("Coupons"),
+                            'route'     => "admin.coupon.index",
+                            'icon'      => "menu-icon las la-wallet",
                         ]
                     ]
                 ])

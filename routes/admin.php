@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\AppSettingsController;
 use App\Http\Controllers\Admin\BroadcastingController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ExtensionsController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\LanguageController;
@@ -72,6 +73,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::controller(ContactMessageController::class)->prefix('contact')->name('contact.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('reply-message', 'reply')->name('messages.reply');
+    });
+
+    //coupon
+    Route::controller(CouponController::class)->prefix('coupon')->name('coupon.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('delete','delete')->name('delete');
+        Route::put('status/update','statusUpdate')->name('status.update');
     });
 
     // Rem,ittance Bank

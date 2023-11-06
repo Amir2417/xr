@@ -29,7 +29,7 @@ class BeneficiaryController extends Controller
         $validated            = $validator->validate();
         if($request->id){
 
-            $beneficiaries          = Recipient::where('id',$request->id)->get();
+            $beneficiaries  = Recipient::where('id',$request->id)->get();
         }else{
             $beneficiaries  = Recipient::where('user_id',auth()->user()->id)->orderByDESC('id')->get()->map(function($data){
                 return [
@@ -68,7 +68,7 @@ class BeneficiaryController extends Controller
      */
     public function create(){
         
-        $receiver_country     = Currency::where('receiver',true)->first();
+        
         $banks                = RemittanceBank::where('status',true)->get()->map(function($data){
             return [
                 'id'                 => $data->id,

@@ -61,6 +61,7 @@ class User extends Authenticatable
         'device_id'           => 'string',
         'social_type'         => 'string',
         'remember_token'      => 'string',
+        'coupon_status'       => 'integer',
         'deleted_at'          => 'datetime',
         'created_at'          => 'datetime',
         'updated_at'          => 'datetime',
