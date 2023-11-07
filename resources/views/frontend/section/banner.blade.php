@@ -296,11 +296,13 @@
                 $('.apply-button').addClass("d-none");
                 $('.applied-button').removeClass("d-none");
                 $('.coupon-text').removeClass("d-none");
+                $('#coupon--bonus').removeClass("d-none");
                 $('#couponcode').modal('hide');
                 $('#coupon').val('');
+                console.log(couponPrice + "" +senderCurrency);
                 $('#coupon--bonus').text(couponPrice + " " + senderCurrency);
                 var removeCoupon    = `
-                <button onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</button>
+                <span class="remove-coupon-code" onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</span>
                 `;
                 $('.remove-coupon').html(removeCoupon);
             }
@@ -348,8 +350,7 @@
             $('#coupon-price').val(bonus);
             var recieveMoney            = $('#receive_money').val();
             var totalReceiveMoney       = parseFloat(recieveMoney) - parseFloat(bonus);
-            $('#receive_money').val(totalReceiveMoney);
-             
+            $('#receive_money').val(totalReceiveMoney); 
         }
         
     };
@@ -428,7 +429,7 @@
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
 
                 var coupon      = $('#coupon-id').val();
-                
+                console.log(coupon);
                 if(coupon   != 0){
                     var couponPrice     = $('#coupon-price').val();
                     receivedMoney   = parseFloat(receivedMoney) + parseFloat(couponPrice);

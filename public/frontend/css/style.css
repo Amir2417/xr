@@ -7461,3 +7461,7 @@ input[type=number] {
   padding: 6px 20px;
   font-size: 12px;
 }
+.remove-coupon-code{
+  background-color: transparent;
+  color: var(--primary-color);
+}

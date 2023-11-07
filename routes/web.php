@@ -68,6 +68,7 @@ Route::post('frontend/request/send-money',function(Request $request) {
                 'sender_ex_rate'    => $request->sender_ex_rate,
                 'sender_base_rate'  => $request->sender_base_rate,
                 'receiver_ex_rate'  => $request->receiver_ex_rate,
+                'coupon_id'         => $request->coupon_id ?? 0,
             ],
             
         ];
@@ -92,6 +93,7 @@ Route::post('frontend/request/send-money',function(Request $request) {
                 'sender_ex_rate'    => $request->sender_ex_rate,
                 'sender_base_rate'  => $request->sender_base_rate,
                 'receiver_ex_rate'  => $request->receiver_ex_rate,
+                'coupon_id'         => $request->coupon_id ?? 0,
             ],
             
         ];

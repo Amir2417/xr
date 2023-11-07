@@ -175,6 +175,7 @@ class RecipientController extends Controller
                 'sender_ex_rate'    => $temporary_data->data->sender_ex_rate,
                 'sender_base_rate'  => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
+                'coupon_id'         => $temporary_data->data->coupon_id ?? 0,
                 'first_name'        => $recipient->first_name,
                 'middle_name'       => $recipient->middle_name ?? '',
                 'last_name'         => $recipient->last_name,

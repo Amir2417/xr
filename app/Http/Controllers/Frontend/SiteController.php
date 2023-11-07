@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use Exception;
 use App\Models\Subscribe;
 use Illuminate\Support\Str;
+use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
 use App\Models\Admin\Journal;
 use App\Http\Helpers\Response;
@@ -14,7 +15,7 @@ use App\Models\Admin\UsefulLink;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Coupon;
+use Illuminate\Support\Facades\Session;
 use App\Models\Admin\TransactionSetting;
 use App\Models\Admin\WebJournalCategory;
 use Illuminate\Support\Facades\Validator;
@@ -49,7 +50,7 @@ class SiteController extends Controller{
         $subscribe_slug             = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
         $subscribe                  = SiteSections::getData($subscribe_slug)->first();
         $useful_link                = UsefulLink::where('status',true)->get();
-
+        $message                = Session::get('message');
 
         return view('frontend.index',compact(
             'transaction_settings',
@@ -68,7 +69,8 @@ class SiteController extends Controller{
             'subscribe',
             'useful_link',
             'sender_currency_first',
-            'receiver_currency_first'
+            'receiver_currency_first',
+            'message'
         ));
     }
     public function about(){
@@ -267,16 +269,24 @@ class SiteController extends Controller{
             return Response::error($validator->errors()->all());
         }
         $user   = auth()->user();
-        $coupon = Coupon::where('status',true)->first();
-        if($coupon->name == $request->coupon){
+        $coupons = Coupon::where('status', true)->get();
+
+        $matchingCoupon = $coupons->first(function ($coupon) use ($request) {
+            return $coupon->name === $request->coupon;
+        });
+
+        if($matchingCoupon){
             if(auth()->check() == true){
                 if($user->coupon_status  == 0){
-                    return Response::success(['Coupon Applied Successfully'],['coupon' => $coupon],200);
+                    return Response::success(['Coupon Applied Successfully'],['coupon' => $matchingCoupon],200);
+                   
                 }else{
-                    return Response::success(['Already Applied The Coupon'],[],200);
+                    Session::flash('message',['success'   => ['Already Applied The Coupon']]);
+                    return response()->json(['success' => true]);
                 }
             }else{
-                return Response::success(['Please Login First'],[],200);
+                Session::flash('message',['success'   => ['Please Login First']]);
+                return response()->json(['success' => true]);
             }
         }else{
             return Response::success(['Coupon not found!'],[],200);

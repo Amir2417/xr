@@ -5,6 +5,7 @@ namespace App\Traits\PaymentGateway;
 use Exception;
 use App\Traits\Transaction;
 use Illuminate\Support\Str;
+use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
 use App\Http\Helpers\Response;
 use Illuminate\Support\Carbon;
@@ -254,6 +255,7 @@ trait Stripe
                         'sender_ex_rate'            => $this->output['user_data']->data->sender_ex_rate,
                         'sender_base_rate'          => $this->output['user_data']->data->sender_base_rate,
                         'receiver_ex_rate'          => $this->output['user_data']->data->receiver_ex_rate,
+                        'coupon_id'                 => $this->output['user_data']->data->coupon_id,
                         'first_name'                => $this->output['user_data']->data->first_name,
                         'middle_name'               => $this->output['user_data']->data->middle_name,
                         'last_name'                 => $this->output['user_data']->data->last_name,
@@ -296,7 +298,18 @@ trait Stripe
                     'attribute'                     => PaymentGatewayConst::SEND,
                     'created_at'                    => now(),
                 ]);
-    
+                if($this->output['user_data']->data->coupon_id != 0){
+                    $user   = auth()->user();
+                    $user->update([
+                        'coupon_status'     => 1,
+                    ]);
+                    
+                    AppliedCoupon::create([
+                        'user_id'   => $user->id,
+                        'coupon_id'   => $this->output['user_data']->data->coupon_id,
+                        'transaction_id'   => $id,
+                    ]);
+                }
                
                 DB::commit();
             }catch(Exception $e) {

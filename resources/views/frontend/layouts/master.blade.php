@@ -45,7 +45,10 @@
     @include('admin.partials.notify')
     @include('frontend.partials.extensions.tawk-to')
     @stack('script')
-
+    <script>
+        var message     = '@json($message)';
+        throwMessage('error',JSON.parse(message));
+    </script>
     <script>
         $("#country_selector").countrySelect({
             defaultCountry: "us",

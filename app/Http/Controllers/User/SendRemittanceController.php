@@ -92,6 +92,7 @@ class SendRemittanceController extends Controller
                     'sender_ex_rate'    => $request->sender_ex_rate,
                     'sender_base_rate'  => $request->sender_base_rate,
                     'receiver_ex_rate'  => $request->receiver_ex_rate,
+                    'coupon_id'         => $request->coupon_id ?? 0,
                 ],
                 
             ];
@@ -119,6 +120,7 @@ class SendRemittanceController extends Controller
                     'sender_ex_rate'    => $request->sender_ex_rate,
                     'sender_base_rate'  => $request->sender_base_rate,
                     'receiver_ex_rate'  => $request->receiver_ex_rate,
+                    'coupon_id'         => $request->coupon_id ?? 0,
                 ],
                 
             ];
@@ -195,6 +197,7 @@ class SendRemittanceController extends Controller
                 'sender_ex_rate'      => $temporary_data->data->sender_ex_rate,
                 'sender_base_rate'    => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
+                'coupon_id'           => $temporary_data->data->coupon_id ?? 0,
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,
