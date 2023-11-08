@@ -27,11 +27,7 @@
                                     <div class="summary-item">
                                         <h4 class="title">{{ __("Remittance Summary") }}</h4>
                                     </div>
-                                    @php
-                                        $send_money      = get_amount(floatval($temporary_data->data->payable_amount) / $temporary_data->data->sender_base_rate) ?? "";
-                                        $exchange_rate   = get_amount(floatval($temporary_data->data->currency->rate)) ?? "";
-                                        $payable_amount  = floatval($send_money) * floatval($exchange_rate);
-                                    @endphp
+                                    
                                     <input type="hidden" name="identifier" value="{{ $temporary_data->identifier }}">
                                     <div class="preview-list-item">
                                         <div class="preview-list-left">
@@ -346,7 +342,7 @@
                                     </div>
                                     <div class="preview-list-right">
                                         
-                                        <span class="text--info">{{ get_amount($payable_amount) }} {{ $temporary_data->data->currency->code }}</span>
+                                        <span class="text--info">{{ get_amount($temporary_data->data->payable_amount) }} {{ $temporary_data->data->currency->code }}</span>
                                     </div>
                                 </div>
                             </div>

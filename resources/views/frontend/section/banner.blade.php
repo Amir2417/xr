@@ -367,7 +367,7 @@
             $('#coupon-price').val(bonus);
             var recieveMoney            = $('#receive_money').val();
             var totalReceiveMoney       = parseFloat(recieveMoney) - parseFloat(bonus);
-            $('#receive_money').val(totalReceiveMoney); 
+            $('#receive_money').val(totalReceiveMoney.toFixed(2)); 
         }
         
     };

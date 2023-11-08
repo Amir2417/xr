@@ -27,7 +27,7 @@ trait Paypal
         $paypalProvider = new PayPalClient;
         $paypalProvider->setApiCredentials($config);
         $paypalProvider->getAccessToken();
-
+        
         $response = $paypalProvider->createOrder([
             "intent" => "CAPTURE",
             "application_context" => [
