@@ -466,12 +466,19 @@ $(".custom-option").on("click", function () {
   $(this).addClass("active");
   var flag = $(this).find("img").attr("src");
   var currencyCode = $(this).find(".custom-currency").text();
+  var currencyCountry = $(this).find(".custom-country").text();
   $(this)
     .parents(".custom-select-wrapper")
     .siblings(".custom-select")
     .find(".custom-select-inner")
     .find(".custom-currency")
     .text(currencyCode);
+  $(this)
+    .parents(".custom-select-wrapper")
+    .siblings(".custom-select")
+    .find(".custom-select-inner")
+    .find(".custom-country")
+    .text(currencyCountry);
   $(this)
     .parents(".custom-select-wrapper")
     .siblings(".custom-select")

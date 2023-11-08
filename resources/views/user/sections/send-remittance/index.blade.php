@@ -374,11 +374,15 @@
                 `;
                 $('.remove-coupon').html(removeCoupon);
             }
+            var successText = response.message.success;
+            throwMessage("success",successText);
             
            
             
         }).fail(function(response){
             var errorText = response.responseJSON;
+            $('#couponcode').modal('hide');
+            throwMessage("error",errorText.message.error);
         });
     }
     function remove(event){

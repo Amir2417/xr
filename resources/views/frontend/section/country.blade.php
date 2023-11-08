@@ -15,7 +15,7 @@
                         <div class="custom-select-inner">
                             <input type="hidden" name="selected-country" class="selected-country" value="{{ old('selected-country') }}">
                             <img src="{{ get_image($default_currency->flag ,'currency-flag') }}" alt="flag" class="custom-flag">
-                            <span class="custom-currency">{{ $default_currency->country ?? '' }}</span>
+                            <span class="custom-country">{{ $default_currency->country ?? '' }}</span>
                         </div>
                     </div>
                     <div class="custom-select-wrapper">
