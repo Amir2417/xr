@@ -271,54 +271,64 @@
             $('#coupon-id').val(couponId);
 
             var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
-            sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
-            function sender(selectedItem,receiver = false){
-                function acceptVar() {
-                    var senderCurrency          = selectedItem.code;
-                    var senderCurrencyRate      = selectedItem.rate;
-                    var receiverCurrencyRate    = receiver.rate;
-                    return {
-                        senderCurrency:senderCurrency,
-                        senderCurrencyRate:senderCurrencyRate,
-                        receiverCurrencyRate:receiverCurrencyRate
-                    };
-                }
-                var senderCurrencyRate      = acceptVar().senderCurrencyRate;
-                var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
-                var senderCurrency          = acceptVar().senderCurrency;
-                var receiverRate            = parseFloat(receiverCurrencyRate) / parseFloat(senderCurrencyRate);
-                var bonus                   = parseFloat(couponPrice) * parseFloat(receiverRate);
-                $('#coupon-price').val(bonus);
-                var recieveMoney            = $('#receive_money').val();
-                var totalReceiveMoney       = parseFloat(recieveMoney) + parseFloat(bonus);
-                $('#receive_money').val(totalReceiveMoney);
-                
-                $('.apply-button').addClass("d-none");
-                $('.applied-button').removeClass("d-none");
-                $('.coupon-text').removeClass("d-none");
-                $('#coupon--bonus').removeClass("d-none");
-                $('#couponcode').modal('hide');
-                $('#coupon').val('');
-                
-                $('#coupon--bonus').text(couponPrice + " " + senderCurrency);
-                var removeCoupon    = `
-                <span class="remove-coupon-code" onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</span>
-                `;
-                $('.remove-coupon').html(removeCoupon);
-                
-                
-                $('#couponcode').modal('hide');
-            }
+            sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")),couponPrice);
+            
             var successText = response.message.success;
             throwMessage("success",successText);
-            
+
+            $(document).on("click",".custom-option",function() {
+                run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+                sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")),couponPrice);
+            });
            
             
         }).fail(function(response){
             var errorText = response.responseJSON;
+            $('#coupon').val('');
             $('#couponcode').modal('hide');
             throwMessage("error",errorText.message.error);
         });
+    }
+    function sender(selectedItem,receiver = false,couponPrice){
+       
+        function acceptVar() {
+            var senderCurrency          = selectedItem.code;
+            var senderCurrencyRate      = selectedItem.rate;
+            var receiverCurrencyRate    = receiver.rate;
+            return {
+                senderCurrency:senderCurrency,
+                senderCurrencyRate:senderCurrencyRate,
+                receiverCurrencyRate:receiverCurrencyRate
+            };
+        }
+        var senderCurrencyRate      = acceptVar().senderCurrencyRate;
+        var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
+        var senderCurrency          = acceptVar().senderCurrency;
+        var receiverRate            = parseFloat(receiverCurrencyRate) / parseFloat(senderCurrencyRate);
+        
+        var bonus                   = parseFloat(couponPrice) * parseFloat(receiverRate);
+        $('#coupon-price').val(bonus);
+        var enterMoney              = $('#send_money').val();
+        var receiveMoney            = parseFloat(enterMoney) * parseFloat(receiverRate)
+        var totalReceiveMoney       = parseFloat(receiveMoney) + parseFloat(bonus);
+       
+        $('#receive_money').val(totalReceiveMoney.toFixed(2));
+        
+        $('.apply-button').addClass("d-none");
+        $('.applied-button').removeClass("d-none");
+        $('.coupon-text').removeClass("d-none");
+        $('#coupon--bonus').removeClass("d-none");
+        $('#couponcode').modal('hide');
+        $('#coupon').val('');
+        
+        $('#coupon--bonus').text(couponPrice + " " + senderCurrency);
+        var removeCoupon    = `
+        <span class="remove-coupon-code" onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</span>
+        `;
+        $('.remove-coupon').html(removeCoupon);
+        
+        
+        $('#couponcode').modal('hide');
     }
     function remove(event){
         event.preventDefault();
@@ -567,9 +577,11 @@
     }
     $("#send_money").keyup(function(){
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+        
     });
     $("#receive_money").keyup(function(){
         runReverse(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+        
     });
 
     function adSelectActiveItem(input) {
@@ -581,10 +593,11 @@
         }
         return false;
     }
-
     $(document).on("click",".custom-option",function() {
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
+        
     });
+    
 
 </script>
 @endpush

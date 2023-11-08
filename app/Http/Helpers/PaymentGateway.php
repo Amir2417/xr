@@ -101,7 +101,8 @@ class PaymentGateway {
 
     public function chargeCalculate($currency,$receiver_currency = null) {
         $temporary_data         = TemporaryData::where('identifier',$this->request_data['identifier'])->first();
-        $amount                 = ($temporary_data->data->payable_amount / $temporary_data->data->sender_base_rate) * $temporary_data->data->currency->rate;
+        
+        $amount                 = $temporary_data->data->payable_amount;
         $fees                   = $temporary_data->data->fees;
         $convert_amount         = $temporary_data->data->convert_amount;
         $receive_money          = $temporary_data->data->receive_money;

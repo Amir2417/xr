@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\User;
 use Exception;
 use App\Models\Recipient;
 use Illuminate\Support\Str;
+use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
 use App\Http\Helpers\Response;
@@ -93,13 +94,36 @@ class SendRemittanceController extends Controller
             'send_money'        => 'required',
             'sender_currency'   => 'required',
             'receiver_currency' => 'required',
+            'coupon'            => 'nullable',
         ]);
         if($validator->fails()){
             return Response::error($validator->errors()->all(),[]);
         }
         $validated            = $validator->validate();
+        $coupons = Coupon::where('status', true)->get();
+
+        $matchingCoupon = $coupons->first(function ($coupon) use ($request) {
+            return $coupon->name === $request->coupon;
+        });
+        $user   = auth()->user();
+        $couponBonus = '';
+        $couponId = 0;
+        if($request->coupon){
+            if($matchingCoupon){
+                if($user->coupon_status == 0){
+                    $couponBonus    = $matchingCoupon->price;
+                    $couponId       = $matchingCoupon->id;
+                }else{
+                    return Response::error(['Already applied the coupon!'],[],404);
+                }
+            }else{
+                return Response::error(['Coupon not found!'],[],404);  
+            }
+        }
+        
+        
         $transaction_type     = TransactionSetting::where('status',true)->where('title','like','%'.$request->type.'%')->first();
-        $sender_currency        = Currency::where('status',true)->where('sender',true)->where('id',$request->sender_currency)->first();
+        $sender_currency      = Currency::where('status',true)->where('sender',true)->where('id',$request->sender_currency)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('id',$request->receiver_currency)->first();
 
         if($request->type == PaymentGatewayConst::TRANSACTION_TYPE_BANK || $request->type == PaymentGatewayConst::TRANSACTION_TYPE_MOBILE){
@@ -142,29 +166,40 @@ class SendRemittanceController extends Controller
                         $total_charge_amount  = $total_charge * $sender_currency_rate;
                         $convert_amount       = floatval($request->send_money);
                         $payable_amount       = $request->send_money + $total_charge_amount;
-                        $reciver_rate           = $receiver_currency_rate / $sender_currency_rate;
+                        $reciver_rate         = $receiver_currency_rate / $sender_currency_rate;
                         $receive_money        = $convert_amount * $reciver_rate;
                     }
                 }
             }
         }
+        
+        if($couponId != 0){
+           
+            $coupon_price    = $couponBonus * $reciver_rate;
+            $receive_money  = $receive_money + $coupon_price;
+
+        }else{
+            $receive_money  = $receive_money;
+        }
+        
         $validated['identifier']    = Str::uuid();
         $data = [
-            'type'               => $validated['type'],
-            'identifier'         => $validated['identifier'],
-            'data'               => [
-                'sender_name'    => auth()->user()->fullname,
-                'sender_email'   => auth()->user()->email,
-                'send_money'     => floatval($request->send_money),
-                'fees'           => $total_charge_amount,
-                'convert_amount' => $convert_amount,
-                'payable_amount' => $payable_amount,
-                'receive_money'  => $receive_money,
+            'type'                  => $validated['type'],
+            'identifier'            => $validated['identifier'],
+            'data'                  => [
+                'sender_name'       => auth()->user()->fullname,
+                'sender_email'      => auth()->user()->email,
+                'send_money'        => floatval($request->send_money),
+                'fees'              => $total_charge_amount,
+                'convert_amount'    => $convert_amount,
+                'payable_amount'    => $payable_amount,
+                'receive_money'     => $receive_money,
                 'sender_currency'   => $sender_currency_code,
                 'receiver_currency' => $receiver_currency_code,
                 'sender_ex_rate'    => $sender_rate,
                 'receiver_ex_rate'  => $reciver_rate,
-                'sender_base_rate'  => floatval($sender_currency_rate)
+                'sender_base_rate'  => floatval($sender_currency_rate),
+                'coupon_id'         => $couponId,
             ],
 
         ];
@@ -447,6 +482,7 @@ class SendRemittanceController extends Controller
                 'sender_ex_rate'    => $temporary_data->data->sender_ex_rate,
                 'sender_base_rate'  => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
+                'coupon_id'         => $temporary_data->data->coupon_id,
                 'first_name'        => $beneficiary->first_name,
                 'middle_name'       => $beneficiary->middle_name ?? '',
                 'last_name'         => $beneficiary->last_name,
@@ -529,6 +565,8 @@ class SendRemittanceController extends Controller
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
 
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
+        $rate                  = $currency->rate / $temporary_data->data->sender_base_rate;
+        
         $data = [
             'type'                    => $temporary_data->type,
             'identifier'              => $temporary_data->identifier,
@@ -540,6 +578,7 @@ class SendRemittanceController extends Controller
                 'sender_ex_rate'      => $temporary_data->data->sender_ex_rate,
                 'sender_base_rate'    => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
+                'coupon_id'           => $temporary_data->data->coupon_id,
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,
@@ -575,7 +614,7 @@ class SendRemittanceController extends Controller
                 'send_money'          => $temporary_data->data->send_money,
                 'fees'                => $temporary_data->data->fees,
                 'convert_amount'      => $temporary_data->data->convert_amount,
-                'payable_amount'      => $temporary_data->data->payable_amount,
+                'payable_amount'      => $temporary_data->data->payable_amount * $rate,
                 'receive_money'       => $temporary_data->data->receive_money,
             ],
 
@@ -677,6 +716,7 @@ class SendRemittanceController extends Controller
 
                 return Response::success(['Send Remittance Inserted Successfully'], $data);
             }else if($temData->type == PaymentGatewayConst::PAYPAL) {
+                
                    $payment_informations = [
                         'trx'                   => $temData->identifier,
                         'gateway_currency_name' => $payment_gateway_currency->name,
