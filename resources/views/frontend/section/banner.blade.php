@@ -263,7 +263,7 @@
         var coupon  = $('#coupon').val();
         var url         = '{{ setRoute("coupon.apply") }}';
         $.post(url,{coupon:coupon,_token:"{{ csrf_token() }}"},function(response){
-            console.log(response);
+            
             var couponId    = response.data.coupon.id;
             var couponName  = response.data.coupon.name;
             var couponPrice = parseFloat(response.data.coupon.price);
@@ -299,18 +299,25 @@
                 $('#coupon--bonus').removeClass("d-none");
                 $('#couponcode').modal('hide');
                 $('#coupon').val('');
-                console.log(couponPrice + "" +senderCurrency);
+                
                 $('#coupon--bonus').text(couponPrice + " " + senderCurrency);
                 var removeCoupon    = `
                 <span class="remove-coupon-code" onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</span>
                 `;
                 $('.remove-coupon').html(removeCoupon);
+                
+                
+                $('#couponcode').modal('hide');
             }
+            var successText = response.message.success;
+            throwMessage("success",successText);
             
            
             
         }).fail(function(response){
             var errorText = response.responseJSON;
+            $('#couponcode').modal('hide');
+            throwMessage("error",errorText.message.error);
         });
     }
     function remove(event){
@@ -429,7 +436,7 @@
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
 
                 var coupon      = $('#coupon-id').val();
-                console.log(coupon);
+                
                 if(coupon   != 0){
                     var couponPrice     = $('#coupon-price').val();
                     receivedMoney   = parseFloat(receivedMoney) + parseFloat(couponPrice);

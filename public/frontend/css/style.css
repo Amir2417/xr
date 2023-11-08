@@ -7465,3 +7465,76 @@ input[type=number] {
   background-color: transparent;
   color: var(--primary-color);
 }
+
+.countries {
+  overflow: hidden;
+  background-color: #723EEB;
+}
+.countries .title {
+  color: #fff;
+}
+.countries .container-c {
+  width: 98%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.countries .top-content h3 {
+  color: #fff;
+  font-size: 22px;
+}
+.countries .custom-currency {
+  color: #000;
+}
+.countries .custom-select {
+  background-color: #fff;
+  border-radius: 8px !important;
+}
+.countries .custom-select-inner {
+  padding: 8px 16px;
+}
+.countries .custom-select-wrapper {
+  top: 96px;
+}
+@media only screen and (max-width: 568px) {
+  .countries .text-content h3 {
+    font-size: 25px !important;
+ }
+}
+.countries .text-content h3, .countries .text-content h4 {
+  color: #fff;
+}
+.countries .c-top h3 {
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+}
+.countries .card {
+  border-radius: 10px;
+  color: #723EEB;
+  border: none !important;
+  padding: 12px 10px;
+  transition: 0.5s;
+  cursor: pointer;
+}
+.countries .card .thumb {
+  margin-right: 8px;
+}
+.countries .card .thumb img {
+  width: 2rem;
+  height: auto;
+  display: flex;
+  margin: auto;
+}
+.countries .card h3 {
+  color: #723EEB;
+  font-size: 12px;
+  font-weight: 700;
+}
+.countries .card p {
+  color: #000;
+  font-size: 10px;
+  margin-top: 10px;
+  font-weight: 600;
+}

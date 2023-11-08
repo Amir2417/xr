@@ -12,6 +12,7 @@ use App\Models\Admin\SourceOfFund;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SendingPurpose;
 use App\Constants\PaymentGatewayConst;
+use Illuminate\Support\Facades\Session;
 use App\Models\Admin\TransactionSetting;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
@@ -34,7 +35,7 @@ class SendRemittanceController extends Controller
         $user_country               = geoip()->getLocation($client_ip)['country'] ?? "";
         $user                       = auth()->user();
         $notifications              = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
-
+        $message                    = Session::get('message');
         return view('user.sections.send-remittance.index',compact(
             'page_title',
             'transaction_settings',
@@ -44,7 +45,8 @@ class SendRemittanceController extends Controller
             'user',
             'notifications',
             'sender_currency_first',
-            'receiver_currency_first'
+            'receiver_currency_first',
+            'message'
         ));
     }
     /**

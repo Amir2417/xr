@@ -9,6 +9,7 @@
 
 
     @include('frontend.section.banner')
+    @include('frontend.section.country')
     @include('frontend.section.feature')
     @include('frontend.section.how-it-work')
     @include('frontend.section.testimonial')

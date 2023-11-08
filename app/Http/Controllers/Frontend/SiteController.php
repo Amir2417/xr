@@ -28,6 +28,7 @@ class SiteController extends Controller{
         $receiver_currency          = Currency::where('status',true)->where('receiver',true)->get();
         $sender_currency_first      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency_first    = Currency::where('status',true)->where('receiver',true)->first();
+        $default_currency           = Currency::where('status',true)->where('default',true)->first();
         $banner_section_slug        = Str::slug(SiteSectionConst::BANNER_SECTION);
         $banner                     = SiteSections::getData($banner_section_slug)->first();
         $feature_section_slug       = Str::slug(SiteSectionConst::FEATURE_SECTION);
@@ -56,6 +57,7 @@ class SiteController extends Controller{
             'transaction_settings',
             'sender_currency',
             'receiver_currency',
+            'default_currency',
             'banner',
             'feature',
             'how_its_work',
@@ -262,6 +264,7 @@ class SiteController extends Controller{
      * Method for apply coupon
      */
     public function couponApply(Request $request){
+        
         $validator      = Validator::make($request->all(),[
             'coupon'    => 'required',
         ]);
@@ -281,15 +284,14 @@ class SiteController extends Controller{
                     return Response::success(['Coupon Applied Successfully'],['coupon' => $matchingCoupon],200);
                    
                 }else{
-                    Session::flash('message',['success'   => ['Already Applied The Coupon']]);
-                    return response()->json(['success' => true]);
+                    return Response::error(['Already Applied the coupon']);
                 }
             }else{
-                Session::flash('message',['success'   => ['Please Login First']]);
-                return response()->json(['success' => true]);
+                
+                return Response::error(['Please Login First']);
             }
         }else{
-            return Response::success(['Coupon not found!'],[],200);
+            return Response::error(['Coupon not found!']);
         }  
     }
 }
