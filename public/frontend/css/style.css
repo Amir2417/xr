@@ -7454,6 +7454,9 @@ input[type=number] {
   padding: 5px;
   border-radius: 6px;
 }
+.modal-header .close-btn{
+  display: contents;
+}
 .exchange-charge {
   padding-top: 10px;
 }

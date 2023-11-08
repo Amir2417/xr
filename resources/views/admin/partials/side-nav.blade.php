@@ -288,6 +288,7 @@
 
                         $setup_section_childs  = [
                             setRoute('admin.setup.sections.section','banner'),
+                            setRoute('admin.setup.sections.section.country','country'),
                             setRoute('admin.setup.sections.section','brand'),
                             setRoute('admin.setup.sections.section','about'),
                             setRoute('admin.setup.sections.section','choose'),
@@ -313,6 +314,10 @@
                                 <a href="{{ setRoute('admin.setup.sections.section','banner') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','banner')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>
                                     <span class="menu-title">{{ __("Banner Section") }}</span>
+                                </a>
+                                <a href="{{ setRoute('admin.setup.sections.section.country','country') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section.country','country')) active @endif">
+                                    <i class="menu-icon las la-ellipsis-h"></i>
+                                    <span class="menu-title">{{ __("Country Section") }}</span>
                                 </a>
                                 <a href="{{ setRoute('admin.setup.sections.section','brand') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','brand')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>

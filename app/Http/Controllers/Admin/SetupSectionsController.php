@@ -1066,7 +1066,7 @@ class SetupSectionsController extends Controller
         $data['language']      = $this->contentValidate($request,$basic_field_name);
         $update_data['key']    = $slug;
         $update_data['value']  = $data;
-        // dd($update_data);
+        
         try{
             SiteSections::updateOrCreate(['key'=>$slug],$update_data);
         }catch(Exception $e){

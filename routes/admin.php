@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\AppSettingsController;
 use App\Http\Controllers\Admin\BroadcastingController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\CountrySectionController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ExtensionsController;
 use App\Http\Controllers\Admin\JournalController;
@@ -308,6 +309,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('store','store')->name('store');
             Route::delete('delete','delete')->name('delete');
             Route::put('status/update','categoryStatusUpdate')->name('status.update');
+        });
+
+        //country section controller
+        Route::controller(CountrySectionController::class)->prefix('country')->name('section.')->group(function(){
+            Route::get('{slug}','view')->name('country');
+            Route::post('update/{slug}','countryUpdate')->name('country.update');
         });
     });
 

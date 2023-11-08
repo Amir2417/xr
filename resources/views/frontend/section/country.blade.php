@@ -1,10 +1,13 @@
+@php
+    $app_local    = get_default_language_code();
+@endphp
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Start Countries
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <section class="countries ptb-80 overflow-hidden">
 <div class="container-c mx-auto">
     <div class="text-content">
-        <h3>{{ __("XRemit is currently available") }} <br> {{ __("in these countries") }}</h3>
+        <h3>{{ @$country_section->value->language->$app_local->title ?? '' }} </h3>
     </div>
     <div class="row d-flex justify-content-center mt-30">
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8 form-group">

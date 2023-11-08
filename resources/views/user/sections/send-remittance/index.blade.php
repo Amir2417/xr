@@ -269,7 +269,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">{{ __("Coupon") }}</h4>
-                <button type="button" class="close"  data-bs-dismiss="modal" aria-label="Close"><i class="las la-times"></i></button>
+                <button type="button" class="close close-btn"  data-bs-dismiss="modal" aria-label="Close"><i class="las la-times"></i></button>
             </div>
             <div class="modal-body">
                 <form class="row g-4" onsubmit="applyCoupon(event)">

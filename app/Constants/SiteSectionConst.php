@@ -4,6 +4,7 @@ namespace App\Constants;
 
 class SiteSectionConst{
     const BANNER_SECTION        = "Banner Section";
+    const COUNTRY_SECTION       = "Country";
     const BRAND_SECTION         = "Brand Section";
     const ABOUT_SECTION         = "About Section";
     const CHOOSE_US_SECTION     = "Choose Us Section";

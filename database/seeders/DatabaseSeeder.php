@@ -26,6 +26,7 @@ use Database\Seeders\Admin\PaymentGatewaySeeder;
 use Database\Seeders\Admin\RemittanceBankSeeder;
 use Database\Seeders\Admin\SendingPurposeSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
+use Database\Seeders\Admin\CountrySectionSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -47,6 +48,7 @@ class DatabaseSeeder extends Seeder
             SetupSeoSeeder::class,
             AppSettingsSeeder::class,
             SiteSectionsSeeder::class,
+            CountrySectionSeeder::class,
             SetupKycSeeder::class,
             ExtensionSeeder::class,
             AdminHasRoleSeeder::class,

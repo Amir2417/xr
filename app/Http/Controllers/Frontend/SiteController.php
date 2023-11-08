@@ -15,6 +15,7 @@ use App\Models\Admin\UsefulLink;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\CountrySection;
 use Illuminate\Support\Facades\Session;
 use App\Models\Admin\TransactionSetting;
 use App\Models\Admin\WebJournalCategory;
@@ -31,6 +32,7 @@ class SiteController extends Controller{
         $default_currency           = Currency::where('status',true)->where('default',true)->first();
         $banner_section_slug        = Str::slug(SiteSectionConst::BANNER_SECTION);
         $banner                     = SiteSections::getData($banner_section_slug)->first();
+        $country_section            = CountrySection::where('key',SiteSectionConst::COUNTRY_SECTION)->first();
         $feature_section_slug       = Str::slug(SiteSectionConst::FEATURE_SECTION);
         $feature                    = SiteSections::getData($feature_section_slug)->first();
         $how_its_work_slug          = Str::slug(SiteSectionConst::HOW_ITS_WORK_SECTION);
@@ -59,6 +61,7 @@ class SiteController extends Controller{
             'receiver_currency',
             'default_currency',
             'banner',
+            'country_section',
             'feature',
             'how_its_work',
             'testimonial',
