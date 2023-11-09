@@ -1,17 +1,17 @@
 <?php
 namespace App\Http\Controllers\User;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
+use App\Models\UserNotification;
 use App\Models\Admin\MobileMethod;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\RemittanceBank;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\PaymentGatewayConst;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Transaction;
-use App\Models\UserNotification;
 
 class DashboardController extends Controller
 {

@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Constants\GlobalConst;
-use App\Http\Controllers\Controller;
-use App\Models\Admin\BasicSettings;
-use App\Models\Admin\SetupKyc;
-use App\Models\UserAuthorization;
-
-use App\Models\UserNotification;
-use App\Notifications\User\Auth\SendAuthorizationCode;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Carbon;
-use App\Providers\Admin\BasicSettingsProvider;
 use Exception;
 use Illuminate\Http\Request;
+use App\Constants\GlobalConst;
+use Illuminate\Support\Carbon;
+use App\Models\Admin\SetupKyc;
+use App\Models\UserNotification;
+use App\Models\UserAuthorization;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\ControlDynamicInputFields;
-use Illuminate\Support\Facades\DB;
+use App\Providers\Admin\BasicSettingsProvider;
+use Illuminate\Validation\ValidationException;
+use App\Notifications\User\Auth\SendAuthorizationCode;
+
 
 class AuthorizationController extends Controller
 {

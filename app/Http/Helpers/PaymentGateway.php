@@ -131,7 +131,7 @@ class PaymentGateway {
             ];
         }else {
             $default_currency   = Currency::default();
-            $exchange_rate      =  $default_currency->rate;
+            $exchange_rate      = $default_currency->rate;
             $will_get           = $receive_money;
             
             $data = [

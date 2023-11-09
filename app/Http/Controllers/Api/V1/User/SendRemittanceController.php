@@ -174,10 +174,8 @@ class SendRemittanceController extends Controller
         }
         
         if($couponId != 0){
-           
             $coupon_price    = $couponBonus * $reciver_rate;
-            $receive_money  = $receive_money + $coupon_price;
-
+            $receive_money   = $receive_money + $coupon_price;
         }else{
             $receive_money  = $receive_money;
         }
