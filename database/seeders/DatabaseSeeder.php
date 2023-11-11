@@ -61,13 +61,13 @@ class DatabaseSeeder extends Seeder
             /**
              * demo
              */
-            UserSeeder::class,
-            RemittanceBankSeeder::class,
-            MobileMethodSeeder::class,
-            SendingPurposeSeeder::class,
-            SourceOfFundsSeeder::class,
-            TransactionSeeder::class,
-            BeneficiarySeeder::class,
+            // UserSeeder::class,
+            // RemittanceBankSeeder::class,
+            // MobileMethodSeeder::class,
+            // SendingPurposeSeeder::class,
+            // SourceOfFundsSeeder::class,
+            // TransactionSeeder::class,
+            // BeneficiarySeeder::class,
             // DemoFixSeeder::class,
 
 

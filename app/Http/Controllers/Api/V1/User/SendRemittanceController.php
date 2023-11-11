@@ -113,6 +113,7 @@ class SendRemittanceController extends Controller
                 if($user->coupon_status == 0){
                     $couponBonus    = $matchingCoupon->price;
                     $couponId       = $matchingCoupon->id;
+                    
                 }else{
                     return Response::error(['Already applied the coupon!'],[],404);
                 }
@@ -206,10 +207,18 @@ class SendRemittanceController extends Controller
         } catch (Exception $e) {
             return Response::error(['Something went wrong! Please try again.'],[],404);
         }
-
-        return Response::success(['Send Money'],[
-            'temporary_data'      => $temporary_data
-        ],200);
+        if($couponId != 0){
+            return Response::success(['Send Money with coupon'],[
+                'temporary_data'      => $temporary_data,
+                'matchingCoupon'      => $matchingCoupon,
+            ],200);
+        }
+        if($couponId == 0){
+            return Response::success(['Send Money without coupon'],[
+                'temporary_data'      => $temporary_data,
+            ],200);
+        }
+        
     }
     /**
     * Method for calculate send remittance
