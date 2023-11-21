@@ -20,89 +20,6 @@
 @endsection
 
 @section('content')
-    <div class="dashboard-area">
-        <div class="dashboard-item-area">
-            <div class="row">
-                <div class="col-xxxl-4 col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-15">
-                    <div class="dashbord-item">
-                        <div class="dashboard-content">
-                            <div class="left">
-                                <h6 class="title">Current Balance</h6>
-                                <div class="user-info">
-                                    <h2 class="user-count">$625k</h2>
-                                </div>
-                                <div class="user-badge">
-                                    <span class="badge badge--success">Add Money 40</span>
-                                    <span class="badge badge--warning">Pending 22</span>
-                                </div>
-                            </div>
-                            <div class="right">
-                                <div class="chart" id="chart6" data-percent="65"><span>65%</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxxl-4 col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-15">
-                    <div class="dashbord-item">
-                        <div class="dashboard-content">
-                            <div class="left">
-                                <h6 class="title">Total Transactions</h6>
-                                <div class="user-info">
-                                    <h2 class="user-count">$165k</h2>
-                                </div>
-                                <div class="user-badge">
-                                    <span class="badge badge--danger">Send 40</span>
-                                    <span class="badge badge--success">Receive 50</span>
-                                </div>
-                            </div>
-                            <div class="right">
-                                <div class="chart" id="chart7" data-percent="80"><span>80%</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxxl-4 col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-15">
-                    <div class="dashbord-item">
-                        <div class="dashboard-content">
-                            <div class="left">
-                                <h6 class="title">Total Money Out</h6>
-                                <div class="user-info">
-                                    <h2 class="user-count">43k</h2>
-                                </div>
-                                <div class="user-badge">
-                                    <span class="badge badge--danger">Canceled 40</span>
-                                    <span class="badge badge--warning">Pending 50K</span>
-                                </div>
-                            </div>
-                            <div class="right">
-                                <div class="chart" id="chart8" data-percent="90"><span>90%</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxxl-4 col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-15">
-                    <div class="dashbord-item">
-                        <div class="dashboard-content">
-                            <div class="left">
-                                <h6 class="title">Active Tickets</h6>
-                                <div class="user-info">
-                                    <h2 class="user-count">$430K</h2>
-                                </div>
-                                <div class="user-badge">
-                                    <span class="badge badge--danger">Canceled 45</span>
-                                    <span class="badge badge--success">Solved 25</span>
-                                </div>
-                            </div>
-                            <div class="right">
-                                <div class="chart" id="chart9" data-percent="95"><span>95%</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="custom-card mt-15">
         <div class="card-header">
             <h6 class="title">{{ __("User Overview") }}</h6>
@@ -112,9 +29,7 @@
                 <div class="row align-items-center mb-10-none">
                     <div class="col-xl-4 col-lg-4 form-group">
                         <div class="user-action-btn-area">
-                            <div class="user-action-btn">
-                                <button type="button" class="bg--danger one" data-bs-toggle="modal" data-bs-target="#addModal"><i class="las la-wallet me-1"></i> Add/Subtract Balance</button>
-                            </div>
+                            
                             <div class="user-action-btn">
                                 @include('admin.components.link.custom',[
                                     'href'          => setRoute('admin.users.login.logs',$user->username),
@@ -198,13 +113,13 @@
                         ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
-                        <label>{{ __("Country") }}<span>*</span></label>
+                        <label>{{ __("Country") }}</label>
                         <select name="country" class="form--control select2-auto-tokenize country-select" data-placeholder="Select Country" data-old="{{ old('country',$user->address->country ?? "") }}"></select>
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
-                        <label>{{ __("Phone Number") }}<span>*</span></label>
+                        <label>{{ __("Phone Number") }}</label>
                         <div class="input-group">
-                            <div class="input-group-text phone-code">+{{ $user->mobile_code }}</div>
+                            
                             <input class="phone-code" type="hidden" name="mobile_code" value="{{ $user->mobile_code }}" />
                             <input type="text" class="form--control" placeholder="Write Here..." name="mobile" value="{{ old('mobile',$user->mobile) }}">
                         </div>

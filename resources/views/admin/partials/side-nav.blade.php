@@ -300,6 +300,8 @@
                             setRoute('admin.setup.sections.section','footer'),
                             setRoute('admin.setup.sections.section','subscribe'),
                             setRoute('admin.setup.sections.section','contact'),
+                            setRoute('admin.setup.sections.section','login'),
+                            setRoute('admin.setup.sections.section','register'),
 
                         ];
                     @endphp
@@ -364,6 +366,14 @@
                                 <a href="{{ setRoute('admin.setup.sections.section','contact') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','contact')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>
                                     <span class="menu-title">{{__("Contact Section")}}</span>
+                                </a>
+                                <a href="{{ setRoute('admin.setup.sections.section','login') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','login')) active @endif">
+                                    <i class="menu-icon las la-ellipsis-h"></i>
+                                    <span class="menu-title">{{__("Login Section")}}</span>
+                                </a>
+                                <a href="{{ setRoute('admin.setup.sections.section','register') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','register')) active @endif">
+                                    <i class="menu-icon las la-ellipsis-h"></i>
+                                    <span class="menu-title">{{__("Register Section")}}</span>
                                 </a>
                             </li>
                         </ul>

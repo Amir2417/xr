@@ -883,11 +883,11 @@ class SendRemittanceController extends Controller
             Response::error($message);
         }
         $share_link   = route('share.link',$data);
-       $download_link   = route('download.pdf',$data);
-       return Response::success(["Payment successful, please go back your app"],[
-        'share-link'   => $share_link,
-        'download_link' => $download_link,
-       ],200);
+        $download_link   = route('download.pdf',$data);
+        return Response::success(["Payment successful, please go back your app"],[
+            'share-link'   => $share_link,
+            'download_link' => $download_link,
+        ],200);
     }
     elseif ($status ==  'cancelled'){
         Response::error(['Payment Cancelled']);

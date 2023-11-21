@@ -1282,7 +1282,7 @@ function sideBarSearchWithInput(input,navItems) {
     $(".sidebar-search-result").append(singleItem);
   });
 
-  // console.log(singleItem);
+  
 }
 
 // Internal Search Section
@@ -1298,7 +1298,7 @@ function executeItemSearch(inputElement,tableElement,URL,minTextLength) {
   $(tableElement).parent().find(".search-result-table").remove();
   var searchText = inputElement.val();
   if(searchText.length > minTextLength) {
-    // console.log(searchText);
+   
     $(tableElement).addClass("d-none");
     makeSearchItemXmlRequest(searchText,tableElement,URL);
   }else {
@@ -1312,15 +1312,10 @@ function makeSearchItemXmlRequest(searchText,tableElement,URL) {
     text        : searchText,
   };
   $.post(URL,data,function(response) {
-    //response
+    
   }).done(function(response){
     itemSearchResult(response,tableElement);
-    // if($(tableElement).siblings(".search-result-table").length > 0) {
-    //     $(tableElement).parent().find(".search-result-table").html(response);
-    // }else{
-    //     $(tableElement).after(`<div class="search-result-table"></div>`);
-    //     $(tableElement).parent().find(".search-result-table").html(response);
-    // }
+    
   }).fail(function(response) {
     throwMessage('error',["Something went wrong! Please try again."]);
   });

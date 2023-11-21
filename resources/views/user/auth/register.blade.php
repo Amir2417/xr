@@ -1,3 +1,8 @@
+@php
+    $app_local  = get_default_language_code();
+    $slug = Illuminate\Support\Str::slug(App\Constants\SiteSectionConst::REGISTER_SECTION);
+    $register = App\Models\Admin\SiteSections::getData($slug)->first();
+@endphp
 @extends('frontend.layouts.master')
 
 @push("css")
@@ -13,12 +18,12 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-12 col-12 d-grid my-auto py-5 login-img">
-                <img src="{{ asset('public/frontend/images/element/register.webp')}}" alt="Image" class="img-fluid">
+                <img src="{{ get_image(@$register->value->image , 'site-section') }}" alt="Image" class="img-fluid">
             </div>
             <div class="col-lg-6 col-md-12 col-12">
                 <div class="content">
                     <div class="my-3">
-                        <h3 class="pb-2 text-capitalize fw-bold">{{ __("Register") }}</h3>
+                        <h3 class="pb-2 text-capitalize fw-bold">{{ @$register->value->language->$app_local->heading ?? '' }}</h3>
                     </div>
                     <form action="{{ setRoute('user.register.submit') }}" method="POST" autocomplete="on">
                         @csrf

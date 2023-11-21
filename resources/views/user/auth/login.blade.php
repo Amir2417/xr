@@ -1,3 +1,8 @@
+@php
+    $app_local  = get_default_language_code();
+    $slug = Illuminate\Support\Str::slug(App\Constants\SiteSectionConst::LOGIN_SECTION);
+    $login = App\Models\Admin\SiteSections::getData($slug)->first();
+@endphp
 @extends('frontend.layouts.master')
 
 @push("css")
@@ -12,13 +17,13 @@
     <div class="container mx-auto">
         <div class="row">
             <div class="col-md-6 d-grid my-auto py-5 login-img">
-                <img src="{{ asset('public/frontend/images/element/login.webp')}}" alt="Image" class="img-fluid">
+                <img src="{{ get_image(@$login->value->image , 'site-section') }}" alt="Image" class="img-fluid">
             </div>
 
             <div class="col-md-6 my-auto">
                 <div class="content">
                     <div class="my-3">
-                        <h3 class="pb-2 text-capitalize fw-bold">{{ __("Welcome Back") }}</h3>
+                        <h3 class="pb-2 text-capitalize fw-bold">{{ @$login->value->language->$app_local->heading ?? '' }}</h3>
                     </div>
                     <form action="{{ setRoute('user.login.submit') }}" method="POST">
                         @csrf

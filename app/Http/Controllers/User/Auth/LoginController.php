@@ -31,7 +31,7 @@ class LoginController extends Controller
     use AuthenticatesUsers,LoggedInUsers;
 
     public function showLoginForm() {
-        $page_title = "| User Login";
+        $page_title           = "| User Login";
         $footer_section_slug  = Str::slug(SiteSectionConst::FOOTER_SECTION);
         $footer               = SiteSections::getData($footer_section_slug)->first();
         $subscribe_slug       = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);

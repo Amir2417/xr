@@ -197,8 +197,7 @@ class UserCareController extends Controller
             'username'              => "required|exists:users,username",
             'firstname'             => "required|string|max:60",
             'lastname'              => "required|string|max:60",
-            'mobile_code'           => "required|string|max:10",
-            'mobile'                => "required|string|max:20",
+            'mobile'                => "nullable|string|max:20",
             'address'               => "nullable|string|max:250",
             'country'               => "nullable|string|max:50",
             'state'                 => "nullable|string|max:50",
@@ -217,9 +216,8 @@ class UserCareController extends Controller
             'zip'           => $validated['zip_code'] ?? "",
             'address'       => $validated['address'] ?? "",
         ];
-        $validated['mobile_code']       = remove_special_char($validated['mobile_code']);
         $validated['mobile']            = remove_special_char($validated['mobile']);
-        $validated['full_mobile']       = $validated['mobile_code'] . $validated['mobile'];
+        $validated['full_mobile']       = $validated['mobile'];
 
         $user = User::where('username', $username)->first();
         if(!$user) return back()->with(['error' => ['Opps! User not exists']]);

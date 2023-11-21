@@ -285,7 +285,7 @@ class CurrencyController extends Controller
             $error = ['error' => $validator->errors()];
             return Response::error($error,null,400);
         }
-
+        
         $validated = $validator->validate();
         $currencies = Currency::search($validated['text'])->select()->limit(10)->get();
         return view('admin.components.search.currency-search',compact(
