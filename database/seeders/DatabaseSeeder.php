@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Database\Seeders\DemoFixSeeder;
 use Database\Seeders\User\UserSeeder;
 use Database\Seeders\Admin\RoleSeeder;
 use Database\Seeders\Admin\AdminSeeder;
@@ -38,7 +37,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
+        //fresh
         $this->call([
             AdminSeeder::class,
             RoleSeeder::class,
@@ -57,20 +56,34 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             UsefulLinkSeeder::class,
             AppOnboardScreensSeeder::class,
-
-            /**
-             * demo
-             */
-            // UserSeeder::class,
-            // RemittanceBankSeeder::class,
-            // MobileMethodSeeder::class,
-            // SendingPurposeSeeder::class,
-            // SourceOfFundsSeeder::class,
-            // TransactionSeeder::class,
-            // BeneficiarySeeder::class,
-            // DemoFixSeeder::class,
-
-
         ]);
+
+        //demo
+        // $this->call([
+        //     AdminSeeder::class,
+        //     RoleSeeder::class,
+        //     TransactionSettingSeeder::class,
+        //     CurrencySeeder::class,
+        //     BasicSettingsSeeder::class,
+        //     SetupSeoSeeder::class,
+        //     AppSettingsSeeder::class,
+        //     SiteSectionsSeeder::class,
+        //     CountrySectionSeeder::class,
+        //     SetupKycSeeder::class,
+        //     ExtensionSeeder::class,
+        //     AdminHasRoleSeeder::class,
+        //     SetupPageSeeder::class,
+        //     PaymentGatewaySeeder::class,
+        //     LanguageSeeder::class,
+        //     UsefulLinkSeeder::class,
+        //     AppOnboardScreensSeeder::class,
+        //     UserSeeder::class,
+        //     RemittanceBankSeeder::class,
+        //     MobileMethodSeeder::class,
+        //     SendingPurposeSeeder::class,
+        //     SourceOfFundsSeeder::class,
+        //     TransactionSeeder::class,
+        //     BeneficiarySeeder::class,
+        // ]);
     }
 }
