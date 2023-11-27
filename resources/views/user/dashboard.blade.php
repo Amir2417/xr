@@ -340,7 +340,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ $item->remittance_data->sender_ex_rate ?? ''}} {{ $item->remittance_data->sender_currency ?? ''}} = {{ $item->remittance_data->currency->rate ?? '' / $item->remittance_data->sender_base_rate ?? ''}} {{ $item->remittance_data->currency->code ?? '' }}</span>
+                                <span>{{ $item->remittance_data->sender_ex_rate ?? ''}} {{ $item->remittance_data->sender_currency ?? ''}} = {{ floatVal($item->remittance_data->currency->rate ?? '' / $item->remittance_data->sender_base_rate ?? '')}} {{ $item->remittance_data->currency->code ?? '' }}</span>
                             </div>
                         </div>
                     @endif

@@ -86,15 +86,15 @@ Route::prefix("user")->name("user.")->group(function(){
 
     Route::controller(ProfileController::class)->prefix("profile")->name("profile.")->group(function(){
         Route::get('/','index')->name('index');
-        Route::put('password/update','passwordUpdate')->name('password.update');
-        Route::put('update','update')->name('update');
-        Route::post('delete-account/{id}','delete')->name('delete');
+        Route::put('password/update','passwordUpdate')->name('password.update')->middleware('app.mode');
+        Route::put('update','update')->name('update')->middleware('app.mode');
+        Route::post('delete-account/{id}','delete')->name('delete')->middleware('app.mode');
     });
 
     //security
     Route::controller(SecurityController::class)->prefix('security')->name('security.')->group(function(){
-        Route::get('google/2fa','google2FA')->name('google.2fa');
-        Route::post('google/2fa/status/update','google2FAStatusUpdate')->name('google.2fa.status.update');
+        Route::get('google/2fa','google2FA')->name('google.2fa')->middleware('app.mode');
+        Route::post('google/2fa/status/update','google2FAStatusUpdate')->name('google.2fa.status.update')->middleware('app.mode');
     });
 
     Route::controller(SupportTicketController::class)->prefix("prefix")->name("support.ticket.")->group(function () {

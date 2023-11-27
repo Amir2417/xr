@@ -14,7 +14,6 @@ use Database\Seeders\Admin\ExtensionSeeder;
 use Database\Seeders\Admin\SetupPageSeeder;
 use Database\Seeders\Admin\UsefulLinkSeeder;
 use Database\Seeders\User\BeneficiarySeeder;
-use Database\Seeders\User\TransactionSeeder;
 use Database\Seeders\Admin\AppSettingsSeeder;
 use Database\Seeders\Admin\AdminHasRoleSeeder;
 use Database\Seeders\Admin\MobileMethodSeeder;
@@ -37,7 +36,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //fresh
+        // fresh
         $this->call([
             AdminSeeder::class,
             RoleSeeder::class,
@@ -82,7 +81,6 @@ class DatabaseSeeder extends Seeder
         //     MobileMethodSeeder::class,
         //     SendingPurposeSeeder::class,
         //     SourceOfFundsSeeder::class,
-        //     TransactionSeeder::class,
         //     BeneficiarySeeder::class,
         // ]);
     }
