@@ -47,7 +47,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
 
         //send remittance 
 
-        Route::controller(SendRemittanceController::class)->prefix('send-remittance')->group(function(){
+        Route::controller(SendRemittanceController::class)->middleware(['kyc.verification.guard'])->prefix('send-remittance')->group(function(){
             Route::post('store','store');
             Route::get('beneficiary','beneficiary');
             Route::get('beneficiary-add','beneficiaryAdd');
