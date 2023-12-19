@@ -358,7 +358,7 @@ trait Stripe
                 "name"         => $user_name
             ],
             "customizations" => [
-                "title"       => "Add Money",
+                "title"       => "Send Remittance",
                 "description" => dateFormat('d M Y', Carbon::now()),
             ]
         ];

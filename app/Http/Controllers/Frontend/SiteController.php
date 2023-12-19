@@ -175,6 +175,40 @@ class SiteController extends Controller{
         ));
 
     }
+
+    /**
+     * Method for get the blogs using category
+     * @param string $slug
+     * @param \Illuminate\Http\Request $request
+     */
+    public function journalCategory($slug){
+        $page_title         = "- Journal Category";
+        $contact_section_slug = Str::slug(SiteSectionConst::CONTACT_SECTION);
+        $contact              = SiteSections::getData($contact_section_slug)->first();
+        $footer_section_slug  = Str::slug(SiteSectionConst::FOOTER_SECTION);
+        $footer               = SiteSections::getData($footer_section_slug)->first();
+        $subscribe_slug       = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
+        $subscribe            = SiteSections::getData($subscribe_slug)->first();
+        $useful_link          = UsefulLink::where('status',true)->get();
+        $blog_category      = WebJournalCategory::where('slug',$slug)->first();
+        
+        if(!$blog_category) abort(404);
+        $blogs              = Journal::where('category_id',$blog_category->id)->latest()->paginate(6);
+        
+
+        return view('frontend.pages.journal-category',compact(
+            'page_title',
+            'blog_category',
+            'blogs',
+            'contact',
+            'footer',
+            'subscribe',
+            'useful_link',
+        ));
+    }
+    /**
+     * Method for 
+     */
     public function contact(){
         $page_title           = "| Contact Page";
         $contact_section_slug = Str::slug(SiteSectionConst::CONTACT_SECTION);

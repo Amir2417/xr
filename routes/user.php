@@ -22,7 +22,7 @@ Route::prefix("user")->name("user.")->group(function(){
     });
 
     //send-remittance
-    Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+    Route::controller(SendRemittanceController::class)->middleware(['kyc.verification.guard'])->prefix('send-remittance')->name('send.remittance.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('store','store')->name('store');
         Route::get('receipt-payment/{identifier}','receiptPayment')->name('receipt.payment');
@@ -36,6 +36,7 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::get('/','transaction')->name('index');
         Route::get('search', 'search')->name('search');
     });
+    
     //beneficary 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('index/{identifier}','index')->name('index');
@@ -53,7 +54,7 @@ Route::prefix("user")->name("user.")->group(function(){
     });
 
     //payment
-    Route::controller(RemittanceController::class)->group(function(){
+    Route::controller(RemittanceController::class)->middleware(['kyc.verification.guard'])->group(function(){
         Route::controller(RemittanceController::class)->name('send.remittance.')->group(function(){
             //paypal
             Route::get('success/response/{gateway}','success')->name('payment.success');

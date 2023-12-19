@@ -59,7 +59,7 @@
                             {
                                 type: "warning",
                                 allow_dismiss: true,
-                                delay: 500000000,
+                                delay: 5000,
                                 placement: {
                                 from: "top",
                                 align: "right"

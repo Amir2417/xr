@@ -64,7 +64,7 @@
                                 </td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ count($item->supported_currencies ?? []) }}</td>
-                                <td>0</td>
+                                <td>{{ count(@$item->currencies) }}</td>
                                 <td>
                                     @include('admin.components.form.switcher',[
                                         'name'          => 'status',

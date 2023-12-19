@@ -49,7 +49,7 @@
                         @forelse ($notifications as $item)
                             <li>
                                 <div class="thumb">
-                                    <img src="@if ($user->image){{ get_image($user->image ?? '', 'user-profile') ?? '' }}@else{{ asset('public/frontend/') }}/images/user/2.jpg  @endif" alt="user">
+                                    <img src="{{ auth()->user()->userImage ?? asset('public/frontend/images/client/client-3.jpg') }}" alt="user">
                                 </div>
                                 <div class="content">
                                     <div class="title-area">

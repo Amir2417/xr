@@ -317,7 +317,9 @@
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
     });
     $('.trx-type-select').on('change',function(){
-        run();
+        var selectedItem = JSON.parse(adSelectActiveItem("input[name=sender_currency]"));
+        var receiver = JSON.parse(adSelectActiveItem("input[name=receiver_currency]"))
+        run(selectedItem,receiver);
     });
     $('.sender-currency').on('change',function(){
         run();
@@ -359,7 +361,7 @@
     }
     function sender(selectedItem,receiver = false,couponPrice){
         couponPrice = parseFloat(couponPrice.toFixed(2));
-        console.log("cou",couponPrice);
+        
         function acceptVar() {
             var senderCurrency          = selectedItem.code;
             var senderCurrencyRate      = selectedItem.rate;
@@ -447,6 +449,7 @@
         var enterAmount = $('#send_money').val();
  
         $("#feature-list").html(selectedType.feature_text);
+       
         function acceptVar() {
             var senderCurrency          = selectedItem.code;
             var senderCurrencyRate      = selectedItem.rate;
@@ -457,7 +460,7 @@
                 senderCurrencyRate:senderCurrencyRate,
                 receiverCurrency:receiverCurrency,
                 receiverCurrencyRate:receiverCurrencyRate
-            };
+            }
         }
 
         function getCharges(selectedType,enterAmount){

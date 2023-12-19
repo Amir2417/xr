@@ -248,7 +248,9 @@
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
     });
     $('.trx-type-select').on('change',function(){
-        run();
+        var selectedItem = JSON.parse(adSelectActiveItem("input[name=sender_currency]"));
+        var receiver = JSON.parse(adSelectActiveItem("input[name=receiver_currency]"))
+        run(selectedItem,receiver);
     });
     $('.sender-currency').on('change',function(){
         run();

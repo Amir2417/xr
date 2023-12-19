@@ -327,9 +327,21 @@ $(window).on("load", function () {
     );
 });
 
-//sidebar Menu
-$(document).on("click", ".notification-icon", function () {
-  $(".notification-wrapper").toggleClass("active");
+//Notification
+$('.notification-icon').on('click', function (e) {
+  e.preventDefault();
+  if($('.notification-wrapper').hasClass('active')) {
+    $('.notification-wrapper').removeClass('active');
+    $('.body-overlay').removeClass('show');
+  }else {
+    $('.notification-wrapper').addClass('active');
+    $('.body-overlay').addClass('show');
+  }
+});
+$('#body-overlay').on('click', function (e) {
+  e.preventDefault();
+  $('.notification-wrapper').removeClass('active');
+  $('.body-overlay').removeClass('show');
 });
 
 //Profile Upload

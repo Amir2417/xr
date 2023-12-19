@@ -117,6 +117,7 @@ Route::controller(SiteController::class)->name('frontend.')->group(function(){
     Route::get('how-it-works','howItWorks')->name('howitworks');
     Route::get('web-journal','webJournal')->name('web.journal');
     Route::get('journal-details/{slug}','journalDetails')->name('journal.details');
+    Route::get('journal-category/{slug}','journalCategory')->name('journal.category');
     Route::get('contact','contact')->name('contact');
 });
 

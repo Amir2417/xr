@@ -167,7 +167,7 @@ class AuthorizationController extends Controller
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
 
-        return redirect()->route("user.profile.index")->with(['success' => ['KYC information successfully submitted']]);
+        return back()->with(['success' => ['KYC information successfully submitted']]);
     }
     /**
      * Googel 2FA Form

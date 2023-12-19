@@ -44,7 +44,7 @@
             <form class="account-form" action="{{ setRoute('user.password.forgot.verify.code',$token) }}" method="POST">
                 @csrf
                 <div class="row ml-b-20">
-                    <div class="col-lg-12 form-group">
+                    <div class="col-lg-12 form-group text-center">
                         <input class="otp" type="text" name="code[]" oninput='digitValidate(this)' onkeyup='tabChange(1)'
                             maxlength=1 required>
                         <input class="otp" type="text" name="code[]"  oninput='digitValidate(this)' onkeyup='tabChange(2)'

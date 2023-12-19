@@ -25,6 +25,7 @@ use Database\Seeders\Admin\RemittanceBankSeeder;
 use Database\Seeders\Admin\SendingPurposeSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
 use Database\Seeders\Admin\CountrySectionSeeder;
+use Database\Seeders\Admin\JournalSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -37,27 +38,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // fresh
-        $this->call([
-            AdminSeeder::class,
-            RoleSeeder::class,
-            TransactionSettingSeeder::class,
-            CurrencySeeder::class,
-            BasicSettingsSeeder::class,
-            SetupSeoSeeder::class,
-            AppSettingsSeeder::class,
-            SiteSectionsSeeder::class,
-            CountrySectionSeeder::class,
-            SetupKycSeeder::class,
-            ExtensionSeeder::class,
-            AdminHasRoleSeeder::class,
-            SetupPageSeeder::class,
-            PaymentGatewaySeeder::class,
-            LanguageSeeder::class,
-            UsefulLinkSeeder::class,
-            AppOnboardScreensSeeder::class,
-        ]);
-
-        //demo
         // $this->call([
         //     AdminSeeder::class,
         //     RoleSeeder::class,
@@ -76,12 +56,37 @@ class DatabaseSeeder extends Seeder
         //     LanguageSeeder::class,
         //     UsefulLinkSeeder::class,
         //     AppOnboardScreensSeeder::class,
-        //     UserSeeder::class,
-        //     RemittanceBankSeeder::class,
-        //     MobileMethodSeeder::class,
-        //     SendingPurposeSeeder::class,
-        //     SourceOfFundsSeeder::class,
-        //     BeneficiarySeeder::class,
+        //     JournalSeeder::class,
         // ]);
+
+        //demo
+        $this->call([
+            AdminSeeder::class,
+            RoleSeeder::class,
+            TransactionSettingSeeder::class,
+            CurrencySeeder::class,
+            BasicSettingsSeeder::class,
+            SetupSeoSeeder::class,
+            AppSettingsSeeder::class,
+            SiteSectionsSeeder::class,
+            CountrySectionSeeder::class,
+            SetupKycSeeder::class,
+            ExtensionSeeder::class,
+            AdminHasRoleSeeder::class,
+            SetupPageSeeder::class,
+            PaymentGatewaySeeder::class,
+            LanguageSeeder::class,
+            UsefulLinkSeeder::class,
+            AppOnboardScreensSeeder::class,
+            JournalSeeder::class,
+
+            UserSeeder::class,
+            RemittanceBankSeeder::class,
+            MobileMethodSeeder::class,
+            SendingPurposeSeeder::class,
+            SourceOfFundsSeeder::class,
+            BeneficiarySeeder::class,
+
+        ]);
     }
 }

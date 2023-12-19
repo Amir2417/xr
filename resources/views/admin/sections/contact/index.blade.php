@@ -36,11 +36,11 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Message</th>
-                            <th>Reply</th>
-                            <th>Created At</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Email") }}</th>
+                            <th>{{ __("Message") }}</th>
+                            <th>{{ __("Reply") }}</th>
+                            <th>{{ __("Created At") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -50,7 +50,7 @@
                                 <td>{{ $key + $contact_requests->firstItem() }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
-                                <td>{{ $item->message }}</td>
+                                <td>{{ Str::words($item->message ?? '','5','...')  }}</td>
                                 <td>
                                     @if ($item->reply == true)
                                         <span class="badge badge--success">{{ __("Replyed") }}</span>

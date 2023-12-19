@@ -285,7 +285,9 @@
             G = f >> 8 & 0x00ff,
             B = f & 0x0000ff;
         return '#' + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
-      } 
+      } // beautiful color shading blending code
+      // http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+
     }, {
       key: "shadeColor",
       value: function shadeColor(p, color) {
@@ -324,7 +326,9 @@
         }
 
         return array;
-      } 
+      } // to extend defaults with user options
+      // credit: http://stackoverflow.com/questions/27936772/deep-object-merging-in-es6-es7#answer-34749873
+
     }, {
       key: "extend",
       value: function extend(target, source) {
@@ -513,7 +517,7 @@
 
           return a.length > b.length ? a : b;
         }, 0);
-      } 
+      } // http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#answer-12342275
 
     }, {
       key: "hexToRgba",
@@ -855,7 +859,7 @@
         }
 
         if (w.config.chart.animations.dynamicAnimation.enabled && w.globals.dataChanged && w.config.chart.type !== 'bar') {
-
+          // disabled due to this bug - https://github.com/apexcharts/vue-apexcharts/issues/75
           delayFactor = 0;
         }
 
@@ -4670,8 +4674,8 @@
       key: "parseDateWithTimezone",
       value: function parseDateWithTimezone(dateStr) {
         return Date.parse(dateStr.replace(/-/g, '/').replace(/[a-z]+/gi, ' '));
-      } 
-      
+      } // http://stackoverflow.com/questions/14638018/current-time-formatting-with-javascript#answer-14638191
+
     }, {
       key: "formatDate",
       value: function formatDate(date, format) {
@@ -10041,8 +10045,12 @@
             graphics.placeTextWithEllipsis(xAxisTextsInversed[_xat2], xAxisTextsInversed[_xat2].textContent, w.config.yaxis[0].labels.maxWidth - (w.config.yaxis[0].title.text ? parseFloat(w.config.yaxis[0].title.style.fontSize) * 2 : 0) - 15);
           }
         }
-      } 
-      
+      } // renderXAxisBands() {
+      //   let w = this.w;
+      //   let plotBand = document.createElementNS(w.globals.SVGNS, 'rect')
+      //   w.globals.dom.elGraphical.add(plotBand)
+      // }
+
     }]);
 
     return XAxis;
@@ -17252,7 +17260,12 @@
 
           if (w.globals.comboCharts) {
             i = parseInt(bar.parentNode.getAttribute('data:realIndex'), 10);
-          }
+          } // if (w.config.tooltip.shared) {
+          // this check not needed  at the moment
+          //   const yDivisor = w.globals.gridHeight / (w.globals.series.length)
+          //   const hoverY = ttCtx.clientY - ttCtx.seriesBound.top
+          //   j = Math.ceil(hoverY / yDivisor)
+          // }
 
 
           var handleXForColumns = function handleXForColumns(x) {
@@ -24202,7 +24215,7 @@
    *
    * Bruls, Mark; Huizing, Kees; van Wijk, Jarke J. (2000), "Squarified treemaps"
    * in de Leeuw, W.; van Liere, R., Data Visualization 2000:
-   * Proc. Joint Eurographics and IEEE TCVG Symp. on Visualization, Springer-Verlag, pp. 33–42.
+   * Proc. Joint Eurographics and IEEE TCVG Symp. on Visualization, Springer-Verlag, pp. 33â€“42.
    *
    * Paper is available online at: http://www.win.tue.nl/~vanwijk/stm.pdf
    *
@@ -26669,7 +26682,7 @@
       isPathLetter: /[MLHVCSQTAZ]/i,
       // matches 0.154.23.45
       numbersWithDots: /((\d?\.\d+(?:e[+-]?\d+)?)((?:\.\d+(?:e[+-]?\d+)?)+))+/gi,
-      matches .
+      // matches .
       dots: /\./g
     };
     SVG.utils = {
@@ -29411,7 +29424,7 @@
           // fetch text parent
           var t = this.parent(SVG.Text); // mark new line
 
-          this.dom.newLined = true; // apply new hy¡n
+          this.dom.newLined = true; // apply new hyÂ¡n
 
           return this.dy(t.dom.leading * t.attr('font-size')).attr('x', t.x());
         }
@@ -32285,13 +32298,19 @@
       var elRect = el.getBoundingClientRect();
 
       if (el.style.display === 'none' || elRect.width === 0) {
-        
+        // if elRect.width=0, the chart is not rendered at all
+        // (it has either display none or hidden in a different tab)
+        // fixes https://github.com/apexcharts/apexcharts.js/issues/2825
+        // fixes https://github.com/apexcharts/apexcharts.js/issues/2991
+        // fixes https://github.com/apexcharts/apexcharts.js/issues/2992
         called = true;
       }
     }
 
     var ro = new ResizeObserver(function (r) {
-      
+      // ROs fire immediately after being created,
+      // per spec: https://drafts.csswg.org/resize-observer/#ref-for-element%E2%91%A3
+      // we don't want that so we just discard the first run
       if (called) {
         fn.call(el, r);
       }

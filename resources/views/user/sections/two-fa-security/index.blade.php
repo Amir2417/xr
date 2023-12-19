@@ -24,8 +24,8 @@
                             <div class="col-xl-12 col-lg-12 form-group">
                                 <label>{{ __("QRcode Share") }}</label>
                                 <div class="input-group">
-                                    <input type="text" class="form--control" value="{{ auth()->user()->two_factor_secret }}" readonly>
-                                    <div class="input-group-text"><i class="las la-copy"></i></div>
+                                    <input type="text" class="form--control" id="referralURL" value="{{ auth()->user()->two_factor_secret }}" readonly>
+                                    <div class="input-group-text copytext"><i class="las la-copy"></i></div>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group">
@@ -58,7 +58,7 @@
                     <div class="play-store-thumb text-center mb-20">
                         <img class="mx-auto" src="{{ asset('public/frontend/') }}/images/element/play-store.png">
                     </div>
-                    <a href="https://www.apple.com/app-store/" class="btn--base mt-10 w-100">{{ __("Download App") }}</a>
+                    <a href="https://play.google.com/store/apps?hl=en&gl=US" class="btn--base mt-10 w-100">{{ __("Download App") }}</a>
                 </div>
             </div>
         </div>
@@ -74,6 +74,15 @@
             var btnText = $(this).text();
             var message     = `Are you sure to <strong>${btnText}</strong> 2 factor authentication (Powered by google)?`;
             openAlertModal(actionRoute,target,message,btnText,"POST");
+        });
+
+        $('.copytext').on('click',function(){
+            var copyText = document.getElementById("referralURL");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+
+            throwMessage('success',["Copied: " + copyText.value]);
         });
     </script>
 @endpush
