@@ -47,5 +47,7 @@ class Transaction extends Model
     {
         return $this->belongsTo(PaymentGatewayCurrency::class,'payment_gateway_currency_id');
     }
+
+    
     
 }

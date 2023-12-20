@@ -369,7 +369,7 @@ class RemittanceController extends Controller
         $page_title = "Crypto Payment Address";
         $transaction = Transaction::where('trx_id', $trx_id)->firstOrFail();
 
-        if($transaction->gateway_currency->gateway->isCrypto() && $transaction->details?->payment_info?->receiver_address ?? false) {
+        if($transaction->currency->gateway->isCrypto() && $transaction->details?->payment_info?->receiver_address ?? false) {
             return view('user.sections.send-remittance.payment.crypto.address', compact(
                 'transaction',
                 'page_title',
