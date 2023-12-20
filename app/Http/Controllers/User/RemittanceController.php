@@ -40,7 +40,7 @@ class RemittanceController extends Controller
     public function submit(Request $request){
        
         try{
-            $instance = PaymentGatewayHelper::init($request->all())->gateway()->render();
+            $instance = PaymentGatewayHelper::init($request->all())->type(PaymentGatewayConst::TYPESENDREMITTANCE)->gateway()->render();
             if($instance instanceof RedirectResponse === false && isset($instance['gateway_type']) && $instance['gateway_type'] == PaymentGatewayConst::MANUAL) {
                 $manual_handler = $instance['distribute'];
                 return $this->$manual_handler($instance);
