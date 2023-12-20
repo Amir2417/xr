@@ -13,18 +13,32 @@ class PaymentGatewayConst {
 
     const TYPESENDREMITTANCE    = "SEND-REMITTANCE";
     
+    const STATUSSUCCESS             = 1;
+    const STATUSPENDING             = 2;
+    const STATUSHOLD                = 3;
+    const STATUSREJECTED            = 4;
+    const STATUSWAITING             = 5;
+
     const APP           = "APP";
     const SEND          = "SEND";
     const RECEIVED      = "RECEIVED";
     const MANUA_GATEWAY = 'manual';
-    
+    const NOT_USED  = "NOT-USED";
 
 
-    const PAYPAL        = 'paypal';
-    const STRIPE        = 'stripe';
-    const FLUTTER_WAVE  = 'flutterwave';
-    const RAZORPAY      = 'razorpay';
-    const SSLCOMMERZ    = 'sslcommerz';
+    const PAYPAL                    = 'paypal';
+    const G_PAY                     = 'gpay';
+    const COIN_GATE                 = 'coingate';
+    const QRPAY                     = 'qrpay';
+    const TATUM                     = 'tatum';
+    const STRIPE                    = 'stripe';
+    const FLUTTERWAVE               = 'flutterwave';
+    const SSLCOMMERZ                = 'sslcommerz';
+    const RAZORPAY                  = 'razorpay';
+
+    const PROJECT_CURRENCY_MULTIPLE = "PROJECT_CURRENCY_MULTIPLE";
+    const PROJECT_CURRENCY_SINGLE   = "PROJECT_CURRENCY_SINGLE";
+    const CALLBACK_HANDLE_INTERNAL  = "CALLBACK_HANDLE_INTERNAL";
 
     //transaction type
 
@@ -47,14 +61,16 @@ class PaymentGatewayConst {
     }
 
     public static function register($alias = null) {
-        $gateway_alias          = [
+        $gateway_alias  = [
             self::PAYPAL        => "paypalInit",
-            self::STRIPE        => "stripeInit",
-            self::MANUA_GATEWAY => "manualInit",
-            self::FLUTTER_WAVE  => 'flutterwaveInit',
-            self::RAZORPAY      => 'razorInit',
-            self::SSLCOMMERZ    => 'sslcommerzInit'
-
+            self::G_PAY         => "gpayInit",
+            self::COIN_GATE     => "coinGateInit",
+            self::QRPAY         => "qrpayInit",
+            self::TATUM         => 'tatumInit',
+            self::STRIPE        => 'stripeInit',
+            self::FLUTTERWAVE   => 'flutterwaveInit',
+            self::SSLCOMMERZ    => 'sslCommerzInit',
+            self::RAZORPAY      => 'razorpayInit',
         ];
 
         if($alias == null) {
@@ -66,10 +82,37 @@ class PaymentGatewayConst {
         }
         return "init";
     }
-
+    public static function registerGatewayRecognization() {
+        return [
+            'isGpay'        => self::G_PAY,
+            'isPaypal'      => self::PAYPAL,
+            'isCoinGate'    => self::COIN_GATE,
+            'isQrpay'       => self::QRPAY,
+            'isTatum'       => self::TATUM,
+            'isStripe'      => self::STRIPE,
+            'isFlutterwave' => self::FLUTTERWAVE,
+            'isSslCommerz'  => self::SSLCOMMERZ,
+            'isRazorpay'    => self::RAZORPAY,
+        ];
+    }
     public static function apiAuthenticateGuard() {
         return [
             'api'   => 'web',
+        ];
+    }
+
+    public static function registerRedirection() {
+        return [
+            'web'       => [
+                'return_url'    => 'user.send.remittance.payment.success',
+                'cancel_url'    => 'user.send.remittance.payment.cancel',
+                'callback_url'  => 'user.send.remittance.payment.callback',
+            ],
+            'api'       => [
+                'return_url'    => 'api.user.send.remittance.payment.success',
+                'cancel_url'    => 'api.user.send.remittance.payment.cancel',
+                'callback_url'  => 'user.send.remittance.payment.callback',
+            ],
         ];
     }
 }

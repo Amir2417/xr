@@ -2,29 +2,50 @@
 namespace App\Http\Helpers;
 
 use Exception;
+use App\Models\UserWallet;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
+use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
+use App\Constants\GlobalConst;
 use App\Models\Admin\Currency;
+use App\Models\UserNotification;
 use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
+use App\Traits\PaymentGateway\Gpay;
+use App\Traits\PaymentGateway\QRPay;
+use App\Traits\PaymentGateway\Tatum;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\PaymentGateway\Paypal;
 use App\Traits\PaymentGateway\Stripe;
-use App\Traits\PaymentGateway\Manual;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Route;
 use App\Constants\PaymentGatewayConst;
+use App\Traits\PaymentGateway\CoinGate;
+use App\Traits\PaymentGateway\Razorpay;
+use App\Notifications\paypalNotification;
+use App\Providers\Admin\CurrencyProvider;
+use App\Traits\PaymentGateway\SslCommerz;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\PaymentGateway\RazorTrait;
+use App\Traits\PaymentGateway\Flutterwave;
 use App\Models\Admin\PaymentGatewayCurrency;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
-use App\Traits\PaymentGateway\SslcommerzTrait;
-use App\Traits\PaymentGateway\FlutterwaveTrait;
+use App\Notifications\User\BuyCryptoMailNotification;
+use App\Models\Admin\PaymentGateway as PaymentGatewayModel;
 
 class PaymentGateway {
 
-    use Paypal,Stripe,Manual,FlutterwaveTrait,SslcommerzTrait,RazorTrait;
+    use Paypal, Gpay, CoinGate, QRPay, Tatum, Stripe, Flutterwave, SslCommerz, Razorpay;
 
     protected $request_data;
     protected $output;
-    private $transaction_id;
+    protected $currency_input_name = "identifier";
+    protected $project_currency = PaymentGatewayConst::PROJECT_CURRENCY_MULTIPLE;
+    protected $predefined_user_wallet;
+    protected $predefined_guard;
+    protected $predefined_user;
 
     public function __construct(array $request_data)
     {
@@ -35,72 +56,110 @@ class PaymentGateway {
         return new PaymentGateway($data);
     }
 
+    public function setProjectCurrency(string $type) {
+        
+        $this->project_currency = $type;
+        return $this;
+    }
+
     public function gateway() {
         $request_data = $this->request_data;
         
         if(empty($request_data)) throw new Exception("Gateway Information is not available. Please provide payment gateway currency alias");
-
-        $validated          = $this->validator($request_data)->validate();
-        $temporary_data     = TemporaryData::where('identifier',$request_data['identifier'])->first();
-        $gateway_currency   = PaymentGatewayCurrency::where("alias",$temporary_data->data->currency->alias)->first();
-
+        $validated = $this->validator($request_data)->validate();
+        $temporary_data     = TemporaryData::where('identifier',$validated['identifier'])->first();
+        $gateway_currency   = PaymentGatewayCurrency::with(['gateway'])->where("alias",$temporary_data->data->currency->alias)->first();
+        
         if(!$gateway_currency || !$gateway_currency->gateway) {
+            if(request()->acceptsJson()) throw new Exception("Gateway not available");
             throw ValidationException::withMessages([
-                $this->$temporary_data->data->currency->alias = "Gateway not available",
+                $this->currency_input_name = "Gateway not available",
             ]);
         }
         
-        if($gateway_currency->gateway->isAutomatic()) {
-            $this->output['gateway']    = $gateway_currency->gateway;
-            $this->output['currency']   = $gateway_currency;
-            $this->output['amount']     = $this->amount();
-            $this->output['distribute'] = $this->gatewayDistribute($gateway_currency->gateway);
-        }elseif($gateway_currency->gateway->isManual()){
-            $this->output['gateway']    = $gateway_currency->gateway;
-            $this->output['currency']   = $gateway_currency;
-            $this->output['amount']     = $this->amount();
-            $this->output['distribute'] = $this->gatewayDistribute($gateway_currency->gateway);
-        }
-
-        $this->output['request_data']   = $validated;
         
+        
+        $this->output['gateway']            = $gateway_currency->gateway;
+        $this->output['currency']           = $gateway_currency;
+        $this->output['amount']             = $this->amount();
+        $this->output['form_data']          = $this->request_data;
+       
+        if($gateway_currency->gateway->isAutomatic()) {
+            
+            $this->output['distribute']         = $this->gatewayDistribute($gateway_currency->gateway);
+            $this->output['record_handler']     = $this->generateRecordHandler();
+        }else {
+            
+            $this->output['distribute']         = "handleManualPayment";
+            $this->output['gateway_type']       = PaymentGatewayConst::MANUAL;
+        }
+     
+
         return $this;
     }
 
-    public function validator($data) {
-        return Validator::make($data,[
-            'identifier'                => "nullable",
-        ]);
+    public function generateRecordHandler() {
+        
+        if($this->predefined_guard) {
+            $guard = $this->predefined_guard;
+        }else {
+            $guard = get_auth_guard();
+        }
+
+        $method = "insertRecord". ucwords($guard);
+       
+        return $method;
     }
+
+   
+
+    public function validator($data) {
+        $validator = Validator::make($data,[
+            'identifier'  => "required",
+        ]);
+
+        if(request()->acceptsJson()) {
+            if($validator->fails()) {
+                $errors = $validator->errors()->all();
+                $first_error = $errors[0];
+                throw new Exception($first_error);
+            }
+        }
+
+        return $validator;
+    }
+
+
 
     public function get() {
         return $this->output;
     }
 
     public function gatewayDistribute($gateway = null) {
-
+        
         if(!$gateway) $gateway = $this->output['gateway'];
         $alias = Str::lower($gateway->alias);
-        if($gateway->type == PaymentGatewayConst::AUTOMATIC){
-            $method = PaymentGatewayConst::register($alias);
-        }elseif($gateway->type == PaymentGatewayConst::MANUAL){ 
-            $method = PaymentGatewayConst::register(strtolower($gateway->type));
-        }
-
+        $method = PaymentGatewayConst::register($alias);
+        
         if(method_exists($this,$method)) {
+            
             return $method;
         }
-        return throw new Exception("Gateway(".$gateway->name.") Trait or Method (".$method."()) does not exists");
+        throw new Exception("Gateway(".$gateway->name.") Trait or Method (".$method."()) does not exists");
     }
 
     public function amount() {
         $currency = $this->output['currency'] ?? null;
+        
         if(!$currency) throw new Exception("Gateway currency not found");
         return $this->chargeCalculate($currency);
     }
 
     public function chargeCalculate($currency,$receiver_currency = null) {
-        $temporary_data         = TemporaryData::where('identifier',$this->request_data['identifier'])->first();
+        $temporary_data     = TemporaryData::where('identifier',$this->request_data['identifier'])->first();
+       
+        
+        
         
         $amount                 = $temporary_data->data->payable_amount;
         $fees                   = $temporary_data->data->fees;
@@ -146,12 +205,18 @@ class PaymentGateway {
                 'default_currency'          => get_default_currency_code(),
             ];
         }
+        
         return (object) $data;
     }
 
     public function render() {
         $output = $this->output;
-        if(!is_array($output)) throw new Exception("Render Faild! Please call with valid gateway/credentials");
+        if(isset($output['gateway_type']) && $output['gateway_type'] == PaymentGatewayConst::MANUAL) {
+            return $this->get();
+        }
+
+        if(!is_array($output)) throw new Exception("Render Failed! Please call with valid gateway/credentials");
+
         $common_keys = ['gateway','currency','amount','distribute'];
         foreach($output as $key => $item) {
             if(!array_key_exists($key,$common_keys)) {
@@ -159,65 +224,52 @@ class PaymentGateway {
                 break;
             }
         }
+
         $distributeMethod = $this->output['distribute'];
-        return $this->$distributeMethod($output) ?? throw new Exception("Something went worng! Please try again.");
+        if(!method_exists($this,$distributeMethod)) throw new Exception("Something went wrong! Please try again.");
+        return $this->$distributeMethod($output);
     }
 
-    public function responseReceive($type = null) {
+    public function responseReceive() {
         $tempData = $this->request_data;
-
-        if(empty($tempData) || empty($tempData['type'])) throw new Exception('Transaction faild. Record didn\'t saved properly. Please try again.');
-
-        $method_name = $tempData['type']."Success";
+        
+        if(empty($tempData) || empty($tempData['type'])) throw new Exception('Transaction failed. Record didn\'t saved properly. Please try again.');
 
         if($this->requestIsApiUser()) {
-           
             $creator_table = $tempData['data']->creator_table ?? null;
             $creator_id = $tempData['data']->creator_id ?? null;
             $creator_guard = $tempData['data']->creator_guard ?? null;
+
             $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
-            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');           
+            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
+
             if($creator_table == null || $creator_id == null || $creator_guard == null) throw new Exception('Request user doesn\'t save properly. Please try again');
             $creator = DB::table($creator_table)->where("id",$creator_id)->first();
             if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
+
             $api_user_login_guard = $api_authenticated_guards[$creator_guard];
             $this->output['api_login_guard'] = $api_user_login_guard;
             Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
         }
+        
         $currency_id = $tempData['data']->currency ?? "";
-        
         $gateway_currency = PaymentGatewayCurrency::find($currency_id);
+        if(!$gateway_currency) throw new Exception('Transaction failed. Gateway currency not available.');
+        $requested_amount = $tempData['data']->amount->requested_amount ?? 0;
         
-        if(!$gateway_currency) throw new Exception('Transaction faild. Gateway currency not available.');
-        
-        $validator_data     = [
-            'identifier'    => $tempData['data']->user_record,
+        $validator_data = [
+            'identifier'  => $tempData['data']->user_record,
         ];
         
         $this->request_data = $validator_data;
+        
         $this->gateway();
+        
         $this->output['tempData'] = $tempData;
-        $type = $tempData['type'];
-        if($type == 'flutterwave'){
-            if(method_exists(FlutterwaveTrait::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }elseif($type == 'stripe'){
-            if(method_exists(Stripe::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }elseif($type == 'sslcommerz'){
-            if(method_exists(SslcommerzTrait::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }elseif($type == 'razorpay'){
-            if(method_exists(RazorTrait::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }else{
-            if(method_exists(Paypal::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
+        $method_name = $this->getResponseMethod($this->output['gateway']);
+        
+        if(method_exists($this,$method_name)) {
+            return $this->$method_name($this->output);
         }
         throw new Exception("Response method ".$method_name."() does not exists.");
     }
@@ -226,92 +278,444 @@ class PaymentGateway {
         $this->output['type']  = $type;
         return $this;
     }
+
+    public function getRedirection() {
+        $redirection = PaymentGatewayConst::registerRedirection();
+        $guard = get_auth_guard();
+        if(!array_key_exists($guard,$redirection)) {
+            throw new Exception("Gateway Redirection URLs/Route Not Registered. Please Register in PaymentGatewayConst::class");
+        }
+        $gateway_redirect_route = $redirection[$guard];
+        return $gateway_redirect_route;
+    }
+
+    public static function getToken(array $response, string $gateway) {
+        switch($gateway) {
+            case PaymentGatewayConst::PAYPAL:
+                return $response['token'] ?? "";
+                break;
+            case PaymentGatewayConst::G_PAY:
+                return $response['gpay_trans_id'] ?? "";
+                break;
+            case PaymentGatewayConst::COIN_GATE:
+                return $response['token'] ?? "";
+                break;
+            case PaymentGatewayConst::QRPAY:
+                return $response['token'] ?? "";
+                break;
+            case PaymentGatewayConst::STRIPE:
+                return $response['token'] ?? "";
+                break;
+            case PaymentGatewayConst::FLUTTERWAVE:
+                return $response['token'] ?? "";
+                break;
+            case PaymentGatewayConst::RAZORPAY:
+                return $response['token'] ?? "";
+                break;
+            default:
+                throw new Exception("Oops! Gateway not registered in getToken method");
+        }
+        throw new Exception("Gateway token not found!");
+    }
+
+    public function getResponseMethod($gateway) {
+
+        $gateway_is = PaymentGatewayConst::registerGatewayRecognization();
+
+        foreach($gateway_is as $method => $gateway_name) {
+            if(method_exists($this,$method)) {
+                if($this->$method($gateway)) {
+                    return $this->generateSuccessMethodName($gateway_name);
+                    break;
+                }
+            }
+        }
+        throw new Exception("Payment gateway response method not declared in generateResponseMethod");
+    }
+
+    public function getCallbackResponseMethod($gateway) {
+
+        $gateway_is = PaymentGatewayConst::registerGatewayRecognization();
+        foreach($gateway_is as $method => $gateway_name) {
+            if(method_exists($this,$method)) {
+                if($this->$method($gateway)) {
+                    return $this->generateCallbackMethodName($gateway_name);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public function generateCallbackMethodName(string $name) {
+        return $name . "CallbackResponse";
+    }
+
+    public function generateSuccessMethodName(string $name) {
+        return $name . "Success";
+    }
+
+    // Update Code (Need to check)
+    public function createTransaction($output, $status = PaymentGatewayConst::STATUSSUCCESS) {
+        $basic_setting = BasicSettings::first();
+        $record_handler = $output['record_handler'];
+        $user = auth()->user();
+        $inserted_id = $this->$record_handler($output,$status);
+     
+        $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
+        UserNotification::create([
+            'user_id'  => auth()->user()->id,
+            'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount).",
+            Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
+        ]);
+        $trx_id     = Transaction::where('id',$inserted_id)->first();
+        
+        if( $basic_setting->email_notification == true){
+            Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id->trx_id));
+        }
+
+        
+        $this->removeTempData($output);
+
+        if($this->requestIsApiUser()) {
+            // logout user
+            $api_user_login_guard = $this->output['api_login_guard'] ?? null;
+            if($api_user_login_guard != null) {
+                auth()->guard($api_user_login_guard)->logout();
+            }
+        }
+        return $this->output['trx_id'] ?? "";
+        
+    }
+
+    
+
+    public function insertRecordWeb($output, $status) {
+        $data  = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
+        
+        if($this->predefined_user) {
+            $user = $this->predefined_user;
+        }else {
+            $user = auth()->guard('web')->user();
+        }
+        
+        $trx_id = generateTrxString("transactions","trx_id","SR",8);
+       
+        DB::beginTransaction();
+        try{
+            $id = DB::table("transactions")->insertGetId([
+                'user_id'                       => auth()->user()->id,
+                'payment_gateway_currency_id'   => $output['currency']->id,
+                'type'                          => $output['type'],
+                'remittance_data'               => json_encode([
+                    'type'                      => $data->type,
+                    'sender_name'               => $data->data->sender_name,
+                    'sender_email'              => $data->data->sender_email,
+                    'sender_currency'           => $data->data->sender_currency,
+                    'receiver_currency'         => $data->data->receiver_currency,
+                    'sender_ex_rate'            => $data->data->sender_ex_rate,
+                    'sender_base_rate'          => $data->data->sender_base_rate,
+                    'receiver_ex_rate'          => $data->data->receiver_ex_rate,
+                    'coupon_id'                 => $data->data->coupon_id,
+                    'first_name'                => $data->data->first_name,
+                    'middle_name'               => $data->data->middle_name,
+                    'last_name'                 => $data->data->last_name,
+                    'email'                     => $data->data->email,
+                    'country'                   => $data->data->country,
+                    'city'                      => $data->data->city,
+                    'state'                     => $data->data->state,
+                    'zip_code'                  => $data->data->zip_code,
+                    'phone'                     => $data->data->phone,
+                    'method_name'               => $data->data->method_name,
+                    'account_number'            => $data->data->account_number,
+                    'address'                   => $data->data->address,
+                    'document_type'             => $data->data->document_type,
+                    'front_image'               => $data->data->front_image,
+                    'back_image'                => $data->data->back_image,
+                    
+                    'sending_purpose'           => $data->data->sending_purpose->name,
+                    'source'                    => $data->data->source->name,
+                    'currency'                  => [
+                        'name'                  => $data->data->currency->name,
+                        'code'                  => $data->data->currency->code,
+                        'rate'                  => $data->data->currency->rate,
+                    ],
+                    'send_money'                => $data->data->send_money,
+                    'fees'                      => $data->data->fees,
+                    'convert_amount'            => $data->data->convert_amount,
+                    'payable_amount'            => $data->data->payable_amount,
+                    'remark'                    => $data->data->remark,
+                ]),
+                'trx_id'                        => $trx_id,
+                'request_amount'                => $data->data->send_money,
+                'exchange_rate'                 => $output['amount']->sender_cur_rate,
+                'payable'                       => $output['amount']->total_amount,
+                'fees'                          => $output['amount']->total_charge,
+                'convert_amount'                => $output['amount']->convert_amount,
+                'will_get_amount'               => $output['amount']->will_get,
+                'remark'                        => $output['gateway']->name,
+                'details'                       => "COMPLETED",
+                'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
+                'attribute'                     => PaymentGatewayConst::SEND,
+                'created_at'                    => now(),
+                'callback_ref'                  => $output['callback_ref'] ?? null,
+            ]);
+
+            if($data->data->coupon_id != 0){
+                $user   = auth()->user();
+                $user->update([
+                    'coupon_status'     => 1,
+                ]);
+                
+                AppliedCoupon::create([
+                    'user_id'   => $user->id,
+                    'coupon_id'   => $data->data->coupon_id,
+                    'transaction_id'   => $id,
+                ]);
+            }
+
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+        $this->output['trx_id'] = $trx_id;
+        return $id;
+    }
+
+    public function updateWalletBalance($output) {
+        $update_amount = $output['wallet']->balance + $output['amount']->requested_amount;
+
+        $output['wallet']->update([
+            'balance'   => $update_amount,
+        ]);
+    }
+
+    public function insertCharges($output,$id) {
+        DB::beginTransaction();
+        try{
+            DB::table('transaction_charges')->insert([
+                'transaction_id'    => $id,
+                'percent_charge'    => $output['amount']->percent_charge,
+                'fixed_charge'      => $output['amount']->fixed_charge,
+                'total_charge'      => $output['amount']->total_charge,
+                'created_at'        => now(),
+            ]);
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function insertDevice($output,$id) {
+        $client_ip = request()->ip() ?? false;
+        $location = geoip()->getLocation($client_ip);
+        $agent = new Agent();
+
+        // $mac = exec('getmac');
+        // $mac = explode(" ",$mac);
+        // $mac = array_shift($mac);
+        $mac = "";
+
+        DB::beginTransaction();
+        try{
+            DB::table("transaction_devices")->insert([
+                'transaction_id'=> $id,
+                'ip'            => $client_ip,
+                'mac'           => $mac,
+                'city'          => $location['city'] ?? "",
+                'country'       => $location['country'] ?? "",
+                'longitude'     => $location['lon'] ?? "",
+                'latitude'      => $location['lat'] ?? "",
+                'timezone'      => $location['timezone'] ?? "",
+                'browser'       => $agent->browser() ?? "",
+                'os'            => $agent->platform() ?? "",
+            ]);
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function removeTempData($output) {
+        try{
+            $id = $output['tempData']['id'];
+            TemporaryData::find($id)->delete();
+        }catch(Exception $e) {
+            // handle error
+        }
+    }
+
+    public function api() {
+        $output = $this->output;
+        if(!$output) throw new Exception("Something went wrong! Gateway render failed. Please call gateway() method before calling api() method");
+        $sources = $this->setSource(PaymentGatewayConst::APP);
+        $url_params = $this->makeUrlParams($sources);
+        $this->setUrlParams($url_params);
+        return $this;
+    }
+
+    public function setSource(string $source) {
+        $sources = [
+            'r-source'  => $source,
+        ];
+
+        return $sources;
+    }
+
+    public function makeUrlParams(array $sources) {
+        try{
+            $params = http_build_query($sources);
+        }catch(Exception $e) {
+            throw new Exception("Something went wrong! Failed to make URL Params.");
+        }
+        return $params;
+    }
+
+    public function setUrlParams(string $url_params) {
+        $output = $this->output;
+        if(!$output) throw new Exception("Something went wrong! Gateway render failed. Please call gateway() method before calling api() method");
+        if(isset($output['url_params'])) {
+            // if already param has
+            $params = $this->output['url_params'];
+            $update_params = $params . "&" . $url_params;
+            $this->output['url_params'] = $update_params; // Update/ reassign URL Parameters
+        }else {
+            $this->output['url_params']  = $url_params; // add new URL Parameters;
+        }
+    }
+
+    public function getUrlParams() {
+        $output = $this->output;
+        
+        if(!$output || !isset($output['url_params'])) $params = "";
+        $params = $output['url_params'] ?? "";
+        return $params;
+    }
+
+    public function setGatewayRoute($route_name, $gateway, $params = null) {
+        
+        if(!Route::has($route_name)) throw new Exception('Route name ('.$route_name.') is not defined');
+        if($params) {
+            return route($route_name,$gateway."?".$params);
+        }
+        
+        return route($route_name,$gateway);
+    }
+
     public function requestIsApiUser() {
         $request_source = request()->get('r-source');
         if($request_source != null && $request_source == PaymentGatewayConst::APP) return true;
         return false;
     }
-    public function responseReceiveApi($type = null) {
-        $tempData = $this->request_data;
 
-        if(empty($tempData) || empty($tempData['type'])){
-            return Response::error(['Transaction faild. Record didn\'t saved properly. Please try again.']);
-        }
-
-        $method_name = $tempData['type']."Success";
-        if($this->requestIsApiUser()) {
-            $creator_table = $tempData['data']->creator_table ?? null;
-            $creator_id = $tempData['data']->creator_id ?? null;
-            $creator_guard = $tempData['data']->creator_guard ?? null;
-            $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
-            if($creator_table != null && $creator_id != null && $creator_guard != null) {
-                if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
-                $creator = DB::table($creator_table)->where("id",$creator_id)->first();
-                if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
-                $api_user_login_guard = $api_authenticated_guards[$creator_guard];
-                $this->output['api_login_guard'] = $api_user_login_guard;
-                Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
-            }
-        }
-
-        $currency_id = $tempData['data']->currency ?? "";
-        $gateway_currency = PaymentGatewayCurrency::find($currency_id);
-        if(!$gateway_currency){
-            $error = ['error'=>['Transaction faild. Gateway currency not available.']];
-            return Response::error($error);
-        }
-
-        $validator_data     = [
-            'identifier'    => $tempData['data']->user_record,
-        ];
-
-        $this->request_data = $validator_data;
-        $this->gateway();
-        $this->output['tempData'] = $tempData;
-        $type = $tempData['type'];
-        if($type == 'flutterWave'){
-            if(method_exists(FlutterwaveTrait::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }elseif($type == 'stripe'){
-            if(method_exists(Stripe::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }elseif($type == 'sslcommerz'){
-            if(method_exists(SslcommerzTrait::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }elseif($type == 'razorpay'){
-            if(method_exists(RazorTrait::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }else{
-            if(method_exists(Paypal::class,$method_name)) {
-                return $this->$method_name($this->output);
-            }
-        }
-
-        $error = ['error'=>["Response method ".$method_name."() does not exists."]];
-        return Response::error($error);
-
+    public static function makePlainText($string) {
+        $string = Str::lower($string);
+        return preg_replace("/[^A-Za-z0-9]/","",$string);
     }
 
-    public function api() {
-        $output               = $this->output;
-        $output['distribute'] = $this->gatewayDistribute() . "Api";
-        $method               = $output['distribute'];
-        $response             = $this->$method($output);
-        $output['response']   = $response;
-        $this->output         = $output;
-        return $this;
+    public function searchWithReferenceInTransaction($reference) {
+
+        $transaction = DB::table('transactions')->where('callback_ref',$reference)->first();
+
+        if($transaction) {
+            return $transaction;
+        }
+
+        return false;
     }
 
-    public function setTransaction(string $transaction_id) {
-        return $this->transaction_id = $transaction_id;
+    public function handleCallback($reference,$callback_data,$gateway_name) {
+
+        if($reference == PaymentGatewayConst::CALLBACK_HANDLE_INTERNAL) {
+            $gateway = PaymentGatewayModel::gateway($gateway_name)->first();
+            $callback_response_receive_method = $this->getCallbackResponseMethod($gateway);
+            return $this->$callback_response_receive_method($callback_data, $gateway);
+        }
+
+        $transaction = Transaction::where('callback_ref',$reference)->first();
+        $this->output['callback_ref']       = $reference;
+        $this->output['capture']            = $callback_data;
+
+        if($transaction) {
+            $gateway_currency = $transaction->gateway_currency;
+            $gateway = $gateway_currency->gateway;
+
+            $requested_amount = $transaction->request_amount;
+            $validator_data = [
+                $this->currency_input_name  => $gateway_currency->alias,
+                $this->amount_input         => $requested_amount
+            ];
+
+            $user_wallet = $transaction->creator_wallet;
+            $this->predefined_user_wallet = $user_wallet;
+            $this->predefined_guard = $transaction->creator->modelGuardName();
+            $this->predefined_user = $transaction->creator;
+
+            $this->output['transaction']    = $transaction;
+
+        }else {
+            // find reference on temp table
+            $tempData = TemporaryData::where('identifier',$reference)->first();
+            if($tempData) {
+                $gateway_currency_id = $tempData->data->currency ?? null;
+                $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
+                if($gateway_currency) {
+                    $gateway = $gateway_currency->gateway;
+
+                    $requested_amount = $tempData['data']->amount->requested_amount ?? 0;
+                    $validator_data = [
+                        $this->currency_input_name  => $gateway_currency->alias,
+                        $this->amount_input         => $requested_amount
+                    ];
+
+                    $get_wallet_model = PaymentGatewayConst::registerWallet()[$tempData->data->creator_guard];
+                    $user_wallet = $get_wallet_model::find($tempData->data->wallet_id);
+                    $this->predefined_user_wallet = $user_wallet;
+                    $this->predefined_guard = $user_wallet->user->modelGuardName(); // need to update
+                    $this->predefined_user = $user_wallet->user;
+
+                    $this->output['tempData'] = $tempData;
+                }
+            }
+        }
+
+
+        if(isset($gateway)) {
+            
+            $this->request_data = $validator_data;
+            $this->gateway();
+
+            $callback_response_receive_method = $this->getCallbackResponseMethod($gateway);
+            return $this->$callback_response_receive_method($reference, $callback_data, $this->output);
+        }
+
+        logger("Gateway not found!!" , [
+            "reference"     => $reference,
+        ]);
     }
 
-    public function transaction(){
-        return $this->transaction_id;
-    }
+    public static function getValueFromGatewayCredentials($gateway, $keywords) {
+        $result = "";
+        $outer_break = false;
+        foreach($keywords as $item) {
+            if($outer_break == true) {
+                break;
+            }
+            $modify_item = PaymentGateway::makePlainText($item);
+            foreach($gateway->credentials ?? [] as $gatewayInput) {
+                $label = $gatewayInput->label ?? "";
+                $label = PaymentGateway::makePlainText($label);
 
+                if($label == $modify_item) {
+                    $result = $gatewayInput->value ?? "";
+                    $outer_break = true;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
 }

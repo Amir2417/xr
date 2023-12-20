@@ -26,7 +26,7 @@
                         </P>
                     </div>
                     <div class="dash-payment-body">
-                        <form class="card-form" action="{{ setRoute("user.send.remittance.manual.payment.confirmed") }}" method="POST" enctype="multipart/form-data">
+                        <form class="card-form" action="{{ setRoute("user.send.remittance.manual.submit",$token) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 @foreach ($gateway->input_fields as $item)

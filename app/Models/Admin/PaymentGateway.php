@@ -100,5 +100,15 @@ class PaymentGateway extends Model
         }
         return false;
     }
+
+    public function isCrypto() {
+        if($this->crypto == true) return true;
+        return false;
+    }
+
+    public function cryptoAssets() 
+    {
+        return $this->hasMany(CryptoAsset::class,'payment_gateway_id');
+    }
     
 }

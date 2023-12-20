@@ -41,7 +41,8 @@ class paypalNotification extends Notification
     {
         $user                   = $this->user;
         $data                   = $this->data;
-        $identifier_data        = TemporaryData::where('identifier',$data['tempData']['data']->user_record)->first();
+
+        $identifier_data        = TemporaryData::where('identifier',$data['form_data']['identifier'])->first();
         $trx_id                 = $this->trx_id;
         $date                   = Carbon::now();
         $datetime               = dateFormat('Y-m-d h:i:s A', $date);
