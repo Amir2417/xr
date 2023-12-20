@@ -10,10 +10,12 @@ class PaymentGatewayConst {
     const REMITTANCE_MONEY      = "Remittance Gateway";
     const MONEYOUT              = "Money Out";
     const ACTIVE                =  true;
+    const CRYPTO                    = "CRYPTO";
 
     const ASSET_TYPE_WALLET         = "WALLET";
 
     const TYPESENDREMITTANCE    = "SEND-REMITTANCE";
+    const CRYPTO_NATIVE             = "CRYPTO_NATIVE";
     
     const STATUSSUCCESS             = 1;
     const STATUSPENDING             = 2;
@@ -25,7 +27,11 @@ class PaymentGatewayConst {
     const SEND          = "SEND";
     const RECEIVED      = "RECEIVED";
     const MANUA_GATEWAY = 'manual';
+
+
     const NOT_USED  = "NOT-USED";
+    const USED      = "USED";
+    const SENT      = "SENT";
 
 
     const PAYPAL                    = 'paypal';

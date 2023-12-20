@@ -2,17 +2,18 @@
 
 namespace App\Traits\PaymentGateway;
 
-use App\Constants\GlobalConst;
 use Exception;
 use Illuminate\Support\Str;
-use App\Constants\PaymentGatewayConst;
-use App\Http\Helpers\PaymentGateway;
-use App\Http\Helpers\Response as HelpersResponse;
+use App\Models\TemporaryData;
+use App\Constants\GlobalConst;
 use App\Models\Admin\CryptoAsset;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\DB;
+use App\Http\Helpers\PaymentGateway;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use App\Constants\PaymentGatewayConst;
+use Illuminate\Http\Client\RequestException;
+use App\Http\Helpers\Response as HelpersResponse;
 
 trait Tatum {
 
@@ -27,13 +28,13 @@ trait Tatum {
         // Need to show request currency wallet information
         $currency = $output['currency'];
         $gateway = $output['gateway'];
-       
+        
         $crypto_asset = $gateway->cryptoAssets->where('coin', $currency->currency_code)->first();
         
         $crypto_active_wallet = collect($crypto_asset->credentials->credentials ?? [])->where('status', true)->first();
         if(!$crypto_asset || !$crypto_active_wallet) throw new Exception("Gateway is not available right now! Please contact with system administration");
         dd("test");
-        if($output['type'] == PaymentGatewayConst::PAYMENTMETHOD) {
+        if($output['type'] == PaymentGatewayConst::TYPESENDREMITTANCE) {
             try{
                 $trx_id = $this->createTatumAddMoneyTransaction($output, $crypto_active_wallet);
             }catch(Exception $e) {
@@ -48,20 +49,20 @@ trait Tatum {
                     'address_info'      => [
                         'coin'          => $crypto_asset->coin,
                         'address'       => $crypto_active_wallet->address,
-                        'input_fields'  => $this->tatumUserTransactionRequirements(PaymentGatewayConst::PAYMENTMETHOD),
-                        'submit_url'    => route('api.user.buy.crypto.payment.crypto.confirm',$trx_id)
+                        'input_fields'  => $this->tatumUserTransactionRequirements(PaymentGatewayConst::TYPESENDREMITTANCE),
+                        'submit_url'    => route('api.user.send.remittance.payment.crypto.confirm',$trx_id)
                     ],
                 ];
             }
 
-            return redirect()->route('user.buy.crypto.payment.crypto.address', $trx_id);
+            return redirect()->route('user.send.remittance.payment.crypto.address', $trx_id);
         }
 
         throw new Exception("No Action Executed!");
     }
 
     public function createTatumAddMoneyTransaction($output, $crypto_active_wallet) {
-
+        $data  = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
         $user = auth()->guard(get_auth_guard())->user();
 
         DB::beginTransaction();
@@ -70,32 +71,63 @@ trait Tatum {
             $qr_image = 'https://chart.googleapis.com/chart?cht=qr&chs=350x350&chl='.$crypto_active_wallet->address;
 
             DB::table('transactions')->insert([
-                'type'      => PaymentGatewayConst::PAYMENTMETHOD,
-                'trx_id'    => $trx_id,
-                'user_type' => GlobalConst::USER,
-                'user_id'   => $user->id,
-                'wallet_id' => $output['wallet']->id,
+                'user_id'                       => auth()->user()->id,
                 'payment_gateway_currency_id'   => $output['currency']->id,
-                'request_amount'                => $output['amount']->requested_amount,
-                'request_currency'              => $output['wallet']->currency->code,
-                'exchange_rate'                 => $output['amount']->exchange_rate,
-                'percent_charge'                => $output['amount']->percent_charge,
-                'fixed_charge'                  => $output['amount']->fixed_charge,
-                'total_charge'                  => $output['amount']->total_charge,
-                'total_payable'                 => $output['amount']->total_amount,
-                'receive_amount'                => $output['amount']->will_get,
-                'receiver_type'                 => GlobalConst::USER,
-                'receiver_id'                   => $user->id,
-                'available_balance'             => $output['wallet']->balance + $output['amount']->will_get,
-                'payment_currency'              => $output['currency']->currency_code,
-                'remark'                        => "ADD MONEY With " . $output['gateway']->name,
+                'type'                          => $output['type'],
+                'remittance_data'               => json_encode([
+                    'type'                      => $data->type,
+                    'sender_name'               => $data->data->sender_name,
+                    'sender_email'              => $data->data->sender_email,
+                    'sender_currency'           => $data->data->sender_currency,
+                    'receiver_currency'         => $data->data->receiver_currency,
+                    'sender_ex_rate'            => $data->data->sender_ex_rate,
+                    'sender_base_rate'          => $data->data->sender_base_rate,
+                    'receiver_ex_rate'          => $data->data->receiver_ex_rate,
+                    'coupon_id'                 => $data->data->coupon_id,
+                    'first_name'                => $data->data->first_name,
+                    'middle_name'               => $data->data->middle_name,
+                    'last_name'                 => $data->data->last_name,
+                    'email'                     => $data->data->email,
+                    'country'                   => $data->data->country,
+                    'city'                      => $data->data->city,
+                    'state'                     => $data->data->state,
+                    'zip_code'                  => $data->data->zip_code,
+                    'phone'                     => $data->data->phone,
+                    'method_name'               => $data->data->method_name,
+                    'account_number'            => $data->data->account_number,
+                    'address'                   => $data->data->address,
+                    'document_type'             => $data->data->document_type,
+                    'front_image'               => $data->data->front_image,
+                    'back_image'                => $data->data->back_image,
+                    
+                    'sending_purpose'           => $data->data->sending_purpose->name,
+                    'source'                    => $data->data->source->name,
+                    'currency'                  => [
+                        'name'                  => $data->data->currency->name,
+                        'code'                  => $data->data->currency->code,
+                        'rate'                  => $data->data->currency->rate,
+                    ],
+                    'send_money'                => $data->data->send_money,
+                    'fees'                      => $data->data->fees,
+                    'convert_amount'            => $data->data->convert_amount,
+                    'payable_amount'            => $data->data->payable_amount,
+                    'remark'                    => $data->data->remark,
+                ]),
+                'trx_id'                        => $trx_id,
+                'request_amount'                => $data->data->send_money,
+                'exchange_rate'                 => $output['amount']->sender_cur_rate,
+                'payable'                       => $output['amount']->total_amount,
+                'fees'                          => $output['amount']->total_charge,
+                'convert_amount'                => $output['amount']->convert_amount,
+                'will_get_amount'               => $output['amount']->will_get,
+                'remark'                        => $output['gateway']->name,
                 'details'                       => json_encode([
                     'payment_info'    => [
                         'payment_type'      => PaymentGatewayConst::CRYPTO,
                         'currency'          => $output['currency']->currency_code,
                         'receiver_address'  => $crypto_active_wallet->address,
                         'receiver_qr_image' => $qr_image,
-                        'requirements'      => $this->tatumUserTransactionRequirements(PaymentGatewayConst::PAYMENTMETHOD),
+                        'requirements'      => $this->tatumUserTransactionRequirements(PaymentGatewayConst::TYPESENDREMITTANCE),
                     ]
                 ]),
                 'status'                        => PaymentGatewayConst::STATUSWAITING,
@@ -113,7 +145,7 @@ trait Tatum {
 
     public function tatumUserTransactionRequirements($trx_type = null) {
         $requirements = [
-            PaymentGatewayConst::PAYMENTMETHOD => [
+            PaymentGatewayConst::TYPESENDREMITTANCE => [
                 [
                     'type'          => 'text',
                     'label'         =>  "Txn Hash",

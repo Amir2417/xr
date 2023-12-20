@@ -61,19 +61,14 @@ Route::prefix("user")->name("user.")->group(function(){
             Route::match('post',"cancel/response/{gateway}",'cancel')->name('payment.cancel');
             Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth','verification.guard','user.google.two.factor']);
 
-            //stripe
-            Route::get('payment/{gateway}','payment')->name('payment');
-            Route::get('stripe/payment/success/{trx}','stripePaymentSuccess')->name('stripe.payment.success');
-
-            //flutterwave
-            Route::get('/flutterwave/callback', 'flutterwaveCallback')->name('flutterwave.callback');
-
             //manual
             Route::get('manual/{token}','showManualForm')->name('manual.form');
             Route::post('manual/submit/{token}','manualSubmit')->name('manual.submit');
 
-            //razor pay
-            Route::get('razor/callback', 'razorCallback')->name('razor.callback');
+            Route::prefix('payment')->name('payment.')->group(function() {
+                Route::get('crypto/address/{trx_id}','cryptoPaymentAddress')->name('crypto.address');
+                Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
+            });
         });
 
         //paypal

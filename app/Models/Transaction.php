@@ -43,11 +43,6 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function user_wallet()
-    {
-        return $this->belongsTo(UserWallet::class, 'user_wallet_id');
-    }
-
     public function currency()
     {
         return $this->belongsTo(PaymentGatewayCurrency::class,'payment_gateway_currency_id');
