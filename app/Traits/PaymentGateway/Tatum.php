@@ -717,7 +717,7 @@ trait Tatum {
             'attr'  => [
                 'address'   => $address,
                 'chain'     => $coin_info['coin'],
-                'url'       => route('user.buy.crypto.payment.callback',['gateway' => $gateway->alias,'token' => PaymentGatewayConst::CALLBACK_HANDLE_INTERNAL])
+                'url'       => route('user.send.remittance.payment.callback',['gateway' => $gateway->alias,'token' => PaymentGatewayConst::CALLBACK_HANDLE_INTERNAL])
             ]
         ])->throw(function(Response $response, RequestException $exception) {
             throw new Exception($exception->getMessage());
