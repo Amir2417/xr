@@ -30,7 +30,7 @@ class Transaction extends Model
         'convert_amount'              => 'decimal:16',
         'will_get_amount'             => 'decimal:16',
         'remark'                      => 'string',
-        'details'                     => 'string',
+        'details'                     => 'object',
         'reject_reason'               => 'string',
         'status'                      => 'integer',
         'attribute'                   => 'string',
