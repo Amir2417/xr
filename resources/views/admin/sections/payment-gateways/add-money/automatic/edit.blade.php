@@ -47,14 +47,29 @@
                     <div class="col-xl-7 col-lg-7">
                         @include('admin.components.payment-gateway.automatic.credentials',['gateway' => $gateway])
 
-                        {{-- Production/Sandbox Switcher --}}
-                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
-                            @include('admin.components.form.switcher', [
-                                'label'         => 'Gateway Environment',
-                                'value'         => old('mode',$gateway->env),
-                                'name'          => "mode",
-                                'options'       => ['Production' => payment_gateway_const()::ENV_PRODUCTION, 'Sandbox' => payment_gateway_const()::ENV_SANDBOX],
-                            ])
+                        <div class="d-block d-md-flex align-items-center justify-content-between">
+                            {{-- Production/Sandbox Switcher --}}
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                                @include('admin.components.form.switcher', [
+                                    'label'         => 'Gateway Environment',
+                                    'value'         => old('mode',$gateway->env),
+                                    'name'          => "mode",
+                                    'options'       => ['Production' => payment_gateway_const()::ENV_PRODUCTION, 'Sandbox' => payment_gateway_const()::ENV_SANDBOX],
+                                ])
+                            </div>
+
+                            {{-- Crypto details button --}}
+                            @if ($gateway->isTatum($gateway))
+                                <div class="mb-2 mb-md-0">
+                                    @include('admin.components.link.custom',[
+                                        'href'          => setRoute('admin.crypto.assets.gateway.index', $gateway->alias),
+                                        'permission'    => 'admin.crypto.assets.gateway.index',
+                                        'text'          => 'Crypto Assets',
+                                        'icon'          => 'las la-info-circle me-2',
+                                        'class'         => 'btn--base',
+                                    ])
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-xl-2 col-lg-2 form-group">

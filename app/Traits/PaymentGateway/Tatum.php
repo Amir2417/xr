@@ -27,9 +27,9 @@ trait Tatum {
         // Need to show request currency wallet information
         $currency = $output['currency'];
         $gateway = $output['gateway'];
-        dd($gateway,$currency->currency_code);
+       
         $crypto_asset = $gateway->cryptoAssets->where('coin', $currency->currency_code)->first();
-        dd($crypto_asset);
+        
         $crypto_active_wallet = collect($crypto_asset->credentials->credentials ?? [])->where('status', true)->first();
         if(!$crypto_asset || !$crypto_active_wallet) throw new Exception("Gateway is not available right now! Please contact with system administration");
         dd("test");

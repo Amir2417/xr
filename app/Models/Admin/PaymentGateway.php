@@ -2,13 +2,14 @@
 
 namespace App\Models\Admin;
 
+use App\Traits\PaymentGateway\Tatum;
 use App\Constants\PaymentGatewayConst;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PaymentGateway extends Model
 {
-    use HasFactory;
+    use HasFactory,Tatum;
 
     protected $guarded = ['id'];
 

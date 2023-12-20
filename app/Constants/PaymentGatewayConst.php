@@ -11,6 +11,8 @@ class PaymentGatewayConst {
     const MONEYOUT              = "Money Out";
     const ACTIVE                =  true;
 
+    const ASSET_TYPE_WALLET         = "WALLET";
+
     const TYPESENDREMITTANCE    = "SEND-REMITTANCE";
     
     const STATUSSUCCESS             = 1;
