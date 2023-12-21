@@ -151,7 +151,10 @@ trait CoinGate {
 
         $data = [
             'gateway'       => $output['gateway']->id,
-            'currency'      => $output['currency'],
+            'currency'      => [
+                'id'        => $output['currency']->id,
+                'alias'     => $output['currency']->alias
+            ],
             'payment_method'=> $output['currency'],
             'amount'        => json_decode(json_encode($output['amount']),true),
             'response'      => $response,
@@ -206,7 +209,7 @@ trait CoinGate {
     }
 
     public function coingateCallbackResponse($reference,$callback_data, $output = null) {
-        info($reference);
+
         if(!$output) $output = $this->output;
 
         $callback_status = $callback_data['status'] ?? "";
