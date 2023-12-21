@@ -406,7 +406,7 @@ class RemittanceController extends Controller
         // check hash is valid or not
         $crypto_transaction = CryptoTransaction::where('txn_hash', $validated['txn_hash'])
                                                 ->where('receiver_address', $receiver_address)
-                                                ->where('asset',$transaction->gateway_currency->currency_code)
+                                                ->where('asset',$transaction->currency->currency_code)
                                                 ->where(function($query) {
                                                     return $query->where('transaction_type',"Native")
                                                                 ->orWhere('transaction_type', "native");
