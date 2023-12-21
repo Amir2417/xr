@@ -68,30 +68,30 @@
                         <hr>
                         <div class="d-flex justify-content-between">
                             <h4>{{ __("Request Amount") }}</h4>
-                            <h4 class="enter-amount">{{ get_amount($transaction->request_amount, $transaction->creator_wallet->currency->code) }}</h4>
+                            <h4 class="enter-amount">{{ get_amount($transaction->request_amount, $transaction->remittance_data->currency->code) }}</h4>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <h4>{{ __("Exchange Rate_WEB") }}</h4>
                             <h4 class="exchange-rate">
-                                1 {{ $transaction->creator_wallet->currency->code }} = 
-                                {{ get_amount($transaction->exchange_rate, $transaction->gateway_currency->currency_code,8) }}
+                                1 {{ $transaction->remittance_data->sender_currency }} = 
+                                {{ get_amount($transaction->exchange_rate, $transaction->remittance_data->currency->code,8) }}
                             </h4>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <h4>{{ __("Fees_WEB") }}</h4>
-                            <h4 class="fees">{{ get_amount($transaction->total_charge, $transaction->creator_wallet->currency->code,4) }}</h4>
+                            <h4 class="fees">{{ get_amount($transaction->fees, $transaction->remittance_data->sender_currency,4) }}</h4>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <h4>{{ __("Total Payable_WEB") }}</h4>
-                            <h4 class="payable">{{ get_amount($transaction->total_payable, $transaction->gateway_currency->currency_code,8) }}</h4>
+                            <h4 class="payable">{{ get_amount($transaction->payable,  $transaction->remittance_data->currency->code,8) }}</h4>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <h4>{{ __("You Will Get_WEB") }}</h4>
-                            <h4 class="will-get">{{ get_amount($transaction->receive_amount, $transaction->creator_wallet->currency->code,4) }}</h4>
+                            <h4 class="will-get">{{ get_amount($transaction->will_get_amount, $transaction->remittance_data->receiver_currency,4) }}</h4>
                         </div>
                     </div>
                 </div>
