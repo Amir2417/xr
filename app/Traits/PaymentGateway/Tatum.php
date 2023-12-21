@@ -727,7 +727,7 @@ trait Tatum {
     }
 
     public function tatumCallbackResponse(array $response_data, $gateway) {
-
+        dd($response_data);
         // store crypto transaction record in local database
         $record['transaction_type'] = ucwords($response_data['type']);
 
