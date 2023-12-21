@@ -3,7 +3,14 @@
 @push('css')
     
 @endpush
-
+@section('breadcrumb')
+    @include('user.components.breadcrumb',['breadcrumbs' => [
+        [
+            'name'  => __("Dashboard"),
+            'url'   => setRoute("user.dashboard"),
+        ]
+    ], 'active' => __("Crypto Address")])
+@endsection
 @section('content')
 <div class="body-wrapper">
     <div class="row mb-20">
