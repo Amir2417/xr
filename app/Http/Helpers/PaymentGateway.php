@@ -631,7 +631,7 @@ class PaymentGateway {
     }
 
     public function handleCallback($reference,$callback_data,$gateway_name) {
-        info($reference);
+       
         if($reference == PaymentGatewayConst::CALLBACK_HANDLE_INTERNAL) {
             $gateway = PaymentGatewayModel::gateway($gateway_name)->first();
             $callback_response_receive_method = $this->getCallbackResponseMethod($gateway);
@@ -686,7 +686,7 @@ class PaymentGateway {
 
 
         if(isset($gateway)) {
-            
+            info($validator_data);
             $this->request_data = $validator_data;
             $this->gateway();
 
