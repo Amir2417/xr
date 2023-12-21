@@ -30,7 +30,7 @@ use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
 
 class SendRemittanceController extends Controller
 {
-    use Stripe,Manual;
+    use Stripe;
     /**
      * Method for get the transaction type data
      */
