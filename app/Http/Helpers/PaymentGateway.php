@@ -70,7 +70,7 @@ class PaymentGateway {
         if(empty($request_data)) throw new Exception("Gateway Information is not available. Please provide payment gateway currency alias");
         $validated = $this->validator($request_data)->validate();
         $temporary_data     = TemporaryData::where('identifier',$validated['identifier'])->first();
-        info($temporary_data->data);
+       
         $gateway_currency   = PaymentGatewayCurrency::with(['gateway'])->where("alias",$temporary_data->data->currency->alias)->first();
         
         if(!$gateway_currency || !$gateway_currency->gateway) {
