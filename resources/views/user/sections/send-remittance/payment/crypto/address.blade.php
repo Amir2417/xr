@@ -9,7 +9,7 @@
     <div class="send-add-form row g-4">
         <div class="col-xxl-8 col-lg-12 col-12 form-area mb-40">
             <div class="add-money-text pb-20">
-                <h4>{{ __("Pay With This Address") }} ({{ $transaction->gateway_currency->currency_code }})</h4>
+                <h4>{{ __("Pay With This Address") }} ({{ $transaction->currency->currency_code }})</h4>
             </div>
 
             @if ($transaction->status == payment_gateway_const()::STATUSWAITING)
