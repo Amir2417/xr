@@ -2,6 +2,7 @@
 namespace App\Http\Helpers;
 
 use Exception;
+use App\Models\User;
 use App\Models\UserWallet;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -42,6 +43,7 @@ class PaymentGateway {
     protected $request_data;
     protected $output;
     protected $currency_input_name = "identifier";
+    protected $amount_input; //only used for callback data
     protected $project_currency = PaymentGatewayConst::PROJECT_CURRENCY_MULTIPLE;
     protected $predefined_user_wallet;
     protected $predefined_guard;
@@ -628,7 +630,7 @@ class PaymentGateway {
     }
 
     public function handleCallback($reference,$callback_data,$gateway_name) {
-
+        info($reference);
         if($reference == PaymentGatewayConst::CALLBACK_HANDLE_INTERNAL) {
             $gateway = PaymentGatewayModel::gateway($gateway_name)->first();
             $callback_response_receive_method = $this->getCallbackResponseMethod($gateway);
@@ -645,14 +647,13 @@ class PaymentGateway {
 
             $requested_amount = $transaction->request_amount;
             $validator_data = [
-                $this->currency_input_name  => $gateway_currency->alias,
-                $this->amount_input         => $requested_amount
+                $this->currency_input_name  => $reference,
             ];
 
-            $user_wallet = $transaction->creator_wallet;
-            $this->predefined_user_wallet = $user_wallet;
-            $this->predefined_guard = $transaction->creator->modelGuardName();
-            $this->predefined_user = $transaction->creator;
+            // $user_wallet = $transaction->creator_wallet;
+            // $this->predefined_user_wallet = $user_wallet;
+            $this->predefined_guard = $transaction->user->modelGuardName();
+            $this->predefined_user = $transaction->user;
 
             $this->output['transaction']    = $transaction;
 
@@ -667,15 +668,15 @@ class PaymentGateway {
 
                     $requested_amount = $tempData['data']->amount->requested_amount ?? 0;
                     $validator_data = [
-                        $this->currency_input_name  => $gateway_currency->alias,
-                        $this->amount_input         => $requested_amount
+                        $this->currency_input_name  => $tempData->identifier,
                     ];
 
-                    $get_wallet_model = PaymentGatewayConst::registerWallet()[$tempData->data->creator_guard];
-                    $user_wallet = $get_wallet_model::find($tempData->data->wallet_id);
-                    $this->predefined_user_wallet = $user_wallet;
-                    $this->predefined_guard = $user_wallet->user->modelGuardName(); // need to update
-                    $this->predefined_user = $user_wallet->user;
+                    // $get_wallet_model = PaymentGatewayConst::registerWallet()[$tempData->data->creator_guard];
+                    // $user_wallet = $get_wallet_model::find($tempData->data->wallet_id);
+                    // $this->predefined_user_wallet = $user_wallet;
+                    $user    = User::where('id',$tempData->data->creator_id)->first();
+                    $this->predefined_guard = $user->modelGuardName(); // need to update
+                    $this->predefined_user = $user;
 
                     $this->output['tempData'] = $tempData;
                 }

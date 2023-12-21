@@ -105,9 +105,8 @@ class User extends Authenticatable
         return $this->firstname . ' ' . $this->lastname;
     }
 
-    public function wallets()
-    {
-        return $this->hasMany(UserWallet::class);
+    public function modelGuardName() {
+        return "web";
     }
     
     public function getUserImageAttribute() {

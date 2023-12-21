@@ -18,7 +18,6 @@ class Transaction extends Model
         'id'                          => 'integer',
         'admin_id'                    => 'integer',
         'user_id'                     => 'integer',
-        
         'payment_gateway_currency_id' => 'integer',
         'type'                        => "string",
         'remittance_data'             => 'object',

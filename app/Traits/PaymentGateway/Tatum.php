@@ -33,7 +33,7 @@ trait Tatum {
         
         $crypto_active_wallet = collect($crypto_asset->credentials->credentials ?? [])->where('status', true)->first();
         if(!$crypto_asset || !$crypto_active_wallet) throw new Exception("Gateway is not available right now! Please contact with system administration");
-        dd("test");
+      
         if($output['type'] == PaymentGatewayConst::TYPESENDREMITTANCE) {
             try{
                 $trx_id = $this->createTatumAddMoneyTransaction($output, $crypto_active_wallet);
@@ -727,7 +727,7 @@ trait Tatum {
     }
 
     public function tatumCallbackResponse(array $response_data, $gateway) {
-        dd($response_data);
+       
         // store crypto transaction record in local database
         $record['transaction_type'] = ucwords($response_data['type']);
 
