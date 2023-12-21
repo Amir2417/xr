@@ -214,7 +214,7 @@ trait CoinGate {
 
         $callback_status = $callback_data['status'] ?? "";
 
-        if(isset($output['transaction']) && $output['transaction'] != null && $output['transaction']->status != PaymentGatewayConst::STATUSSUCCESS) { // if transaction already created & status is not success
+        if(isset($output['transaction']) && $output['transaction'] != null && $output['transaction']->status != global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT) { // if transaction already created & status is not success
 
             // Just update transaction status and update user wallet if needed
             if($callback_status == $this->coinGate_status_paid) {
@@ -227,7 +227,7 @@ trait CoinGate {
 
                 try{
                     DB::table($output['transaction']->getTable())->where('id',$output['transaction']->id)->update([
-                        'status'        => PaymentGatewayConst::STATUSSUCCESS,
+                        'status'        => global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT,
                         'details'       => json_encode($transaction_details),
                         'callback_ref'  => $reference,
                     ]);
@@ -243,10 +243,10 @@ trait CoinGate {
             }
         }else { // need to create transaction and update status if needed
 
-            $status = PaymentGatewayConst::STATUSPENDING;
+            $status = global_const()::REMITTANCE_STATUS_PENDING;
 
             if($callback_status == $this->coinGate_status_paid) {
-                $status = PaymentGatewayConst::STATUSSUCCESS;
+                $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
             }
 
             $this->createTransaction($output, $status);

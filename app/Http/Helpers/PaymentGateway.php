@@ -382,7 +382,7 @@ class PaymentGateway {
         }
 
         
-        
+        $this->removeTempData($output);
 
         if($this->requestIsApiUser()) {
             // logout user
@@ -491,7 +491,14 @@ class PaymentGateway {
         return $id;
     }
 
-    
+    public function removeTempData($output) {
+        try{
+            $id = $output['tempData']['id'];
+            TemporaryData::find($id)->delete();
+        }catch(Exception $e) {
+            // handle error
+        }
+    }
 
     public function api() {
         $output = $this->output;
