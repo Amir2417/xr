@@ -70,7 +70,7 @@ class PaymentGateway {
         if(empty($request_data)) throw new Exception("Gateway Information is not available. Please provide payment gateway currency alias");
         $validated = $this->validator($request_data)->validate();
         $temporary_data     = TemporaryData::where('identifier',$validated['identifier'])->first();
-       
+        
         $gateway_currency   = PaymentGatewayCurrency::with(['gateway'])->where("alias",$temporary_data->data->currency->alias)->first();
         
         if(!$gateway_currency || !$gateway_currency->gateway) {
@@ -160,7 +160,7 @@ class PaymentGateway {
 
     public function chargeCalculate($currency,$receiver_currency = null) {
         $temporary_data     = TemporaryData::where('identifier',$this->request_data['identifier'])->first();
-       
+        
         
         
         
@@ -362,12 +362,16 @@ class PaymentGateway {
     public function createTransaction($output, $status = PaymentGatewayConst::STATUSSUCCESS) {
         $basic_setting = BasicSettings::first();
         $record_handler = $output['record_handler'];
-        $user = auth()->user();
+        if($this->predefined_user) {
+            $user = $this->predefined_user;
+        }else {
+            $user = auth()->guard(get_auth_guard())->user();
+        }
         $inserted_id = $this->$record_handler($output,$status);
      
         $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
         UserNotification::create([
-            'user_id'  => auth()->user()->id,
+            'user_id'  => $user->id,
             'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount).",
             Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
         ]);
@@ -378,7 +382,7 @@ class PaymentGateway {
         }
 
         
-        $this->removeTempData($output);
+        
 
         if($this->requestIsApiUser()) {
             // logout user
@@ -407,7 +411,7 @@ class PaymentGateway {
         DB::beginTransaction();
         try{
             $id = DB::table("transactions")->insertGetId([
-                'user_id'                       => auth()->user()->id,
+                'user_id'                       => $user->id,
                 'payment_gateway_currency_id'   => $output['currency']->id,
                 'type'                          => $output['type'],
                 'remittance_data'               => json_encode([
@@ -448,6 +452,7 @@ class PaymentGateway {
                     'convert_amount'            => $data->data->convert_amount,
                     'payable_amount'            => $data->data->payable_amount,
                     'remark'                    => $data->data->remark,
+                    'user_record'               => $output['form_data']['identifier']
                 ]),
                 'trx_id'                        => $trx_id,
                 'request_amount'                => $data->data->send_money,
@@ -486,70 +491,7 @@ class PaymentGateway {
         return $id;
     }
 
-    public function updateWalletBalance($output) {
-        $update_amount = $output['wallet']->balance + $output['amount']->requested_amount;
-
-        $output['wallet']->update([
-            'balance'   => $update_amount,
-        ]);
-    }
-
-    public function insertCharges($output,$id) {
-        DB::beginTransaction();
-        try{
-            DB::table('transaction_charges')->insert([
-                'transaction_id'    => $id,
-                'percent_charge'    => $output['amount']->percent_charge,
-                'fixed_charge'      => $output['amount']->fixed_charge,
-                'total_charge'      => $output['amount']->total_charge,
-                'created_at'        => now(),
-            ]);
-            DB::commit();
-        }catch(Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function insertDevice($output,$id) {
-        $client_ip = request()->ip() ?? false;
-        $location = geoip()->getLocation($client_ip);
-        $agent = new Agent();
-
-        // $mac = exec('getmac');
-        // $mac = explode(" ",$mac);
-        // $mac = array_shift($mac);
-        $mac = "";
-
-        DB::beginTransaction();
-        try{
-            DB::table("transaction_devices")->insert([
-                'transaction_id'=> $id,
-                'ip'            => $client_ip,
-                'mac'           => $mac,
-                'city'          => $location['city'] ?? "",
-                'country'       => $location['country'] ?? "",
-                'longitude'     => $location['lon'] ?? "",
-                'latitude'      => $location['lat'] ?? "",
-                'timezone'      => $location['timezone'] ?? "",
-                'browser'       => $agent->browser() ?? "",
-                'os'            => $agent->platform() ?? "",
-            ]);
-            DB::commit();
-        }catch(Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function removeTempData($output) {
-        try{
-            $id = $output['tempData']['id'];
-            TemporaryData::find($id)->delete();
-        }catch(Exception $e) {
-            // handle error
-        }
-    }
+    
 
     public function api() {
         $output = $this->output;
@@ -631,24 +573,27 @@ class PaymentGateway {
     }
 
     public function handleCallback($reference,$callback_data,$gateway_name) {
-       
+        
         if($reference == PaymentGatewayConst::CALLBACK_HANDLE_INTERNAL) {
             $gateway = PaymentGatewayModel::gateway($gateway_name)->first();
             $callback_response_receive_method = $this->getCallbackResponseMethod($gateway);
             return $this->$callback_response_receive_method($callback_data, $gateway);
         }
+        
 
         $transaction = Transaction::where('callback_ref',$reference)->first();
         $this->output['callback_ref']       = $reference;
         $this->output['capture']            = $callback_data;
 
         if($transaction) {
-            $gateway_currency = $transaction->gateway_currency;
+            
+            $gateway_currency_id = $transaction->payment_gateway_currency_id;
+            $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
             $gateway = $gateway_currency->gateway;
-
+           
             $requested_amount = $transaction->request_amount;
             $validator_data = [
-                $this->currency_input_name  => $reference,
+                $this->currency_input_name  => $transaction->remittance_data->user_record,
             ];
 
             // $user_wallet = $transaction->creator_wallet;
@@ -657,19 +602,25 @@ class PaymentGateway {
             $this->predefined_user = $transaction->user;
 
             $this->output['transaction']    = $transaction;
+            
 
         }else {
             // find reference on temp table
             $tempData = TemporaryData::where('identifier',$reference)->first();
             if($tempData) {
-                $gateway_currency_id = $tempData->data->currency ?? null;
+               
+                
+                $gateway_currency_id = $tempData->data->currency->id ?? null;
+               
                 $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
+                
                 if($gateway_currency) {
+                   
                     $gateway = $gateway_currency->gateway;
-
+                    
                     $requested_amount = $tempData['data']->amount->requested_amount ?? 0;
                     $validator_data = [
-                        $this->currency_input_name  => $tempData->identifier,
+                        $this->currency_input_name  => $tempData->data->user_record,
                     ];
 
                     // $get_wallet_model = PaymentGatewayConst::registerWallet()[$tempData->data->creator_guard];
@@ -680,13 +631,14 @@ class PaymentGateway {
                     $this->predefined_user = $user;
 
                     $this->output['tempData'] = $tempData;
+                    
                 }
             }
         }
-
-
+        
+       
         if(isset($gateway)) {
-            info($validator_data);
+            
             $this->request_data = $validator_data;
             $this->gateway();
 
@@ -696,6 +648,7 @@ class PaymentGateway {
 
         logger("Gateway not found!!" , [
             "reference"     => $reference,
+            
         ]);
     }
 

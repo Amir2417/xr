@@ -232,7 +232,7 @@ trait CoinGate {
                         'callback_ref'  => $reference,
                     ]);
 
-                    $this->updateWalletBalance($output);
+                   
                     DB::commit();
                     
                 }catch(Exception $e) {
