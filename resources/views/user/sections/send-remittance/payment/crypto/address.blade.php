@@ -24,7 +24,7 @@
                         @csrf
                         <div class="form-group">
                             <div class="input-group">
-                                <input type="text" value="{{ $transaction->details->payment_info->receiver_address ?? "" }}" class="form--control ref-input text-light copiable" readonly>
+                                <input type="text" value="{{ $transaction->details->payment_info->receiver_address ?? "" }}" class="form--control ref-input copiable" readonly>
                                 <div class="input-group-append">
                                     <span class="input-group-text copytext copy-button">
                                         <i class="la la-copy"></i>
