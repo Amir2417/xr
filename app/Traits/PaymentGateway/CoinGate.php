@@ -206,7 +206,7 @@ trait CoinGate {
     }
 
     public function coingateCallbackResponse($reference,$callback_data, $output = null) {
-
+        info($reference);
         if(!$output) $output = $this->output;
 
         $callback_status = $callback_data['status'] ?? "";
