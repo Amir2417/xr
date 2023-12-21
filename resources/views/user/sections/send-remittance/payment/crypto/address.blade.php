@@ -69,7 +69,7 @@
                             <hr>
                             <div class="d-flex justify-content-between">
                                 <h4>{{ __("Request Amount") }}</h4>
-                                <h4 class="enter-amount">{{ get_amount($transaction->request_amount, $transaction->remittance_data->currency->code) }}</h4>
+                                <h4 class="enter-amount">{{ get_amount($transaction->request_amount, $transaction->remittance_data->sender_currency) }}</h4>
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between">
