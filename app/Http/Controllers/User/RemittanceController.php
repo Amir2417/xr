@@ -99,7 +99,7 @@ class RemittanceController extends Controller
 
         $callback_token = $request->get('token');
         $callback_data = $request->all();
-        info($callback_data);
+        
         try{
             PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleCallback($callback_token,$callback_data,$gateway);
         }catch(Exception $e) {
@@ -424,10 +424,7 @@ class RemittanceController extends Controller
         DB::beginTransaction();
         try{
 
-            // Update user wallet balance
-            DB::table($transaction->creator_wallet->getTable())
-                ->where('id',$transaction->creator_wallet->id)
-                ->increment('balance',$transaction->receive_amount);
+            
 
             // update crypto transaction as used
             DB::table($crypto_transaction->getTable())->where('id', $crypto_transaction->id)->update([
