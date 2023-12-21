@@ -368,11 +368,19 @@ class RemittanceController extends Controller
 
         $page_title = "Crypto Payment Address";
         $transaction = Transaction::where('trx_id', $trx_id)->firstOrFail();
+        $client_ip      = request()->ip() ?? false;
+        $user_country   = geoip()->getLocation($client_ip)['country'] ?? "";
+        $kyc_data       = SetupKyc::userKyc()->first();
+        $user           = auth()->user();
+        $notifications  = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
 
         if($transaction->currency->gateway->isCrypto() && $transaction->details?->payment_info?->receiver_address ?? false) {
             return view('user.sections.send-remittance.payment.crypto.address', compact(
                 'transaction',
                 'page_title',
+                'user_country',
+                'user',
+                'notifications'
             ));
         }
 
