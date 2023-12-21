@@ -151,8 +151,10 @@ trait CoinGate {
 
         $data = [
             'gateway'       => $output['gateway']->id,
-            'currency'      => $output['currency']->id,
-            'payment_method'=> $output['currency'],
+            'currency'      => [
+                'id'        => $output['currency']->id,
+                'alias'     => $output['currency']->alias,
+            ],
             'amount'        => json_decode(json_encode($output['amount']),true),
             'response'      => $response,
             
