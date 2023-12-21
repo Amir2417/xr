@@ -99,7 +99,7 @@ class RemittanceController extends Controller
 
         $callback_token = $request->get('token');
         $callback_data = $request->all();
-
+        info($callback_data);
         try{
             PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleCallback($callback_token,$callback_data,$gateway);
         }catch(Exception $e) {
@@ -391,7 +391,7 @@ class RemittanceController extends Controller
     {
         $transaction = Transaction::where('trx_id',$trx_id)->where('status', PaymentGatewayConst::STATUSWAITING)->firstOrFail();
 
-        
+
         $dy_input_fields = $transaction->details->payment_info->requirements ?? [];
         $validation_rules = $this->generateValidationRules($dy_input_fields);
 
