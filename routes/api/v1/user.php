@@ -18,13 +18,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
         Route::get('success/response/{gateway}','success')->withoutMiddleware(['auth:api'])->name("payment.success");
         Route::get("cancel/response/{gateway}",'cancel')->withoutMiddleware(['auth:api'])->name("payment.cancel");
 
-        Route::get('manual/input-fields','manualInputFields');
-
-        Route::prefix('payment')->name('payment.')->group(function() {
-            Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
-        });
-
-        
+        Route::get('manual/input-fields','manualInputFields');  
     });
 
 
@@ -69,7 +63,9 @@ Route::prefix("user")->name("api.user.")->group(function(){
             // Automatic gateway additional fields
             Route::get('payment-gateway/additional-fields','gatewayAdditionalFields');
 
-            
+            Route::prefix('payment')->name('payment.')->group(function() {
+                Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
+            });
 
             
         });
