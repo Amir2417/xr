@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use Exception;
 use App\Models\Recipient;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ use App\Models\Admin\SendingPurpose;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\PaymentGateway\Manual;
 use App\Traits\PaymentGateway\Stripe;
+use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\TransactionSetting;
 use Illuminate\Support\Facades\Validator;
@@ -644,217 +646,73 @@ class SendRemittanceController extends Controller
      */
     public function submitData(Request $request) {
 
-        $validator = Validator::make($request->all(), [
-           'identifier'  => "required",
-       ]);
+        try{
+            $instance = PaymentGatewayHelper::init($request->all())->type(PaymentGatewayConst::TYPESENDREMITTANCE)->gateway()->api()->render();
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()],[],500);
+        }
 
-       if($validator->fails()){
-           $error =  ['error'=>$validator->errors()->all()];
-           return Response::validation($error);
-       }
+        if($instance instanceof RedirectResponse === false && isset($instance['gateway_type']) && $instance['gateway_type'] == PaymentGatewayConst::MANUAL) {
+            return Response::error([__('Can\'t submit manual gateway in automatic link')],[],400);
+        }
 
-       $temporary_data  = TemporaryData::where('identifier',$request->identifier)->first();
+        return Response::success([__('Payment gateway response successful')],[
+            'redirect_url'          => $instance['redirect_url'],
+            'redirect_links'        => $instance['redirect_links'],
+            'action_type'           => $instance['type']  ?? false, 
+            'address_info'          => $instance['address_info'] ?? [],
+        ],200);  
+    }
+    public function success(Request $request, $gateway){
+        try{
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
 
-       $alias = $temporary_data->data->currency->alias;
-       $amount = $temporary_data->data->payable_amount * $temporary_data->data->currency->rate;
-
-       $payment_gateways_currencies = PaymentGatewayCurrency::where('alias',$alias)->whereHas('gateway', function ($gateway) {
-           $gateway->where('slug', PaymentGatewayConst::remittance_money_slug());
-           $gateway->where('status', 1);
-        })->first();
-
-       if(!$payment_gateways_currencies){
-            $error = ['error'=>['Gateway Information is not available. Please provide payment gateway currency alias']];
-            return Response::error($error);
-       }
-       $user = auth()->user();
-       try{
-           $instance = PaymentGatewayHelper::init($request->all())->gateway()->api()->get();
-           $trx = $instance['response']['id']??$instance['response']['trx']??$instance['response']['reference_id']??$instance['response'];;
-           $temData = TemporaryData::where('identifier',$trx)->first();
-
-           if(!$temData){
-               $error = ['error'=>["Invalid Request"]];
-               return Response::error($error);
-           }
-           $payment_gateway_currency = PaymentGatewayCurrency::where('id', $temData->data->currency)->first();
-           $payment_gateway = PaymentGateway::where('id', $temData->data->gateway)->first();
-           if($payment_gateway->type == "AUTOMATIC") {
-               if($temData->type == PaymentGatewayConst::STRIPE) {
-                   $payment_informations =[
-                       'trx' =>  $temData->identifier,
-                       'gateway_currency_name' =>  $payment_gateway_currency->name,
-                       'request_amount' => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
-                       'exchange_rate' => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
-                       'total_charge' => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
-                       'will_get' => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
-                       'payable_amount' =>  get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
-                   ];
-                   $data =[
-                        'gategay_type'          => $payment_gateway->type,
-                        'gateway_currency_name' => $payment_gateway_currency->name,
-                        'alias'                 => $payment_gateway_currency->alias,
-                        'identify'              => $temData->type,
-                        'payment_informations'  => $payment_informations,
-                        'url'                   => @$temData->data->response->link."?prefilled_email=".@$user->email,
-                        'method'                => "get",
-                   ];
-
-                   return Response::success(['Send Remittance Inserted Successfully'], $data);
-               }elseif($temData->type == PaymentGatewayConst::RAZORPAY) {
-                $payment_informations =[
-                    'trx' =>  $temData->identifier,
-                    'gateway_currency_name' =>  $payment_gateway_currency->name,
-                    'request_amount' => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
-                    'exchange_rate' => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
-                    'total_charge' => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
-                    'will_get' => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
-                    'payable_amount' =>  get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
-                ];
-                $data =[
-                     'gategay_type'          => $payment_gateway->type,
-                     'gateway_currency_name' => $payment_gateway_currency->name,
-                     'alias'                 => $payment_gateway_currency->alias,
-                     'identify'              => $temData->type,
-                     'payment_informations'  => $payment_informations,
-                     'url' => @$instance['response']['short_url'],
-                     'method' => "get",
-                ];
-
-                return Response::success(['Send Remittance Inserted Successfully'], $data);
-            }else if($temData->type == PaymentGatewayConst::PAYPAL) {
-                
-                   $payment_informations = [
-                        'trx'                   => $temData->identifier,
-                        'gateway_currency_name' => $payment_gateway_currency->name,
-                        'request_amount'        => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
-                        'exchange_rate'         => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
-                        'total_charge'          => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
-                        'will_get'              => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
-                        'payable_amount'        => get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
-                   ];
-                   $data =[
-                        'gategay_type'          => $payment_gateway->type,
-                        'gateway_currency_name' => $payment_gateway_currency->name,
-                        'alias'                 => $payment_gateway_currency->alias,
-                        'identify'              => $temData->type,
-                        'payment_informations'  => $payment_informations,
-                        'url'                   => @$temData->data->response->links,
-                        'method'                => "get",
-                   ];
-                   return Response::success(['Send Remittance Inserted Successfully'], $data);
-
-               }else if($temData->type == PaymentGatewayConst::FLUTTER_WAVE) {
-                   $payment_informations =[
-                       'trx'                   => $temData->identifier,
-                       'gateway_currency_name' => $payment_gateway_currency->name,
-                       'request_amount'        => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
-                       'exchange_rate'         => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
-                       'total_charge'          => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
-                       'will_get'              => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
-                       'payable_amount'        => get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
-                   ];
-                   $data =[
-                       'gateway_type'          => $payment_gateway->type,
-                       'gateway_currency_name' => $payment_gateway_currency->name,
-                       'alias'                 => $payment_gateway_currency->alias,
-                       'identify'              => $temData->type,
-                       'payment_informations'  => $payment_informations,
-                       'url'                   => @$temData->data->response->link,
-                       'method'                => "get",
-                   ];
-
-                   return Response::success(['Send Remittance Inserted Successfully'], $data);
-                }elseif($temData->type == PaymentGatewayConst::SSLCOMMERZ) {
-
-                    $payment_informations =[
-                        'trx'                   =>  $temData->identifier,
-                        'gateway_currency_name' =>  $payment_gateway_currency->name,
-                        'request_amount'        => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
-                        'exchange_rate'         => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
-                        'total_charge'          => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
-                        'will_get'              => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
-                        'payable_amount'        =>  get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
-                    ];
-                    $data =[
-                        'gateway_type' => $payment_gateway->type,
-                        'gateway_currency_name' => $payment_gateway_currency->name,
-                        'alias' => $payment_gateway_currency->alias,
-                        'identify' => $temData->type,
-                        'payment_informations' => $payment_informations,
-                        'url' => $instance['response']['link'],
-                        'method' => "get",
-                    ];
-
-                    return Response::success(['Send Remittance Inserted Successfully'],$data);
+            if(!$temp_data) {
+                if(Transaction::where('callback_ref',$token)->exists()) {
+                    return Response::success([__('Transaction request sended successfully!')],[],400);
+                }else {
+                    return Response::error([__('Transaction failed. Record didn\'t saved properly. Please try again')],[],400);
                 }
-           }elseif($payment_gateway->type == "MANUAL"){
+            }
 
-                $payment_informations =[
-                    'trx'                   => $temData->identifier,
+            $update_temp_data = json_decode(json_encode($temp_data->data),true);
+            $update_temp_data['callback_data']  = $request->all();
+            $temp_data->update([
+                'data'  => $update_temp_data,
+            ]);
+            $temp_data = $temp_data->toArray();
+            $instance = PaymentGatewayHelper::init($temp_data)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
 
-                    'gateway_currency_name' => $payment_gateway_currency->name,
-                    'request_amount'        => get_amount($temData->data->amount->requested_amount).' '.$temData->data->amount->default_currency,
-                    'exchange_rate'         => "1".' '.$temData->data->amount->default_currency.' = '.get_amount($temData->data->amount->sender_cur_rate).' '.$temData->data->amount->sender_cur_code,
-                    'total_charge'          => get_amount($temData->data->amount->total_charge).' '.$temData->data->amount->sender_cur_code,
-                    'will_get'              => get_amount($temData->data->amount->will_get).' '.$temData->data->amount->default_currency,
-                    'payable_amount'        => get_amount($temData->data->amount->total_amount).' '.$temData->data->amount->sender_cur_code,
-                ];
-                $data =[
-                    'gategay_type'          => $payment_gateway->type,
-                    'gateway_currency_name' => $payment_gateway_currency->name,
-                    'alias'                 => $payment_gateway_currency->alias,
-                    'identify'              => $temData->type,
-                    'details'               => $payment_gateway->desc??null,
-                    'input_fields'          => $payment_gateway->input_fields??null,
-                    'payment_informations'  => $payment_informations,
-                    'url'                   => route('api.user.manual.payment.confirmed'),
-                    'method'                => "post",
-                ];
-                return Response::success(['Send Remittance Inserted Successfully'], $data);
-           }else{
-               $error = ['error'=>["Something is wrong"]];
-               return Response::error($error);
-           }
+            if($instance instanceof RedirectResponse) return $instance;
+        }catch(Exception $e) {
+            
+            return Response::error([$e->getMessage()],[],500);
+        }
+        $share_link   = route('share.link',$instance);
+        $download_link   = route('download.pdf',$instance);
+        return Response::success(["Payment successful, please go back your app"],[
+            'share-link'   => $share_link,
+            'download_link' => $download_link,
+        ],200);
 
-       }catch(Exception $e) {
-           $error = ['error'=>[$e->getMessage()]];
-           return Response::error($error);
-       }
-   }
+        
+    }
 
-   public function success(Request $request, $gateway){
-       $requestData = $request->all();
-       $token = $requestData['token'] ?? "";
-       $checkTempData = TemporaryData::where("type", $gateway)->where("identifier", $token)->first();
-       if (!$checkTempData){
-           $message = ['error' => ["Transaction failed. Record didn\'t saved properly. Please try again."]];
-           return Response::error($message);
-       }
+    public function cancel(Request $request,$gateway) {
+        $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+        $temp_data = TemporaryData::where("type",PaymentGatewayConst::TYPESENDREMITTANCE)->where("identifier",$token)->first();
+        try{
+            if($temp_data != null) {
+                $temp_data->delete();
+            }
+        }catch(Exception $e) {
+            // Handel error
+        }
+        return Response::success([__('Payment process cancel successfully!')],[],200);
+    }
 
-       $checkTempData = $checkTempData->toArray();
-
-       try {
-
-          $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceiveApi();
-       } catch (Exception $e) {
-
-           $message = ['error' => [$e->getMessage()]];
-           return Response::error($message);
-       }
-       $share_link   = route('share.link',$data);
-       $download_link   = route('download.pdf',$data);
-       return Response::success(["Payment successful, please go back your app"],[
-        'share-link'   => $share_link,
-        'download_link' => $download_link,
-       ],200);
-   }
-
-   public function cancel(Request $request, $gateway)
-   {
-       $message = ['error' => ["Something is worng"]];
-       return Response::error($message);
-   }
+   
    public function flutterwaveCallback(){
 
     $status = request()->status;

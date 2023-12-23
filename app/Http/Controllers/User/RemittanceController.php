@@ -84,6 +84,7 @@ class RemittanceController extends Controller
             
             return back()->with(['error' => [$e->getMessage()]]);
         }
+        
         return redirect()->route("user.payment.confirmation",$instance)->with(['success' => ['Successfully Send Remittance']]);
     }
     public function cancel(Request $request, $gateway) {
