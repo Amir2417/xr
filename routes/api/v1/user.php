@@ -63,7 +63,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
             // Automatic gateway additional fields
             Route::get('payment-gateway/additional-fields','gatewayAdditionalFields');
 
-            Route::prefix('payment')->name('payment.')->group(function() {
+            Route::prefix('payment')->name('send.remittance.payment.')->group(function() {
                 Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
             });
 
