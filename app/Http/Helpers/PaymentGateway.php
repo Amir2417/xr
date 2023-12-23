@@ -256,7 +256,8 @@ class PaymentGateway {
         }
         
         $currency_id = $tempData['data']->currency ?? "";
-        $gateway_currency = PaymentGatewayCurrency::find($currency_id);
+        // dd($currency_id);
+        $gateway_currency = PaymentGatewayCurrency::find($currency_id->id);
         if(!$gateway_currency) throw new Exception('Transaction failed. Gateway currency not available.');
         $requested_amount = $tempData['data']->amount->requested_amount ?? 0;
         

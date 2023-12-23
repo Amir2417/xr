@@ -25,6 +25,7 @@ trait ControlDynamicInputFields {
     }
 
     public function placeValueWithFields($kyc_fields,$form_data) {
+       
         $fields_with_value = [];
         foreach($kyc_fields ?? [] as $key => $item) {
             if($item->type == "text" || $item->type == "textarea") {
@@ -46,6 +47,7 @@ trait ControlDynamicInputFields {
                 $fields_with_value[$key]['value'] = $vlaue;
             }
         }
+        // dd($fields_with_value);
         $this->removeUserKycFiles();
         return $fields_with_value;
     }
@@ -65,6 +67,7 @@ trait ControlDynamicInputFields {
     }
 
     public function removeUserKycFiles() {
+        
         $user_kyc = auth()->user()->kyc;
         if($user_kyc) {
             if($user_kyc->data) {

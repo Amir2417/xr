@@ -13,26 +13,14 @@ Route::prefix("user")->name("api.user.")->group(function(){
 
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
         
-        Route::get('/flutterwave/callback', 'flutterwaveCallback')->name('flutterwave.callback');
-        Route::get('stripe/payment/success/{trx}','stripePaymentSuccess')->name('stripe.payment.success');
-
-        //razor pay
-        Route::get('razor/callback', 'razorCallback')->name('razor.callback');
+       
         // Automatic Gateway Response Routes
         Route::get('success/response/{gateway}','success')->withoutMiddleware(['auth:api'])->name("payment.success");
         Route::get("cancel/response/{gateway}",'cancel')->withoutMiddleware(['auth:api'])->name("payment.cancel");
 
         Route::get('manual/input-fields','manualInputFields');
 
-        // Submit with manual gateway
-        Route::post("manual/submit","manualSubmit");
-
-        // Automatic gateway additional fields
-        Route::get('payment-gateway/additional-fields','gatewayAdditionalFields');
-
-        Route::prefix('payment')->name('payment.')->group(function() {
-            Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
-        });
+        
     });
 
 
@@ -70,8 +58,16 @@ Route::prefix("user")->name("api.user.")->group(function(){
             Route::get('receipt-payment','receiptPayment');
             Route::post('receipt-payment-store','receiptPaymentStore');
             Route::post('submit-data','submitData');
-            Route::post('stripe/payment/confirm','paymentConfirmedApi')->name('stripe.payment.confirmed');
-            Route::post('manual/payment/confirmed','manualPaymentConfirmedApi')->name('manual.payment.confirmed');
+            
+            // Submit with manual gateway
+            Route::post("manual/submit","manualSubmit");
+
+            // Automatic gateway additional fields
+            Route::get('payment-gateway/additional-fields','gatewayAdditionalFields');
+
+            Route::prefix('payment')->name('payment.')->group(function() {
+                Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
+            });
 
             
         });

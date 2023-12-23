@@ -8,31 +8,37 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
+use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
 use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\Admin\MobileMethod;
 use App\Models\Admin\SourceOfFund;
 use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
+use App\Traits\PaymentGateway\Gpay;
+
 use App\Http\Controllers\Controller;
-use App\Models\Admin\PaymentGateway;
 use App\Models\Admin\RemittanceBank;
 use App\Models\Admin\SendingPurpose;
+
 use Illuminate\Support\Facades\Auth;
-use App\Traits\PaymentGateway\Manual;
-use App\Traits\PaymentGateway\Stripe;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\CryptoTransaction;
 use App\Models\Admin\TransactionSetting;
+use App\Notifications\paypalNotification;
+use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\manualEmailNotification;
 use Illuminate\Validation\ValidationException;
-use KingFlamez\Rave\Facades\Rave as Flutterwave;
 use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
 
 class SendRemittanceController extends Controller
 {
-    use Stripe;
+    use ControlDynamicInputFields;
     /**
      * Method for get the transaction type data
      */
@@ -701,7 +707,7 @@ class SendRemittanceController extends Controller
 
     public function cancel(Request $request,$gateway) {
         $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
-        $temp_data = TemporaryData::where("type",PaymentGatewayConst::TYPESENDREMITTANCE)->where("identifier",$token)->first();
+        $temp_data = TemporaryData::where("identifier",$token)->first();
         try{
             if($temp_data != null) {
                 $temp_data->delete();
@@ -712,73 +718,269 @@ class SendRemittanceController extends Controller
         return Response::success([__('Payment process cancel successfully!')],[],200);
     }
 
-   
-   public function flutterwaveCallback(){
+    public function manualInputFields(Request $request) {
+       
+        $validator = Validator::make($request->all(),[
+            'alias'         => "required|string|exists:payment_gateway_currencies",
+        ]);
 
-    $status = request()->status;
-
-    if ($status ==  'successful'){
-
-        $transactionID = Flutterwave::getTransactionIDFromCallback();
-        $data = Flutterwave::verifyTransaction($transactionID);
-
-        $requestData = request()->tx_ref;
-
-        $token = $requestData;
-
-        $checkTempData = TemporaryData::where("type",'flutterwave')->where("identifier",$token)->first();
-
-        $message = ['error' => ['Transaction faild. Record didn\'t saved properly. Please try again.']];
-
-        if(!$checkTempData) return Response::error($message);
-
-        $checkTempData = $checkTempData->toArray();
-        try{
-           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
-
-        }catch(Exception $e) {
-            $message = ['error' => [$e->getMessage()]];
-            Response::error($message);
+        if($validator->fails()) {
+            return Response::error($validator->errors()->all(),[],400);
         }
-        $share_link   = route('share.link',$data);
-        $download_link   = route('download.pdf',$data);
+
+        $validated = $validator->validate();
+        $gateway_currency = PaymentGatewayCurrency::where("alias",$validated['alias'])->first();
+
+        $gateway = $gateway_currency->gateway;
+
+        if(!$gateway->isManual()) return Response::error([__('Can\'t get fields. Requested gateway is automatic')],[],400);
+
+        if(!$gateway->input_fields || !is_array($gateway->input_fields)) return Response::error([__("This payment gateway is under constructions. Please try with another payment gateway")],[],503);
+
+        try{
+            $input_fields = json_decode(json_encode($gateway->input_fields),true);
+            $input_fields = array_reverse($input_fields);
+        }catch(Exception $e) {
+            return Response::error([__("Something went wrong! Please try again")],[],500);
+        }
+        
+        return Response::success([__('Payment gateway input fields fetch successfully!')],[
+            'gateway'           => [
+                'desc'          => $gateway->desc
+            ],
+            'input_fields'      => $input_fields,
+            'currency'          => $gateway_currency->only(['alias']),
+        ],200);
+    }
+    public function manualSubmit(Request $request) {
+        $basic_setting = BasicSettings::first();
+        $user          = auth()->user();
+        try{
+            $instance = PaymentGatewayHelper::init($request->all())->gateway()->get();
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()],[],401);
+        }
+
+        // Check it's manual or automatic
+        if(!isset($instance['gateway_type']) || $instance['gateway_type'] != PaymentGatewayConst::MANUAL) return Response::error([__('Can\'t submit automatic gateway in manual link')],[],400);
+
+        $gateway = $instance['gateway'] ?? null;
+        $gateway_currency = $instance['currency'] ?? null;
+        if(!$gateway || !$gateway_currency || !$gateway->isManual()) return Response::error([__('Selected gateway is invalid')],[],400);
+
+        $amount = $instance['amount'] ?? null;
+        if(!$amount) return Response::error([__('Transaction Failed. Failed to save information. Please try again')],[],400);
+
+        // $wallet = $wallet = $instance['wallet'] ?? null;
+        // if(!$wallet) return Response::error([__('Your wallet is invalid!')],[],400);
+        
+        $this->file_store_location = "transaction";
+        $dy_validation_rules = $this->generateValidationRules($gateway->input_fields);
+        
+        $validator = Validator::make($request->all(),$dy_validation_rules);
+        
+        if($validator->fails()) return Response::error($validator->errors()->all(),[],400);
+        $validated = $validator->validate();
+        
+        $get_values = $this->placeValueWithFields($gateway->input_fields,$validated);
+        
+        $data   = TemporaryData::where('identifier',$request->identifier)->first();
+        
+        $trx_id = generateTrxString("transactions","trx_id","SR",8);
+        // Make Transaction
+        DB::beginTransaction();
+        try{
+            $id = DB::table("transactions")->insertGetId([
+                'user_id'                       => auth()->user()->id,
+                'payment_gateway_currency_id'   => $gateway_currency->id,
+                'type'                          => PaymentGatewayConst::TYPESENDREMITTANCE,
+                'remittance_data'               => json_encode([
+                    'type'                      => $data->type,
+                    'sender_name'               => $data->data->sender_name,
+                    'sender_email'              => $data->data->sender_email,
+                    'sender_currency'           => $data->data->sender_currency,
+                    'receiver_currency'         => $data->data->receiver_currency,
+                    'sender_ex_rate'            => $data->data->sender_ex_rate,
+                    'sender_base_rate'          => $data->data->sender_base_rate,
+                    'receiver_ex_rate'          => $data->data->receiver_ex_rate,
+                    'coupon_id'                 => $data->data->coupon_id,
+                    'first_name'                => $data->data->first_name,
+                    'middle_name'               => $data->data->middle_name,
+                    'last_name'                 => $data->data->last_name,
+                    'email'                     => $data->data->email,
+                    'country'                   => $data->data->country,
+                    'city'                      => $data->data->city,
+                    'state'                     => $data->data->state,
+                    'zip_code'                  => $data->data->zip_code,
+                    'phone'                     => $data->data->phone,
+                    'method_name'               => $data->data->method_name,
+                    'account_number'            => $data->data->account_number,
+                    'address'                   => $data->data->address,
+                    'document_type'             => $data->data->document_type,
+                    'front_image'               => $data->data->front_image,
+                    'back_image'                => $data->data->back_image,
+                    
+                    'sending_purpose'           => $data->data->sending_purpose->name,
+                    'source'                    => $data->data->source->name,
+                    'currency'                  => [
+                        'name'                  => $data->data->currency->name,
+                        'code'                  => $data->data->currency->code,
+                        'rate'                  => $data->data->currency->rate,
+                    ],
+                    'send_money'                => $data->data->send_money,
+                    'fees'                      => $data->data->fees,
+                    'convert_amount'            => $data->data->convert_amount,
+                    'payable_amount'            => $data->data->payable_amount,
+                    'remark'                    => $data->data->remark,
+                ]),
+                'trx_id'                        => $trx_id,
+                'request_amount'                => $data->data->send_money,
+                'exchange_rate'                 => $data->data->currency->rate,
+                'payable'                       => $data->data->payable_amount,
+                'fees'                          => $data->data->fees,
+                'convert_amount'                => $data->data->convert_amount,
+                'will_get_amount'               => $data->data->receive_money,
+                'remark'                        => 'Manual',
+                'details'                       => "COMPLETED",
+                'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
+                'attribute'                     => PaymentGatewayConst::SEND,
+                'created_at'                    => now(),
+                'callback_ref'                  => $output['callback_ref'] ?? null,
+            ]);
+            if($data->data->coupon_id != 0){
+                $user   = auth()->user();
+                
+                $user->update([
+                    'coupon_status'     => 1,
+                ]);
+                
+                AppliedCoupon::create([
+                    'user_id'   => $user->id,
+                    'coupon_id'   => $data->data->coupon_id,
+                    'transaction_id'   => $id,
+                ]);
+            }
+            if($basic_setting->email_notification == true){
+                Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
+                
+            }
+            DB::commit();
+        }catch(Exception $e) {
+            
+            DB::rollBack();
+            return Response::error([__("Something went wrong! Please try again")],[],500);
+        }
+        $share_link   = route('share.link',$trx_id);
+        $download_link   = route('download.pdf',$trx_id);
         return Response::success(["Payment successful, please go back your app"],[
             'share-link'   => $share_link,
             'download_link' => $download_link,
         ],200);
     }
-    elseif ($status ==  'cancelled'){
-        Response::error(['Payment Cancelled']);
-    }
-    else{
-        Response::error(['Payment Failed']);
-    }
-   }
-     //stripe success
-    public function stripePaymentSuccess($trx){
-        $token = $trx;
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::STRIPE)->where("identifier",$token)->first();
-        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
+    public function gatewayAdditionalFields(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'currency'          => "required|string|exists:payment_gateway_currencies,alias",
+        ]);
+        if($validator->fails()) return Response::error($validator->errors()->all(),[],400);
+        $validated = $validator->validate();
 
-        if(!$checkTempData) return Response::error($message);
-        $checkTempData = $checkTempData->toArray();
+        $gateway_currency = PaymentGatewayCurrency::where("alias",$validated['currency'])->first();
 
+        $gateway = $gateway_currency->gateway;
+
+        $data['available'] = false;
+        $data['additional_fields']  = [];
+        if(Gpay::isGpay($gateway)) {
+            $gpay_bank_list = Gpay::getBankList();
+            if($gpay_bank_list == false) return Response::error(['Gpay bank list server response failed! Please try again'],[],500);
+            $data['available']  = true;
+
+            $gpay_bank_list_array = json_decode(json_encode($gpay_bank_list),true);
+
+            $gpay_bank_list_array = array_map(function ($array){
+                
+                $data['name']       = $array['short_name_by_gpay'];
+                $data['value']      = $array['gpay_bank_code'];
+
+                return $data;
+        
+            }, $gpay_bank_list_array);
+
+            $data['additional_fields'][] = [
+                'type'      => "select",
+                'label'     => "Select Bank",
+                'title'     => "Select Bank",
+                'name'      => "bank",
+                'values'    => $gpay_bank_list_array,
+            ];
+
+        }
+
+        return Response::success([__('Request response fetch successfully!')],$data,200);
+    }
+
+    public function cryptoPaymentConfirm(Request $request, $trx_id) 
+    {
+        
+        $transaction = Transaction::where('trx_id',$trx_id)->where('status', PaymentGatewayConst::STATUSWAITING)->firstOrFail();
+
+        $dy_input_fields = $transaction->details->payment_info->requirements ?? [];
+        $validation_rules = $this->generateValidationRules($dy_input_fields);
+
+        $validated = [];
+        if(count($validation_rules) > 0) {
+            $validated = Validator::make($request->all(), $validation_rules)->validate();
+        }
+
+        if(!isset($validated['txn_hash'])) return Response::error(['Transaction hash is required for verify']);
+
+        $receiver_address = $transaction->details->payment_info->receiver_address ?? "";
+
+        // check hash is valid or not
+        $crypto_transaction = CryptoTransaction::where('txn_hash', $validated['txn_hash'])
+                                                ->where('receiver_address', $receiver_address)
+                                                ->where('asset',$transaction->currency->currency_code)
+                                                ->where(function($query) {
+                                                    return $query->where('transaction_type',"Native")
+                                                                ->orWhere('transaction_type', "native");
+                                                })
+                                                ->where('status',PaymentGatewayConst::NOT_USED)
+                                                ->first();
+                                                
+        if(!$crypto_transaction) return Response::error(['Transaction hash is not valid! Please input a valid hash'],[],404);
+
+        if($crypto_transaction->amount >= $transaction->total_payable == false) {
+            if(!$crypto_transaction) Response::error(['Insufficient amount added. Please contact with system administrator'],[],400);
+        }
+
+        DB::beginTransaction();
         try{
 
-            $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            
+
+            // update crypto transaction as used
+            DB::table($crypto_transaction->getTable())->where('id', $crypto_transaction->id)->update([
+                'status'        => PaymentGatewayConst::USED,
+            ]);
+
+            // update transaction status
+            $transaction_details = json_decode(json_encode($transaction->details), true);
+            $transaction_details['payment_info']['txn_hash'] = $validated['txn_hash'];
+
+            DB::table($transaction->getTable())->where('id', $transaction->id)->update([
+                'details'       => json_encode($transaction_details),
+                'status'        => global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT,
+            ]);
+
+            DB::commit();
+
         }catch(Exception $e) {
-            $message = ['error' => ["Something Is Wrong..."]];
-            return Response::error($message);
+            DB::rollback();
+            return Response::error(['Something went wrong! Please try again'],[],500);
         }
-        $share_link   = route('share.link',$data);
-       $download_link   = route('download.pdf',$data);
-       return Response::success(["Payment successful, please go back your app"],[
-        'share-link'   => $share_link,
-        'download_link' => $download_link,
-       ],200);
 
+        return Response::success(['Payment Confirmation Success!'],[],200);
     }
-
     //sslcommerz success
     public function sllCommerzSuccess(Request $request){
 

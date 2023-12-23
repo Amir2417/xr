@@ -27,6 +27,7 @@ use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
 use App\Providers\Admin\BasicSettingsProvider;
 use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
+use App\Notifications\manualEmailNotification;
 
 class RemittanceController extends Controller
 {
@@ -108,22 +109,6 @@ class RemittanceController extends Controller
             logger($e);
         }
     }
-    public function stripePaymentSuccess($trx){
-        
-        $token = $trx;
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::STRIPE)->where("identifier",$token)->first();
-        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
-        $checkTempData = $checkTempData->toArray();
-
-        try{
-            $transaction = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive(); 
-            
-        }catch(Exception $e) {
-            
-            return back()->with(['error' => ["Something Is Wrong..."]]);
-        }
-        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully send remittance']]);
-    }
     
     /**
      * This method for stripe payment
@@ -199,6 +184,7 @@ class RemittanceController extends Controller
     }
 
     public function manualSubmit(Request $request,$token) {
+        
         $basic_setting = BasicSettings::first();
         $user          = auth()->user();
         $request->merge(['identifier' => $token]);
@@ -298,7 +284,7 @@ class RemittanceController extends Controller
                 ]);
             }
             if( $basic_setting->email_notification == true){
-                Notification::route("mail",$user->email)->notify(new paypalNotification($user,$data,$trx_id));
+                Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
             }
             DB::table("temporary_datas")->where("identifier",$token)->delete();
             DB::commit();
@@ -438,7 +424,7 @@ class RemittanceController extends Controller
 
             DB::table($transaction->getTable())->where('id', $transaction->id)->update([
                 'details'       => json_encode($transaction_details),
-                'status'        => PaymentGatewayConst::STATUSSUCCESS,
+                'status'        => global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT,
             ]);
 
             DB::commit();

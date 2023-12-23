@@ -10,16 +10,16 @@ use App\Models\Admin\Currency;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class paypalNotification extends Notification
+class manualEmailNotification extends Notification
 {
     use Queueable;
     public $user;
     public $data;
     public $trx_id;
-
     /**
      * Create a new notification instance.
      *
@@ -32,17 +32,29 @@ class paypalNotification extends Notification
         $this->trx_id = $trx_id;
     }
 
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
     public function via($notifiable)
     {
         return ['mail'];
     }
 
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
     public function toMail($notifiable)
     {
         $user                   = $this->user;
         $data                   = $this->data;
-       
-        $identifier_data        = TemporaryData::where('identifier',$data['form_data']['identifier'])->first();
+        $identifier_data        = TemporaryData::where('identifier',$data->identifier)->first();
+        // dd($identifier_data->data);
         $trx_id                 = $this->trx_id;
         $date                   = Carbon::now();
         $datetime               = dateFormat('Y-m-d h:i:s A', $date);
@@ -53,7 +65,7 @@ class paypalNotification extends Notification
 
         return (new MailMessage)
             ->subject("Your Recent Remittance - MTCN: ". $trx_id)
-            ->view('frontend.email.confirmation', [
+            ->view('frontend.email.manual-confirmation', [
                 'identifier_data'   => $identifier_data,
                 'data'              => $data,
                 'user'              => $user,
