@@ -573,7 +573,7 @@ class SendRemittanceController extends Controller
             return Response::error($validator->errors()->all(),[]);
         }
         $temporary_data     = TemporaryData::where('identifier',$request->identifier)->first();
-        if($temporary_data->data->payment_gateway != null){
+        if(@$temporary_data->data->payment_gateway != null){
             $validated          = $validator->validate();
             $currency           = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
             $source_of_fund     = SourceOfFund::where('id',$validated['source'])->first();
