@@ -195,6 +195,7 @@ class RecipientController extends Controller
                 'fees'              => $temporary_data->data->fees,
                 'convert_amount'    => $temporary_data->data->convert_amount,
                 'payable_amount'    => $temporary_data->data->payable_amount,
+                'payable'           => $temporary_data->data->payable,
                 'receive_money'     => $temporary_data->data->receive_money,
             ],
         ];  
