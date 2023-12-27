@@ -572,76 +572,81 @@ class SendRemittanceController extends Controller
         if($validator->fails()){
             return Response::error($validator->errors()->all(),[]);
         }
-        $temporary_data    = TemporaryData::where('identifier',$request->identifier)->first();
-        $validated   = $validator->validate();
-        $currency = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
-        $source_of_fund = SourceOfFund::where('id',$validated['source'])->first();
-        $sending_purpose  = SendingPurpose::where('id',$validated['sending_purpose'])->first();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
+        $temporary_data     = TemporaryData::where('identifier',$request->identifier)->first();
+        if($temporary_data->data->payment_gateway != null){
+            $validated          = $validator->validate();
+            $currency           = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
+            $source_of_fund     = SourceOfFund::where('id',$validated['source'])->first();
+            $sending_purpose    = SendingPurpose::where('id',$validated['sending_purpose'])->first();
+            $sender_currency    = Currency::where('status',true)->where('sender',true)->first();
 
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
-        $rate                  = $currency->rate / $temporary_data->data->sender_base_rate;
-        
-        $data = [
-            'type'                    => $temporary_data->type,
-            'identifier'              => $temporary_data->identifier,
-            'data'                    => [
-                'sender_name'         => auth()->user()->fullname,
-                'sender_email'        => auth()->user()->email,
-                'sender_currency'     => $temporary_data->data->sender_currency,
-                'receiver_currency'   => $temporary_data->data->receiver_currency,
-                'sender_ex_rate'      => $temporary_data->data->sender_ex_rate,
-                'sender_base_rate'    => $temporary_data->data->sender_base_rate,
-                'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
-                'coupon_id'           => $temporary_data->data->coupon_id,
-                'first_name'          => $temporary_data->data->first_name,
-                'middle_name'         => $temporary_data->data->middle_name,
-                'last_name'           => $temporary_data->data->last_name,
-                'email'               => $temporary_data->data->email,
-                'country'             => $temporary_data->data->country,
-                'city'                => $temporary_data->data->city,
-                'state'               => $temporary_data->data->state,
-                'zip_code'            => $temporary_data->data->zip_code,
-                'phone'               => $temporary_data->data->phone,
-                'method_name'         => $temporary_data->data->method_name,
-                'account_number'      => $temporary_data->data->account_number,
-                'address'             => $temporary_data->data->address,
-                'document_type'       => $temporary_data->data->document_type,
-                'sending_purpose'     => [
-                    'id'              => $sending_purpose->id,
-                    'name'            => $sending_purpose->name,
+            $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
+            $rate                  = $currency->rate / $temporary_data->data->sender_base_rate;
+            
+            $data = [
+                'type'                    => $temporary_data->type,
+                'identifier'              => $temporary_data->identifier,
+                'data'                    => [
+                    'sender_name'         => auth()->user()->fullname,
+                    'sender_email'        => auth()->user()->email,
+                    'sender_currency'     => $temporary_data->data->sender_currency,
+                    'receiver_currency'   => $temporary_data->data->receiver_currency,
+                    'sender_ex_rate'      => $temporary_data->data->sender_ex_rate,
+                    'sender_base_rate'    => $temporary_data->data->sender_base_rate,
+                    'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
+                    'coupon_id'           => $temporary_data->data->coupon_id,
+                    'first_name'          => $temporary_data->data->first_name,
+                    'middle_name'         => $temporary_data->data->middle_name,
+                    'last_name'           => $temporary_data->data->last_name,
+                    'email'               => $temporary_data->data->email,
+                    'country'             => $temporary_data->data->country,
+                    'city'                => $temporary_data->data->city,
+                    'state'               => $temporary_data->data->state,
+                    'zip_code'            => $temporary_data->data->zip_code,
+                    'phone'               => $temporary_data->data->phone,
+                    'method_name'         => $temporary_data->data->method_name,
+                    'account_number'      => $temporary_data->data->account_number,
+                    'address'             => $temporary_data->data->address,
+                    'document_type'       => $temporary_data->data->document_type,
+                    'sending_purpose'     => [
+                        'id'              => $sending_purpose->id,
+                        'name'            => $sending_purpose->name,
+                    ],
+                    'source'              => [
+                        'id'              => $source_of_fund->id,
+                        'name'            => $source_of_fund->name,
+                    ],
+                    'remark'              => $validated['remark'],
+                    'currency'            => [
+                        'id'              => $currency->id,
+                        'name'            => $currency->name,
+                        'code'            => $currency->currency_code,
+                        'alias'           => $currency->alias,
+                        'rate'            => $currency->rate,
+                    ],
+                    'payment_gateway'     => $validated['payment_gateway'],
+                    'front_image'         => $temporary_data->data->front_image,
+                    'back_image'          => $temporary_data->data->back_image,
+                    'send_money'          => $temporary_data->data->send_money,
+                    'fees'                => $temporary_data->data->fees,
+                    'convert_amount'      => $temporary_data->data->convert_amount,
+                    'payable_amount'      => $temporary_data->data->payable_amount * $rate,
+                    'receive_money'       => $temporary_data->data->receive_money,
                 ],
-                'source'              => [
-                    'id'              => $source_of_fund->id,
-                    'name'            => $source_of_fund->name,
-                ],
-                'remark'              => $validated['remark'],
-                'currency'            => [
-                    'id'              => $currency->id,
-                    'name'            => $currency->name,
-                    'code'            => $currency->currency_code,
-                    'alias'           => $currency->alias,
-                    'rate'            => $currency->rate,
-                ],
-                'payment_gateway'     => $validated['payment_gateway'],
-                'front_image'         => $temporary_data->data->front_image,
-                'back_image'          => $temporary_data->data->back_image,
-                'send_money'          => $temporary_data->data->send_money,
-                'fees'                => $temporary_data->data->fees,
-                'convert_amount'      => $temporary_data->data->convert_amount,
-                'payable_amount'      => $temporary_data->data->payable_amount * $rate,
-                'receive_money'       => $temporary_data->data->receive_money,
-            ],
 
-        ];
-        try{
-            $temporary_data->update($data);
-        }catch(Exception $e){
-            return Response::error(['Something went wrong! Please try again.'],[],404);
+            ];
+            try{
+                $temporary_data->update($data);
+            }catch(Exception $e){
+                return Response::error(['Something went wrong! Please try again.'],[],404);
+            }
+            return Response::success(['Receipt Payment Data Stored'],[
+                'temporary_data'         => $temporary_data
+            ],200);
+        }else{
+            return Response::error(['Data is already Stored.'],[],404);
         }
-        return Response::success(['Receipt Payment Data Stored'],[
-            'temporary_data'         => $temporary_data
-        ],200);
+        
     }
 
       /**
