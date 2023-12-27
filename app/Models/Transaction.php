@@ -3,16 +3,17 @@
 namespace App\Models;
 
 
+use App\Constants\PaymentGatewayConst;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $appends = [];
+    protected $appends = ['confirm', 'dynamic_inputs', 'confirm_url'];
 
     protected $casts = [
         'id'                          => 'integer',
@@ -36,6 +37,29 @@ class Transaction extends Model
         'created_at'                  => 'date:Y-m-d',
         'updated_at'                  => 'date:Y-m-d',
     ];
+
+
+
+
+    public function getConfirmAttribute()
+    {
+        if($this->currency == null) return false;
+        if($this->currency->gateway->isTatum($this->currency->gateway) && $this->status == PaymentGatewayConst::STATUSWAITING) return true;
+    }
+
+    public function getDynamicInputsAttribute()
+    {
+        if($this->confirm == false) return [];
+        $input_fields = $this->details->payment_info->requirements;
+        return $input_fields;
+    }
+
+    public function getConfirmUrlAttribute()
+    {
+        if($this->confirm == false) return false;
+        return setRoute('api.user.send.remittance.payment.crypto.confirm', $this->trx_id);
+    }
+
 
     public function user()
     {
