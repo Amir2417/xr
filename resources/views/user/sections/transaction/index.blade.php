@@ -244,10 +244,10 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($item->payable ?? '' / $item->remittance_data->sender_base_rate ?? '') ?? '' }} {{ $item->remittance_data->currency->code ?? '' }}</span>
+                                <span>{{ get_amount($item->payable,$item->remittance_data->currency->code,8)}}</span>
                             </div>
                         </div>
-                        @if ($item->currency->gateway->isTatum($item->currency->gateway) && $item->status == payment_gateway_const()::STATUSWAITING)
+                        @if ($item->currency->gateway->isTatum($item->currency->gateway) && $item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
                             <div class="col-12">
                                 <form action="{{ setRoute('user.send.remittance.payment.crypto.confirm', $item->trx_id) }}" method="POST">
                                     @csrf
