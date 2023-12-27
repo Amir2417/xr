@@ -247,6 +247,28 @@
                                 <span>{{ get_amount($item->payable ?? '' / $item->remittance_data->sender_base_rate ?? '') ?? '' }} {{ $item->remittance_data->currency->code ?? '' }}</span>
                             </div>
                         </div>
+                        @if ($transaction->currency->gateway->isTatum($transaction->currency->gateway) && $transaction->status == payment_gateway_const()::STATUSWAITING)
+                            <div class="col-12">
+                                <form action="{{ setRoute('user.send.remittance.payment.crypto.confirm', $transaction->trx_id) }}" method="POST">
+                                    @csrf
+                                    @php
+                                        $input_fields = $transaction->details->payment_info->requirements ?? [];
+                                    @endphp
+
+                                    @foreach ($input_fields as $input)
+                                        <div class="">
+                                            <h4 class="mb-0">{{ $input->label }}</h4>
+                                            <input type="text" class="form-control" name="{{ $input->name }}" placeholder="{{ $input->placeholder ?? "" }}">
+                                        </div>
+                                    @endforeach
+
+                                    <div class="text-end">
+                                        <button type="submit" class="btn--base my-2">{{ __("Process") }}</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        @endif
                         <div class="receipt-download" style="text-align: center; padding-top: 20px;">
                             <a href="{{ setRoute('download.pdf',$item->trx_id) }}" class="btn btn--base">{{ __("Download Receipt") }}</a>
                             <input type="hidden" name="" class="box" value="{{ setRoute('share.link',$item->trx_id) }}">
