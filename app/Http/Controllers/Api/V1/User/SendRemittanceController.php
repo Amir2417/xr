@@ -574,9 +574,9 @@ class SendRemittanceController extends Controller
         }
         $temporary_data     = TemporaryData::where('identifier',$request->identifier)->first();
         if(isset($temporary_data->data->payment_gateway)){
-            return Response::error(['Data is already stored.'],[
+            return Response::success(['Data is already stored.'],[
                 'temporary_data'    => $temporary_data
-            ],404);
+            ],200);
         }
         $validated          = $validator->validate();
         $currency           = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
