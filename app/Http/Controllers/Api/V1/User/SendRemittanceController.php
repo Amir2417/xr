@@ -200,6 +200,7 @@ class SendRemittanceController extends Controller
                 'fees'              => $total_charge_amount,
                 'convert_amount'    => $convert_amount,
                 'payable_amount'    => $payable_amount,
+                'payable'           => $payable_amount,
                 'receive_money'     => $receive_money,
                 'sender_currency'   => $sender_currency_code,
                 'receiver_currency' => $receiver_currency_code,
@@ -517,6 +518,7 @@ class SendRemittanceController extends Controller
                 'fees'              => $temporary_data->data->fees,
                 'convert_amount'    => $temporary_data->data->convert_amount,
                 'payable_amount'    => $temporary_data->data->payable_amount,
+                'payable'           => $temporary_data->data->payable,
                 'receive_money'     => $temporary_data->data->receive_money,
             ],
         ];
@@ -573,11 +575,7 @@ class SendRemittanceController extends Controller
             return Response::error($validator->errors()->all(),[]);
         }
         $temporary_data     = TemporaryData::where('identifier',$request->identifier)->first();
-        if(isset($temporary_data->data->payment_gateway)){
-            return Response::success(['Data is already stored.'],[
-                'temporary_data'    => $temporary_data
-            ],200);
-        }
+        
         $validated          = $validator->validate();
         $currency           = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
         $source_of_fund     = SourceOfFund::where('id',$validated['source'])->first();
@@ -634,7 +632,8 @@ class SendRemittanceController extends Controller
                 'send_money'          => $temporary_data->data->send_money,
                 'fees'                => $temporary_data->data->fees,
                 'convert_amount'      => $temporary_data->data->convert_amount,
-                'payable_amount'      => $temporary_data->data->payable_amount * $rate,
+                'payable'             => $temporary_data->data->payable,
+                'payable_amount'      => $temporary_data->data->payable * $rate,
                 'receive_money'       => $temporary_data->data->receive_money,
             ],
 

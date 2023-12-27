@@ -130,7 +130,7 @@ trait Tatum {
                         'requirements'      => $this->tatumUserTransactionRequirements(PaymentGatewayConst::TYPESENDREMITTANCE),
                     ]
                 ]),
-                'status'                        => PaymentGatewayConst::STATUSWAITING,
+                'status'                        => global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT,
                 'created_at'                    => now(),
             ]);
 
