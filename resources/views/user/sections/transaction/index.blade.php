@@ -247,12 +247,12 @@
                                 <span>{{ get_amount($item->payable ?? '' / $item->remittance_data->sender_base_rate ?? '') ?? '' }} {{ $item->remittance_data->currency->code ?? '' }}</span>
                             </div>
                         </div>
-                        @if ($transaction->currency->gateway->isTatum($transaction->currency->gateway) && $transaction->status == payment_gateway_const()::STATUSWAITING)
+                        @if ($item->currency->gateway->isTatum($item->currency->gateway) && $item->status == payment_gateway_const()::STATUSWAITING)
                             <div class="col-12">
-                                <form action="{{ setRoute('user.send.remittance.payment.crypto.confirm', $transaction->trx_id) }}" method="POST">
+                                <form action="{{ setRoute('user.send.remittance.payment.crypto.confirm', $item->trx_id) }}" method="POST">
                                     @csrf
                                     @php
-                                        $input_fields = $transaction->details->payment_info->requirements ?? [];
+                                        $input_fields = $item->details->payment_info->requirements ?? [];
                                     @endphp
 
                                     @foreach ($input_fields as $input)
