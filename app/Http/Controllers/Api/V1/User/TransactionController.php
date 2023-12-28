@@ -14,6 +14,10 @@ class TransactionController extends Controller
      */
     public function index(){
         $transaction   = Transaction::where('user_id',auth()->user()->id)->get()->map(function($data){
+            
+            if ($data->currency->gateway->isTatum($data->currency->gateway) && $data->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT){
+                $submit_url = route('api.user.send.remittance.payment.crypto.confirm',$data->trx_id); 
+            }
             return [
                 'trx_id'              => $data->trx_id,
                 'remittance_data'     => $data->remittance_data,
@@ -28,6 +32,7 @@ class TransactionController extends Controller
                 'status'              => $data->status,
                 'attribute'           => $data->attribute,
                 'share_link'          => route('share.link',$data->trx_id),
+                'submit_url'          => $submit_url ?? '',
                 'download_link'       => route('download.pdf',$data->trx_id),
                 'created_at'          => $data->created_at,
                 'updated_at'          => $data->updated_at,
@@ -43,6 +48,9 @@ class TransactionController extends Controller
      */
     public function allTransction(){
         $transaction   = Transaction::get()->map(function($data){
+            if ($data->currency->gateway->isTatum($data->currency->gateway) && $data->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT){
+                $submit_url = route('api.user.send.remittance.payment.crypto.confirm',$data->trx_id); 
+            }
             return [
                 'trx_id'              => $data->trx_id,
                 'remittance_data'     => $data->remittance_data,
@@ -57,6 +65,7 @@ class TransactionController extends Controller
                 'status'              => $data->status,
                 'attribute'           => $data->attribute,
                 'share_link'          => route('share.link',$data->trx_id),
+                'submit_url'          => $submit_url ?? '',
                 'download_link'       => route('download.pdf',$data->trx_id),
                 'created_at'          => $data->created_at,
                 'updated_at'          => $data->updated_at,
