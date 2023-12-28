@@ -55,7 +55,7 @@ class ProfileController extends Controller
             'phone'         => "nullable|string|max:20",
             'state'         => "nullable|string|max:50",
             'city'          => "nullable|string|max:50",
-            'zip_code'      => "nullable|numeric",
+            'zip_code'      => "nullable|string",
             'address'       => "nullable|string|max:250",
             'image'         => "nullable|image|mimes:jpg,png,svg,webp|max:10240",
         ])->validate();

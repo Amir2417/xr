@@ -76,7 +76,7 @@ class ProfileController extends Controller
             'address'       => "nullable|string|max:250",
             'city'          => "nullable|alpha_num|max:50",
             'state'         => "nullable|alpha_num|max:50",
-            'zip_code'      => "nullable|numeric",
+            'zip_code'      => "nullable|string",
             'image'         => "nullable|image|mimes:jpg,png,svg,webp|max:10240",
         ]);
 

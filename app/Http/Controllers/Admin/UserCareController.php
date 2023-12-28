@@ -202,7 +202,7 @@ class UserCareController extends Controller
             'country'               => "nullable|string|max:50",
             'state'                 => "nullable|string|max:50",
             'city'                  => "nullable|string|max:50",
-            'zip_code'              => "nullable|numeric|max_digits:8",
+            'zip_code'              => "nullable|string",
             'email_verified'        => 'required|boolean',
             'two_factor_verified'   => 'required|boolean',
             'kyc_verified'          => 'required|boolean',
