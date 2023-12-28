@@ -29,6 +29,7 @@ class TransactionController extends Controller
                 'will_get_amount'     => floatval($data->will_get_amount),
                 'remark'              => $data->remark,
                 'details'             => $data->details,
+                'requirements'        => $data->details->payment_info->requirements,
                 'status'              => $data->status,
                 'attribute'           => $data->attribute,
                 'share_link'          => route('share.link',$data->trx_id),

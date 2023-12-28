@@ -50,7 +50,7 @@ trait Tatum {
                         'coin'          => $crypto_asset->coin,
                         'address'       => $crypto_active_wallet->address,
                         'input_fields'  => $this->tatumUserTransactionRequirements(PaymentGatewayConst::TYPESENDREMITTANCE),
-                        'submit_url'    => route('api.user.send.remittance.payment.crypto.confirm',$trx_id)
+                        5
                     ],
                 ];
             }
