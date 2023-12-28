@@ -605,5 +605,19 @@
     "success",
     "alert",
     "select Banks Name",
-    "select Method Name"
+    "select Method Name",
+    "haveACoupon",
+    "apply",
+    "removeCoupon",
+    "applied",
+    "enterTheCouponCode",
+    "coupon",
+    "applyCoupon",
+    "deleteRecipient",
+    "recipientDeleteAlert",
+    "delete",
+    "coinGatePayment",
+    "cryptoPaymentAddress",
+    "payWithThisAddress",
+    "addressCopyTo"
 ]
