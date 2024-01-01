@@ -316,6 +316,9 @@ class PaymentGateway {
             case PaymentGatewayConst::RAZORPAY:
                 return $response['token'] ?? "";
                 break;
+            case PaymentGatewayConst::SSLCOMMERZ:
+                return $response['token'] ?? "";
+                break;
             default:
                 throw new Exception("Oops! Gateway not registered in getToken method");
         }
@@ -360,7 +363,7 @@ class PaymentGateway {
     }
 
     // Update Code (Need to check)
-    public function createTransaction($output, $status = PaymentGatewayConst::STATUSSUCCESS) {
+    public function createTransaction($output, $status = PaymentGatewayConst::STATUSSUCCESS,$temp_remove = true) {
         $basic_setting = BasicSettings::first();
         $record_handler = $output['record_handler'];
         if($this->predefined_user) {
@@ -381,9 +384,11 @@ class PaymentGateway {
         if( $basic_setting->email_notification == true){
             Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id->trx_id));
         }
-
+        if($temp_remove) {
+            $this->removeTempData($output);
+        }
         
-        $this->removeTempData($output);
+        
 
         if($this->requestIsApiUser()) {
             // logout user

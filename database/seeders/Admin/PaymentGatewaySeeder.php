@@ -75,8 +75,6 @@ class PaymentGatewaySeeder extends Seeder
             array('payment_gateway_id' => '4','name' => 'RazorPay INR','alias' => 'razorpay-inr-automatic','currency_code' => 'INR','currency_symbol' => '₹','image' => NULL,'min_limit' => '100.00000000','max_limit' => '100000.00000000','percent_charge' => '0.00000000','fixed_charge' => '0.00000000','rate' => '82.87000000','created_at' => '2023-08-23 13:23:21','updated_at' => '2023-08-23 13:26:35'),
             array('payment_gateway_id' => '5','name' => 'SSLCommerz BDT','alias' => 'sslcommerz-bdt-automatic','currency_code' => 'BDT','currency_symbol' => '৳','image' => NULL,'min_limit' => '100.00000000','max_limit' => '50000.00000000','percent_charge' => '0.00000000','fixed_charge' => '1.00000000','rate' => '110.64000000','created_at' => '2023-09-27 16:11:53','updated_at' => '2023-09-27 16:12:04'),
 
-           
-
             array('payment_gateway_id' => '6','name' => 'ADPay USD','alias' => 'remittance-gateway-adpay-usd-manual','currency_code' => 'USD','currency_symbol' => '$','image' => NULL,'min_limit' => '0.00000000','max_limit' => '0.00000000','percent_charge' => '0.00000000','fixed_charge' => '0.00000000','rate' => '1.00000000','created_at' => '2023-08-26 04:46:32','updated_at' => '2023-08-26 04:46:32'),
 
             array('payment_gateway_id' => '5000','name' => 'CoinGate USDT','alias' => 'remittance-gateway-coingate-usdt-automatic','currency_code' => 'USDT','currency_symbol' => '$','image' => NULL,'min_limit' => '1.00000000','max_limit' => '10000.00000000','percent_charge' => '3.00000000','fixed_charge' => '0.00000000','rate' => '1.00','created_at' => '2023-08-07 12:06:12','updated_at' => '2023-08-07 12:36:10'),

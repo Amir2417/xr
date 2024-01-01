@@ -985,100 +985,31 @@ class SendRemittanceController extends Controller
 
         return Response::success(['Payment Confirmation Success!'],[],200);
     }
-    //sslcommerz success
-    public function sllCommerzSuccess(Request $request){
-
-        $data = $request->all();
-        $token = $data['tran_id'];
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
-        if(!$checkTempData) return Response::error($message);
-        $checkTempData = $checkTempData->toArray();
-
-        $creator_table = $checkTempData['data']->creator_table ?? null;
-        $creator_id = $checkTempData['data']->creator_id ?? null;
-        $creator_guard = $checkTempData['data']->creator_guard ?? null;
-        $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
-        if($creator_table != null && $creator_id != null && $creator_guard != null) {
-            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
-            $creator = DB::table($creator_table)->where("id",$creator_id)->first();
-            if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
-            $api_user_login_guard = $api_authenticated_guards[$creator_guard];
-            Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
-        }
-        if( $data['status'] != "VALID"){
-            $message = ['error' => ["Added Money Failed"]];
-            return Response::error($message);
-        }
+    public function postSuccess(Request $request, $gateway)
+    {
         try{
-           $data = PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            if($temp_data && $temp_data->data->creator_guard != 'api') {
+                Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+            }
         }catch(Exception $e) {
-            $message = ['error' => ["Something Is Wrong..."]];
-            return Response::error($message);
+            return Response::error([$e->getMessage()]);
         }
-        $share_link   = route('share.link',$data);
-        $download_link   = route('download.pdf',$data);
-        return Response::success(["Payment successful, please go back your app"],[
-            'share-link'   => $share_link,
-            'download_link' => $download_link,
-        ],200);
+        return $this->success($request, $gateway);
     }
-    //sslCommerz fails
-    public function sllCommerzFails(Request $request){
-        $data = $request->all();
-
-        $token = $data['tran_id'];
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
-        if(!$checkTempData) return Response::error($message);
-        $checkTempData = $checkTempData->toArray();
-
-        $creator_table = $checkTempData['data']->creator_table ?? null;
-        $creator_id = $checkTempData['data']->creator_id ?? null;
-        $creator_guard = $checkTempData['data']->creator_guard ?? null;
-
-        $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
-        if($creator_table != null && $creator_id != null && $creator_guard != null) {
-            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
-            $creator = DB::table($creator_table)->where("id",$creator_id)->first();
-            if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
-            $api_user_login_guard = $api_authenticated_guards[$creator_guard];
-            Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
+    public function postCancel(Request $request, $gateway)
+    {
+        try{
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            if($temp_data && $temp_data->data->creator_guard != 'api') {
+                Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+            }
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()]);
         }
-        if( $data['status'] == "FAILED"){
-            TemporaryData::destroy($checkTempData['id']);
-            $message = ['error' => ["Send Remittance Failed"]];
-            return Response::error($message);
-        }
-
-    }
-    //sslCommerz canceled
-    public function sllCommerzCancel(Request $request){
-        $data = $request->all();
-        $token = $data['tran_id'];
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        $message = ['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']];
-        if(!$checkTempData) return Response::error($message);
-        $checkTempData = $checkTempData->toArray();
-
-
-        $creator_table = $checkTempData['data']->creator_table ?? null;
-        $creator_id = $checkTempData['data']->creator_id ?? null;
-        $creator_guard = $checkTempData['data']->creator_guard ?? null;
-
-        $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
-        if($creator_table != null && $creator_id != null && $creator_guard != null) {
-            if(!array_key_exists($creator_guard,$api_authenticated_guards)) throw new Exception('Request user doesn\'t save properly. Please try again');
-            $creator = DB::table($creator_table)->where("id",$creator_id)->first();
-            if(!$creator) throw new Exception("Request user doesn\'t save properly. Please try again");
-            $api_user_login_guard = $api_authenticated_guards[$creator_guard];
-            Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
-        }
-        if( $data['status'] != "VALID"){
-            TemporaryData::destroy($checkTempData['id']);
-            $message = ['error' => ["Send Remittance Canceled"]];
-            return Response::error($message);
-        }
+        return $this->cancel($request, $gateway);
     }
     /**
      * razor pay callback

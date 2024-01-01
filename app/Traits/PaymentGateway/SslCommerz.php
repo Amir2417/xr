@@ -2,7 +2,9 @@
 namespace App\Traits\PaymentGateway;
 
 use Exception;
+use Illuminate\Support\Str;
 use App\Models\TemporaryData;
+use Illuminate\Support\Facades\DB;
 use App\Http\Helpers\PaymentGateway;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -19,12 +21,16 @@ trait SslCommerz {
 
     public function sslCommerzInit($output = null) 
     {
-        throw new Exception("This gateway is under development!");
 
         if(!$output) $output = $this->output;
         $request_credentials = $this->getSslCommerzRequestCredentials($output);
-        $payment_link = $this->createSslCommerzPaymentLink($output, $request_credentials);
-
+        
+        try{
+            $payment_link = $this->createSslCommerzPaymentLink($output, $request_credentials);
+        }catch(Exception $e) {
+            throw new Exception($e);
+        }
+        
         return $payment_link;
     }
 
@@ -35,17 +41,15 @@ trait SslCommerz {
         $endpoint = $request_credentials->base_url . $endpoint;
 
         $temp_record_token = generate_unique_string('temporary_datas','identifier',60);
-        // $this->setUrlParams("token=" . $temp_record_token); // set Parameter to URL for identifying when return success/cancel
+        $this->setUrlParams("token=" . $temp_record_token); // set Parameter to URL for identifying when return success/cancel
 
         $redirection = $this->getRedirection();
         $url_parameter = $this->getUrlParams();
-
+        
         $user = auth()->guard(get_auth_guard())->user();
 
-        // dd($this->setGatewayRoute($redirection['return_url'],PaymentGatewayConst::SSLCOMMERZ,$url_parameter));
-
         $temp_data = $this->sslCommerzJunkInsert($temp_record_token); // create temporary information
-
+        
         $response = Http::asForm()->post($endpoint, [
             'store_id'      => $this->request_credentials->store_id,
             'store_passwd'  => $this->request_credentials->secret_key,
@@ -63,7 +67,7 @@ trait SslCommerz {
             'cus_country'   => $user->address->country ?? "",
             'cus_phone'     => " ",
             'shipping_method'   => "No",
-            'product_name'      => "Add Money",
+            'product_name'      => "Send Remittance",
             'product_category'  => " ",
             'product_profile'   => " ",
         ])->throw(function(Response $response, RequestException $exception) use ($temp_data) {
@@ -82,6 +86,12 @@ trait SslCommerz {
                 'data'  => $temp_data_contains,
             ]);
 
+            if(request()->expectsJson()) {
+                $this->output['redirection_response']   = $response_array;
+                $this->output['redirect_links']         = [];
+                $this->output['redirect_url']           = $response_array['GatewayPageURL'];
+                return $this->get();
+            }
             return redirect()->away($response_array['GatewayPageURL']);
         }
 
@@ -91,19 +101,23 @@ trait SslCommerz {
     public function sslCommerzJunkInsert($temp_token) {
         $output = $this->output;
 
+        
         $data = [
             'gateway'       => $output['gateway']->id,
-            'currency'      => $output['currency']->id,
+            'currency'      => [
+                'id'        => $output['currency']->id,
+                'alias'     => $output['currency']->alias
+            ],
+            'payment_method'=> $output['currency'],
             'amount'        => json_decode(json_encode($output['amount']),true),
-            'wallet_table'  => $output['wallet']->getTable(),
-            'wallet_id'     => $output['wallet']->id,
             'creator_table' => auth()->guard(get_auth_guard())->user()->getTable(),
             'creator_id'    => auth()->guard(get_auth_guard())->user()->id,
             'creator_guard' => get_auth_guard(),
+            'user_record'   => $output['form_data']['identifier'],
         ];
-
+        
         return TemporaryData::create([
-            'type'          => PaymentGatewayConst::TYPEADDMONEY,
+            'type'          => PaymentGatewayConst::SSLCOMMERZ,
             'identifier'    => $temp_token,
             'data'          => $data,
         ]);
@@ -161,6 +175,96 @@ trait SslCommerz {
 
         $this->request_credentials = (object) $request_credentials;
         return (object) $request_credentials;
+    }
+
+    public function isSslCommerz($gateway)
+    {
+        $search_keyword = ['sslcommerz','sslcommerz gateway','gateway sslcommerz','sslcommerz payment gateway'];
+        $gateway_name = $gateway->name;
+
+        $search_text = Str::lower($gateway_name);
+        $search_text = preg_replace("/[^A-Za-z0-9]/","",$search_text);
+        foreach($search_keyword as $keyword) {
+            $keyword = Str::lower($keyword);
+            $keyword = preg_replace("/[^A-Za-z0-9]/","",$keyword);
+            if($keyword == $search_text) {
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    public function sslcommerzSuccess($output) {
+       
+        $reference              = $output['tempData']['identifier'];
+        $output['capture']      = $output['tempData']['data']->response ?? "";
+        $output['callback_ref'] = $reference;
+        $response_status = $output['capture']->status ?? "";
+
+        if($response_status == "SUCCESS") {
+            $status = PaymentGatewayConst::STATUSSUCCESS;
+        }else {
+            $status = PaymentGatewayConst::STATUSPENDING;
+        }
+
+        if(!$this->searchWithReferenceInTransaction($reference)) {
+            // need to insert new transaction in database
+            try{
+                $transaction_response = $this->createTransaction($output, $status);
+            }catch(Exception $e) {
+                throw new Exception($e->getMessage());
+            }
+            return $transaction_response;
+        }
+
+    }
+
+    public function sslcommerzCallbackResponse($reference,$callback_data, $output = null) {
+
+        if(!$output) $output = $this->output;
+
+        $callback_status = $callback_data['status'] ?? "";
+        dd($output);
+        if(isset($output['transaction']) && $output['transaction'] != null && $output['transaction']->status != PaymentGatewayConst::STATUSSUCCESS) { // if transaction already created & status is not success
+
+            // Just update transaction status and update user wallet if needed
+            if($callback_status == "VALID") {
+
+                $transaction_details                        = json_decode(json_encode($output['transaction']->details),true) ?? [];
+                $transaction_details['gateway_response']    = $callback_data;
+
+                // update transaction status
+                DB::beginTransaction();
+
+                try{
+                    DB::table($output['transaction']->getTable())->where('id',$output['transaction']->id)->update([
+                        'status'        => PaymentGatewayConst::STATUSSUCCESS,
+                        'details'       => json_encode($transaction_details),
+                        'callback_ref'  => $reference,
+                    ]);
+
+                    $this->updateWalletBalance($output);
+                    DB::commit();
+                    
+                }catch(Exception $e) {
+                    DB::rollBack();
+                    logger($e);
+                    throw new Exception($e);
+                }
+            }
+        }else { // need to create transaction and update status if needed
+
+            $status = PaymentGatewayConst::STATUSPENDING;
+
+            if($callback_status == "VALID") {
+                $status = PaymentGatewayConst::STATUSSUCCESS;
+            }
+
+            $this->createTransaction($output, $status, false);
+        }
+
+        logger("Transaction Created Successfully ::" . $callback_data['status']);
     }
 
 }

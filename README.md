@@ -4,15 +4,15 @@ Immediate Older Version: 2.2.0
 Current Version: 2.3.0
 
 Feature Update:
-1. Admin Panel Basic Settings Update
-2. Admin Panel User Care Update
+1. Payment Gateway CoinGate and Tatum Added.
+
 
 
 
 Please User Those Command On Your Terminal To Update Full System
 .
 1. To Run Project Please Run This Command On Your Terminal
-    composer update && composer dumpautoload  && php artisan migrate:fresh --seed && php artisan passport:install --force
+    composer update && composer dumpautoload  && php artisan migrate && php artisan passport:install --force
 
 2. To Update Basic Settings Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\BasicSettingsSeeder
@@ -26,5 +26,8 @@ Please User Those Command On Your Terminal To Update Full System
 5. To Update Journal Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\JournalSeeder
 
-6. To Update Journal Seeder Please Run This Command On Your Terminal
+6. To Update UsefulLink Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\UsefulLinkSeeder
+
+7. To Update Payment Gateway Seeder Please Run This Command On Your Terminal
+    php artisan db:seed --class=Database\\Seeders\\Admin\\PaymentGatewaySeeder

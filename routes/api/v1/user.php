@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("user")->name("api.user.")->group(function(){
 
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
-        
+        // POST Route For Unauthenticated Request
+        Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth:api']);
+        Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth:api']);
        
         // Automatic Gateway Response Routes
         Route::get('success/response/{gateway}','success')->withoutMiddleware(['auth:api'])->name("payment.success");
@@ -62,7 +64,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
 
             // Automatic gateway additional fields
             Route::get('payment-gateway/additional-fields','gatewayAdditionalFields');
-
+            
             Route::prefix('payment')->name('send.remittance.payment.')->group(function() {
                 Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
             });

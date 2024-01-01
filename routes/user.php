@@ -55,11 +55,15 @@ Route::prefix("user")->name("user.")->group(function(){
 
     //payment
     Route::controller(RemittanceController::class)->middleware(['kyc.verification.guard'])->group(function(){
-        Route::controller(RemittanceController::class)->name('send.remittance.')->group(function(){
+        Route::controller(RemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
             //paypal
             Route::match('get','success/response/{gateway}','success')->name('payment.success');
             Route::match('post',"cancel/response/{gateway}",'cancel')->name('payment.cancel');
             Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth','verification.guard','user.google.two.factor','kyc.verification.guard']);
+
+            // POST Route For Unauthenticated Request
+            Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
+            Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
 
             //manual
             Route::get('manual/{token}','showManualForm')->name('manual.form');

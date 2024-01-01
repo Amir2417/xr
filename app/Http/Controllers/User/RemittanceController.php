@@ -294,62 +294,30 @@ class RemittanceController extends Controller
         }
         return redirect()->route("user.payment.confirmation",$trx_id)->with(['success' => ['Successfully send remittance']]);
     }
-    //sslcommerz success
-    public function sllCommerzSuccess(Request $request){
-        
-        $data           = $request->all();
-        $token          = $data['tran_id'];
-        $checkTempData  = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        
-        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
-        $checkTempData  = $checkTempData->toArray();
-        $creator_id     = $checkTempData['data']->creator_id ?? null;
-        $creator_guard  = $checkTempData['data']->creator_guard ?? null;
-
-        $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
-        if( $data['status'] != "VALID"){
-            return redirect()->route("user.send.remittance.index")->with(['error' => ['Send Remittance Failed']]);
-        }
+    public function postSuccess(Request $request, $gateway)
+    {
         try{
-            $transaction= PaymentGatewayHelper::init($checkTempData)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
             
+            Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
         }catch(Exception $e) {
             
-            return back()->with(['error' => ["Something Is Wrong..."]]);
+            return redirect()->route('frontend.index');
         }
-        return redirect()->route("user.payment.confirmation",$transaction)->with(['success' => ['Successfully Send Remittance']]);
+        return $this->success($request, $gateway);
     }
-    //sslCommerz fails
-    public function sllCommerzFails(Request $request){
-        $data = $request->all();
-        $token = $data['tran_id'];
-        $checkTempData = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
-        $checkTempData = $checkTempData->toArray();
-        $creator_id = $checkTempData['data']->creator_id ?? null;
-        $creator_guard = $checkTempData['data']->creator_guard ?? null;
-        $user = Auth::guard($creator_guard)->loginUsingId($creator_id);
-        if( $data['status'] == "FAILED"){
-            TemporaryData::destroy($checkTempData['id']);
-            return redirect()->route("user.send.remittance.index")->with(['error' => ['Send Remittance Failed']]);
+    public function postCancel(Request $request, $gateway)
+    {
+        try{
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+        }catch(Exception $e) {
+            
+            return redirect()->route('frontend.index');
         }
-
-    }
-    //sslCommerz canceled
-    public function sllCommerzCancel(Request $request){
-        $data           = $request->all();
-        $token          = $data['tran_id'];
-        $checkTempData  = TemporaryData::where("type",PaymentGatewayConst::SSLCOMMERZ)->where("identifier",$token)->first();
-        if(!$checkTempData) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Record didn\'t saved properly. Please try again.']]);
-        $checkTempData  = $checkTempData->toArray();
-        $creator_id     = $checkTempData['data']->creator_id ?? null;
-        $creator_guard  = $checkTempData['data']->creator_guard ?? null;
-        $user           = Auth::guard($creator_guard)->loginUsingId($creator_id);
-        if( $data['status'] != "VALID"){
-            TemporaryData::destroy($checkTempData['id']);
-            return redirect()->route("user.send.remittance.index")->with(['error' => ['Send Remittance Canceled']]);
-        }
-
+        return $this->cancel($request, $gateway);
     }
     public function cryptoPaymentAddress(Request $request, $trx_id) {
 
