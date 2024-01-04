@@ -161,9 +161,6 @@ class PaymentGateway {
     public function chargeCalculate($currency,$receiver_currency = null) {
         $temporary_data     = TemporaryData::where('identifier',$this->request_data['identifier'])->first();
         
-        
-        
-        
         $amount                 = $temporary_data->data->payable_amount;
         $fees                   = $temporary_data->data->fees;
         $convert_amount         = $temporary_data->data->convert_amount;
@@ -256,7 +253,7 @@ class PaymentGateway {
         }
         
         $currency_id = $tempData['data']->currency ?? "";
-        // dd($currency_id);
+   
         $gateway_currency = PaymentGatewayCurrency::find($currency_id->id);
         if(!$gateway_currency) throw new Exception('Transaction failed. Gateway currency not available.');
         $requested_amount = $tempData['data']->amount->requested_amount ?? 0;
@@ -266,7 +263,7 @@ class PaymentGateway {
         ];
         
         $this->request_data = $validator_data;
-        
+       
         $this->gateway();
         
         $this->output['tempData'] = $tempData;

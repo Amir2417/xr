@@ -40,7 +40,13 @@ class CurrencySeeder extends Seeder
             array('admin_id' => '1','country' => 'Australia','name' => 'Australian dollar','code' => 'AUD','symbol' => '$','type' => 'FIAT','flag' => 'seeder/australia.webp','rate' => '1.56000000','sender' => '1','receiver' => '0','default' => '0','status' => '1','created_at' => '2023-11-08 09:15:22','updated_at' => '2023-11-08 09:15:22'),
             array('admin_id' => '1','country' => 'South Africa','name' => 'South African rand','code' => 'ZAR','symbol' => 'R','type' => 'FIAT','flag' => 'seeder/south-africa.webp','rate' => '18.49000000','sender' => '0','receiver' => '1','default' => '0','status' => '1','created_at' => '2023-11-08 09:17:14','updated_at' => '2023-11-08 09:17:14')
         );
-        Currency::insert($data);
+        
+        foreach($data as $item){
+            $currency   = Currency::where('code',$item['code'])->first();
+            if($currency == null){
+                Currency::insert($item);
+            }
+        }
         
     }
 }

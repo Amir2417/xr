@@ -26,8 +26,5 @@ Please User Those Command On Your Terminal To Update Full System
 5. To Update Journal Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\JournalSeeder
 
-6. To Update UsefulLink Seeder Please Run This Command On Your Terminal
-    php artisan db:seed --class=Database\\Seeders\\Admin\\UsefulLinkSeeder
-
-7. To Update Payment Gateway Seeder Please Run This Command On Your Terminal
+6. To Update Payment Gateway Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\PaymentGatewaySeeder

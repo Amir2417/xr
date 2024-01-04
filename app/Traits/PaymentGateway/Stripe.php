@@ -30,8 +30,9 @@ trait Stripe {
 
         $redirection = $this->getRedirection();
         $url_parameter = $this->getUrlParams();
-
+        
         $user = auth()->guard(get_auth_guard())->user();
+        
         try{
             $checkout = $stripe_client->checkout->sessions->create([
                 'mode'              => 'payment',
@@ -57,6 +58,7 @@ trait Stripe {
                     ]
                 ],
             ]);
+            
             
 
             $response_array = json_decode(json_encode($checkout->getLastResponse()->json), true);
@@ -96,7 +98,7 @@ trait Stripe {
             'creator_guard' => get_auth_guard(),
             'user_record'   => $output['form_data']['identifier'],
         ];
-
+       
         return TemporaryData::create([
             'type'          => PaymentGatewayConst::STRIPE,
             'identifier'    => $temp_identifier,

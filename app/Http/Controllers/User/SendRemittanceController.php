@@ -236,7 +236,6 @@ class SendRemittanceController extends Controller
 
                 
                 'payment_gateway'     => $validated['payment_gateway'],
-
                 'front_image'         => $temporary_data->data->front_image,
                 'back_image'          => $temporary_data->data->back_image,
                 'send_money'          => $temporary_data->data->send_money,

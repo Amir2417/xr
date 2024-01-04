@@ -655,7 +655,7 @@ class SendRemittanceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function submitData(Request $request) {
-
+        
         try{
             $instance = PaymentGatewayHelper::init($request->all())->type(PaymentGatewayConst::TYPESENDREMITTANCE)->gateway()->api()->render();
         }catch(Exception $e) {

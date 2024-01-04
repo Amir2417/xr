@@ -32,7 +32,7 @@ class PaymentGatewaySeeder extends Seeder
             array('id' => '5001','slug' => 'remittance-gateway','code' => '10015','type' => 'AUTOMATIC','name' => 'Tatum','title' => 'Tatum Gateway','alias' => 'tatum','image' => '27de2cd3-018f-4709-82e2-ef64cd33e5a2.webp','credentials' => '[{"label":"Testnet","placeholder":"Enter Testnet","name":"test-net","value":"t-64c8e10396979a001d135363-64c8e10496979a001d135367"},{"label":"Mainnet","placeholder":"Enter Mainnet","name":"main-net","value":"t-64c8e10396979a001d135363-64c8e10496979a001d135369"}]','supported_currencies' => '["BTC","ETH","SOL"]','crypto' => '1','desc' => NULL,'input_fields' => NULL,'env' => 'SANDBOX','status' => '1','last_edit_by' => '1','created_at' => '2023-11-07 17:05:37','updated_at' => '2023-11-07 17:44:00'),
 
         );
-        PaymentGateway::upsert($payment_gateways,['code'],[]);
+        PaymentGateway::upsert($payment_gateways,['code'],['credentials']);
 
         $payment_gateway_currencies = array(
             

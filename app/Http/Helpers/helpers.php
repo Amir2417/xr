@@ -454,7 +454,11 @@ function files_asset_path($slug)
 function get_amount($amount, $currency = null, $precision = null)
 {
     if (!is_numeric($amount)) return "Not Number";
-    $amount = ($precision) ? number_format($amount, $precision, ".", ",") : number_format($amount, 2, ".", ",");
+    if($precision == "double") {
+        $amount = (double) $amount;
+    }else {
+        $amount = ($precision) ? number_format($amount, $precision, ".", "") : number_format($amount, 2, ".", "");
+    }
     if (!$currency) return $amount;
     $amount = $amount . " " . $currency;
     return $amount;

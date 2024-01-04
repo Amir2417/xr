@@ -142,7 +142,7 @@ class AuthorizationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function verify2FACode(Request $request) {
+    public function verify2FACode(Request $request) {
 
         $validator = Validator::make($request->all(), [
             'otp' => 'required',
