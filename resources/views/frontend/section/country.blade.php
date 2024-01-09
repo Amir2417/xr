@@ -125,18 +125,18 @@ $receiverCurrency   = json_encode($receiver_currency);
     });
     function country(input){
         
-        var selectedCode    = input.code;
-        var selectedRate    = parseFloat(input.rate);
-        var selectedCountry = input.country;
-        var exactRate       = parseFloat(selectedRate) / parseFloat(selectedRate);
+        var selectedCode        = input.code;
+        var selectedRate        = parseFloat(input.rate);
+        var selectedCountry     = input.country;
+        var exactRate           = parseFloat(selectedRate) / parseFloat(selectedRate);
        
-        var senderCurrency  = {!! json_encode($senderCurrency, JSON_HEX_TAG) !!};
-        var senderCurrency = JSON.parse(senderCurrency);
+        var senderCurrency      = {!! json_encode($senderCurrency, JSON_HEX_TAG) !!};
+        var senderCurrency      = JSON.parse(senderCurrency);
 
-        var receiverCurrency  = {!! json_encode($receiverCurrency, JSON_HEX_TAG) !!};
-        var receiverCurrency = JSON.parse(receiverCurrency);
+        var receiverCurrency    = {!! json_encode($receiverCurrency, JSON_HEX_TAG) !!};
+        var receiverCurrency    = JSON.parse(receiverCurrency);
         var asset               = "{{ files_asset_path('currency-flag') }}";
-        var senderHTML  = '';
+        var senderHTML          = '';
         if (senderCurrency.length > 0) {
             $('.sender-country').empty();
             $.each(senderCurrency,function(index,item){

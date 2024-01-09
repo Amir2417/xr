@@ -143,15 +143,15 @@ class DashboardController extends Controller
                                         ->where('status', global_const()::REMITTANCE_STATUS_COMPLETE)
                                         ->count();
             
-            $pending_data[]  = $pending;
-            $complete_data[]  = $complete;
-            $month_day[] = date('Y-m-d', $start);
-            $start = strtotime('+1 day',$start);
+            $pending_data[]     = $pending;
+            $complete_data[]    = $complete;
+            $month_day[]        = date('Y-m-d', $start);
+            $start              = strtotime('+1 day',$start);
         }
         // Chart one
         $chart_one_data = [
-            'pending_data'  => $pending_data,
-            'complete_data'  => $complete_data,
+            'pending_data'      => $pending_data,
+            'complete_data'     => $complete_data,
             
         ];
 
@@ -194,9 +194,9 @@ class DashboardController extends Controller
             'percent_ticket'        => $percent_ticket,
 
             'user_chart_data'       => $user_chart,
-            'chart_one_data'   => $chart_one_data,
-            'month_day'        => $month_day,
-            'total_user_count'  => User::all()->count(),
+            'chart_one_data'        => $chart_one_data,
+            'month_day'             => $month_day,
+            'total_user_count'      => User::all()->count(),
             'total_remittance_count'  => Transaction::all()->count(),
             'total_remittance_bank_count'  => RemittanceBank::all()->count(),
             'total_mobile_method_count'  => MobileMethod::all()->count(),

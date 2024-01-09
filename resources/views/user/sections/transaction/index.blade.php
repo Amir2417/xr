@@ -372,7 +372,7 @@
                         </div>
                         <div class="dashboard-list-right">
                             <h4 class="main-money text--base">${parseFloat(transaction.will_get_amount).toFixed(2)} ${senderCurrency.code}</h4>
-                            <h6 class="exchange-money">${parseFloat(transaction.request_amount).toFixed(2)} ${receiverCurrency.code} </h6>
+                            <h6 class="exchange-money">${parseFloat(transaction.request_amount).toFixed(8)} ${receiverCurrency.code} </h6>
                         </div>
                     </div>
                     <div class="preview-list-wrapper">
@@ -388,7 +388,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>${transaction.trx_id   }</span>
+                                <span>${transaction.trx_id}</span>
                             </div>
                         </div>
                         <div class="preview-list-item">

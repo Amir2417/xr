@@ -648,7 +648,7 @@ class SendRemittanceController extends Controller
         ],200);
     }
 
-      /**
+    /**
      * Add Money Form Submit
      *
      * @param  \Illuminate\Http\Request  $request
