@@ -395,7 +395,7 @@ trait Razorpay  {
                 // create new transaction with success
                 $this->createTransaction($output,global_const()::REMITTANCE_STATUS_PENDING,false);
             }
-
+            logger("Transaction Created Successfully");
         }
     }
 }
