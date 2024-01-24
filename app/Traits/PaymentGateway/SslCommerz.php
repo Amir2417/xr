@@ -225,7 +225,6 @@ trait SslCommerz {
         if(!$output) $output = $this->output;
 
         $callback_status = $callback_data['status'] ?? "";
-        dd($output);
         if(isset($output['transaction']) && $output['transaction'] != null && $output['transaction']->status != PaymentGatewayConst::STATUSSUCCESS) { // if transaction already created & status is not success
 
             // Just update transaction status and update user wallet if needed

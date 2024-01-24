@@ -421,6 +421,18 @@ class RemittanceController extends Controller
         ));
     }
 
+    /**
+     * Redirect Users for collecting payment via Button Pay (JS Checkout)
+     */
+    public function redirectBtnPay(Request $request, $gateway)
+    {
+        try{
+            return PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleBtnPay($gateway, $request->all());
+        }catch(Exception $e) {
+            return redirect()->route('user.buy.crypto.index')->with(['error' => [$e->getMessage()]]);
+        }
+    }
+
     
     /**
      * Method for share link page

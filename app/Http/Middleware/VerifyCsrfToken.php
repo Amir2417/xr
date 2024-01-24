@@ -17,5 +17,7 @@ class VerifyCsrfToken extends Middleware
         'user/check/email',
         'user/send-remittance/success/response/' . PaymentGatewayConst::SSLCOMMERZ,
         'user/send-remittance/cancel/response/' . PaymentGatewayConst::SSLCOMMERZ,
+        'user/send-remittance/success/response/' . PaymentGatewayConst::RAZORPAY,
+        'user/send-remittance/cancel/response/' . PaymentGatewayConst::RAZORPAY,
     ];
 }

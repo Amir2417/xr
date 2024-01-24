@@ -2,23 +2,24 @@
 namespace App\Traits\PaymentGateway;
 
 use Exception;
+use App\Models\User;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\TemporaryData;
-use Illuminate\Support\Carbon;
 use App\Http\Helpers\PaymentGateway;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Http\Client\RequestException;
-use App\Http\Controllers\Api\V1\User\AddMoneyController;
 
 trait Razorpay  {
 
     private $razorpay_gateway_credentials;
     private $request_credentials;
-    private $razorpay_api_base_url = "https://api.razorpay.com/";
-    private $razorpay_api_v1       = "v1";
+    private $razorpay_api_base_url  = "https://api.razorpay.com/";
+    private $razorpay_api_v1        = "v1";
+    private $razorpay_btn_pay       = true;
 
     public function razorpayInit($output) {
         if(!$output) $output = $this->output;
@@ -26,10 +27,103 @@ trait Razorpay  {
         $request_credentials = $this->getRazorpayRequestCredentials($output);
 
         try{
+            if($this->razorpay_btn_pay) {
+                // create link for btn pay
+                return $this->razorpayCreateLinkForBtnPay($output);
+            }
             return $this->createRazorpayPaymentLink($output, $request_credentials);
         }catch(Exception $e) {
+           
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Create Link for Button Pay (JS Checkout)
+     */
+    public function razorpayCreateLinkForBtnPay($output)
+    {
+        $temp_record_token = generate_unique_string('temporary_datas','identifier','',35);
+        
+        $temp_data = $this->razorPayJunkInsert($temp_record_token); // create temporary information
+
+        $btn_link = $this->generateLinkForBtnPay($temp_record_token, PaymentGatewayConst::RAZORPAY);
+
+        if(request()->expectsJson()) {
+            $this->output['redirection_response']   = [];
+            $this->output['redirect_links']         = [];
+            $this->output['redirect_url']           = $btn_link;
+            return $this->get();
+        }
+
+        return redirect($btn_link);
+    }
+
+    /**
+     * Button Pay page redirection with necessary data
+     */
+    public function razorpayBtnPay($temp_data)
+    {
+        
+        $data = $temp_data->data;
+        $output = $this->output;
+        
+        if(!isset($data->razorpay_order)) { // is order is not created the create new order
+            // Need to create order
+            $order = $this->razorpayCreateOrder([
+                'amount'            => get_amount($data->amount->total_amount, null, 2) * 100,
+                'currency'          => $data->amount->sender_cur_code,
+                'receipt'           => $temp_data->identifier,
+                'partial_payment'   => false,
+            ]);
+
+            // Update TempData
+            $update_data = json_decode(json_encode($data), true);
+            $update_data['razorpay_order'] = $order;
+
+            $temp_data->update([
+                'data'  => $update_data,
+            ]);
+
+            $temp_data->refresh();
+        }
+       
+        $data = $temp_data->data; // update the data variable 
+        $order = $data->razorpay_order;
+
+        $order_id                   = $order->id;
+        $request_credentials        = $this->getRazorpayRequestCredentials($output);
+        $output['order_id']         = $order_id;
+        $output['key']              = $request_credentials->key_id;
+        $output['callback_url']     = $data->callback_url;
+        $output['cancel_url']       = $data->cancel_url;
+        $output['user']             = auth()->guard(get_auth_guard())->user();
+
+        return view('payment-gateway.btn-pay.razorpay', compact('output'));
+    }
+
+    /**
+     * Create order for receive payment
+     */
+    public function razorpayCreateOrder($request_data, $output = null)
+    {
+        if($output == null) $output = $this->output;
+
+        $endpoint = $this->razorpay_api_base_url . $this->razorpay_api_v1 . "/orders";
+
+        $request_credentials = $this->getRazorpayRequestCredentials($output);
+
+        $key_id = $request_credentials->key_id;
+        $secret_key = $request_credentials->secret_key;
+
+        $response = Http::withBasicAuth($key_id, $secret_key)->withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post($endpoint, $request_data)->throw(function(Response $response, RequestException $exception) {
+            $response_body = json_decode(json_encode($response->json()), true);
+            throw new Exception($response_body['error']['description'] ?? "");
+        })->json();
+
+        return $response;
     }
 
     public function createRazorpayPaymentLink($output, $request_credentials) 
@@ -47,7 +141,7 @@ trait Razorpay  {
 
         $user = auth()->guard(get_auth_guard())->user();
 
-        $temp_data = $this->flutterWaveJunkInsert($temp_record_token); // create temporary information
+        $temp_data = $this->razorPayJunkInsert($temp_record_token); // create temporary information
 
         $response = Http::withBasicAuth($key_id, $secret_key)->withHeaders([
             'Content-Type' => 'application/json',
@@ -94,23 +188,32 @@ trait Razorpay  {
         return redirect()->away($response_array['short_url']);
     }
 
-    public function razorPayWaveJunkInsert($temp_token) 
+    public function razorPayJunkInsert($temp_token) 
     {
         $output = $this->output;
 
+        $this->setUrlParams("token=" . $temp_token); // set Parameter to URL for identifying when return success/cancel
+        $redirection = $this->getRedirection();
+        $url_parameter = $this->getUrlParams();
+
         $data = [
             'gateway'       => $output['gateway']->id,
-            'currency'      => $output['currency']->id,
+            'currency'      => [
+                'id'        => $output['currency']->id,
+                'alias'     => $output['currency']->alias
+            ],
+            'payment_method'=> $output['currency'],
             'amount'        => json_decode(json_encode($output['amount']),true),
-            'wallet_table'  => $output['wallet']->getTable(),
-            'wallet_id'     => $output['wallet']->id,
             'creator_table' => auth()->guard(get_auth_guard())->user()->getTable(),
             'creator_id'    => auth()->guard(get_auth_guard())->user()->id,
             'creator_guard' => get_auth_guard(),
+            'callback_url'  => $this->setGatewayRoute($redirection['return_url'],PaymentGatewayConst::RAZORPAY,$url_parameter),
+            'cancel_url'    => $this->setGatewayRoute($redirection['cancel_url'],PaymentGatewayConst::RAZORPAY,$url_parameter),
+            'user_record'   => $output['form_data']['identifier'],
         ];
 
         return TemporaryData::create([
-            'type'          => PaymentGatewayConst::TYPEADDMONEY,
+            'type'          => PaymentGatewayConst::RAZORPAY,
             'identifier'    => $temp_token,
             'data'          => $data,
         ]);
@@ -182,42 +285,114 @@ trait Razorpay  {
         return false;
     }
 
+    /**
+     * Razorpay Success Response
+     */
     public function razorpaySuccess($output) 
     {
+        $reference              = $output['tempData']['identifier'];
+        $order_info             = $output['tempData']['data']->razorpay_order ?? false;
+        $output['callback_ref'] = $reference;
+
+        if($order_info == false) {
+            throw new Exception("Invalid Order");
+        }
+
         $redirect_response = $output['tempData']['data']->callback_data ?? false;
         if($redirect_response == false) {
             throw new Exception("Invalid response");
         }
 
-        if($redirect_response->razorpay_payment_link_status == "success") {
-            $output['capture']      = $output['tempData']['data']->response ?? "";
+        if(isset($redirect_response->razorpay_payment_id) && isset($redirect_response->razorpay_order_id) && isset($redirect_response->razorpay_signature)) {
+            // Response Data
+            $output['capture']      = $output['tempData']['data']->callback_data ?? "";
 
-            try{
-                $this->createTransaction($output);
-            }catch(Exception $e) {
-                throw new Exception($e->getMessage());
-            }
-        }
+            $gateway_credentials = $this->getRazorpayRequestCredentials($output);
 
-        if($redirect_response->razorpay_payment_link_status == "cancelled") {
+            // Need to verify payment signature
+            $request_order_id       = $order_info->id; // database order 
+            $razorpay_payment_id    = $redirect_response->razorpay_payment_id; // response payment id
+            $key_secret             = $gateway_credentials->secret_key;
 
-            $identifier = $output['tempData']['identifier'];
-            $response_array = json_decode(json_encode($redirect_response), true);
+            $generated_signature = hash_hmac("sha256", $request_order_id . "|" . $razorpay_payment_id, $key_secret);
 
-            if(isset($response_array['r-source']) && $response_array['r-source'] == PaymentGatewayConst::APP) {
-                if($output['type'] == PaymentGatewayConst::TYPEADDMONEY) {
-                    return (new AddMoneyController())->cancel(new Request([
-                        'token' => $identifier,
-                    ]), PaymentGatewayConst::RAZORPAY);
+            if($generated_signature == $redirect_response->razorpay_signature) {
+
+                if(!$this->searchWithReferenceInTransaction($reference)) {
+                    try{
+                        $transaction_response = $this->createTransaction($output);
+                    }catch(Exception $e) {
+                        throw new Exception($e->getMessage());
+                    }
+                    return $transaction_response;
                 }
+
+            }else {
+                throw new Exception("Payment Failed, Invalid Signature Found!");
+            }
+            
+        }
+    }
+
+    /**
+     * Razorpay Callback Response
+     */
+    public function razorpayCallbackResponse($response_data, $gateway)
+    {
+        $entity = $response_data['entity'] ?? false;
+        $event  = $response_data['event'] ?? false;
+
+        if($entity == "event" && $event == "order.paid") { // order response event data is valid
+            // get the identifier
+            $token = $response_data['payload']['order']['entity']['receipt'] ?? "";
+
+            $temp_data = TemporaryData::where('identifier', $token)->first();
+
+            // if transaction is already exists need to update status, balance & response data
+            $transaction = Transaction::where('callback_ref', $token)->first();
+
+            $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
+
+            if($temp_data) {
+                $gateway_currency_id = $temp_data->data->currency ?? null;
+                $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
+                if($gateway_currency) {
+
+                    $requested_amount = $temp_data['data']->amount->requested_amount ?? 0;
+                    $validator_data = [
+                        $this->currency_input_name  => $transaction->data->user_record,
+                    ];
+
+                    $user    = User::where('id',$transaction->data->creator_id)->first();
+                    $this->predefined_guard = $user->modelGuardName();;
+                    $this->predefined_user = $user;
+
+                    $this->output['tempData'] = $temp_data;
+                }
+
+                $this->request_data = $validator_data;
+                $this->gateway();
             }
 
-            $this->setUrlParams("token=" . $identifier); // set Parameter to URL for identifying when return success/cancel
-            $redirection = $this->getRedirection();
-            $url_parameter = $this->getUrlParams();
+            $output                     = $this->output;
+            $output['callback_ref']     = $token;
+            $output['capture']          = $response_data;
 
-            $cancel_link = $this->setGatewayRoute($redirection['cancel_url'],PaymentGatewayConst::RAZORPAY,$url_parameter);
-            return redirect()->away($cancel_link);
+            if($transaction && $transaction->status != global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT) {
+
+                $update_data                        = json_decode(json_encode($transaction->details), true);
+                $update_data['gateway_response']    = $response_data;
+
+                // update information
+                $transaction->update([
+                    'status'    => $status,
+                    'details'   => $update_data
+                ]);
+            }else {
+                // create new transaction with success
+                $this->createTransaction($output);
+            }
+
         }
     }
 }

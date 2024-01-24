@@ -230,7 +230,10 @@ class PaymentGateway {
         return $this->$distributeMethod($output);
     }
 
-    public function responseReceive() {
+    /**
+     * Collect user data from temporary data and clears next routes
+     */
+    public function authenticateTempData(){
         $tempData = $this->request_data;
         
         if(empty($tempData) || empty($tempData['type'])) throw new Exception('Transaction failed. Record didn\'t saved properly. Please try again.');
@@ -267,6 +270,11 @@ class PaymentGateway {
         $this->gateway();
         
         $this->output['tempData'] = $tempData;
+
+    }
+
+    public function responseReceive() {
+        $this->authenticateTempData();
         $method_name = $this->getResponseMethod($this->output['gateway']);
         
         if(method_exists($this,$method_name)) {
@@ -357,6 +365,17 @@ class PaymentGateway {
 
     public function generateSuccessMethodName(string $name) {
         return $name . "Success";
+    }
+
+    function removeSpacialChar($string, $replace_string = "",$length) {
+        return preg_replace("/[^A-Za-z0-9]/",$replace_string,$string,$length);
+    }
+
+    public function generateBtnPayResponseMethod(string $gateway)
+    {
+        $name = $this->removeSpacialChar($gateway,"",$length=40);
+        
+        return $name . "BtnPay";
     }
 
     // Update Code (Need to check)
@@ -682,5 +701,47 @@ class PaymentGateway {
             }
         }
         return $result;
+    }
+
+    public function generateLinkForRedirectForm($token, $gateway)
+    {
+        $redirection = $this->getRedirection();
+        $form_redirect_route = $redirection['redirect_form'];
+        return route($form_redirect_route, [$gateway, 'token' => $token]);
+    }
+
+    /**
+     * Link generation for button pay (JS checkout)
+     */
+    public function generateLinkForBtnPay($token, $gateway)
+    {
+        $redirection = $this->getRedirection();
+        $form_redirect_route = $redirection['btn_pay'];
+        return route($form_redirect_route, [$gateway, 'token' => $token]);
+    }
+
+    /**
+     * Handle Button Pay (JS Checkout) Redirection
+     */
+    public function handleBtnPay($gateway, $request_data)
+    {
+
+        if(!array_key_exists('token', $request_data)) throw new Exception("Requested with invalid token");
+        $temp_token = $request_data['token'];
+
+        $temp_data = TemporaryData::where('identifier', $temp_token)->first();
+       
+        if(!$temp_data) throw new Exception("Requested with invalid token");
+        
+        $this->request_data = $temp_data->toArray();
+        $this->authenticateTempData();
+        
+        $method = $this->generateBtnPayResponseMethod($gateway);
+        
+        if(method_exists($this, $method)) {
+            return $this->$method($temp_data);
+        }
+
+        throw new Exception("Button Pay response method [" . $method ."()] not available in this gateway");
     }
 }

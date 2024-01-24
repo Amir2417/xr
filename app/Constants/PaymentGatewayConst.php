@@ -43,6 +43,8 @@ class PaymentGatewayConst {
     const FLUTTERWAVE               = 'flutterwave';
     const SSLCOMMERZ                = 'sslcommerz';
     const RAZORPAY                  = 'razorpay';
+    const PERFECT_MONEY             = 'perfect-money';
+    const PAGADITO                  = 'pagadito';
 
     const PROJECT_CURRENCY_MULTIPLE = "PROJECT_CURRENCY_MULTIPLE";
     const PROJECT_CURRENCY_SINGLE   = "PROJECT_CURRENCY_SINGLE";
@@ -79,6 +81,8 @@ class PaymentGatewayConst {
             self::FLUTTERWAVE   => 'flutterwaveInit',
             self::SSLCOMMERZ    => 'sslCommerzInit',
             self::RAZORPAY      => 'razorpayInit',
+            self::PERFECT_MONEY => 'perfectMoneyInit',
+            self::PAGADITO      => 'pagaditoInit'
         ];
 
         if($alias == null) {
@@ -101,6 +105,8 @@ class PaymentGatewayConst {
             'isFlutterwave' => self::FLUTTERWAVE,
             'isSslCommerz'  => self::SSLCOMMERZ,
             'isRazorpay'    => self::RAZORPAY,
+            'isPerfectMoney'    => self::PERFECT_MONEY,
+            'isPagadito'        => self::PAGADITO
         ];
     }
     public static function apiAuthenticateGuard() {
@@ -115,11 +121,13 @@ class PaymentGatewayConst {
                 'return_url'    => 'user.send.remittance.payment.success',
                 'cancel_url'    => 'user.send.remittance.payment.cancel',
                 'callback_url'  => 'user.send.remittance.payment.callback',
+                'btn_pay'       => 'user.send.remittance.payment.btn.pay',
             ],
             'api'       => [
                 'return_url'    => 'api.user.send.remittance.payment.success',
                 'cancel_url'    => 'api.user.send.remittance.payment.cancel',
                 'callback_url'  => 'user.send.remittance.payment.callback',
+                'btn_pay'       => 'api.user.send.remittance.payment.btn.pay',
             ],
         ];
     }

@@ -65,6 +65,9 @@ Route::prefix("user")->name("user.")->group(function(){
             Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
             Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
 
+            //redirect with Btn Pay
+            Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('payment.btn.pay')->withoutMiddleware(['auth','verification.guard','user.google.two.factor']);
+
             //manual
             Route::get('manual/{token}','showManualForm')->name('manual.form');
             Route::post('manual/submit/{token}','manualSubmit')->name('manual.submit');

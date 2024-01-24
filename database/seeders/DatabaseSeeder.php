@@ -38,28 +38,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // fresh
-        $this->call([
-            AdminSeeder::class,
-            RoleSeeder::class,
-            TransactionSettingSeeder::class,
-            CurrencySeeder::class,
-            BasicSettingsSeeder::class,
-            SetupSeoSeeder::class,
-            AppSettingsSeeder::class,
-            SiteSectionsSeeder::class,
-            CountrySectionSeeder::class,
-            SetupKycSeeder::class,
-            ExtensionSeeder::class,
-            AdminHasRoleSeeder::class,
-            SetupPageSeeder::class,
-            PaymentGatewaySeeder::class,
-            LanguageSeeder::class,
-            UsefulLinkSeeder::class,
-            AppOnboardScreensSeeder::class,
-            JournalSeeder::class,
-        ]);
-
-        //demo
         // $this->call([
         //     AdminSeeder::class,
         //     RoleSeeder::class,
@@ -79,14 +57,36 @@ class DatabaseSeeder extends Seeder
         //     UsefulLinkSeeder::class,
         //     AppOnboardScreensSeeder::class,
         //     JournalSeeder::class,
-
-        //     UserSeeder::class,
-        //     RemittanceBankSeeder::class,
-        //     MobileMethodSeeder::class,
-        //     SendingPurposeSeeder::class,
-        //     SourceOfFundsSeeder::class,
-        //     BeneficiarySeeder::class,
-
         // ]);
+
+        //demo
+        $this->call([
+            AdminSeeder::class,
+            RoleSeeder::class,
+            TransactionSettingSeeder::class,
+            CurrencySeeder::class,
+            BasicSettingsSeeder::class,
+            SetupSeoSeeder::class,
+            AppSettingsSeeder::class,
+            SiteSectionsSeeder::class,
+            CountrySectionSeeder::class,
+            SetupKycSeeder::class,
+            ExtensionSeeder::class,
+            AdminHasRoleSeeder::class,
+            SetupPageSeeder::class,
+            PaymentGatewaySeeder::class,
+            LanguageSeeder::class,
+            UsefulLinkSeeder::class,
+            AppOnboardScreensSeeder::class,
+            JournalSeeder::class,
+
+            UserSeeder::class,
+            RemittanceBankSeeder::class,
+            MobileMethodSeeder::class,
+            SendingPurposeSeeder::class,
+            SourceOfFundsSeeder::class,
+            BeneficiarySeeder::class,
+
+        ]);
     }
 }
