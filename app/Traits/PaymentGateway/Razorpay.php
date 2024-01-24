@@ -25,10 +25,11 @@ trait Razorpay  {
         if(!$output) $output = $this->output;
 
         $request_credentials = $this->getRazorpayRequestCredentials($output);
-
+       
         try{
             if($this->razorpay_btn_pay) {
                 // create link for btn pay
+                
                 return $this->razorpayCreateLinkForBtnPay($output);
             }
             return $this->createRazorpayPaymentLink($output, $request_credentials);
@@ -43,10 +44,12 @@ trait Razorpay  {
      */
     public function razorpayCreateLinkForBtnPay($output)
     {
-        $temp_record_token = generate_unique_string('temporary_datas','identifier','',35);
+        
+        
+        $temp_record_token = generate_unique_string('temporary_datas','identifier');
         
         $temp_data = $this->razorPayJunkInsert($temp_record_token); // create temporary information
-
+        
         $btn_link = $this->generateLinkForBtnPay($temp_record_token, PaymentGatewayConst::RAZORPAY);
 
         if(request()->expectsJson()) {

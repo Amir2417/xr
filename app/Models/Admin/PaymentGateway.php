@@ -4,12 +4,13 @@ namespace App\Models\Admin;
 
 use App\Traits\PaymentGateway\Tatum;
 use App\Constants\PaymentGatewayConst;
+use App\Traits\PaymentGateway\Razorpay;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PaymentGateway extends Model
 {
-    use HasFactory,Tatum;
+    use HasFactory,Tatum,Razorpay;
 
     protected $guarded = ['id'];
 

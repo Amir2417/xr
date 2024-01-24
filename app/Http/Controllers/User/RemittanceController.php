@@ -429,7 +429,8 @@ class RemittanceController extends Controller
         try{
             return PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleBtnPay($gateway, $request->all());
         }catch(Exception $e) {
-            return redirect()->route('user.buy.crypto.index')->with(['error' => [$e->getMessage()]]);
+            dd($e->getMessage());
+            return redirect()->route('user.send.remittance.index')->with(['error' => [$e->getMessage()]]);
         }
     }
 
