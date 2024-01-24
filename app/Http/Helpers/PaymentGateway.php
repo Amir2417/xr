@@ -400,7 +400,7 @@ class PaymentGateway {
         if( $basic_setting->email_notification == true){
             Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id->trx_id));
         }
-        if($temp_remove) {
+        if($temp_remove == true) {
             $this->removeTempData($output);
         }
         

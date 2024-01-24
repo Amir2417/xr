@@ -361,9 +361,9 @@ trait Razorpay  {
                 $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
                 if($gateway_currency) {
 
-                    $requested_amount = $temp_data['data']->amount->requested_amount ?? 0;
+                    $requested_amount = $temp_data->data->amount->requested_amount ?? 0;
                     $validator_data = [
-                        $this->currency_input_name  => $transaction->data->user_record,
+                        $this->currency_input_name  => $temp_data->data->user_record,
                     ];
 
                     $user    = User::where('id',$transaction->data->creator_id)->first();
@@ -393,7 +393,7 @@ trait Razorpay  {
                 ]);
             }else {
                 // create new transaction with success
-                $this->createTransaction($output);
+                $this->createTransaction($output,global_const()::REMITTANCE_STATUS_PENDING,false);
             }
 
         }
