@@ -293,6 +293,7 @@ trait Razorpay  {
      */
     public function razorpaySuccess($output) 
     {
+        
         $reference              = $output['tempData']['identifier'];
         $order_info             = $output['tempData']['data']->razorpay_order ?? false;
         $output['callback_ref'] = $reference;
@@ -307,6 +308,7 @@ trait Razorpay  {
         }
 
         if(isset($redirect_response->razorpay_payment_id) && isset($redirect_response->razorpay_order_id) && isset($redirect_response->razorpay_signature)) {
+           
             // Response Data
             $output['capture']      = $output['tempData']['data']->callback_data ?? "";
 
@@ -320,21 +322,28 @@ trait Razorpay  {
             $generated_signature = hash_hmac("sha256", $request_order_id . "|" . $razorpay_payment_id, $key_secret);
 
             if($generated_signature == $redirect_response->razorpay_signature) {
-
+ 
                 if(!$this->searchWithReferenceInTransaction($reference)) {
+                   
                     try{
-                        $transaction_response = $this->createTransaction($output);
+                        $status = global_const()::REMITTANCE_STATUS_PENDING;
+                        $transaction_response = $this->createTransaction($output,$status,false);
+                        
                     }catch(Exception $e) {
+                         
                         throw new Exception($e->getMessage());
                     }
+                    
                     return $transaction_response;
                 }
 
             }else {
+                 
                 throw new Exception("Payment Failed, Invalid Signature Found!");
             }
             
         }
+     
     }
 
     /**
@@ -342,18 +351,19 @@ trait Razorpay  {
      */
     public function razorpayCallbackResponse($response_data, $gateway)
     {
+        logger("Start");
         $entity = $response_data['entity'] ?? false;
         $event  = $response_data['event'] ?? false;
 
         if($entity == "event" && $event == "order.paid") { // order response event data is valid
             // get the identifier
             $token = $response_data['payload']['order']['entity']['receipt'] ?? "";
-
+logger("token".$token);
             $temp_data = TemporaryData::where('identifier', $token)->first();
-
+logger("temp".$temp_data);
             // if transaction is already exists need to update status, balance & response data
-            $transaction = Transaction::where('callback_ref', $token)->first();
-
+            $transaction = Transaction::where('callback_ref', $temp_data->identifier)->first();
+logger("transaction".$transaction);
             $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
 
             if($temp_data) {
