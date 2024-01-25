@@ -241,7 +241,7 @@ class RecipientController extends Controller
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-        
+       
         return view('user.sections.recipient.create',compact(
             'page_title',
             'user_country',
@@ -256,10 +256,9 @@ class RecipientController extends Controller
      */
     public function getBank(Request $request){
         $user_country       = Currency::where('id',$request->country)->first();
-        $country_code = substr($user_country->code, 0, 2);
-        $bank_list = getFlutterwaveBanks($country_code);
-  
-        // return response()->json($bank_list);
+        $country            = get_specific_country($user_country->country);
+        $bank_list          = getFlutterwaveBanks($country['country_code']);
+
         return Response::success(['Data fetch successfully'],['bank_list' => $bank_list],200);
     }
     public function recipientDataStore(Request $request){

@@ -52,6 +52,7 @@ function setRoute($route_name, $param = null)
 function get_all_countries($item = [])
 {
     $countries = json_decode(file_get_contents(resource_path('world/countries.json')), true);
+   
 
     $countries = array_map(function ($array) {
         return [
@@ -61,10 +62,36 @@ function get_all_countries($item = [])
             'currency_name'         => $array['currency_name'],
             'currency_code'         => $array['currency'],
             'currency_symbol'       => $array['currency_symbol'],
+            'country_code'          => $array['iso2'],
         ];
     }, $countries);
 
     return json_decode(json_encode($countries));
+}
+
+function get_specific_country($name){
+   
+    $countries = json_decode(file_get_contents(resource_path('world/countries.json')), true);
+
+   
+    foreach ($countries as $country) {
+        if (strtolower($country['name']) === strtolower($name)) {
+            
+            $countryData = [
+                'id'                    => $country['id'],
+                'name'                  => $country['name'],
+                'mobile_code'           => $country['phone_code'],
+                'currency_name'         => $country['currency_name'],
+                'currency_code'         => $country['currency'],
+                'currency_symbol'       => $country['currency_symbol'],
+                'country_code'          => $country['iso2'],
+            ];
+            return $countryData;
+        }
+    }
+
+   
+    return null;
 }
 
 function get_country_phone_code($country) {
