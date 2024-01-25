@@ -379,7 +379,7 @@ class PaymentGateway {
     }
 
     // Update Code (Need to check)
-    public function createTransaction($output, $status = PaymentGatewayConst::STATUSSUCCESS,$temp_remove = true) {
+    public function createTransaction($output, $status,$temp_remove = true) {
         $basic_setting = BasicSettings::first();
         $record_handler = $output['record_handler'];
         if($this->predefined_user) {
@@ -484,8 +484,8 @@ class PaymentGateway {
                 'convert_amount'                => $output['amount']->convert_amount,
                 'will_get_amount'               => $output['amount']->will_get,
                 'remark'                        => $output['gateway']->name,
-                'details'                       => "COMPLETED",
-                'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
+                'details'                       => json_encode(['gateway_response' => $output['capture'],'data' => $data->data,'user_record' => $output['form_data']['identifier']]),
+                'status'                        => $status,
                 'attribute'                     => PaymentGatewayConst::SEND,
                 'created_at'                    => now(),
                 'callback_ref'                  => $output['callback_ref'] ?? null,

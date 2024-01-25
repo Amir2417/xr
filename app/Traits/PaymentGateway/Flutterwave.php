@@ -230,7 +230,8 @@ trait Flutterwave {
             $output['capture']      = $output['tempData']['data']->response ?? "";
             
             try{
-                $transaction_response = $this->createTransaction($output);
+                $status = global_const()::REMITTANCE_STATUS_PENDING;
+                $transaction_response = $this->createTransaction($output,$status);
             }catch(Exception $e) {
                 throw new Exception($e->getMessage());
             }

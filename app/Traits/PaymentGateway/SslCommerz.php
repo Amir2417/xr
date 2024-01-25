@@ -203,9 +203,9 @@ trait SslCommerz {
         $response_status = $output['capture']->status ?? "";
 
         if($response_status == "SUCCESS") {
-            $status = PaymentGatewayConst::STATUSSUCCESS;
+            $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
         }else {
-            $status = PaymentGatewayConst::STATUSPENDING;
+            $status = global_const()::REMITTANCE_STATUS_PENDING;
         }
 
         if(!$this->searchWithReferenceInTransaction($reference)) {
