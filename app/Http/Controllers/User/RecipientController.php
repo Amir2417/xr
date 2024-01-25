@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\User;
 
 use Exception;
+use App\Models\Recipient;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
+use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\UserNotification;
 use App\Models\Admin\MobileMethod;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\RemittanceBank;
-use App\Models\Recipient;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -240,9 +241,7 @@ class RecipientController extends Controller
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-        $receiver_country     = Currency::where('receiver',true)->first();
         
-
         return view('user.sections.recipient.create',compact(
             'page_title',
             'user_country',
@@ -252,9 +251,19 @@ class RecipientController extends Controller
             'user_country',
         ));
     }
-    
+    /**
+     * Method for get the bank list data
+     */
+    public function getBank(Request $request){
+        $user_country       = Currency::where('id',$request->country)->first();
+        $country_code = substr($user_country->code, 0, 2);
+        $bank_list = getFlutterwaveBanks($country_code);
+  
+        // return response()->json($bank_list);
+        return Response::success(['Data fetch successfully'],['bank_list' => $bank_list],200);
+    }
     public function recipientDataStore(Request $request){
-        
+        dd($request->all());
         if($request->method == global_const()::RECIPIENT_METHOD_BANK ){
 
             $validator      = Validator::make($request->all(),[

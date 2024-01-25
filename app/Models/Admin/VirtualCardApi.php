@@ -14,6 +14,5 @@ class VirtualCardApi extends Model
         'image' => 'string',
         'config' => 'object',
         'card_details' => 'string',
-        'card_limit' => 'integer'
     ];
 }

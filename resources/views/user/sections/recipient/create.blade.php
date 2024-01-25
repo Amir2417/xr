@@ -64,16 +64,29 @@
                                         'placeholder'     => __("Enter Email")."..."
                                     ])
                                 </div>
-                                <div class="col-xl-4 col-lg-4 col-md-4 form-group">
+                                {{-- <div class="col-xl-4 col-lg-4 col-md-4 form-group transaction-type">
+                                    <label>{{ __("Transaction Type") }} <span>*</span></label>
+                                    <select class="form--control trx-type-select select2-basic" name="method">
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
+                                    </select>
+                                </div> --}}
+                               <div class="col-xl-4 col-lg-4 col-md-4 form-group">
                                     <label>{{ __("Country") }}<span>*</span></label>
                                     <select class="form--control select2-basic" name="country">
                                         <option selected disabled>{{ __("Select Country") }}</option>
                                         @foreach ($receiver_currency as $item)
-                                            <option value="{{ $item->country }}">{{ $item->country }} </option>
+                                            <option value="{{ $item->id }}">{{ $item->country }} </option>
                                         @endforeach 
                                     </select>
                                 </div>
-                                <div class="col-xl-4 col-lg-4 col-md-6 form-group">
+                                {{-- <div class="col-xl-4 col-lg-4 form-group">
+                                    <label>{{ __("Bank Name") }} <span class="text--base">*</span></label>
+                                    <select class="form--control select2-basic bank-list" name="bank_name">
+                                        
+                                    </select>
+                                </div> --}}
+                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
                                         'label'           => __('City'),
                                         'type'            => 'text',
@@ -135,8 +148,8 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Bank Name") }}*</label>
-                                            <select class="form--control select2-basic" name="bank_name">
-                                                <option selected disabled>{{ __("Select Bank") }}</option> 
+                                            <select class="form--control select2-basic bank-list" name="bank_name">
+                                        
                                             </select>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
@@ -217,63 +230,42 @@
         }
     });
 </script>
+
+
 <script>
-    var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
-
-    $('select[name="country"]').on('change',function(){
-        $("select[name=mobile_name]").html('');
-        getMobile($(this));
+    $("select[name=country]").change(function(){
+        var country = $(this).val();
+        var transactionType = $("select[name=method] :selected").val();
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
+        }      
     });
-    
-    function getMobile(select){
-        var country = $(select).val();
-        if(country == "" || country == null){
-            return false; 
+    $("select[name=method]").change(function(){
+        var country = $("select[name=country] :selected").val();
+        var transactionType = $(this).val();
+        console.log(transactionType);
+        $(".bank-list").html('');
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
         }
-        $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    option += `<option value="${item.name}">${item.name}</option>`
-                });
-                $("select[name=mobile_name]").html(option);
-                $("select[name=mobile_name]").select2();
-            }
-        }).fail(function(response){
-            var errorText = response.responseJSON;
-        });
-    }
-</script>
-<script>
-    var getBankName = "{{ setRoute('user.get.bank.name') }}";
-
-    $('select[name="country"]').on('change',function(){
-        $("select[name=bank_name]").html('');
-        getBank($(this));
     });
-    
-    function getBank(select){
-        var country = $(select).val();
-        if(country == "" || country == null){
-            return false;
-        }
-        $.post(getBankName,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    console.log(item.name);
-                    option += `<option value="${item.name}">${item.name}</option>`
+    function getBankList(country,transactionType){
+        var bankListUrl = "{{ route('user.recipient.bank.list') }}";
+            $(".bank-list").html('');
+            $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
 
+                if(response.data.bank_list == null || response.data.bank_list == ''){
+                    $('.bank-list').html('<option value="">No Bank Aviliable</option>');
+                }else{
+                    $('.bank-list').html('<option value="">Select Bank</option>');
+                }
+                
+                $.each(response.data.bank_list, function (key, value) { 
+                    $(".bank-list").append('<option value=' + value.code + '|' + value.name + ' >' + value.name + '</option>');
                 });
-                $("select[name=bank_name]").html(option);
-                $("select[name=bank_name]").select2();
-            }
-        }).fail(function(response) {
-
-            var errorText = response.responseJSON;
-
-        });
+            });
     }
+    
 </script>
     
 @endpush

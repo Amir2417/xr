@@ -47,12 +47,12 @@
                         [
                             'title'     => "Virtual Card Api",
                             'route'     => "admin.virtual.card.api",
-                            'icon'      => "menu-icon las la-wallet",
+                            'icon'      => "menu-icon las la-vr-cardboard",
                         ],
                         [
                             'title'     => __("Coupons"),
                             'route'     => "admin.coupon.index",
-                            'icon'      => "menu-icon las la-wallet",
+                            'icon'      => "menu-icon las la-percentage",
                         ]
                     ]
                 ])

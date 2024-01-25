@@ -21,7 +21,7 @@ class CurrencyController extends Controller
     public function index()
     {
         $page_title = "Setup Currency";
-        $currencies = Currency::orderByDesc('default')->paginate(30);
+        $currencies = Currency::orderByDesc('default')->paginate(15);
         return view('admin.sections.currency.index',compact(
             'page_title',
             'currencies'

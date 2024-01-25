@@ -22,6 +22,7 @@ use Intervention\Image\Facades\Image;
 use App\Constants\PaymentGatewayConst;
 use Buglinjo\LaravelWebp\Facades\Webp;
 use App\Models\Admin\AdminNotification;
+use App\Models\Admin\VirtualCardApi;
 use App\Providers\Admin\CurrencyProvider;
 
 use App\Providers\Admin\BasicSettingsProvider;
@@ -439,6 +440,9 @@ function files_path($slug)
         ],
         'junk-files'        => [
             'path'      => 'backend/files/junk-files',
+        ],
+        'card-api'   => [
+            'path'      => 'backend/images/card-settings',
         ],
     ];
 
@@ -1584,4 +1588,44 @@ function get_api_languages(){
         return $value == false;
     });
     return $lang;
+}
+
+//flutterwave automatic withdrawal helper functions
+function getFlutterwaveBanks($iso2){
+    $cardApi = VirtualCardApi::first();
+    $secretKey = $cardApi->config->flutterwave_secret_key;
+    $base_url =$cardApi->config->flutterwave_url;
+    
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_URL =>  $base_url.'/banks'.'/'.$iso2,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => array(
+        "Authorization: Bearer ". $secretKey
+      ),
+    ));
+
+    $response = curl_exec($curl);
+    
+    curl_close($curl);
+    $banks = json_decode($response,true);
+   
+    return $banks['data'];
+}
+function getPaymentCredentials($credentials,$label){
+    $data = null;
+    foreach ($credentials as $object) {
+        $object = (object)$object;
+        if ($object->label === $label) {
+            $data = $object;
+            break;
+        }
+    }
+    return $data->value;
 }

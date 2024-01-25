@@ -63,6 +63,7 @@ class GlobalConst {
     const LAST_ONE_YEARS                         = "LAST_ONE_YEARS";
     const SPECIFIC_DATES                         = "SPECIFIC_DATES";
 
-
+    const LIVE = 'live';
+    const SANDBOX = 'sandbox';
 
 }

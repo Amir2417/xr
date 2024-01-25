@@ -43,10 +43,11 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::get('add/{identifier}','add')->name('add');
         Route::post('store/{identifier}','store')->name('store');
         Route::post('send/{identifier}','send')->name('send');
-
+        
         //side nav
         Route::get('show','show')->name('show');
         Route::get('create','create')->name('create');
+        Route::post('get/bank','getBank')->name('bank.list');
         Route::post('recipient-data-store','recipientDataStore')->name('data.store');
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update/{id}','update')->name('data.update');
