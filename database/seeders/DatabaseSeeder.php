@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\User\UserSeeder;
 use Database\Seeders\Admin\RoleSeeder;
 use Database\Seeders\Admin\AdminSeeder;
+use Database\Seeders\Admin\JournalSeeder;
 use Database\Seeders\Admin\CurrencySeeder;
 use Database\Seeders\Admin\LanguageSeeder;
 use Database\Seeders\Admin\SetupKycSeeder;
@@ -20,12 +21,12 @@ use Database\Seeders\Admin\MobileMethodSeeder;
 use Database\Seeders\Admin\SiteSectionsSeeder;
 use Database\Seeders\Admin\BasicSettingsSeeder;
 use Database\Seeders\Admin\SourceOfFundsSeeder;
+use Database\Seeders\Admin\CountrySectionSeeder;
 use Database\Seeders\Admin\PaymentGatewaySeeder;
 use Database\Seeders\Admin\RemittanceBankSeeder;
 use Database\Seeders\Admin\SendingPurposeSeeder;
+use Database\Seeders\Admin\VirtualCardApiSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
-use Database\Seeders\Admin\CountrySectionSeeder;
-use Database\Seeders\Admin\JournalSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -57,6 +58,7 @@ class DatabaseSeeder extends Seeder
         //     UsefulLinkSeeder::class,
         //     AppOnboardScreensSeeder::class,
         //     JournalSeeder::class,
+        //     VirtualCardApiSeeder::class,
         // ]);
 
         //demo
@@ -79,6 +81,7 @@ class DatabaseSeeder extends Seeder
             UsefulLinkSeeder::class,
             AppOnboardScreensSeeder::class,
             JournalSeeder::class,
+            VirtualCardApiSeeder::class,
 
             UserSeeder::class,
             RemittanceBankSeeder::class,

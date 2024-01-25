@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\UsefulLinkController;
 use App\Http\Controllers\Admin\AppSettingsController;
 use App\Http\Controllers\Admin\CryptoAssetController;
 use App\Http\Controllers\Admin\TrxSettingsController;
+use App\Http\Controllers\Admin\VirtualCardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\BroadcastingController;
 use App\Http\Controllers\Admin\MobileMethodController;
@@ -161,6 +162,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::controller(TrxSettingsController::class)->prefix('trx-settings')->name('trx.settings.')->group(function () {
         Route::get('index', 'index')->name('index');
         Route::put('charges/update', 'trxChargeUpdate')->name('charges.update');
+    });
+
+    // virtual card api
+    Route::controller(VirtualCardController::class)->prefix('virtual-card')->name('virtual.card.')->group(function () {
+        Route::get('api/settings', 'cardApi')->name('api');
+        Route::put('api/update', 'cardApiUpdate')->name('api.update');
     });
 
     // User Care Section

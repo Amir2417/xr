@@ -45,6 +45,11 @@
                             'icon'      => "menu-icon las la-wallet",
                         ],
                         [
+                            'title'     => "Virtual Card Api",
+                            'route'     => "admin.virtual.card.api",
+                            'icon'      => "menu-icon las la-wallet",
+                        ],
+                        [
                             'title'     => __("Coupons"),
                             'route'     => "admin.coupon.index",
                             'icon'      => "menu-icon las la-wallet",
