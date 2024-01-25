@@ -342,7 +342,7 @@ trait Razorpay  {
 
             }else {
                  
-                throw new Exception("Payment Failed, Invalid Signature Found!");
+                throw new Exception("Payment Failed, Invalid Signature Found");
             }
             
         }
