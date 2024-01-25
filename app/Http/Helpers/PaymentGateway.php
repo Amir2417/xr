@@ -3,13 +3,10 @@ namespace App\Http\Helpers;
 
 use Exception;
 use App\Models\User;
-use App\Models\UserWallet;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
-use Jenssegers\Agent\Agent;
 use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
-use App\Constants\GlobalConst;
 use App\Models\Admin\Currency;
 use App\Models\UserNotification;
 use Illuminate\Support\Facades\DB;
@@ -20,25 +17,23 @@ use App\Traits\PaymentGateway\Tatum;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\PaymentGateway\Paypal;
 use App\Traits\PaymentGateway\Stripe;
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Route;
 use App\Constants\PaymentGatewayConst;
 use App\Traits\PaymentGateway\CoinGate;
 use App\Traits\PaymentGateway\Razorpay;
 use App\Notifications\paypalNotification;
-use App\Providers\Admin\CurrencyProvider;
 use App\Traits\PaymentGateway\SslCommerz;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\PaymentGateway\Flutterwave;
 use App\Models\Admin\PaymentGatewayCurrency;
+use App\Traits\PaymentGateway\PagaditoTrait;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
-use App\Notifications\User\BuyCryptoMailNotification;
 use App\Models\Admin\PaymentGateway as PaymentGatewayModel;
 
 class PaymentGateway {
 
-    use Paypal, Gpay, CoinGate, QRPay, Tatum, Stripe, Flutterwave, SslCommerz, Razorpay;
+    use Paypal, Gpay, CoinGate, QRPay, Tatum, Stripe, Flutterwave, SslCommerz, Razorpay,PagaditoTrait;
 
     protected $request_data;
     protected $output;

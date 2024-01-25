@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
+use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\Admin\SetupKyc;
 use App\Models\UserNotification;
@@ -25,9 +26,9 @@ use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\manualEmailNotification;
 use App\Providers\Admin\BasicSettingsProvider;
 use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
-use App\Notifications\manualEmailNotification;
 
 class RemittanceController extends Controller
 {
@@ -87,6 +88,73 @@ class RemittanceController extends Controller
         }
         
         return redirect()->route("user.payment.confirmation",$instance)->with(['success' => ['Successfully Send Remittance']]);
+    }
+    /**
+     * Method for pagadito success
+     */
+    public function successPagadito(Request $request, $gateway){
+        $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+        $temp_data = TemporaryData::where("identifier",$token)->first();
+        if($temp_data->data->creator_guard == 'web'){
+            Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+            try{
+                if(Transaction::where('callback_ref', $token)->exists()) {
+                    if(!$temp_data) return redirect()->route("user.send.remittance.index")->with(['success' => [__('Successfully Send Remittance')]]);
+                }else {
+                    if(!$temp_data) return redirect()->route('index')->with(['error' => [__("transaction_record")]]);
+                }
+
+                $update_temp_data = json_decode(json_encode($temp_data->data),true);
+                $update_temp_data['callback_data']  = $request->all();
+                $temp_data->update([
+                    'data'  => $update_temp_data,
+                ]);
+                $temp_data = $temp_data->toArray();
+                $instance = PaymentGatewayHelper::init($temp_data)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            }catch(Exception $e) {
+                return back()->with(['error' => [$e->getMessage()]]);
+            }
+            return redirect()->route("user.payment.confirmation",$instance)->with(['success' => ['Successfully Send Remittance']]);
+        }elseif($temp_data->data->creator_guard =='api'){
+            $creator_table = $temp_data->data->creator_table ?? null;
+            $creator_id = $temp_data->data->creator_id ?? null;
+            $creator_guard = $temp_data->data->creator_guard ?? null;
+            $api_authenticated_guards = PaymentGatewayConst::apiAuthenticateGuard();
+            if($creator_table != null && $creator_id != null && $creator_guard != null) {
+                if(!array_key_exists($creator_guard,$api_authenticated_guards)) return Response::success([__('Request user doesn\'t save properly. Please try again')],[],400);
+                $creator = DB::table($creator_table)->where("id",$creator_id)->first();
+                if(!$creator) return Response::success([__('Request user doesn\'t save properly. Please try again')],[],400);
+                $api_user_login_guard = $api_authenticated_guards[$creator_guard];
+                Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
+            }
+            try{
+                if(!$temp_data) {
+                    if(Transaction::where('callback_ref',$token)->exists()) {
+                        return Response::success([__('Successfully Send Remittance')],[],400);
+                    }else {
+                        return Response::error([__('transaction_record')],[],400);
+                    }
+                }
+                $update_temp_data = json_decode(json_encode($temp_data->data),true);
+                $update_temp_data['callback_data']  = $request->all();
+                $temp_data->update([
+                    'data'  => $update_temp_data,
+                ]);
+                $temp_data = $temp_data->toArray();
+                $instance = PaymentGatewayHelper::init($temp_data)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+
+                // return $instance;
+            }catch(Exception $e) {
+                return Response::error([$e->getMessage()],[],500);
+            }
+            $share_link   = route('share.link',$instance);
+            $download_link   = route('download.pdf',$instance);
+            return Response::success(["Payment successful, please go back your app"],[
+                'share-link'   => $share_link,
+                'download_link' => $download_link,
+            ],200);
+        }
+
     }
     public function cancel(Request $request, $gateway) {
         if($request->has('token')) {
