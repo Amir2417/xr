@@ -1,418 +1,476 @@
 <?php
-namespace App\Traits\PaymentGateway;
 
+namespace App\Http\Controllers\User;
+
+use PDF;
 use Exception;
-use App\Models\User;
 use App\Models\Transaction;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
-use App\Http\Helpers\PaymentGateway;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
+use App\Models\Admin\Currency;
+use App\Models\Admin\SetupKyc;
+use App\Models\UserNotification;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
+use App\Http\Controllers\Controller;
+use App\Models\Admin\PaymentGateway;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\CryptoTransaction;
+use Illuminate\Support\Facades\Session;
+use App\Notifications\paypalNotification;
+use App\Traits\ControlDynamicInputFields;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
-use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Notification;
+use App\Providers\Admin\BasicSettingsProvider;
+use App\Http\Helpers\PaymentGateway as PaymentGatewayHelper;
+use App\Notifications\manualEmailNotification;
 
-trait Razorpay  {
-
-    private $razorpay_gateway_credentials;
-    private $request_credentials;
-    private $razorpay_api_base_url  = "https://api.razorpay.com/";
-    private $razorpay_api_v1        = "v1";
-    private $razorpay_btn_pay       = true;
-
-    public function razorpayInit($output) {
-        if(!$output) $output = $this->output;
-
-        $request_credentials = $this->getRazorpayRequestCredentials($output);
+class RemittanceController extends Controller
+{
+   
+    use ControlDynamicInputFields;
+    
+    /**
+     * Method for buy crypto submit
+     * @param Illuminate\Http\Request $request
+     */
+    public function submit(Request $request){
        
         try{
-            if($this->razorpay_btn_pay) {
-                // create link for btn pay
-                
-                return $this->razorpayCreateLinkForBtnPay($output);
+            $instance = PaymentGatewayHelper::init($request->all())->type(PaymentGatewayConst::TYPESENDREMITTANCE)->gateway()->render();
+            if($instance instanceof RedirectResponse === false && isset($instance['gateway_type']) && $instance['gateway_type'] == PaymentGatewayConst::MANUAL) {
+                $manual_handler = $instance['distribute'];
+                return $this->$manual_handler($instance);
             }
-            return $this->createRazorpayPaymentLink($output, $request_credentials);
-        }catch(Exception $e) {
-           
-            throw new Exception($e->getMessage());
+        }catch(Exception $e){
+            return back()->with(['error' => [$e->getMessage()]]);
         }
+        return $instance;
     }
-
     /**
-     * Create Link for Button Pay (JS Checkout)
+     * This method for success alert of PayPal
+     * @method POST
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Http\Request
      */
-    public function razorpayCreateLinkForBtnPay($output)
-    {
-        
-        
-        $temp_record_token = generate_unique_string('temporary_datas','identifier');
-        
-        $temp_data = $this->razorPayJunkInsert($temp_record_token); // create temporary information
-        
-        $btn_link = $this->generateLinkForBtnPay($temp_record_token, PaymentGatewayConst::RAZORPAY);
+    public function success(Request $request, $gateway){
+        try{
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            
 
-        if(request()->expectsJson()) {
-            $this->output['redirection_response']   = [];
-            $this->output['redirect_links']         = [];
-            $this->output['redirect_url']           = $btn_link;
-            return $this->get();
-        }
+            if(Transaction::where('callback_ref', $token)->exists()) {
+                if(!$temp_data) return redirect()->route('user.send.remittance.index')->with(['success' => ['Transaction request sended successfully!']]);;
+            }else {
+                if(!$temp_data) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction failed. Record didn\'t saved properly. Please try again.']]);
+            }
 
-        return redirect($btn_link);
-    }
-
-    /**
-     * Button Pay page redirection with necessary data
-     */
-    public function razorpayBtnPay($temp_data)
-    {
-        
-        $data = $temp_data->data;
-        $output = $this->output;
-        
-        if(!isset($data->razorpay_order)) { // is order is not created the create new order
-            // Need to create order
-            $order = $this->razorpayCreateOrder([
-                'amount'            => get_amount($data->amount->total_amount, null, 2) * 100,
-                'currency'          => $data->amount->sender_cur_code,
-                'receipt'           => $temp_data->identifier,
-                'partial_payment'   => false,
-            ]);
-
-            // Update TempData
-            $update_data = json_decode(json_encode($data), true);
-            $update_data['razorpay_order'] = $order;
+            $update_temp_data = json_decode(json_encode($temp_data->data),true);
+            
+            $update_temp_data['callback_data']  = $request->all();
 
             $temp_data->update([
-                'data'  => $update_data,
+                'data'  => $update_temp_data,
+            ]);
+            $temp_data = $temp_data->toArray();
+            
+            $instance = PaymentGatewayHelper::init($temp_data)->type(PaymentGatewayConst::TYPESENDREMITTANCE)->responseReceive();
+            
+            if($instance instanceof RedirectResponse) return $instance;
+        }catch(Exception $e) {
+            
+            return back()->with(['error' => [$e->getMessage()]]);
+        }
+        
+        return redirect()->route("user.payment.confirmation",$instance)->with(['success' => ['Successfully Send Remittance']]);
+    }
+    public function cancel(Request $request, $gateway) {
+        if($request->has('token')) {
+            $identifier = $request->token;
+            if($temp_data = TemporaryData::where('identifier', $identifier)->first()) {
+                $temp_data->delete();
+            }
+        }
+        return redirect()->route('user.send.remittance.index');
+    }
+    public function callback(Request $request,$gateway) {
+
+        $callback_token = $request->get('token');
+        $callback_data = $request->all();
+        
+        try{
+            PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleCallback($callback_token,$callback_data,$gateway);
+        }catch(Exception $e) {
+            // handle Error
+            logger($e);
+        }
+    }
+    
+    /**
+     * This method for stripe payment
+     * @method GET
+     * @param $gateway
+     */
+    public function payment(Request $request,$gateway){
+        $page_title = "Stripe Payment";
+        $client_ip = request()->ip() ?? false;
+        $user_country = geoip()->getLocation($client_ip)['country'] ?? "";
+        $user         = auth()->user();
+        $notifications = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+        $tempData = Session::get('identifier');
+        
+        $hasData = TemporaryData::where('identifier', $tempData)->where('type',$gateway)->first();
+        
+        if(!$hasData){
+            return redirect()->route('user.send.remittance.index');
+        }
+        return view('user.sections.money-transfer.automatic.'.$gateway,compact(
+            "page_title",
+            "hasData",
+            'user_country',
+            'user',
+            'notifications'
+        ));
+    }
+    
+    public function handleManualPayment($payment_info) {
+
+        
+        // Insert temp data
+        $data = [
+            'type'          => PaymentGatewayConst::TYPESENDREMITTANCE,
+            'identifier'    => generate_unique_string("temporary_datas","identifier",16),
+            'data'          => [
+                'gateway_currency_id'    => $payment_info['currency']->id,
+                'amount'                 => $payment_info['amount'],
+                'form_data'              => $payment_info['form_data']['identifier'],
+            ],
+        ];
+
+        try{
+            TemporaryData::create($data);
+        }catch(Exception $e) {
+            return redirect()->route('user.send.remittance.index')->with(['error' => ['Failed to save data. Please try again']]);
+        }
+        return redirect()->route('user.send.remittance.manual.form',$data['identifier']);
+    }
+
+    
+
+    public function showManualForm($token) {
+        
+        $tempData = TemporaryData::search($token)->first();
+        if(!$tempData || $tempData->data == null || !isset($tempData->data->gateway_currency_id)) return redirect()->route('user.send.remittance.index')->with(['error' => ['Invalid request']]);
+        $gateway_currency = PaymentGatewayCurrency::find($tempData->data->gateway_currency_id);
+        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('user.send.remittance.index')->with(['error' => ['Selected gateway is invalid']]);
+        $gateway = $gateway_currency->gateway;
+        if(!$gateway->input_fields || !is_array($gateway->input_fields)) return redirect()->route('user.send.remittance.index')->with(['error' => ['This payment gateway is under constructions. Please try with another payment gateway']]);
+        $amount = $tempData->data->amount;
+
+        $page_title = "- Payment Instructions";
+        $client_ip      = request()->ip() ?? false;
+        $user_country   = geoip()->getLocation($client_ip)['country'] ?? "";
+        $kyc_data       = SetupKyc::userKyc()->first();
+        $user           = auth()->user();
+        $notifications  = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+
+        return view('user.sections.money-transfer.manual.payment_confirmation',compact("gateway","page_title","token","amount",'user_country',
+        'user',
+        'notifications'));
+    }
+
+    public function manualSubmit(Request $request,$token) {
+        
+        $basic_setting = BasicSettings::first();
+        $user          = auth()->user();
+        $request->merge(['identifier' => $token]);
+        $tempDataValidate = Validator::make($request->all(),[
+            'identifier'        => "required|string|exists:temporary_datas",
+        ])->validate();
+
+        $tempData = TemporaryData::search($tempDataValidate['identifier'])->first();
+        if(!$tempData || $tempData->data == null || !isset($tempData->data->gateway_currency_id)) return redirect()->route('user.send.remittance.index')->with(['error' => ['Invalid request']]);
+        $gateway_currency = PaymentGatewayCurrency::find($tempData->data->gateway_currency_id);
+        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('user.send.remittance.index')->with(['error' => ['Selected gateway is invalid']]);
+        $gateway = $gateway_currency->gateway;
+        $amount = $tempData->data->amount ?? null;
+        if(!$amount) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Failed to save information. Please try again']]);
+        
+
+        $this->file_store_location  = "transaction";
+        $dy_validation_rules        = $this->generateValidationRules($gateway->input_fields);
+
+        $validated  = Validator::make($request->all(),$dy_validation_rules)->validate();
+        $get_values = $this->placeValueWithFields($gateway->input_fields,$validated);
+        
+        $data   = TemporaryData::where('identifier',$tempData->data->form_data)->first();
+       
+        $trx_id = generateTrxString("transactions","trx_id","SR",8);
+
+        // Make Transaction
+        DB::beginTransaction();
+        try{
+            $id = DB::table("transactions")->insertGetId([
+                'user_id'                       => auth()->user()->id,
+                'payment_gateway_currency_id'   => $gateway_currency->id,
+                'type'                          => PaymentGatewayConst::TYPESENDREMITTANCE,
+                'remittance_data'               => json_encode([
+                    'type'                      => $data->type,
+                    'sender_name'               => $data->data->sender_name,
+                    'sender_email'              => $data->data->sender_email,
+                    'sender_currency'           => $data->data->sender_currency,
+                    'receiver_currency'         => $data->data->receiver_currency,
+                    'sender_ex_rate'            => $data->data->sender_ex_rate,
+                    'sender_base_rate'          => $data->data->sender_base_rate,
+                    'receiver_ex_rate'          => $data->data->receiver_ex_rate,
+                    'coupon_id'                 => $data->data->coupon_id,
+                    'first_name'                => $data->data->first_name,
+                    'middle_name'               => $data->data->middle_name,
+                    'last_name'                 => $data->data->last_name,
+                    'email'                     => $data->data->email,
+                    'country'                   => $data->data->country,
+                    'city'                      => $data->data->city,
+                    'state'                     => $data->data->state,
+                    'zip_code'                  => $data->data->zip_code,
+                    'phone'                     => $data->data->phone,
+                    'method_name'               => $data->data->method_name,
+                    'account_number'            => $data->data->account_number,
+                    'address'                   => $data->data->address,
+                    'document_type'             => $data->data->document_type,
+                    'front_image'               => $data->data->front_image,
+                    'back_image'                => $data->data->back_image,
+                    
+                    'sending_purpose'           => $data->data->sending_purpose->name,
+                    'source'                    => $data->data->source->name,
+                    'currency'                  => [
+                        'name'                  => $data->data->currency->name,
+                        'code'                  => $data->data->currency->code,
+                        'rate'                  => $data->data->currency->rate,
+                    ],
+                    'send_money'                => $data->data->send_money,
+                    'fees'                      => $data->data->fees,
+                    'convert_amount'            => $data->data->convert_amount,
+                    'payable_amount'            => $data->data->payable_amount,
+                    'remark'                    => $data->data->remark,
+                ]),
+                'trx_id'                        => $trx_id,
+                'request_amount'                => $data->data->send_money,
+                'exchange_rate'                 => $data->data->currency->rate,
+                'payable'                       => $data->data->payable_amount,
+                'fees'                          => $data->data->fees,
+                'convert_amount'                => $data->data->convert_amount,
+                'will_get_amount'               => $data->data->receive_money,
+                'remark'                        => 'Manual',
+                'details'                       => "COMPLETED",
+                'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
+                'attribute'                     => PaymentGatewayConst::SEND,
+                'created_at'                    => now(),
+                'callback_ref'                  => $output['callback_ref'] ?? null,
+            ]);
+            if($data->data->coupon_id != 0){
+                $user   = auth()->user();
+                $user->update([
+                    'coupon_status'     => 1,
+                ]);
+                
+                AppliedCoupon::create([
+                    'user_id'   => $user->id,
+                    'coupon_id'   => $data->data->coupon_id,
+                    'transaction_id'   => $id,
+                ]);
+            }
+            if( $basic_setting->email_notification == true){
+                Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
+            }
+            DB::table("temporary_datas")->where("identifier",$token)->delete();
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            return redirect()->route('user.send.remittance.manual.form',$token)->with(['error' => ['Something went wrong! Please try again']]);
+        }
+        return redirect()->route("user.payment.confirmation",$trx_id)->with(['success' => ['Successfully send remittance']]);
+    }
+    public function postSuccess(Request $request, $gateway)
+    {
+        try{
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            
+            Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+        }catch(Exception $e) {
+            
+            return redirect()->route('frontend.index');
+        }
+        return $this->success($request, $gateway);
+    }
+    public function postCancel(Request $request, $gateway)
+    {
+        try{
+            $token = PaymentGatewayHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+        }catch(Exception $e) {
+            
+            return redirect()->route('frontend.index');
+        }
+        return $this->cancel($request, $gateway);
+    }
+    public function cryptoPaymentAddress(Request $request, $trx_id) {
+
+        $page_title = "Crypto Payment Address";
+        $transaction = Transaction::where('trx_id', $trx_id)->firstOrFail();
+        $client_ip      = request()->ip() ?? false;
+        $user_country   = geoip()->getLocation($client_ip)['country'] ?? "";
+        $kyc_data       = SetupKyc::userKyc()->first();
+        $user           = auth()->user();
+        $notifications  = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+
+        if($transaction->currency->gateway->isCrypto() && $transaction->details?->payment_info?->receiver_address ?? false) {
+            return view('user.sections.send-remittance.payment.crypto.address', compact(
+                'transaction',
+                'page_title',
+                'user_country',
+                'user',
+                'notifications'
+            ));
+        }
+
+        return abort(404);
+    }
+
+    public function cryptoPaymentConfirm(Request $request, $trx_id) 
+    {
+        $transaction = Transaction::where('trx_id',$trx_id)->where('status', global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->firstOrFail();
+
+
+        $dy_input_fields = $transaction->details->payment_info->requirements ?? [];
+        $validation_rules = $this->generateValidationRules($dy_input_fields);
+
+        $validated = [];
+        if(count($validation_rules) > 0) {
+            $validated = Validator::make($request->all(), $validation_rules)->validate();
+        }
+
+        if(!isset($validated['txn_hash'])) return back()->with(['error' => ['Transaction hash is required for verify']]);
+
+        $receiver_address = $transaction->details->payment_info->receiver_address ?? "";
+
+        // check hash is valid or not
+        $crypto_transaction = CryptoTransaction::where('txn_hash', $validated['txn_hash'])
+                                                ->where('receiver_address', $receiver_address)
+                                                ->where('asset',$transaction->currency->currency_code)
+                                                ->where(function($query) {
+                                                    return $query->where('transaction_type',"Native")
+                                                                ->orWhere('transaction_type', "native");
+                                                })
+                                                ->where('status',PaymentGatewayConst::NOT_USED)
+                                                ->first();
+                                                
+        if(!$crypto_transaction) return back()->with(['error' => ['Transaction hash is not valid! Please input a valid hash']]);
+
+        if($crypto_transaction->amount >= $transaction->total_payable == false) {
+            if(!$crypto_transaction) return back()->with(['error' => ['Insufficient amount added. Please contact with system administrator']]);
+        }
+
+        DB::beginTransaction();
+        try{
+
+            
+
+            // update crypto transaction as used
+            DB::table($crypto_transaction->getTable())->where('id', $crypto_transaction->id)->update([
+                'status'        => PaymentGatewayConst::USED,
             ]);
 
-            $temp_data->refresh();
+            // update transaction status
+            $transaction_details = json_decode(json_encode($transaction->details), true);
+            $transaction_details['payment_info']['txn_hash'] = $validated['txn_hash'];
+
+            DB::table($transaction->getTable())->where('id', $transaction->id)->update([
+                'details'       => json_encode($transaction_details),
+                'status'        => global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT,
+            ]);
+
+            DB::commit();
+
+        }catch(Exception $e) {
+            DB::rollback();
+            return back()->with(['error' => ['Something went wrong! Please try again']]);
         }
-       
-        $data = $temp_data->data; // update the data variable 
-        $order = $data->razorpay_order;
 
-        $order_id                   = $order->id;
-        $request_credentials        = $this->getRazorpayRequestCredentials($output);
-        $output['order_id']         = $order_id;
-        $output['key']              = $request_credentials->key_id;
-        $output['callback_url']     = $data->callback_url;
-        $output['cancel_url']       = $data->cancel_url;
-        $output['user']             = auth()->guard(get_auth_guard())->user();
-
-        return view('payment-gateway.btn-pay.razorpay', compact('output'));
+        return back()->with(['success' => ['Payment Confirmation Success!']]);
+    }
+    public function paymentConfirmation(Request $request,$trx_id){
+        $page_title    = "| Payment Confirmation";
+        $client_ip     = request()->ip() ?? false;
+        $user_country  = geoip()->getLocation($client_ip)['country'] ?? "";
+        $kyc_data      = SetupKyc::userKyc()->first();
+        $user          = auth()->user();
+        $notifications = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+        $transaction   = Transaction::where('trx_id',$trx_id)->first();
+        return view('user.sections.payment-confirmation.index',compact(
+            'page_title',
+            'transaction',
+            'user_country',
+            'user',
+            'notifications'
+        ));
     }
 
     /**
-     * Create order for receive payment
+     * Redirect Users for collecting payment via Button Pay (JS Checkout)
      */
-    public function razorpayCreateOrder($request_data, $output = null)
+    public function redirectBtnPay(Request $request, $gateway)
     {
-        if($output == null) $output = $this->output;
-
-        $endpoint = $this->razorpay_api_base_url . $this->razorpay_api_v1 . "/orders";
-
-        $request_credentials = $this->getRazorpayRequestCredentials($output);
-
-        $key_id = $request_credentials->key_id;
-        $secret_key = $request_credentials->secret_key;
-
-        $response = Http::withBasicAuth($key_id, $secret_key)->withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post($endpoint, $request_data)->throw(function(Response $response, RequestException $exception) {
-            $response_body = json_decode(json_encode($response->json()), true);
-            throw new Exception($response_body['error']['description'] ?? "");
-        })->json();
-
-        return $response;
-    }
-
-    public function createRazorpayPaymentLink($output, $request_credentials) 
-    {
-        $endpoint = $this->razorpay_api_base_url . $this->razorpay_api_v1 . "/payment_links";
-
-        $key_id = $request_credentials->key_id;
-        $secret_key = $request_credentials->secret_key;
-
-        $temp_record_token = generate_unique_string('temporary_datas','identifier',35);
-        $this->setUrlParams("token=" . $temp_record_token); // set Parameter to URL for identifying when return success/cancel
-
-        $redirection = $this->getRedirection();
-        $url_parameter = $this->getUrlParams();
-
-        $user = auth()->guard(get_auth_guard())->user();
-
-        $temp_data = $this->razorPayJunkInsert($temp_record_token); // create temporary information
-
-        $response = Http::withBasicAuth($key_id, $secret_key)->withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post($endpoint, [
-            'amount' => ceil($output['amount']->total_amount) * 100,
-            'currency' => $output['currency']->currency_code,
-            'expire_by' => now()->addMinutes(20)->timestamp,
-            'reference_id' => $temp_record_token,
-            'description' => 'Add Money',
-            'customer' => [
-                'name' => $user->firstname ?? "",
-                'email' => $user->email ?? "",
-            ],
-            'notify' => [
-                'sms' => false,
-                'email' => true,
-            ],
-            'reminder_enable' => true,
-            'callback_url' => $this->setGatewayRoute($redirection['return_url'],PaymentGatewayConst::RAZORPAY,$url_parameter),
-            'callback_method' => 'get',
-        ])->throw(function(Response $response, RequestException $exception) use ($temp_data) {
-            $response_body = json_decode(json_encode($response->json()), true);
-            $temp_data->delete();
-            throw new Exception($response_body['error']['description'] ?? "");
-        })->json();
-
-        $response_array = json_decode(json_encode($response), true);
-
-        $temp_data_contains = json_decode(json_encode($temp_data->data),true);
-        $temp_data_contains['response'] = $response_array;
-
-        $temp_data->update([
-            'data'  => $temp_data_contains,
-        ]);
-
-        // make api response
-        if(request()->expectsJson()) {
-            $this->output['redirection_response']   = $response_array;
-            $this->output['redirect_links']         = [];
-            $this->output['redirect_url']           = $response_array['short_url'];
-            return $this->get();
+        try{
+            return PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleBtnPay($gateway, $request->all());
+        }catch(Exception $e) {
+            dd($e->getMessage());
+            return redirect()->route('user.send.remittance.index')->with(['error' => [$e->getMessage()]]);
         }
-
-        return redirect()->away($response_array['short_url']);
     }
 
-    public function razorPayJunkInsert($temp_token) 
+    
+    /**
+     * Method for share link page
+     * @param string $trx_id
+     * @param \Illuminate\Http\Request $request
+     */
+    public function shareLink(Request $request,$trx_id){
+        $page_title         = "| Information";
+        $transaction        = Transaction::where('trx_id',$trx_id)->first();
+        $sender_currency    = Currency::where('status',true)->where('sender',true)->first();
+        $receiver_currency  = Currency::where('status',true)->where('receiver',true)->first();
+
+        return view('share-link.index',compact(
+            'page_title',
+            'transaction',
+            'sender_currency',
+            'receiver_currency',
+        ));   
+    }
+
+    public function downloadPdf($trx_id)
     {
-        $output = $this->output;
+        $transaction             = Transaction::where('trx_id',$trx_id)->first(); 
+        $sender_currency         = Currency::where('status',true)->where('sender',true)->first();
+        $receiver_currency       = Currency::where('status',true)->where('receiver',true)->first();
 
-        $this->setUrlParams("token=" . $temp_token); // set Parameter to URL for identifying when return success/cancel
-        $redirection = $this->getRedirection();
-        $url_parameter = $this->getUrlParams();
-
-        $data = [
-            'gateway'       => $output['gateway']->id,
-            'currency'      => [
-                'id'        => $output['currency']->id,
-                'alias'     => $output['currency']->alias
-            ],
-            'payment_method'=> $output['currency'],
-            'amount'        => json_decode(json_encode($output['amount']),true),
-            'creator_table' => auth()->guard(get_auth_guard())->user()->getTable(),
-            'creator_id'    => auth()->guard(get_auth_guard())->user()->id,
-            'creator_guard' => get_auth_guard(),
-            'callback_url'  => $this->setGatewayRoute($redirection['return_url'],PaymentGatewayConst::RAZORPAY,$url_parameter),
-            'cancel_url'    => $this->setGatewayRoute($redirection['cancel_url'],PaymentGatewayConst::RAZORPAY,$url_parameter),
-            'user_record'   => $output['form_data']['identifier'],
+        $data   = [
+            'transaction'        => $transaction,
+            'sender_currency'    => $sender_currency,
+            'receiver_currency'  => $receiver_currency,
         ];
-
-        return TemporaryData::create([
-            'type'          => PaymentGatewayConst::RAZORPAY,
-            'identifier'    => $temp_token,
-            'data'          => $data,
-        ]);
-    }
-
-    public function getRazorpayCredentials($output)
-    {
-        $gateway = $output['gateway'] ?? null;
-        if(!$gateway) throw new Exception("Payment gateway not available");
-
-        $key_id             = ['public key','razorpay public key','key id','razorpay public', 'public'];
-        $secret_key_sample  = ['secret','secret key','razorpay secret','razorpay secret key'];
-
-        $key_id             = PaymentGateway::getValueFromGatewayCredentials($gateway,$key_id);
-        $secret_key         = PaymentGateway::getValueFromGatewayCredentials($gateway,$secret_key_sample);
         
-        $mode = $gateway->env;
-        $gateway_register_mode = [
-            PaymentGatewayConst::ENV_SANDBOX => PaymentGatewayConst::ENV_SANDBOX,
-            PaymentGatewayConst::ENV_PRODUCTION => PaymentGatewayConst::ENV_PRODUCTION,
-        ];
-
-        if(array_key_exists($mode,$gateway_register_mode)) {
-            $mode = $gateway_register_mode[$mode];
-        }else {
-            $mode = PaymentGatewayConst::ENV_SANDBOX;
-        }
-
-        $credentials = (object) [
-            'key_id'                    => $key_id,
-            'secret_key'                => $secret_key,
-            'mode'                      => $mode
-        ];
-
-        $this->razorpay_gateway_credentials = $credentials;
-
-        return $credentials;
-    }
-
-    public function getRazorpayRequestCredentials($output = null) 
-    {
-        if(!$this->razorpay_gateway_credentials) $this->getRazorpayCredentials($output);
-        $credentials = $this->razorpay_gateway_credentials;
-        if(!$output) $output = $this->output;
-
-        $request_credentials = [];
-        $request_credentials['key_id']          = $credentials->key_id;
-        $request_credentials['secret_key']      = $credentials->secret_key;
-
-        $this->request_credentials = (object) $request_credentials;
-        return (object) $request_credentials;
-    }
-
-    public function isRazorpay($gateway) 
-    {
-        $search_keyword = ['razorpay','razorpay gateway','gateway razorpay','razorpay payment gateway'];
-        $gateway_name = $gateway->name;
-
-        $search_text = Str::lower($gateway_name);
-        $search_text = preg_replace("/[^A-Za-z0-9]/","",$search_text);
-        foreach($search_keyword as $keyword) {
-            $keyword = Str::lower($keyword);
-            $keyword = preg_replace("/[^A-Za-z0-9]/","",$keyword);
-            if($keyword == $search_text) {
-                return true;
-                break;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Razorpay Success Response
-     */
-    public function razorpaySuccess($output) 
-    {
+        $pdf = PDF::loadView('pdf-templates.index', $data);
         
-        $reference              = $output['tempData']['identifier'];
-        $order_info             = $output['tempData']['data']->razorpay_order ?? false;
-        $output['callback_ref'] = $reference;
-
-        if($order_info == false) {
-            throw new Exception("Invalid Order");
-        }
-
-        $redirect_response = $output['tempData']['data']->callback_data ?? false;
-        if($redirect_response == false) {
-            throw new Exception("Invalid response");
-        }
-
-        if(isset($redirect_response->razorpay_payment_id) && isset($redirect_response->razorpay_order_id) && isset($redirect_response->razorpay_signature)) {
-           
-            // Response Data
-            $output['capture']      = $output['tempData']['data']->callback_data ?? "";
-
-            $gateway_credentials = $this->getRazorpayRequestCredentials($output);
-
-            // Need to verify payment signature
-            $request_order_id       = $order_info->id; // database order 
-            $razorpay_payment_id    = $redirect_response->razorpay_payment_id; // response payment id
-            $key_secret             = $gateway_credentials->secret_key;
-
-            $generated_signature = hash_hmac("sha256", $request_order_id . "|" . $razorpay_payment_id, $key_secret);
-
-            if($generated_signature == $redirect_response->razorpay_signature) {
- 
-                if(!$this->searchWithReferenceInTransaction($reference)) {
-                   
-                    try{
-                        $status = global_const()::REMITTANCE_STATUS_PENDING;
-                        $transaction_response = $this->createTransaction($output,$status,false);
-                        
-                    }catch(Exception $e) {
-                         
-                        throw new Exception($e->getMessage());
-                    }
-                    
-                    return $transaction_response;
-                }else{
-                    $transaction    = Transaction::where('callback_ref',$reference)->first();
-                    return $transaction->trx_id;
-                }
-
-            }else {
-                 
-                throw new Exception("Payment Failed, Invalid Signature Found");
-            }
-            
-        }
-     
+        $basic_settings = BasicSettingsProvider::get();
+        
+        return $pdf->download($basic_settings->site_name.'-'.$transaction->trx_id.'.pdf');
     }
-
-    /**
-     * Razorpay Callback Response
-     */
-    public function razorpayCallbackResponse($response_data, $gateway)
-    {
-
-        $entity = $response_data['entity'] ?? false;
-        $event  = $response_data['event'] ?? false;
-
-        if($entity == "event" && $event == "order.paid") { // order response event data is valid
-            // get the identifier
-            $token = $response_data['payload']['order']['entity']['receipt'] ?? "";
-
-            $temp_data = TemporaryData::where('identifier', $token)->first();
-
-            // if transaction is already exists need to update status, balance & response data
-            $transaction = Transaction::where('callback_ref', $temp_data->identifier)->first();
-
-            $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
-
-            if($temp_data) {
-                $gateway_currency_id = $temp_data->data->currency->id ?? null;
-                $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
-                if($gateway_currency) {
-
-                    $requested_amount = $temp_data->data->amount->requested_amount ?? 0;
-                    $validator_data = [
-                        $this->currency_input_name  => $temp_data->data->user_record,
-                    ];
-
-                    $user    = User::where('id',$temp_data->data->creator_id)->first();
-                    $this->predefined_guard = $user->modelGuardName();;
-                    $this->predefined_user = $user;
-
-                    $this->output['tempData'] = $temp_data;
-                }
-
-                $this->request_data = $validator_data;
-
-                $this->gateway();
-                
-            }
-
-            $output                     = $this->output;
-            $output['callback_ref']     = $token;
-            $output['capture']          = $response_data;
-
-            if($transaction && $transaction->status != global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT) {
-
-                $update_data                        = json_decode(json_encode($transaction->details), true);
-                $update_data['gateway_response']    = $response_data;
-
-                // update information
-                $transaction->update([
-                    'status'    => $status,
-                    'details'   => $update_data
-                ]);
-            }else {
-                // create new transaction with success
-
-               $this->createTransaction($output,global_const()::REMITTANCE_STATUS_PENDING,false);
-            }
-          
-            logger("Transaction Created Successfully");
-        }
-    }
+   
 }

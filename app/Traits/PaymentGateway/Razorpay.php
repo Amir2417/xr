@@ -335,11 +335,14 @@ trait Razorpay  {
                     }
                     
                     return $transaction_response;
+                }else{
+                    $transaction    = Transaction::where('callback_ref',$reference)->first();
+                    return $transaction->trx_id;
                 }
 
             }else {
                  
-                throw new Exception("Payment Failed, Invalid Signature Found!");
+                throw new Exception("Payment Failed, Invalid Signature Found");
             }
             
         }
@@ -351,23 +354,23 @@ trait Razorpay  {
      */
     public function razorpayCallbackResponse($response_data, $gateway)
     {
-        logger("Start");
+
         $entity = $response_data['entity'] ?? false;
         $event  = $response_data['event'] ?? false;
 
         if($entity == "event" && $event == "order.paid") { // order response event data is valid
             // get the identifier
             $token = $response_data['payload']['order']['entity']['receipt'] ?? "";
-logger("token".$token);
+
             $temp_data = TemporaryData::where('identifier', $token)->first();
-logger("temp".$temp_data);
+
             // if transaction is already exists need to update status, balance & response data
             $transaction = Transaction::where('callback_ref', $temp_data->identifier)->first();
-logger("transaction".$transaction);
+
             $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
 
             if($temp_data) {
-                $gateway_currency_id = $temp_data->data->currency ?? null;
+                $gateway_currency_id = $temp_data->data->currency->id ?? null;
                 $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
                 if($gateway_currency) {
 
@@ -376,7 +379,7 @@ logger("transaction".$transaction);
                         $this->currency_input_name  => $temp_data->data->user_record,
                     ];
 
-                    $user    = User::where('id',$transaction->data->creator_id)->first();
+                    $user    = User::where('id',$temp_data->data->creator_id)->first();
                     $this->predefined_guard = $user->modelGuardName();;
                     $this->predefined_user = $user;
 
@@ -384,7 +387,9 @@ logger("transaction".$transaction);
                 }
 
                 $this->request_data = $validator_data;
+
                 $this->gateway();
+                
             }
 
             $output                     = $this->output;
@@ -403,8 +408,10 @@ logger("transaction".$transaction);
                 ]);
             }else {
                 // create new transaction with success
-                $this->createTransaction($output,global_const()::REMITTANCE_STATUS_PENDING,false);
+
+               $this->createTransaction($output,global_const()::REMITTANCE_STATUS_PENDING,false);
             }
+          
             logger("Transaction Created Successfully");
         }
     }
