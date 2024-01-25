@@ -319,6 +319,9 @@ class PaymentGateway {
             case PaymentGatewayConst::SSLCOMMERZ:
                 return $response['token'] ?? "";
                 break;
+            case PaymentGatewayConst::PAGADITO:
+                return $response['param1'] ?? "";
+                break;
             default:
                 throw new Exception("Oops! Gateway not registered in getToken method");
         }

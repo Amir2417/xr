@@ -33,6 +33,7 @@ class PaymentGatewaySeeder extends Seeder
 
             array('id' => '10001','slug' => 'remittance-gateway','code' => '20025','type' => 'AUTOMATIC','name' => 'Razorpay','title' => 'Razorpay Gateway','alias' => 'razorpay','image' => 'seeder/razor-pay.webp','credentials' => '[{"label":"Key ID","placeholder":"Enter Key ID","name":"key-id","value":"rzp_test_voV4gKUbSxoQez"},{"label":"Secret Key","placeholder":"Enter Secret Key","name":"secret-key","value":"cJltc1jy6evA4Vvh9lTO7SWr"}]','supported_currencies' => '["USD","EUR","GBP","SGD","AED","AUD","CAD","CNY","SEK","NZD","MXN","BDT","EGP","HKD","INR","LBP","LKR","MAD","MYR","NGN","NPR","PHP","PKR","QAR","SAR","UZS","GHS"]','crypto' => '0','desc' => NULL,'input_fields' => NULL,'env' => 'SANDBOX','status' => '1','last_edit_by' => '1','created_at' => '2023-11-09 17:26:21','updated_at' => '2023-11-09 17:36:05'),
 
+            array('id' => '10002','slug' => 'remittance-gateway','code' => '20035','type' => 'AUTOMATIC','name' => 'Pagadito','title' => 'Pagadito Payment gateway','alias' => 'pagadito','image' => 'seeder/pagadito.webp','credentials' => '[{"label":"UID","placeholder":"Enter UID","name":"uid","value":"b73eb3fa1dc8bea4b4363322c906a8fd"},{"label":"WSK","placeholder":"Enter WSK","name":"wsk","value":"dc843ff5865bac2858ad8f23af081256"},{"label":"base_url","placeholder":"Enter base_url","name":"base_url","value":"https:\\/\\/sandbox.pagadito.com"}]','supported_currencies' => '["USD","HNL","CRC","DOP","GTQ","NIO","PAB"]','crypto' => '0','desc' => NULL,'input_fields' => NULL,'env' => 'SANDBOX','status' => '1','last_edit_by' => '1','created_at' => '2024-01-08 04:05:40','updated_at' => '2024-01-08 04:05:40'),
 
         );
         PaymentGateway::upsert($payment_gateways,['code'],['credentials']);
@@ -84,6 +85,7 @@ class PaymentGatewaySeeder extends Seeder
 
             array('payment_gateway_id' => '10001','name' => 'Razorpay USD','alias' => 'remittance-gateway-razorpay-usd-automatic','currency_code' => 'USD','currency_symbol' => "$",'image' => NULL,'min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '2.00000000','fixed_charge' => '1.00000000','rate' => '1','created_at' => '2023-11-09 17:36:05','updated_at' => '2023-11-09 17:36:05'),
 
+            array('payment_gateway_id' => '10002','name' => 'Pagadito USD','alias' => 'remittance-gateway-pagadito-usd-automatic','currency_code' => 'USD','currency_symbol' => '$','image' => 'seeder/pagadito.webp','min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '2.00000000','fixed_charge' => '1.00000000','rate' => '1','created_at' => '2024-01-08 04:11:48','updated_at' => '2024-01-08 04:12:21'),
         );
         PaymentGatewayCurrency::upsert($payment_gateway_currencies,['alias'],[]);
     }

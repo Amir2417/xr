@@ -15,11 +15,13 @@ trait PagaditoTrait {
     private $pagadito_gateway_credentials;
 
     public function pagaditoInit($output = null) {
-   
+        
         if(!$output) $output = $this->output;
         $credentials = $this->getPagaditoCredentials($output);
         $this->pagaditoSetSecreteKey($credentials);
+        
         return $this->pagaditoCreateOrder($credentials,$output);
+
     }
 
     public function getPagaditoCredentials($output) {
@@ -76,22 +78,25 @@ trait PagaditoTrait {
         $mode = $credentials->mode;
         $Pagadito = new Pagadito($uid,$wsk,$credentials,$output['amount']->sender_cur_code);
         $Pagadito->config( $credentials,$output['amount']->sender_cur_code);
-
+        
         if ($mode == "SANDBOX") {
             $Pagadito->mode_sandbox_on();
         }
         if ($Pagadito->connect()) {
+            
             $Pagadito->add_detail(1,"Please Pay For  Transfer Money", $output['amount']->total_amount);
+            
             $Pagadito->set_custom_param("param1", "Valor de param1");
             $Pagadito->set_custom_param("param2", "Valor de param2");
             $Pagadito->set_custom_param("param3", "Valor de param3");
             $Pagadito->set_custom_param("param4", "Valor de param4");
             $Pagadito->set_custom_param("param5", "Valor de param5");
-
             $Pagadito->enable_pending_payments();
             $getUrls = (object)$Pagadito->exec_trans($Pagadito->get_rs_code());
             
+            
             if($getUrls->code == "PG1002" ){
+                
                 $parts = parse_url($getUrls->value);
                 parse_str($parts['query'], $query);
                 // Extract the token value
@@ -111,6 +116,7 @@ trait PagaditoTrait {
                 return redirect($getUrls->value);
 
             }
+            
             $ern = rand(1000, 2000);
             if (!$Pagadito->exec_trans($ern)) {
                 switch($Pagadito->get_rs_code())
@@ -163,14 +169,13 @@ trait PagaditoTrait {
 
         $data = [
             'gateway'               => $output['gateway']->id,
-            'currency'              => $output['currency']->id,
-            'payment_method'        => $output['currency'],
+            'currency'      => [
+                'id'        => $output['currency']->id,
+                'alias'     => $output['currency']->alias
+            ],
+            'payment_method'=> $output['currency'],
             'amount'                => json_decode(json_encode($output['amount']),true),
             'response'              => $response,
-            'wallet_table'          => $output['wallet']->getTable(),
-            'wallet'                => [
-                'wallet_id'         => $output['wallet']->id,
-            ],
             'creator_table'         => auth()->guard(get_auth_guard())->user()->getTable(),
             'creator_id'            => auth()->guard(get_auth_guard())->user()->id,
             'creator_guard'         => get_auth_guard(),
@@ -179,7 +184,7 @@ trait PagaditoTrait {
 
         // $this->deletePreTemp($output['form_data']['identifier']);
         return TemporaryData::create([
-            'type'          => PaymentGatewayConst::BUY_CRYPTO,
+            'type'          => PaymentGatewayConst::PAGADITO,
             'identifier'    => $identifier_token,
             'data'          => $data,
         ]);
@@ -190,13 +195,14 @@ trait PagaditoTrait {
 
         $output['capture']              = $output['tempData']['data']->response ?? "";
         $output['record_handler']       = 'insertRecordWeb';
-        $status            = global_const()::STATUS_CONFIRM_PAYMENT;
+        $status = global_const()::REMITTANCE_STATUS_PENDING;
         // need to insert new transaction in database
         try{
-            $this->createTransaction($output,$status);
+            $transaction_response = $this->createTransaction($output,$status);
         }catch(Exception $e) {
             throw new Exception($e->getMessage());
         }
+        return $transaction_response;
     }
 
     public static function isPagadito($gateway) {
