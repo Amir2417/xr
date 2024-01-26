@@ -26,7 +26,7 @@ class RecipientController extends Controller
 
         $page_title           = "| Recipients";
         $temporary_data       = TemporaryData::where('identifier',$identifier)->first();
-        $recipients           = Recipient::where('method',$temporary_data->type)->where('user_id',auth()->user()->id)->orderByDESC('id')->get();   
+        $recipients           = Recipient::auth()->where('method',$temporary_data->type)->where('country',$temporary_data->data->receiver_country)->orderByDESC('id')->get();   
         $client_ip            = request()->ip() ?? false;
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $user                 = auth()->user();
@@ -42,7 +42,7 @@ class RecipientController extends Controller
         ));
     }
     /**
-     * Method for add new add recipient information for send remittance
+     * Method for add new recipient information for send remittance
      * @param string $identifier
      * @param Illuminate\Http\Request $request
      */
@@ -53,8 +53,7 @@ class RecipientController extends Controller
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $user                 = auth()->user();
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('country',$temporary_data->data->receiver_country)->first();
         
         
 

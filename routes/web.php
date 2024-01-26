@@ -3,6 +3,7 @@
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
+use App\Models\Admin\Currency;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Models\Admin\TransactionSetting;
@@ -38,7 +39,7 @@ Route::post('frontend/request/send-money',function(Request $request) {
     }
     
     $validated = $validator->validate();
-
+    $receiver_country = Currency::where('status',true)->where('receiver',true)->where('code',$request->receiver_currency)->first();
     $send_money = $validated['send_money'] / $request->sender_base_rate;
         
     $limit_amount = TransactionSetting::where('title',$validated['type'])->first();
@@ -66,6 +67,7 @@ Route::post('frontend/request/send-money',function(Request $request) {
                 'receive_money'     => $request->receive_money,
                 'sender_currency'   => $request->sender_currency,
                 'receiver_currency' => $request->receiver_currency,
+                'receiver_country'  => $receiver_country->country,
                 'sender_ex_rate'    => $request->sender_ex_rate,
                 'sender_base_rate'  => $request->sender_base_rate,
                 'receiver_ex_rate'  => $request->receiver_ex_rate,

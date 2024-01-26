@@ -63,8 +63,10 @@ class SendRemittanceController extends Controller
         if($validator->fails()){
             return back()->with(['error' => ['Please enter send money.']]);
         }
+        
         $validated = $validator->validate();
         $send_money = $validated['send_money'] / $request->sender_base_rate;
+        $receiver_country = Currency::where('status',true)->where('receiver',true)->where('code',$request->receiver_currency)->first();
         
         $limit_amount = TransactionSetting::where('title',$validated['type'])->first();
         $isWithinLimits = false;
@@ -92,6 +94,7 @@ class SendRemittanceController extends Controller
                     'sender_email'      => auth()->user()->email,
                     'sender_currency'   => $request->sender_currency,
                     'receiver_currency' => $request->receiver_currency,
+                    'receiver_country'  => $receiver_country->country,
                     'sender_ex_rate'    => $request->sender_ex_rate,
                     'sender_base_rate'  => $request->sender_base_rate,
                     'receiver_ex_rate'  => $request->receiver_ex_rate,
@@ -121,6 +124,7 @@ class SendRemittanceController extends Controller
                     'sender_email'      => auth()->user()->email,
                     'sender_currency'   => $request->sender_currency,
                     'receiver_currency' => $request->receiver_currency,
+                    'receiver_country'  => $receiver_country->country,
                     'sender_ex_rate'    => $request->sender_ex_rate,
                     'sender_base_rate'  => $request->sender_base_rate,
                     'receiver_ex_rate'  => $request->receiver_ex_rate,

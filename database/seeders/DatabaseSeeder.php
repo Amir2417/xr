@@ -88,6 +88,7 @@ class DatabaseSeeder extends Seeder
             MobileMethodSeeder::class,
             SendingPurposeSeeder::class,
             SourceOfFundsSeeder::class,
+            BeneficiarySeeder::class,
 
         ]);
     }

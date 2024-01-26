@@ -62,10 +62,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 form-group">
                                     <label>{{ __("Country") }}<span>*</span></label>
                                     <select class="form--control select2-basic" name="country">
-                                        <option selected disabled>{{ __("Select Country") }}</option>
-                                        @foreach ($receiver_currency as $item)
-                                            <option value="{{ $item->country }}">{{ $item->country }} </option>
-                                        @endforeach 
+                                        <option value="{{ $receiver_currency->country }}">{{ $receiver_currency->country }} </option>
                                     </select>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 form-group">
@@ -104,33 +101,19 @@
                                         'placeholder'     => __("Enter Phone")."..."
                                     ])
                                 </div>
+                                @if ($temporary_data->type == global_const()::TRANSACTION_TYPE_BANK)
                                 <div class="form-group transaction-type">
                                     <label>{{ __("Transaction Type") }} <span>*</span></label>
                                     <select class="form--control trx-type-select select2-basic" name="method">
                                         <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
                                     </select>
                                 </div>
-                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>{{ __("Mobile Method") }}<span>*</span></label>
-                                            <select class="form--control select2-basic" name="mobile_name">
-                                                <option selected disabled>{{ __("Select Method") }}</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>{{ __("Account Number") }}<span>*</span></label>
-                                            <input type="number" class="form--control" name="account_number" placeholder="{{ __("Enter Number") }}...">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_BANK }}-view" style="display: block;">
+                                <div class="trx-inputs">
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Bank Name") }}*</label>
-                                            <select class="form--control select2-basic" name="bank_name">
-                                                <option selected disabled>{{ __("Select Bank") }}</option>
+                                            <select class="form--control select2-basic bank-list" name="bank_name">
+                                                
                                             </select>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
@@ -144,6 +127,30 @@
                                         </div>
                                     </div>
                                 </div>
+                                @else
+                                <div class="form-group transaction-type">
+                                    <label>{{ __("Transaction Type") }} <span>*</span></label>
+                                    <select class="form--control trx-type-select select2-basic" name="method">
+                                        
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
+                                    </select>
+                                </div>
+                                <div class="trx-inputs">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
+                                            <label>{{ __("Mobile Method") }}<span>*</span></label>
+                                            <select class="form--control select2-basic" name="mobile_name">
+                                                
+                                            </select>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
+                                            <label>{{ __("Account Number") }}<span>*</span></label>
+                                            <input type="number" class="form--control" name="account_number" placeholder="{{ __("Enter Number") }}...">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                @endif
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     @include('admin.components.form.textarea',[
                                         'label'           => __('Address'),
@@ -193,81 +200,40 @@
 @endsection
 
 @push('script')
-<script>
-    $(".trx-type-select").change(function () {
-        var recipientsWrapper = $(".add-recipient-item");
-        var inputItems = recipientsWrapper.find("input,select,textarea");
-        var selectValue = $(this).val();
-        $.each(inputItems, function (index, item) {
-            if (selectValue == "" || selectValue == null) {
-                $(item).prop("readonly", true);
-            } else {
-                $(item).prop("readonly", false);
-            }
-        });
 
-        if (selectValue != "") {
-            $(this).parents(".transaction-type").siblings(".trx-inputs").slideUp();
-            $(this).parents(".transaction-type").siblings("." + $(this).val() + "-view").slideDown();
-        }
-    });
-</script>
 <script>
-    var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
-
-    $('select[name="country"]').on('change',function(){
-        $("select[name=mobile_name]").html('');
-        getMobile($(this));
+    $(document).ready(function () {
+        var country = $("select[name=country] :selected").val();
+        var transactionType = $("select[name=method] :selected").val();
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
+        }  
     });
     
-    function getMobile(select){
-        var country = $(select).val();
-        if(country == "" || country == null){
-            return false; 
+    $("select[name=method]").change(function(){
+        var country = $("select[name=country] :selected").val();
+        var transactionType = $(this).val();
+       
+        $(".bank-list").html('');
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
         }
-        $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    option += `<option value="${item.name}">${item.name}</option>`
-                });
-                $("select[name=mobile_name]").html(option);
-                $("select[name=mobile_name]").select2();
-            }
-        }).fail(function(response){
-            var errorText = response.responseJSON;
-        });
-    }
-</script>
-<script>
-    var getBankName = "{{ setRoute('user.get.bank.name') }}";
-
-    $('select[name="country"]').on('change',function(){
-        $("select[name=bank_name]").html('');
-        getBank($(this));
     });
-    
-    function getBank(select){
-        var country = $(select).val();
-        if(country == "" || country == null){
-            return false;
-        }
-        $.post(getBankName,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    console.log(item.name);
-                    option += `<option value="${item.name}">${item.name}</option>`
+    function getBankList(country,transactionType){
+        var bankListUrl = "{{ route('user.recipient.bank.list') }}";
+            $(".bank-list").html('');
+            $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
 
+                if(response.data.bank_list == null || response.data.bank_list == ''){
+                    $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
+                }else{
+                    $('.bank-list').html('<option value="" disabled>Select Bank</option>');
+                }
+                
+                $.each(response.data.bank_list, function (key, value) {
+                    $(".bank-list").append('<option value="' + value.name + '" ' + ' >' + value.name + '</option>');
                 });
-                $("select[name=bank_name]").html(option);
-                $("select[name=bank_name]").select2();
-            }
-        }).fail(function(response) {
-
-            var errorText = response.responseJSON;
-
-        });
+            });
     }
 </script>
     
