@@ -11,7 +11,9 @@ Route::controller(SettingController::class)->prefix("settings")->group(function(
     Route::get("language","languages");
     
 });
-
+Route::controller(SettingController::class)->group(function(){
+    Route::get('bank-list','bankList');
+});
 
 Route::controller(SendRemittanceController::class)->prefix('send-remittance')->group(function(){
     Route::post('send-money','sendMoney');

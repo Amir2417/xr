@@ -10,11 +10,28 @@ use App\Models\Admin\AppSettings;
 use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AppOnboardScreens;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 
 class SettingController extends Controller
 {
-
+    /**
+     * Method for bank list
+     */
+    public function bankList(Request $request){
+        
+        $validator      = Validator::make($request->all(),[
+            'country_code'    => 'required',
+        ]);
+        if($validator->fails()) return Response::error($validator->errors()->all(),[]);
+        $validated = $validator->validate();
+        $bank_list          = getFlutterwaveBanks($request->country_code);
+        
+        return Response::success([__("Bank List data fetch successfully!")],[
+            'bank_list' => $bank_list,
+        ],200);
+    }
 
     public function languages(){
         try{

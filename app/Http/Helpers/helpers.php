@@ -1642,7 +1642,7 @@ function getFlutterwaveBanks($iso2){
     
     curl_close($curl);
     $banks = json_decode($response,true);
-   
+
     return $banks['data'];
 }
 function getPaymentCredentials($credentials,$label){

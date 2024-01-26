@@ -269,21 +269,21 @@
     });
     function getBankList(country,transactionType){
         var bankListUrl = "{{ route('user.recipient.bank.list') }}";
-            $(".bank-list").html('');
-            $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
+        $(".bank-list").html('');
+        $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
 
-                if(response.data.bank_list == null || response.data.bank_list == ''){
-                    $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
-                }else{
-                    $('.bank-list').html('<option value="" disabled>Select Bank</option>');
-                }
-                
-                $.each(response.data.bank_list, function (key, value) { 
-                    var bank_name   = "{{ $recipient->bank_name }}";
-                    var selectedAttribute = (bank_name === value.name) ? 'selected' : ''; 
-                    $(".bank-list").append('<option value="' + value.name + '" ' + selectedAttribute + '>' + value.name + '</option>');
-                });
+            if(response.data.bank_list == null || response.data.bank_list == ''){
+                $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
+            }else{
+                $('.bank-list').html('<option value="" disabled>Select Bank</option>');
+            }
+            
+            $.each(response.data.bank_list, function (key, value) { 
+                var bank_name   = "{{ $recipient->bank_name }}";
+                var selectedAttribute = (bank_name === value.name) ? 'selected' : ''; 
+                $(".bank-list").append('<option value="' + value.name + '" ' + selectedAttribute + '>' + value.name + '</option>');
             });
+        });
     }
     
 </script>
