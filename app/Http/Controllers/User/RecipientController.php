@@ -239,7 +239,6 @@ class RecipientController extends Controller
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $user                 = auth()->user();
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
        
         return view('user.sections.recipient.create',compact(
@@ -264,7 +263,7 @@ class RecipientController extends Controller
     public function recipientDataStore(Request $request){
         
         if($request->method == global_const()::RECIPIENT_METHOD_BANK ){
-
+           
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -356,12 +355,9 @@ class RecipientController extends Controller
         $client_ip            = request()->ip() ?? false;
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-        $receiver_country     = Currency::where('receiver',true)->first();
-        $banks                = RemittanceBank::where('country',$recipient->country)->where('status',true)->get();
-        $mobile_methods       = MobileMethod::where('country',$recipient->country)->where('status',true)->get();
-
+        
+        
         return view('user.sections.recipient.edit',compact(
             'page_title',
             'user_country',
@@ -369,8 +365,6 @@ class RecipientController extends Controller
             'notifications',
             'receiver_currency',
             'user_country',
-            'banks',
-            'mobile_methods',
             'recipient'
         ));
     }

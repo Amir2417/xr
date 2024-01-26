@@ -120,11 +120,8 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Bank Name") }}*</label>
-                                            <select class="form--control select2-basic" name="bank_name">
-                                                <option selected disabled value="">{{ __("Select Bank") }}</option> 
-                                                @foreach ($banks as $item)
-                                                    <option value="{{ $item->name }}" @if($item->name == $recipient->bank_name) selected @endif>{{ $item->name }}</option>  
-                                                @endforeach
+                                            <select class="form--control select2-basic bank-list" name="bank_name">
+                                                
                                             </select>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
@@ -247,62 +244,49 @@
     });
 </script>
 <script>
-    var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
-
-    $('select[name="country"]').on('change',function(){
-        $("select[name=mobile_name]").html('');
-        getMobile($(this));
+    $(document).ready(function () {
+        var country = $("select[name=country] :selected").val();
+        var transactionType = $("select[name=method] :selected").val();
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
+        } 
     });
+    $("select[name=country]").change(function(){
+        var country = $(this).val();
+        var transactionType = $("select[name=method] :selected").val();
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
+        }      
+    });
+    $("select[name=method]").change(function(){
+        var country = $("select[name=country] :selected").val();
+        var transactionType = $(this).val();
+        
+        $(".bank-list").html('');
+        if(transactionType == 'Bank'){
+            getBankList(country,transactionType);
+        }
+    });
+    function getBankList(country,transactionType){
+        var bankListUrl = "{{ route('user.recipient.bank.list') }}";
+            $(".bank-list").html('');
+            $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
+
+                if(response.data.bank_list == null || response.data.bank_list == ''){
+                    $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
+                }else{
+                    $('.bank-list').html('<option value="" disabled>Select Bank</option>');
+                }
+                
+                $.each(response.data.bank_list, function (key, value) { 
+                    var bank_name   = "{{ $recipient->bank_name }}";
+                    var selectedAttribute = (bank_name === value.name) ? 'selected' : ''; 
+                    $(".bank-list").append('<option value="' + value.name + '" ' + selectedAttribute + '>' + value.name + '</option>');
+                });
+            });
+    }
     
-    function getMobile(select){
-        var country = $(select).val();
-        if(country == "" || country == null){
-            return false; 
-        }
-        $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    option += `<option value="${item.name}">${item.name}</option>`
-                });
-                $("select[name=mobile_name]").html(option);
-                $("select[name=mobile_name]").select2();
-            }
-        }).fail(function(response){
-            var errorText = response.responseJSON;
-        });
-    }
 </script>
-<script>
-    var getBankName = "{{ setRoute('user.get.bank.name') }}";
 
-    $('select[name="country"]').on('change',function(){
-        $("select[name=bank_name]").html('');
-        getBank($(this));
-    });
-   
-    function getBank(select){
-        var country = $(select).val();
-        if(country == "" || country == null){
-            return false;
-        }
-        $.post(getBankName,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    console.log(item.name);
-                    option += `<option value="${item.name}">${item.name}</option>`
-
-                });
-                $("select[name=bank_name]").html(option);
-                $("select[name=bank_name]").select2();
-            }
-        }).fail(function(response) {
-
-            var errorText = response.responseJSON;
-
-        });
-    }
-</script>
     
 @endpush

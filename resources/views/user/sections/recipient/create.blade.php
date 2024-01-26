@@ -232,7 +232,7 @@
     $("select[name=method]").change(function(){
         var country = $("select[name=country] :selected").val();
         var transactionType = $(this).val();
-        console.log(transactionType);
+       
         $(".bank-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
@@ -249,8 +249,8 @@
                     $('.bank-list').html('<option value="" disabled>Select Bank</option>');
                 }
                 
-                $.each(response.data.bank_list, function (key, value) { 
-                    $(".bank-list").append('<option value=' + value.code + '|' + value.name + ' >' + value.name + '</option>');
+                $.each(response.data.bank_list, function (key, value) {
+                    $(".bank-list").append('<option value="' + value.name + '" ' + ' >' + value.name + '</option>');
                 });
             });
     }
