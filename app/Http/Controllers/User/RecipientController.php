@@ -255,14 +255,14 @@ class RecipientController extends Controller
      * Method for get the bank list data
      */
     public function getBank(Request $request){
-        $user_country       = Currency::where('id',$request->country)->first();
+        $user_country       = Currency::where('country',$request->country)->first();
         $country            = get_specific_country($user_country->country);
         $bank_list          = getFlutterwaveBanks($country['country_code']);
 
         return Response::success(['Data fetch successfully'],['bank_list' => $bank_list],200);
     }
     public function recipientDataStore(Request $request){
-        dd($request->all());
+        
         if($request->method == global_const()::RECIPIENT_METHOD_BANK ){
 
             $validator      = Validator::make($request->all(),[

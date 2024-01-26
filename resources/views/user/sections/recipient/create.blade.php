@@ -64,28 +64,17 @@
                                         'placeholder'     => __("Enter Email")."..."
                                     ])
                                 </div>
-                                {{-- <div class="col-xl-4 col-lg-4 col-md-4 form-group transaction-type">
-                                    <label>{{ __("Transaction Type") }} <span>*</span></label>
-                                    <select class="form--control trx-type-select select2-basic" name="method">
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
-                                    </select>
-                                </div> --}}
+                                
                                <div class="col-xl-4 col-lg-4 col-md-4 form-group">
                                     <label>{{ __("Country") }}<span>*</span></label>
                                     <select class="form--control select2-basic" name="country">
                                         <option selected disabled>{{ __("Select Country") }}</option>
                                         @foreach ($receiver_currency as $item)
-                                            <option value="{{ $item->id }}">{{ $item->country }} </option>
+                                            <option value="{{ $item->country }}">{{ $item->country }} </option>
                                         @endforeach 
                                     </select>
                                 </div>
-                                {{-- <div class="col-xl-4 col-lg-4 form-group">
-                                    <label>{{ __("Bank Name") }} <span class="text--base">*</span></label>
-                                    <select class="form--control select2-basic bank-list" name="bank_name">
-                                        
-                                    </select>
-                                </div> --}}
+                                
                                  <div class="col-xl-4 col-lg-4 col-md-6 form-group">
                                     @include('admin.components.form.input',[
                                         'label'           => __('City'),
@@ -255,9 +244,9 @@
             $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
 
                 if(response.data.bank_list == null || response.data.bank_list == ''){
-                    $('.bank-list').html('<option value="">No Bank Aviliable</option>');
+                    $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
                 }else{
-                    $('.bank-list').html('<option value="">Select Bank</option>');
+                    $('.bank-list').html('<option value="" disabled>Select Bank</option>');
                 }
                 
                 $.each(response.data.bank_list, function (key, value) { 
