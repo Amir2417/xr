@@ -22,4 +22,7 @@ Please User Those Command On Your Terminal To Update Full System
     php artisan db:seed --class=Database\\Seeders\\Admin\\PaymentGatewaySeeder
 
 4. To Update Virtual Card Seeder Please Run This Command On Your Terminal
-    php artisan db:seed --class=Database\\Seeders\\Admin\\PaymentGatewaySeeder
+    php artisan db:seed --class=Database\\Seeders\\Admin\\VirtualCardApiSeeder
+
+5. To Update Transaction Setting Seeder Please Run This Command On Your Terminal
+    php artisan db:seed --class=Database\\Seeders\\Admin\\TransactionSettingSeeder

@@ -30,14 +30,14 @@
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
                                     <label>{{ __("Fixed Charge*") }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_fixed_charge',$item->fixed_charge) }}" name="{{$item->slug}}_fixed_charge">
+                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_fixed_charge',get_amount($item->fixed_charge,null,4)) }}" name="{{$item->slug}}_fixed_charge">
                                         <span class="input-group-text">{{ get_default_currency_code($default_currency) }}</span>
                                     </div>
                                 </div>
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
                                     <label>{{ __("Percent Charge*") }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_percent_charge',$item->percent_charge) }}" name="{{$item->slug}}_percent_charge">
+                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_percent_charge',get_amount($item->percent_charge,null,4)) }}" name="{{$item->slug}}_percent_charge">
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>
@@ -61,14 +61,14 @@
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
                                     <label>{{ __("Minimum Amount") }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_min_limit',$item->min_limit) }}" name="{{$item->slug}}_min_limit">
+                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_min_limit',get_amount($item->min_limit,null,4)) }}" name="{{$item->slug}}_min_limit">
                                         <span class="input-group-text">{{ get_default_currency_code($default_currency) }}</span>
                                     </div>
                                 </div>
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
                                     <label>{{ __("Maximum Amount") }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_max_limit',$item->max_limit) }}" name="{{$item->slug}}_max_limit">
+                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_max_limit',get_amount($item->max_limit,null,4)) }}" name="{{$item->slug}}_max_limit">
                                         <span class="input-group-text">{{ get_default_currency_code($default_currency) }}</span>
                                     </div>
                                 </div>
@@ -86,14 +86,14 @@
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
                                     <label>{{ __("Daily Transfer Limit") }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_daily_limit',$item->daily_limit) }}" name="{{$item->slug}}_daily_limit">
+                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_daily_limit',get_amount($item->daily_limit,null,4)) }}" name="{{$item->slug}}_daily_limit">
                                         <span class="input-group-text">{{ get_default_currency_code($default_currency) }}</span>
                                     </div>
                                 </div>
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
                                     <label>{{ __("Monthly Transfer Limit") }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_monthly_limit',$item->monthly_limit) }}" name="{{$item->slug}}_monthly_limit">
+                                        <input type="text" class="form--control number-input" value="{{ old($item->slug.'_monthly_limit',get_amount($item->monthly_limit,null,4)) }}" name="{{$item->slug}}_monthly_limit">
                                         <span class="input-group-text">{{ get_default_currency_code($default_currency) }}</span>
                                     </div>
                                 </div>
@@ -120,28 +120,28 @@
                                         <div class="col-xxl-3 col-xl-3 col-lg-3 form-group">
                                             <label>{{ __("Minimum Amount") }}</label>
                                             <div class="input-group">
-                                                <input type="text" class="form--control number-input" value="{{ $data->min_limit }}" name="{{$item->slug}}_com_min_limit[]" placeholder="0.00">
+                                                <input type="text" class="form--control number-input" value="{{ get_amount($data->min_limit,null,4) }}" name="{{$item->slug}}_com_min_limit[]" placeholder="0.00">
                                                 <span class="input-group-text">{{ get_default_currency_code() }}</span>
                                             </div>
                                         </div>
                                         <div class="col-xxl-3 col-xl-3 col-lg-3 form-group">
                                             <label>{{ __("Maximum Amount") }}</label>
                                             <div class="input-group">
-                                                <input type="text" class="form--control number-input" value="{{ $data->max_limit }}" name="{{$item->slug}}_com_max_limit[]" placeholder="0.00">
+                                                <input type="text" class="form--control number-input" value="{{ get_amount($data->max_limit,null,4) }}" name="{{$item->slug}}_com_max_limit[]" placeholder="0.00">
                                                 <span class="input-group-text">{{ get_default_currency_code() }}</span>
                                             </div>
                                         </div>
                                         <div class="col-xxl-3 col-xl-3 col-lg-3 form-group">
                                             <label>{{ __("Fixed Charge") }}</label>
                                             <div class="input-group">
-                                                <input type="text" class="form--control number-input" value="{{ $data->fixed  }}" name="{{$item->slug}}_fixed[]" placeholder="0.00">
+                                                <input type="text" class="form--control number-input" value="{{ get_amount($data->fixed,null,4)  }}" name="{{$item->slug}}_fixed[]" placeholder="0.00">
                                                 <span class="input-group-text">{{ get_default_currency_code() }}</span>
                                             </div>
                                         </div>
                                         <div class="col-xxl-3 col-xl-3 col-lg-3 form-group">
                                             <label>{{ __("Percent Charge") }}</label>
                                             <div class="input-group">
-                                                <input type="text" class="form--control number-input" value="{{ $data->percent }}" name="{{$item->slug}}_percent[]" placeholder="0.00">
+                                                <input type="text" class="form--control number-input" value="{{ get_amount($data->percent,null,4) }}" name="{{$item->slug}}_percent[]" placeholder="0.00">
                                                 <span class="input-group-text">%</span>
                                             </div>
                                         </div>

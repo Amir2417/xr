@@ -36,7 +36,7 @@ class PaymentGatewaySeeder extends Seeder
             array('id' => '10002','slug' => 'remittance-gateway','code' => '20035','type' => 'AUTOMATIC','name' => 'Pagadito','title' => 'Pagadito Payment gateway','alias' => 'pagadito','image' => 'seeder/pagadito.webp','credentials' => '[{"label":"UID","placeholder":"Enter UID","name":"uid","value":"b73eb3fa1dc8bea4b4363322c906a8fd"},{"label":"WSK","placeholder":"Enter WSK","name":"wsk","value":"dc843ff5865bac2858ad8f23af081256"},{"label":"base_url","placeholder":"Enter base_url","name":"base_url","value":"https:\\/\\/sandbox.pagadito.com"}]','supported_currencies' => '["USD","HNL","CRC","DOP","GTQ","NIO","PAB"]','crypto' => '0','desc' => NULL,'input_fields' => NULL,'env' => 'SANDBOX','status' => '1','last_edit_by' => '1','created_at' => '2024-01-08 04:05:40','updated_at' => '2024-01-08 04:05:40'),
 
         );
-        PaymentGateway::upsert($payment_gateways,['code'],['credentials']);
+        PaymentGateway::upsert($payment_gateways,['code'],[]);
 
         $payment_gateway_currencies = array(
             
