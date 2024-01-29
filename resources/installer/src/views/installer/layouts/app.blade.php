@@ -11,7 +11,7 @@
     @endisset</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- bootstrap css link -->
-    <link rel="stylesheet" href="{{ asset('/resources/installer/src/assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('/resources/installer/src/assets/css/bootstrap.min.css') }}">
     <!-- favicon -->
     <link rel="shortcut icon" href="{{ asset('/resources/installer/src/assets/images/logo/favicon.png') }}" type="image/x-icon">
     <!-- lightcase css links -->
@@ -47,11 +47,11 @@
 
 
 <!-- jquery -->
-<script src="{{ asset('../resources/installer/src/assets/js/jquery-3.6.0.js') }}"></script>
+<script src="{{ asset('../resources/installer/src/assets/js/jquery-3.6.0.min.js') }}"></script>
 <!-- bootstrap js -->
-<script src="{{ asset('../resources/installer/src/assets/js/bootstrap.bundle.js') }}"></script>
+<script src="{{ asset('../resources/installer/src/assets/js/bootstrap.bundle.min.js') }}"></script>
 <!-- smooth scroll js -->
-<script src="{{ asset('../resources/installer/src/assets/js/smoothscroll.js') }}"></script>
+<script src="{{ asset('../resources/installer/src/assets/js/smoothscroll.min.js') }}"></script>
 <!-- lightcase js-->
 <script src="{{ asset('../resources/installer/src/assets/js/lightcase.js') }}"></script>
 <!-- main -->

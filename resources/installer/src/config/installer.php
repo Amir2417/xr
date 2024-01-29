@@ -28,7 +28,8 @@ return [
                 'curl',
                 'zip',
                 'zlib',
-                'fileinfo'
+                'fileinfo',
+                'exif',
             ],
         ],
         'apache'    => [

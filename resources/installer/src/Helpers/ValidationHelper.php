@@ -3,6 +3,8 @@
 namespace Project\Installer\Helpers;
 
 use Exception;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Project\Installer\Helpers\Helper;
 use Project\Installer\Helpers\URLHelper;
@@ -30,7 +32,9 @@ class ValidationHelper {
         foreach($auth_tokens as $token) {
             $response = Http::withHeaders([
                 'Authorization'     => 'Bearer ' . $token,
-            ])->get($url->getValidation(),['code' => $data['code']]);
+            ])->get($url->getValidation(),['code' => $data['code']])->throw(function(Response $response, RequestException $e) {
+                throw new Exception($e->getMessage());
+            });
 
             if($response->successful()) {
                 break;
@@ -59,5 +63,13 @@ class ValidationHelper {
 
     public static function step() {
         return session('validation');
+    }
+
+    public function isLocalInstallation() {
+        $url = request()->url();
+        $url_path = parse_url($url);
+        $host = $url_path['host'];
+        if($host == "localhost" || $host == "127.0.0.1") return true;
+        return false;
     }
 }
