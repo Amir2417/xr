@@ -28,7 +28,7 @@ Route::name('user.')->group(function(){
     Route::get('login',[UserLoginController::class,"showLoginForm"])->name('login');
     Route::post('login',[UserLoginController::class,"login"])->name('login.submit');
 
-    Route::get('register',[UserRegisterController::class,"showRegistrationForm"])->name('register');
+    Route::get('register',[UserRegisterController::class,"showRegistrationForm"])->name('register')->middleware('register.verification.guard');
     Route::post('register',[UserRegisterController::class,"register"])->name('register.submit');
 
     Route::controller(UserForgotPasswordController::class)->prefix("password")->name("password.")->group(function(){

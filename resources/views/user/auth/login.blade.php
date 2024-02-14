@@ -44,7 +44,9 @@
 
                         <p class="d-block text-center mt-3 create-acc">
                             &mdash; {{ __("Don't have an account?") }}
-                            <a href="{{ setRoute('user.register')}}">{{ __("Register") }}</a>
+                            @if ($basic_settings->user_registration == true)   
+                                <a href="{{ setRoute('user.register')}}">{{ __("Register") }}</a>
+                            @endif
                             &mdash;
                         </p>
                     </form>

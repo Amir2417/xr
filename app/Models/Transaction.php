@@ -71,6 +71,10 @@ class Transaction extends Model
         return $this->belongsTo(PaymentGatewayCurrency::class,'payment_gateway_currency_id');
     }
 
-    
+    //for search transaction log
+    public function scopeSearch($query,$data) {
+        return $query->where("trx_id",'LIKE','%'.$data.'%')
+                     ->orderBy('id','desc');
+    }
     
 }

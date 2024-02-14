@@ -10,6 +10,7 @@ use App\Traits\User\LoggedInUsers;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -37,12 +38,14 @@ class LoginController extends Controller
         $subscribe_slug       = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
         $subscribe            = SiteSections::getData($subscribe_slug)->first();
         $useful_link          = UsefulLink::where('status',true)->get();
+        $basic_settings       = BasicSettingsProvider::get();
         
         return view('user.auth.login',compact(
             'page_title',
             'footer',
             'subscribe',
-            'useful_link'
+            'useful_link',
+            'basic_settings'
         ));
     }
 

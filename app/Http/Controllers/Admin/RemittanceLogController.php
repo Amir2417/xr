@@ -24,7 +24,7 @@ class RemittanceLogController extends Controller
      */
     public function index(){
         $page_title           = "All Logs";
-        $transactions         = Transaction::get();
+        $transactions         = Transaction::orderBy('id','desc')->paginate(10);
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
         
@@ -239,7 +239,50 @@ class RemittanceLogController extends Controller
             'transactions',
         ));
     }
+    /**
+     * Method for remittance log search 
+     */
+    /** 
+    * Method for search buy crypto log  
+    */
+    public function search(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
 
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::search($validated['text'])->get();
+       
+        return view('admin.components.search.remittance-search',compact('transactions'));
+        
+    }
+    /**
+     * Method for remittance log search 
+     */
+    /** 
+    * Method for search buy crypto log  
+    */
+    public function reviewSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->search($validated['text'])->get();
+       
+        return view('admin.components.search.review-search',compact('transactions'));
+        
+    }
 
 
     public function downloadPdf($trx_id)

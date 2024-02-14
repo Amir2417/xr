@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'verification.guard'        => \App\Http\Middleware\VerificationGuard::class,
         'user.google.two.factor'    => \App\Http\Middleware\User\GoogleTwoFactor::class,
         'kyc.verification.guard'    => \App\Http\Middleware\User\KycVerificationGuard::class,
+        'register.verification.guard'    => \App\Http\Middleware\User\RegisterVerificationGuard::class,
     ];
 }
