@@ -140,6 +140,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('delayed','delayed')->name('delayed');
         Route::post('search','search')->name("search");
         Route::post('review-search','reviewSearch')->name("review.search");
+        Route::post('cancel-search','cancelSearch')->name("cancel.search");
 
     });
 
