@@ -264,9 +264,7 @@ class RemittanceLogController extends Controller
     /**
      * Method for remittance log search 
      */
-    /** 
-    * Method for search buy crypto log  
-    */
+    
     public function reviewSearch(Request $request) {
         $validator = Validator::make($request->all(),[
             'text'  => 'required|string',
@@ -308,9 +306,7 @@ class RemittanceLogController extends Controller
     /**
      * Method for remittance log search 
      */
-    /** 
-    * Method for search buy crypto log  
-    */
+    
     public function completeSearch(Request $request) {
         $validator = Validator::make($request->all(),[
             'text'  => 'required|string',
@@ -325,6 +321,26 @@ class RemittanceLogController extends Controller
         $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->search($validated['text'])->get();
        
         return view('admin.components.search.complete-search',compact('transactions'));
+        
+    }
+    /**
+     * Method for remittance log search 
+     */
+    
+    public function confirmPaymentSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->search($validated['text'])->get();
+       
+        return view('admin.components.search.confirm-payment-search',compact('transactions'));
         
     }
 
