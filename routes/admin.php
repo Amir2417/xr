@@ -141,6 +141,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('search','search')->name("search");
         Route::post('review-search','reviewSearch')->name("review.search");
         Route::post('cancel-search','cancelSearch')->name("cancel.search");
+        Route::post('complete-search','completeSearch')->name("complete.search");
 
     });
 

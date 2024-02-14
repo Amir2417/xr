@@ -305,6 +305,28 @@ class RemittanceLogController extends Controller
         return view('admin.components.search.cancel-search',compact('transactions'));
         
     }
+    /**
+     * Method for remittance log search 
+     */
+    /** 
+    * Method for search buy crypto log  
+    */
+    public function completeSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->search($validated['text'])->get();
+       
+        return view('admin.components.search.complete-search',compact('transactions'));
+        
+    }
 
 
     public function downloadPdf($trx_id)
