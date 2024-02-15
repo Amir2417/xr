@@ -343,6 +343,46 @@ class RemittanceLogController extends Controller
         return view('admin.components.search.confirm-payment-search',compact('transactions'));
         
     }
+    /**
+     * Method for remittance log search 
+     */
+    
+    public function holdSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_HOLD)->search($validated['text'])->get();
+       
+        return view('admin.components.search.hold-search',compact('transactions'));
+        
+    }
+    /**
+     * Method for remittance log search 
+     */
+    
+    public function settledSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_SETTLED)->search($validated['text'])->get();
+       
+        return view('admin.components.search.settled-search',compact('transactions'));
+        
+    }
 
 
     public function downloadPdf($trx_id)

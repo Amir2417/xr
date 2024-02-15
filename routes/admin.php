@@ -143,6 +143,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('cancel-search','cancelSearch')->name("cancel.search");
         Route::post('complete-search','completeSearch')->name("complete.search");
         Route::post('confirm-payment-search','confirmPaymentSearch')->name("confirm.payment.search");
+        Route::post('hold-search','holdSearch')->name("hold.search");
+        Route::post('settled-search','settledSearch')->name("settled.search");
 
     });
 
