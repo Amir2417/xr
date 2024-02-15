@@ -403,6 +403,26 @@ class RemittanceLogController extends Controller
         return view('admin.components.search.pending-search',compact('transactions'));
         
     }
+    /**
+     * Method for remittance log search 
+     */
+    
+    public function delayedSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_DELAYED)->search($validated['text'])->get();
+       
+        return view('admin.components.search.delayed-search',compact('transactions'));
+        
+    }
 
 
     public function downloadPdf($trx_id)
