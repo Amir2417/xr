@@ -423,6 +423,46 @@ class RemittanceLogController extends Controller
         return view('admin.components.search.delayed-search',compact('transactions'));
         
     }
+    /**
+     * Method for remittance log search 
+     */
+    
+    public function failedSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_FAILED)->search($validated['text'])->get();
+       
+        return view('admin.components.search.failed-search',compact('transactions'));
+        
+    }
+    /**
+     * Method for remittance log search 
+     */
+    
+    public function refundedSearch(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        
+        $transactions    = Transaction::where('status',global_const()::REMITTANCE_STATUS_REFUND)->search($validated['text'])->get();
+       
+        return view('admin.components.search.refunded-search',compact('transactions'));
+        
+    }
 
 
     public function downloadPdf($trx_id)

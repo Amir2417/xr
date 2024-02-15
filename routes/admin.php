@@ -147,6 +147,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('settled-search','settledSearch')->name("settled.search");
         Route::post('pending-search','pendingSearch')->name("pending.search");
         Route::post('delayed-search','delayedSearch')->name("delayed.search");
+        Route::post('failed-search','failedSearch')->name("failed.search");
+        Route::post('refunded-search','refundedSearch')->name("refunded.search");
 
     });
 
