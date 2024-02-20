@@ -239,7 +239,7 @@ class RecipientController extends Controller
         $user                 = auth()->user();
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-       
+
         return view('user.sections.recipient.create',compact(
             'page_title',
             'user_country',
@@ -355,7 +355,7 @@ class RecipientController extends Controller
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
-        
+        $mobile_methods       = MobileMethod::where('country',$recipient->country)->where('status',true)->get();
         
         return view('user.sections.recipient.edit',compact(
             'page_title',
@@ -364,7 +364,8 @@ class RecipientController extends Controller
             'notifications',
             'receiver_currency',
             'user_country',
-            'recipient'
+            'recipient',
+            'mobile_methods',
         ));
     }
     
