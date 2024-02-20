@@ -256,6 +256,8 @@
         var transactionType = $("select[name=method] :selected").val();
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
+        }else{
+            getMobileList(country,transactionType);
         }      
     });
     $("select[name=method]").change(function(){
@@ -265,6 +267,8 @@
         $(".bank-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
+        }else{
+            getMobileList(country,transactionType);
         }
     });
     function getBankList(country,transactionType){
@@ -283,6 +287,22 @@
                 var selectedAttribute = (bank_name === value.name) ? 'selected' : ''; 
                 $(".bank-list").append('<option value="' + value.name + '" ' + selectedAttribute + '>' + value.name + '</option>');
             });
+        });
+    }
+    function getMobileList(country,transactionType){
+        var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
+        
+        $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
+            var option = '';
+            if(response.data.country.length > 0){
+                $.each(response.data.country,function(index,item){
+                    option += `<option value="${item.name}">${item.name}</option>`
+                });
+                $("select[name=mobile_name]").html(option);
+                $("select[name=mobile_name]").select2();
+            }
+        }).fail(function(response){
+            var errorText = response.responseJSON;
         });
     }
     
