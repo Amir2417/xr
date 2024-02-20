@@ -66,22 +66,32 @@ class BeneficiaryController extends Controller
         ],200);
     }
     /**
-     * Method for create beneficiary
+     * Method for receiver currency list
      */
-    public function create(){
-        
-        
-        $banks                = RemittanceBank::where('status',true)->get()->map(function($data){
+    public function receiverCountry(){
+        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get()->map(function($data){
             return [
-                'id'                 => $data->id,
-                'name'               => $data->name,
-                'slug'               => $data->slug,
-                'country'            => $data->country,
-                'status'             => $data->status,
-                'created_at'         => $data->created_at ?? '',
-                'updated_at'         => $data->updated_at ?? '',
+                'id'           => $data->id,
+                'country'      => $data->country,
+                'name'         => $data->name,
+                'code'         => $data->code,
             ];
         });
+
+        return Response::success(['Receiver country data fetch successfully.'],[
+            'receiver_country'  => $receiver_currency,
+        ],200);
+    }
+    /**
+     * Method for create beneficiary
+     */
+    public function create(Request $request){
+        
+        $user_country       = Currency::where('country',$request->country)->where('receiver',true)->first();
+        if(!$user_country) return Response::error([$request->country .' '.'is not receiver country']);
+        $country            = get_specific_country($user_country->country);
+        $bank_list          = getFlutterwaveBanks($country['country_code']);
+
         $mobile_methods       = MobileMethod::where('status',true)->get()->map(function($data){
             return [
                 'id'                 => $data->id,
@@ -94,7 +104,7 @@ class BeneficiaryController extends Controller
             ];
         });
         return Response::success(['Bank & Mobile Data.'],[
-            'banks'            => $banks,
+            'banks'            => $bank_list,
             'mobile_methods'   => $mobile_methods
         ],200);
     }
@@ -102,7 +112,9 @@ class BeneficiaryController extends Controller
      * Method for store beneficiary information
      */
     public function store(Request $request){
+        
         if($request->method == global_const()::BENEFICIARY_METHOD_BANK_TRANSAFER ){
+            
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -146,9 +158,12 @@ class BeneficiaryController extends Controller
                     'name'  => "Recipient already exists!",
                 ]);
             }
+            $validated['user_id'] = auth()->user()->id;
+            $validated['method'] = "Bank Transfer";
             try{
                 $beneficiary  =  Recipient::create($validated);
             }catch(Exception $e){
+                
                 return Response::error(['Something went wrong! Please try again.'],[],404);
             }
             return Response::success(['Recipient Stored'],[
@@ -252,6 +267,8 @@ class BeneficiaryController extends Controller
                     'name'  => "Recipient already exists!",
                 ]);
             }
+            $validated['user_id'] = auth()->user()->id;
+            $validated['method'] = "Mobile Money";
             try{
                 $beneficiary  =  Recipient::create($validated);
             }catch(Exception $e){

@@ -76,6 +76,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
         //beneficiary
         Route::controller(BeneficiaryController::class)->prefix('beneficiary')->group(function(){
             Route::get('index','index');
+            Route::get('receiver-country','receiverCountry');
             Route::get('create','create');
             Route::post('store','store');
             Route::post('update','update');

@@ -331,17 +331,11 @@ class SendRemittanceController extends Controller
         }
 
         $receiver_country     = Currency::where('receiver',true)->first();
-        $banks                = RemittanceBank::where('country',$receiver_country->country)->where('status',true)->get()->map(function($data){
-            return [
-                'id'                 => $data->id,
-                'name'               => $data->name,
-                'slug'               => $data->slug,
-                'country'            => $data->country,
-                'status'             => $data->status,
-                'created_at'         => $data->created_at ?? '',
-                'updated_at'         => $data->updated_at ?? '',
-            ];
-        });
+        $user_country       = Currency::where('country',$request->country)->where('receiver',true)->first();
+        if(!$user_country) return Response::error([$request->country .' '.'is not receiver country']);
+        $country            = get_specific_country($user_country->country);
+        $bank_list          = getFlutterwaveBanks($country['country_code']);
+
         $mobile_methods       = MobileMethod::where('country',$receiver_country->country)->where('status',true)->get()->map(function($data){
             return [
                 'id'                 => $data->id,
@@ -355,7 +349,7 @@ class SendRemittanceController extends Controller
         });
 
         return Response::success(['Bank and Mobile Data fetch successfully.'],[
-            'banks'           => $banks,
+            'banks'           => $bank_list,
             'mobile_method'   => $mobile_methods,
         ],200);
     }
@@ -407,7 +401,8 @@ class SendRemittanceController extends Controller
                     'name'  => "Recipient already exists!",
                 ]);
             }
-
+            $validated['user_id'] = auth()->user()->id;
+            $validated['method'] = "Bank Transfer";
             try{
                 $beneficiary  = Recipient::create($validated);
             }catch(Exception $e){
@@ -459,6 +454,8 @@ class SendRemittanceController extends Controller
                     'name'  => "Recipient already exists!",
                 ]);
             }
+            $validated['user_id'] = auth()->user()->id;
+            $validated['method'] = "Mobile Money";
             try{
                 $beneficiary  = Recipient::create($validated);
             }catch(Exception $e){
