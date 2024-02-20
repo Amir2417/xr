@@ -19,18 +19,9 @@ class RegisterVerificationGuard
     public function handle(Request $request, Closure $next)
     {
         $basic_settings = BasicSettingsProvider::get();
-        if($basic_settings->user_registration) {
-            if($basic_settings->user_registration != 1){
-                $smg = "User Registration System currently not available.";
-                if(request()->expectsJson()) {
-                    return Response::error([$smg],[],400);
-                }
-                if(auth()->guard("web")->check()) {
-                    $smg = "User Registration System currently not available.";
-                    return redirect()->route("user.login")->with(['warning' => [$smg]]); 
-                }
-            }
-            
+        if($basic_settings->user_registration == 0) {
+            $smg = "User Registration System currently not available.";
+            return redirect()->route("user.login")->with(['warning' => [$smg]]);    
         }
         return $next($request);
     }
