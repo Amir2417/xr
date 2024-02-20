@@ -1,10 +1,12 @@
 <<<<<<<< Update Guide >>>>>>>>>>>
 
-Immediate Older Version: 2.2.0
-Current Version: 2.3.0
+Immediate Older Version: 2.3.1
+Current Version: 2.4.0
 
 Feature Update:
-1. Payment Gateway Pagadito and Razorpay Added.
+1. Basic settings user register update.
+2. Automatic Bank list load based on receiver country.(Bank transfer)
+3. Pagadito and Razorpay payment Gateway added.
 
 
 

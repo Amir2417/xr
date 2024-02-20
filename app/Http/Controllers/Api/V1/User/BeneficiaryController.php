@@ -320,7 +320,6 @@ class BeneficiaryController extends Controller
             $validated['method'] = "Bank Transfer";
             $beneficiary    = Recipient::where('id',$request->id)->first();
             if($request->hasFile('front_image')){
-
                 $image = upload_file($validated['front_image'],'junk-files',$beneficiary->front_image);
                 $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'site-section');
                 delete_file($image['dev_path']);
