@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\V1\User\AuthorizationController;
 use Illuminate\Support\Facades\Route;
 
 // User Auth Routes
-Route::controller(RegisterController::class)->middleware('register.verification.guard')->group(function() {
+Route::controller(RegisterController::class)->group(function() {
     Route::post("register","register");
 });
 

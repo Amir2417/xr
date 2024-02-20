@@ -61,6 +61,10 @@ Route::prefix("user")->name("api.user.")->group(function(){
             Route::post('receipt-payment-store','receiptPaymentStore');
             Route::post('submit-data','submitData');
             
+
+            //redirect with Btn Pay
+            Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('send.remittance.payment.btn.pay')->withoutMiddleware(['auth:api','verification.guard','kyc.verification.guard','user.google.two.factor']);
+            
             // Submit with manual gateway
             Route::post("manual/submit","manualSubmit");
 
@@ -71,8 +75,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
                 Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
             });
 
-            //redirect with Btn Pay
-            Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('send.remittance.payment.btn.pay')->withoutMiddleware(['auth:api','verification.guard','kyc.verification.guard','user.google.two.factor']);
+            
         });
 
         //beneficiary

@@ -44,7 +44,11 @@ class RegisterController extends Controller
         if($basic_settings->secure_password) {
             $passowrd_rule = ["required",Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()];
         }
-
+        $basic_settings       = BasicSettingsProvider::get();
+        if($basic_settings->user_registration == false){
+            $error = ['User Registration System currently not available.'];
+            return Response::error($error);
+        } 
         $agree_policy = $this->basic_settings->agree_policy == 1 ? 'required|in:on' : 'nullable';
 
         $validator = Validator::make($request->all(), [
