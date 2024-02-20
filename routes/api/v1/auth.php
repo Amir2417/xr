@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 // User Auth Routes
 Route::controller(RegisterController::class)->group(function() {
-    Route::post("register","register");
+    Route::post("register","register")->middleware('register.verification.guard');;
 });
 
 Route::controller(LoginController::class)->group(function(){
