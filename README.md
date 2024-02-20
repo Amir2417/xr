@@ -4,7 +4,7 @@ Immediate Older Version: 2.2.0
 Current Version: 2.3.0
 
 Feature Update:
-1. Payment Gateway CoinGate and Tatum Added.
+1. Payment Gateway Pagadito and Razorpay Added.
 
 
 

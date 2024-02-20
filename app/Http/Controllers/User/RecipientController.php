@@ -198,7 +198,8 @@ class RecipientController extends Controller
                 'payable'           => $temporary_data->data->payable,
                 'receive_money'     => $temporary_data->data->receive_money,
             ],
-        ];  
+        ]; 
+        
         try{
             $temporary_data->update($data);
         }catch(Exception $e){

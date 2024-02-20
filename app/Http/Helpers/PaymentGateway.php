@@ -419,7 +419,7 @@ class PaymentGateway {
 
     public function insertRecordWeb($output, $status) {
         $data  = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
-        
+       
         if($this->predefined_user) {
             $user = $this->predefined_user;
         }else {

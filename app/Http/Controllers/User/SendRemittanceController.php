@@ -55,6 +55,7 @@ class SendRemittanceController extends Controller
      * @param \Illuminate\Http\Request $request
      */
     public function store(Request $request){
+       
         $validator = Validator::make($request->all(),[
             'type'           => 'required',
             'send_money'     => 'required',
@@ -102,6 +103,7 @@ class SendRemittanceController extends Controller
                 ],
                 
             ];
+            
             try { 
                 $temporary_data = TemporaryData::create($data);
             } catch (Exception $e) {
@@ -151,6 +153,7 @@ class SendRemittanceController extends Controller
     public function receiptPayment($identifier){
         $page_title        = "| Receipt Payment";
         $temporary_data    = TemporaryData::where('identifier',$identifier)->first();
+  
         $sending_purposes  = SendingPurpose::where('status',true)->get();
         $source_of_funds   = SourceOfFund::where('status',true)->get();
         $payment_gateway   = PaymentGatewayCurrency::whereHas('gateway', function ($gateway) {
@@ -251,6 +254,7 @@ class SendRemittanceController extends Controller
             ],
             
         ];
+        
         try{
             $temporary_data->update($data);
         }catch(Exception $e){
@@ -273,7 +277,7 @@ class SendRemittanceController extends Controller
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
         $user                 = auth()->user();
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
-
+       
         return view('user.sections.send-remittance.receipt-preview',compact(
             'page_title',
             'sender_currency',

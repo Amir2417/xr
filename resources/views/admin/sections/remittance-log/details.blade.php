@@ -38,10 +38,10 @@
                     <ul class="list">
                         
                         <li>{{ __("Sending Amount") }}<span>{{ get_amount($transaction->remittance_data->send_money) ?? '' }} {{ $sender_currency->code ?? '' }}</span></li>
-                        <li>{{ __("Exchange Rate") }}<span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($receiver_currency->rate) }} {{ $receiver_currency->code}}</span></li>
-                        <li>{{ __("Total Fees & Charges") }}<span>{{ get_amount($transaction->fees) ?? "" }} {{ $sender_currency->code }}</span></li>
-                        <li>{{ __("Amount we'll Convert") }}<span>{{ get_amount($transaction->remittance_data->convert_amount) ?? "" }} {{ $sender_currency->code }}</span></li>
-                        <li>{{ __("Will Get Amount") }}<span>{{ get_amount($transaction->will_get_amount) ?? '' }} {{ $receiver_currency->code }}</span></li>
+                        <li>{{ __("Exchange Rate") }}<span>{{ get_amount($transaction->remittance_data->sender_ex_rate) }} {{ $transaction->remittance_data->sender_currency}} = {{ get_amount($transaction->remittance_data->receiver_ex_rate) }} {{ $transaction->remittance_data->receiver_currency}}</span></li>
+                        <li>{{ __("Total Fees & Charges") }}<span>{{ get_amount($transaction->fees) ?? "" }} {{ $transaction->remittance_data->sender_currency }}</span></li>
+                        <li>{{ __("Amount we'll Convert") }}<span>{{ get_amount($transaction->remittance_data->convert_amount) ?? "" }} {{ $transaction->remittance_data->sender_currency }}</span></li>
+                        <li>{{ __("Will Get Amount") }}<span>{{ get_amount($transaction->will_get_amount) ?? '' }} {{ $transaction->remittance_data->receiver_currency }}</span></li>
                         <li>{{ __("Sending Purpose") }}<span>{{ $transaction->remittance_data->sending_purpose ?? '' }}</span></li>
                         <li>{{ __("Source Of Fund") }}<span>{{ $transaction->remittance_data->source ?? '' }}</span></li>
                     </ul>
