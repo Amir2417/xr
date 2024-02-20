@@ -1043,4 +1043,16 @@ class SendRemittanceController extends Controller
         }
     }
 
+    /**
+     * Redirect Users for collecting payment via Button Pay (JS Checkout)
+     */
+    public function redirectBtnPay(Request $request, $gateway)
+    {
+        try{
+            return PaymentGatewayHelper::init([])->type(PaymentGatewayConst::TYPESENDREMITTANCE)->handleBtnPay($gateway, $request->all());
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()], [], 500);
+        }
+    }
+
 }

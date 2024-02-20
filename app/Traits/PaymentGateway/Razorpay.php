@@ -93,7 +93,7 @@ trait Razorpay  {
        
         $data = $temp_data->data; // update the data variable 
         $order = $data->razorpay_order;
-
+        
         $order_id                   = $order->id;
         $request_credentials        = $this->getRazorpayRequestCredentials($output);
         $output['order_id']         = $order_id;
@@ -101,7 +101,7 @@ trait Razorpay  {
         $output['callback_url']     = $data->callback_url;
         $output['cancel_url']       = $data->cancel_url;
         $output['user']             = auth()->guard(get_auth_guard())->user();
-
+       
         return view('payment-gateway.btn-pay.razorpay', compact('output'));
     }
 

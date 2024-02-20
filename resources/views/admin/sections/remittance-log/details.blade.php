@@ -122,6 +122,7 @@
                             
                         </li>
                         <li>{{ __("Remark") }} <span>{{ $transaction->remittance_data->remark ?? 'N/A' }}</span></li>
+                        <li>{{ __("Date") }} <span>{{ $transaction->created_at->format("d-m-Y") }}</span></li>
                     </ul>
                 </div>
             </div>

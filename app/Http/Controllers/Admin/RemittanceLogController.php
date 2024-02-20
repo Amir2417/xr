@@ -106,7 +106,7 @@ class RemittanceLogController extends Controller
      */
     public function reviewPayment(){
         $page_title    = "Review Payment Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.review-payment',compact(
             'page_title',
@@ -120,7 +120,7 @@ class RemittanceLogController extends Controller
      */
     public function pending(){
         $page_title    = "Pending Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_PENDING)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_PENDING)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.pending',compact(
             'page_title',
@@ -134,7 +134,7 @@ class RemittanceLogController extends Controller
      */
     public function confirmPayment(){
         $page_title    = "Confirm Payment Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.confirm-payment',compact(
             'page_title',
@@ -148,7 +148,7 @@ class RemittanceLogController extends Controller
      */
     public function hold(){
         $page_title    = "Hold Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_HOLD)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_HOLD)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.hold',compact(
             'page_title',
@@ -162,7 +162,7 @@ class RemittanceLogController extends Controller
      */
     public function settled(){
         $page_title    = "Settled Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_SETTLED)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_SETTLED)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.settled',compact(
             'page_title',
@@ -176,7 +176,7 @@ class RemittanceLogController extends Controller
      */
     public function complete(){
         $page_title    = "Complete Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.complete',compact(
             'page_title',
@@ -190,7 +190,7 @@ class RemittanceLogController extends Controller
      */
     public function canceled(){
         $page_title    = "Canceled Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_CANCEL)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_CANCEL)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.cancel',compact(
             'page_title',
@@ -204,7 +204,7 @@ class RemittanceLogController extends Controller
      */
     public function failed(){
         $page_title    = "Failed Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_FAILED)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_FAILED)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.failed',compact(
             'page_title',
@@ -218,7 +218,7 @@ class RemittanceLogController extends Controller
      */
     public function refunded(){
         $page_title    = "Refunded Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_REFUND)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_REFUND)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.refunded',compact(
             'page_title',
@@ -232,7 +232,7 @@ class RemittanceLogController extends Controller
      */
     public function delayed(){
         $page_title    = "Delayed Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_DELAYED)->get();
+        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_DELAYED)->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.delayed',compact(
             'page_title',

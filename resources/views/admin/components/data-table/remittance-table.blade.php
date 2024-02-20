@@ -18,7 +18,7 @@
                 <td>{{ $item->remittance_data->sender_name ?? '' }}</td>
                 <td>{{ $item->remittance_data->first_name ?? '' }} {{ $item->remittance_data->middle_name ?? '' }} {{ $item->remittance_data->last_name ?? '' }}</td>
                 <td>{{ $item->remittance_data->type ?? '' }}</td>
-                <td>{{ get_amount($item->payable) ?? '' }} {{ $item->remittance_data->currency->code ?? '' }} <span>{{ get_amount($item->will_get_amount,$item->remittance_data->receiver_currency) ?? '' }}</span></td>
+                <td>{{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }} <span>{{ get_amount($item->will_get_amount,$item->remittance_data->receiver_currency) ?? '' }}</span></td>
                 
                 <td>{{ $item->remark ?? '' }}</td>
                 <td>

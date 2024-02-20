@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("user")->name("api.user.")->group(function(){
 
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+        //redirect with Btn Pay
+        Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('payment.btn.pay')->withoutMiddleware(['auth:api','verification.guard','kyc.verification.guard','user.google.two.factor']);
         // POST Route For Unauthenticated Request
         Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth:api']);
         Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth:api']);
