@@ -29,7 +29,7 @@
                 <div class="row mb-10-none">
                     <div class="col-xl-12   col-lg-12 form-group">
                         <label>{{ __("Name*") }}</label>
-                        <input type="text" class="form--control text-capitalize" name="api_method" value="{{ $api->config->name }}">
+                        <input type="text" readonly class="form--control text-capitalize" name="api_method" value="{{ $api->config->name }}">
                         
                     </div>
                     <div class="col-xl-12 col-lg-12 form-group configForm" id="flutterwave">
