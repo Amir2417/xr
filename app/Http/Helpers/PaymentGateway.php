@@ -365,13 +365,13 @@ class PaymentGateway {
         return $name . "Success";
     }
 
-    function removeSpacialChar($string, $replace_string = "",$length) {
-        return preg_replace("/[^A-Za-z0-9]/",$replace_string,$string,$length);
+    function removeSpacialChar($string, $replace_string = "") {
+        return preg_replace("/[^A-Za-z0-9]/",$replace_string,$string);
     }
 
     public function generateBtnPayResponseMethod(string $gateway)
     {
-        $name = $this->removeSpacialChar($gateway,"",$length=40);
+        $name = $this->removeSpacialChar($gateway,"");
         
         return $name . "BtnPay";
     }

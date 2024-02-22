@@ -45,7 +45,7 @@
                             'icon'      => "menu-icon las la-wallet",
                         ],
                         [
-                            'title'     => "Virtual Card Api",
+                            'title'     => "Bank Methods",
                             'route'     => "admin.virtual.card.api",
                             'icon'      => "menu-icon las la-vr-cardboard",
                         ],

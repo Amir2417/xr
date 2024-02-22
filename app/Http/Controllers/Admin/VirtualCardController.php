@@ -14,7 +14,7 @@ class VirtualCardController extends Controller
 {
     public function cardApi()
     {
-        $page_title = "Setup Virtual Card Api";
+        $page_title = "Bank Methods";
         $api = VirtualCardApi::first();
         return view('admin.sections.virtual-card.api',compact(
             'page_title',
@@ -27,8 +27,6 @@ class VirtualCardController extends Controller
             'flutterwave_secret_key'    => 'required_if:api_method,flutterwave',
             'flutterwave_secret_hash'   => 'required_if:api_method,flutterwave',
             'flutterwave_url'           => 'required_if:api_method,flutterwave',
-            'card_details'              => 'required|string',
-            'image'                     => "nullable|mimes:png,jpg,jpeg,webp,svg",
             
         ]);
         if($validator->fails()) {
