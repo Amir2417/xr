@@ -49,6 +49,6 @@ class VirtualCardController extends Controller
         }
         $api->save();
 
-        return back()->with(['success' => ['Card API Has Been Updated.']]);
+        return back()->with(['success' => ['Bank Method Updated Successfully']]);
     }
 }
