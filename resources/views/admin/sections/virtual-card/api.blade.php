@@ -30,7 +30,6 @@
                     <div class="col-xl-12   col-lg-12 form-group">
                         <label>{{ __("Name*") }}</label>
                         <select class="form--control nice-select" name="api_method">
-                            <option disabled>{{ __("Select Platfrom") }}</option>
                             <option value="flutterwave" @if(@$api->config->name == 'flutterwave') selected @endif>@lang('Flutterwave')</option>
                         </select>
                     </div>
