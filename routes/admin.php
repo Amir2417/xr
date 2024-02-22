@@ -166,9 +166,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     // virtual card api
-    Route::controller(VirtualCardController::class)->prefix('virtual-card')->name('virtual.card.')->group(function () {
-        Route::get('api/settings', 'cardApi')->name('api');
-        Route::put('api/update', 'cardApiUpdate')->name('api.update');
+    Route::controller(VirtualCardController::class)->prefix('bank-methods')->name('virtual.card.')->group(function () {
+        Route::get('index', 'cardApi')->name('api');
+        Route::put('update', 'cardApiUpdate')->name('api.update');
     });
 
     // User Care Section
