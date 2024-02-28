@@ -216,6 +216,7 @@ class UserCareController extends Controller
             'zip'           => $validated['zip_code'] ?? "",
             'address'       => $validated['address'] ?? "",
         ];
+       
         $validated['mobile']            = remove_special_char($validated['mobile']);
         $validated['full_mobile']       = $validated['mobile'];
 

@@ -130,26 +130,20 @@
                         @enderror
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
-                        @php
-                            $old_state = old('state',$user->address->state ?? "");
-                        @endphp
-                        <label>{{ __("State") }}</label>
-                        <select name="state" class="form--control select2-auto-tokenize state-select" data-placeholder="Select State" data-old="{{ $old_state }}">
-                            @if ($old_state)
-                                <option value="{{ $old_state }}" selected>{{ $old_state }}</option>
-                            @endif
-                        </select>
+                        @include('admin.components.form.input',[
+                            'label'         => __("City"),
+                            'name'          => "city",
+                            'placeholder'   => __("Enter City")."...",
+                            'value'         => old('city',$user->address->city ?? "")
+                        ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
-                        @php
-                            $old_city = old('city',$user->address->city ?? "");
-                        @endphp
-                        <label>{{ __("City") }}</label>
-                        <select name="city" class="form--control select2-auto-tokenize city-select" data-placeholder="Select City" data-old="{{ $old_city }}">
-                            @if ($old_city)
-                                <option value="{{ $old_city }}" selected>{{ $old_city }}</option>
-                            @endif
-                        </select>
+                        @include('admin.components.form.input',[
+                            'label'         => __("State"),
+                            'name'          => "state",
+                            'placeholder'   => __("Enter State")."...",
+                            'value'         => old('state',$user->address->state ?? "")
+                        ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
