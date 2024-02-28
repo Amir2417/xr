@@ -31,31 +31,25 @@ trait ControlDynamicInputFields {
         $fields_with_value = [];
         foreach($kyc_fields ?? [] as $key => $item) {
             if($item->type == "text" || $item->type == "textarea") {
-                $value = $form_data[$item->name] ?? "";
+                $vlaue = $form_data[$item->name] ?? "";
             }elseif($item->type == "file") {
                 $form_file = $form_data[$item->name] ?? "";
                 if(is_file($form_file)) {
                     $get_file_link = upload_file($form_file,"junk-files");
-                    $upload_file = upload_files_from_path_dynamic([$get_file_link['dev_path']],$this->file_store_location);
+                    $upload_file = upload_files_from_path_dynamic([$get_file_link['dev_path']],"kyc-files");
                     delete_file($get_file_link['dev_path']);
-                    $value = $upload_file;
+                    $vlaue = $upload_file;
                 }
             }elseif($item->type == "select") {
-                $value = $form_data[$item->name] ?? "";
+                $vlaue = $form_data[$item->name] ?? "";
             }
 
             if(isset($form_data[$item->name])) {
                 $fields_with_value[$key] = json_decode(json_encode($item),true);
-                $fields_with_value[$key]['value'] = $value;
+                $fields_with_value[$key]['value'] = $vlaue;
             }
         }
-
-        try{
-            $this->removeUserKycFiles();
-        }catch(Exception $e) {
-            // Handle Error
-        }
-
+        $this->removeUserKycFiles();
         return $fields_with_value;
     }
 
@@ -79,7 +73,7 @@ trait ControlDynamicInputFields {
                 foreach($user_kyc->data ?? [] as $item) {
                     if($item->type == "file") {
                         $file_name = $item->value ?? "";
-                        $file_path = get_files_path($this->file_store_location);
+                        $file_path = get_files_path("kyc-files");
                         if(!empty($file_name)) {
                             $file_link = $file_path . "/" . $file_name;
                             delete_file($file_link);

@@ -206,8 +206,6 @@ class RemittanceController extends Controller
     }
     
     public function handleManualPayment($payment_info) {
-
-        
         // Insert temp data
         $data = [
             'type'          => PaymentGatewayConst::TYPESENDREMITTANCE,
@@ -252,7 +250,7 @@ class RemittanceController extends Controller
     }
 
     public function manualSubmit(Request $request,$token) {
-        
+       
         $basic_setting = BasicSettings::first();
         $user          = auth()->user();
         $request->merge(['identifier' => $token]);
@@ -268,17 +266,17 @@ class RemittanceController extends Controller
         $amount = $tempData->data->amount ?? null;
         if(!$amount) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Failed to save information. Please try again']]);
         
-
         $this->file_store_location  = "transaction";
         $dy_validation_rules        = $this->generateValidationRules($gateway->input_fields);
-
+        
         $validated  = Validator::make($request->all(),$dy_validation_rules)->validate();
         $get_values = $this->placeValueWithFields($gateway->input_fields,$validated);
+       
         
         $data   = TemporaryData::where('identifier',$tempData->data->form_data)->first();
        
         $trx_id = generateTrxString("transactions","trx_id","SR",8);
-
+        
         // Make Transaction
         DB::beginTransaction();
         try{
