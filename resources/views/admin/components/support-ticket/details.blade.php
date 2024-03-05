@@ -39,7 +39,7 @@
                     if($(this).is(":checked")) {
                         $(this).prop("checked",false);
                         var actionRoute =  "{{ setRoute('admin.support.ticket.solve') }}";
-                        var message     = `{{ __("Are you sure to mark as solved (Token:") }} <strong>${target}</strong>)? {{ __("Because it's not reversable.") }}`;
+                        var message     = `{{ __("Are you sure to mark as solved (Token:") }} <strong>${target}</strong>)? {{ __("Because it's not reversible.") }}`;
                         openDeleteModal(actionRoute,target,message,"Solve","POST");
                     }
                 });
