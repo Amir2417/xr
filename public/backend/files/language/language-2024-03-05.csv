@@ -992,7 +992,7 @@ Add Testimonial,Add Testimonial,Agregar testimonio,إضافة شهادة
 Comment,Comment,Comentario,تعليق
 Designation,Designation,Designación,تعيين
 Edit Testimonial,Testimonial edit,Edición testimonial,تحرير شهادة
-Web Journal Dashboard,Web Journal Dashboard,Panel de diario web,Web Journal Dashboard
+Web Journal Dashboard,Web Journal Dashboard,Panel de diario web,لوحة تحكم مجلة الويب
 Add New Journal,Add New Journal,Agregar un nuevo diario,أضف مجلة جديدة
 Total Journal,Total Journal,Diario total,المجلة الكلية
 Active Journal,Active Journal,Diario activo,مجلة نشطة
@@ -1051,9 +1051,9 @@ Payment gateway deleted successfully!,Payment gateway deleted successfully!,¡Pa
 Manual Payment Method,Manual Payment Method,Método de pago manual,طريقة الدفع اليدوي
 Currency Code,Currency Code,Código de moneda,رمز العملة
 Currency Symbol,Currency Symbol,Símbolo de moneda,رمز العملة
-ex: Paypal,ex: Paypal,Ej: PayPal,على سبيل المثال: PayPal
-ex: United State Dollar,ex: United State Dollar,Ej: dólar estatal unido,على سبيل المثال: United State Dollar
-ex: USD,ex: USD,Ej: USD,على سبيل المثال: USD
+ex: Paypal,ex: Paypal,Ej: PayPal,على سبيل المثال: باي بال
+ex: United State Dollar,ex: United State Dollar,Ej: dólar estatal unido,على سبيل المثال: دولار الولايات المتحدة
+ex: USD,ex: USD,Ej: USD,على سبيل المثال: دولار أمريكي
 ex: $,ex: $,Ej: $,على سبيل المثال: $
 Manual Payment Method Edit,Manual Payment Method Edit,Método de pago manual editar,تحرير طريقة الدفع اليدوي
 Manual Payment Method Create,Manual Payment Method Create,Método de pago manual Crear,طريقة الدفع اليدوي
