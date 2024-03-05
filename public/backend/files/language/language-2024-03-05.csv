@@ -801,8 +801,8 @@ Basic settings not found!,Basic settings not found!,Configuración básica no en
 Basic settings status updated successfully!,Basic settings status updated successfully!,Estado de configuración básica actualizada correctamente!,تم تحديث حالة الإعدادات الأساسية بنجاح!
 Logo (Light Version),Logo (Light Version),Logotipo (versión ligera),شعار (إصدار الضوء)
 Logo (Dark Version),Logo (Dark Version),Logotipo (versión oscura),شعار (نسخة مظلمة)
-Favicon (Light Version),Favicon (Light Version),Favicon (versión ligera),Favicon (نسخة خفيفة)
-Favicon (Dark Version),Favicon (Dark Version),Favicon (versión oscura),Favicon (نسخة مظلمة)
+Favicon (Light Version),Favicon (Light Version),Favicon (versión ligera),الأيقونة المفضلة (الإصدار الخفيف)
+Favicon (Dark Version),Favicon (Dark Version),Favicon (versión oscura),الأيقونة المفضلة (الإصدار الداكن)
 Basic setting not found! Please run database seeder,Basic setting not found! Please run database seeder,Configuración básica no encontrada! Ejecute un semiller de base de datos,الإعداد الأساسي لم يتم العثور عليه! الرجاء تشغيل قاعدة البيانات بذور
 No changes to update.,No changes to update.,No hay cambios en la actualización.,لا توجد تغييرات للتحديث.
 Image assets updated successfully!,Image assets updated successfully!,¡Activos de imagen actualizados con éxito!,أصول الصورة تحديث بنجاح!
