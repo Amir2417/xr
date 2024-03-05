@@ -73,7 +73,7 @@
                                 <option value="{{ global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT }}" @if ($status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT) selected @endif>{{ __("Review Payment") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_PENDING }}" @if ($status == global_const()::REMITTANCE_STATUS_PENDING) selected @endif>{{ __("Pending") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT }}" @if ($status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT) selected @endif>{{ __("Confirm Payment") }}</option>
-                                <option value="{{ global_const()::REMITTANCE_STATUS_HOLD }}" @if ($status == global_const()::REMITTANCE_STATUS_HOLD) selected @endif>{{ __("Hold") }}</option>
+                                <option value="{{ global_const()::REMITTANCE_STATUS_HOLD }}" @if ($status == global_const()::REMITTANCE_STATUS_HOLD) selected @endif>{{ __("On Hold") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_SETTLED }}" @if ($status == global_const()::REMITTANCE_STATUS_SETTLED) selected @endif>{{ __("Settled") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_COMPLETE }}" @if ($status == global_const()::REMITTANCE_STATUS_COMPLETE) selected @endif>{{ __("Complete") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_CANCEL }}" @if ($status == global_const()::REMITTANCE_STATUS_CANCEL) selected @endif>{{ __("Cancel") }}</option>
