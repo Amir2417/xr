@@ -138,12 +138,12 @@ class User extends Authenticatable
         if($status == GlobalConst::ACTIVE) {
             $data = [
                 'class'     => "badge badge--success",
-                'value'     => "Active",
+                'value'     => __("Active"),
             ];
         }else if($status == GlobalConst::BANNED) {
             $data = [
                 'class'     => "badge badge--danger",
-                'value'     => "Banned",
+                'value'     => __("Banned"),
             ];
         }
         return (object) $data;
@@ -158,22 +158,22 @@ class User extends Authenticatable
         if($status == GlobalConst::APPROVED) {
             $data = [
                 'class'     => "badge badge--success",
-                'value'     => "Verified",
+                'value'     => __("Verified"),
             ];
         }else if($status == GlobalConst::PENDING) {
             $data = [
                 'class'     => "badge badge--warning",
-                'value'     => "Pending",
+                'value'     => __("Pending"),
             ];
         }else if($status == GlobalConst::REJECTED) {
             $data = [
                 'class'     => "badge badge--danger",
-                'value'     => "Rejected",
+                'value'     => __("Rejected"),
             ];
         }else {
             $data = [
                 'class'     => "badge badge--danger",
-                'value'     => "Unverified",
+                'value'     => __("Unverified"),
             ];
         }
         return (object) $data;
