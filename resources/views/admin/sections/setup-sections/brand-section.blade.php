@@ -38,7 +38,7 @@
     <div class="table-wrapper">
         <div class="table-header justify-content-end">
             <div class="table-btn-area">
-                <a href="#add-brand" class="btn--base modal-btn"><i class="fas fa-plus me-1"></i> {{ __("Add Brand ") }}</a>
+                <a href="#add-brand" class="btn--base modal-btn"><i class="fas fa-plus me-1"></i> {{ __("Add Brand") }}</a>
             </div>
         </div>
         <div class="table-responsive">
