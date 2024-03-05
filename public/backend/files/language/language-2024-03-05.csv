@@ -23,7 +23,7 @@ Copyright,Copyright,Derechos de autor,حقوق النشر
 All Right Reserved,All Right Reserved,Todos los derechos reservados,جميع الحقوق محفوظة
 Language switch to English,Language switch to English,El idioma cambia al inglés,تحول اللغة إلى اللغة الإنجليزية
 Language switch to Spanish,Language switch to Spanish,El idioma cambia al español,تحول اللغة إلى الإسبانية
-Language switch to Arabic,Language switch to Arabic,El idioma cambia al árabe,تحول اللغة إلى اللغة العربية
+Language switch to Arabic,Language switch to Arabic,Idioma cambia al árabe,تحول اللغة إلى اللغة العربية
 Follow us,Follow us,Síganos,تابعنا
 Email Address,Email Address,Dirección de correo electrónico,عنوان البريد الإلكتروني
 Address,Address,DIRECCIÓN,عنوان
@@ -33,8 +33,8 @@ Name,Name,Nombre,اسم
 Email,Email,Correo electrónico,بريد إلكتروني
 Subject,Subject,Sujeto,موضوع
 Message,Message,Mensaje,رسالة
-Send Message,Send Message,Enviar mensaje,أرسل رسالة
-Contact Request successfully send!,Contact Request successfully send!,¡Contacto Solicitud de contacto con éxito!,طلب الاتصال بنجاح إرسال!
+Send Message,Send Message,Enviar mensaje,إرسال الرسالة
+Contact Request successfully send!,Contact Request successfully send!,¡Contacto Solicitud de contactar con éxito!,طلب الاتصال بنجاح إرسال!
 Subscription successful!,Subscription successful!,Suscripción exitosa!,اشتراك ناجح!
 Welcome Back,Welcome Back,Bienvenido de nuevo,مرحبًا بعودتك
 Enter Your Email,Enter Your Email,Introduce tu correo electrónico,أدخل بريدك الإلكتروني
@@ -77,13 +77,13 @@ Account successfully verified,Account successfully verified,Cuenta verificada co
 Send Remittance,Send Remittance,Enviar remesas,إرسال التحويلات
 Transactions,Transactions,Actas,المعاملات
 Recipients,Recipients,Receptores,المستلمين
-KYC,KYC,Kyc,اعرف عميلك
+KYC,KYC,Kyc,KYC
 2FA Security,2FA Security,2FA SEGURIDAD,2FA الأمن
 Logout,Logout,Cerrar sesión,تسجيل خروج
 Help Center,Help Center,Centro de ayuda,مركز المساعدة
 How can we help you?,How can we help you?,como podemos ayudarte?,كيف يمكننا مساعدتك؟
 Total Send Remittance,Total Send Remittance,Remesas de envío total,إجمالي إرسال التحويلات
-Total Remittance,Total Remittance,Remesas totales,التحويلات الكلية
+Total Remittance,Total Remittance,Remesas totales,إجمالي التحويلات
 Completed Remittance,Completed Remittance,Remesas completadas,التحويلات المكتملة
 Ongoing Remittance,Ongoing Remittance,Remesas continuas,التحويلات المستمرة
 Canceled Remittance,Canceled Remittance,Remesas canceladas,التحويلات الملغاة
@@ -142,7 +142,7 @@ Enter Phone,Enter Phone,Ingrese el teléfono,أدخل الهاتف
 Bank Name,Bank Name,Nombre del banco,اسم البنك
 IBAN Number,IBAN Number,Número IBAN,رقم IBAN
 Mobile Method,Mobile Method,Método móvil,طريقة الهاتف المحمول
-Select Method,Select Method,Seleccionar método,حدد الطريقة
+Select Method,Select Method,Método de selección,حدد الطريقة
 Select Bank,Select Bank,Seleccionar banco,حدد بنك
 Select IBAN Number,Select IBAN Number,Seleccione el número Iban,حدد رقم IBAN
 Write Here,Write Here,Escribe aquí,اكتب هنا
@@ -174,7 +174,7 @@ Your Payment Is Successfully Completed,Your Payment Is Successfully Completed,Su
 Payment Confirmation,Payment Confirmation,Confirmación de pago,تأكيد الدفعة
 Download Receipt PDF,Download Receipt PDF,Descargar recibo PDF,تنزيل استلام PDF
 Go To Dashboard,Go To Dashboard,Ir al panel de control,الذهاب إلى لوحة القيادة
-Send Another Remittance,Send Another Remittance,Enviar otra remesas,إرسال تحويلات أخرى
+Send Another Remittance,Send Another Remittance,Enviar otra remesa,إرسال تحويلات أخرى
 Bank Transfer,Bank Transfer,Transferencia bancaria,التحويل المصرفي
 Pending,Pending,Pendiente,قيد الانتظار
 Review Payment,Review Payment,Pago de revisión,مراجعة الدفع
@@ -207,7 +207,7 @@ Back to,Back to,De regreso,ارجع الى
 Front,Front,Frente,أمام
 Back,Back,Atrás,خلف
 ID Type,ID Type,tipo de identificación,نوع الهوية
-KYC information successfully submitted,KYC information successfully submitted,La información de KYC presentó con éxito,تم إرسال معلومات KYC بنجاح
+KYC information successfully submitted,KYC information successfully submitted,La información de KYC presentó con éxito,تم تقديم معلومات KYC بنجاح
 Two Factor Authenticator,Two Factor Authenticator,Autenticador de dos factores,اثنان عامل المصادقة
 QRcode Share,QRcode Share,QRCode compartido,QRCode Share
 Disable,Disable,Desactivar,إبطال
@@ -240,7 +240,7 @@ KYC Unverified,KYC Unverified,KYC no verificado,KYC غير التحقق
 All Users,All Users,Todos los usuarios,جميع المستخدمين
 Email To Users,Email To Users,Correo electrónico a los usuarios,البريد الإلكتروني للمستخدمين
 Banned Users,Banned Users,Usuarios prohibidos,المستخدمين المحظورون
-Agent Care,Agent Care,Cuidado de agentes,رعاية الوكيل
+Agent Care,Agent Care,Cuidado del agente,رعاية الوكيل
 Active Agents,Active Agents,Agentes activos,الوكلاء النشطين
 All Agents,All Agents,Todos los agentes,جميع الوكلاء
 Email To Agents,Email To Agents,Correo electrónico a los agentes,البريد الإلكتروني إلى الوكلاء
@@ -254,7 +254,7 @@ Settings,Settings,Ajustes,إعدادات
 Web Settings,Web Settings,Configuración web,إعدادات الويب
 Basic Settings,Basic Settings,Ajustes básicos,الإعدادات الأساسية
 Image Assets,Image Assets,Activos de imagen,أصول الصورة
-Setup SEO,Setup SEO ( Search Engine Optimization ),Configurar SEO (optimización de motores de búsqueda),إعداد SEO (تحسين محرك البحث)
+Setup SEO,Setup SEO ( Search Engine Optimization ),Configuración de SEO (optimización de motores de búsqueda),إعداد SEO (تحسين محرك البحث)
 App Settings,App Settings,Ajustes de Aplicacion,إعدادات التطبيقات
 Splash Screen,Splash Screen,Pantalla de bienvenida,شاشة البداية
 Onboard Screen,Onboard Screen,Pantalla a bordo,على متن الشاشة
@@ -266,7 +266,7 @@ Setup KYC,Setup KYC,Configurar KYC,إعداد KYC
 Setup Web Content,Setup Web Content,Configurar contenido web,إعداد محتوى الويب
 Setup Section,Setup Section,Sección de configuración,قسم الإعداد
 Banner Section,Banner Section,Banner,قسم لافتة
-Brand Section,Brand Section,Sección de la marca,قسم العلامة التجارية
+Brand Section,Brand Section,Sección de marca,قسم العلامة التجارية
 About Section,About Section,Acerca de la sección,حول القسم
 How Its Work Section,How Its Work Section,Cómo su sección de trabajo,كيف قسم عملها
 Feature Section,Feature Section,Sección de características,ميزة قسم
@@ -274,7 +274,7 @@ Choose Us Section,Choose Us Section,Elija la sección de EE. UU.,اختر الق
 Journal Section,Journal Section,Sección de diario,قسم المجلة
 App Download Section,App Download Section,Sección de descarga de la aplicación,قسم تنزيل التطبيق
 Contact Section,Contact Section,Sección de contacto,قسم الاتصال
-Footer Section,Footer Section,Sección de fútbol,قسم تذييل
+Footer Section,Footer Section,Sección de pies,قسم تذييل
 Subscribe Section,Subscribe Section,SUSCRIBIR SECCIÓN,قسم الاشتراك
 Testimonials Section,Testimonials Section,Sección de testimonios,قسم الشهادات
 Setup Pages,Setup Pages,Páginas de configuración,صفحات الإعداد
@@ -327,7 +327,7 @@ View User,View User,Ver usuario,عرض المستخدم
 MTCN ID,MTCN ID,ID de MTCN,معرف MTCN
 S. NAME,S. NAME,NOMBRE DE,S. الاسم
 R. NAME,R. NAME,R. Nombre,R. الاسم
-T. TYPE,T. TYPE,T. Tipo,T. النوع
+T. TYPE,T. TYPE,T. Tipo,T. type
 AMOUNT,AMOUNT,CANTIDAD,كمية
 P. METHOD,P. METHOD,P. método,طريقة P.
 Status,Status,Estado,حالة
@@ -341,7 +341,7 @@ Attachments,Attachments,Archivos adjuntos,المرفقات
 Conversation,Conversation,Conversación,محادثة
 "This ticket is solved, you can t send message right now","This ticket is solved, you can t send message right now","Este boleto está resuelto, no puede enviar un mensaje ahora mismo",تم حل هذه التذكرة ، لا يمكنك إرسال رسالة الآن
 Write something,Write something,Escribe algo,أكتب شيئا
-Support Details,Support Details,Detalles de soporte,تفاصيل الدعم
+Support Details,Support Details,Detalles de apoyo,تفاصيل الدعم
 Description,Description,Descripción,وصف
 please Fill Out The Field,Please Fill Out The Field,Por favor complete el campo,يرجى ملء الحقل
 upload,Upload,Subir,رفع
@@ -363,7 +363,7 @@ same As Contact,Same as Contact Number,Igual que el número de contacto,نفس �
 select Mobile Method,Select Mobile Method,Seleccionar método móvil,حدد طريقة الهاتف المحمول
 dummy Month,OCT,OCT,أكتوبر
 contact Number,Contact Number,Número de contacto,رقم الاتصال
-upload Document,Upload Document,Cargar documento,وثيقة تحميل
+upload Document,Upload Document,Cargar documento,تحميل وثيقة
 interval Fees Charges,Interval Fees & Charges,Tarifas y cargos de intervalo,رسوم الفاصل والرسوم
 Verified,Verified,Verificado,تم التحقق
 user Name Or Email Address,Username Or Email Address,Nombre de usuario o dirección de correo electrónico,اسم المستخدم أو البريد الالكتروني
@@ -394,7 +394,7 @@ money Transfer Msg,Your money has been transfer successfully,Su dinero ha sido t
 request,Request,Pedido,طلب
 recent Transaction,Recent Transaction,Transacción reciente,المعاملة الأخيرة
 my Invoice,My Invoice,Mi factura,فاتورتي
-my Voucher,My Voucher,Mi cupón,قسيم
+my Voucher,My Voucher,Mi cupón,قسيمي
 transaction Log,Transaction Log,Registro de transacciones,سجل المعاملات
 transfer Fees Charges,Transfer Fees & Charges,Tarifas y cargos de transferencia,رسوم النقل والرسوم
 amount Convert,Amount we ll convert,Cantidad que convertiremos,المبلغ الذي نحوله
@@ -466,7 +466,7 @@ total Exchanged Amount,Total Exchanged Amount,Cantidad total intercambiada,إج�
 converted Amount,Converted Amount,Cantidad convertida,المبلغ المحول
 requested Amount,Requested Amount,Monto requerido,الكمية المطلوبة
 track Your Transaction,Track Your Transaction,Seguimiento de su transacción,تتبع معاملتك
-transfer Calculator,Transfer Calculator,Transferir calculadora,نقل الآلة الحاسبة
+transfer Calculator,Transfer Calculator,Calculadora de transferencia,نقل الآلة الحاسبة
 new User Here,New user here?,Nuevo usuario aquí?,مستخدم جديد هنا؟
 onboard Subtitle Text,"Smarter way to Send money anytime, anywhere with best exchange rate ","Forma más inteligente de enviar dinero en cualquier momento, en cualquier lugar con el mejor tipo de cambio",طريقة أكثر ذكاءً لإرسال الأموال في أي وقت وفي أي مكان بأفضل سعر صرف
 safe And Secure Process,Safe & Secure Process,Proceso seguro y seguro,عملية آمنة ومأمونة
@@ -492,23 +492,23 @@ Sending Country,Sending Country,Envío de país,إرسال البلد
 Receiving Country,Receiving Country,País receptor,استلام الدولة
 receiving Method,Receiving Method,Método de recepción,استلام طريقة
 select Receiving Method,Select Receiving Method,Seleccione el método de recepción,حدد طريقة الاستلام
-cash Pickup,Cash Pickup,Recogida en efectivo,الالتقاء النقدي
+cash Pickup,Cash Pickup,Recogida en efectivo,الالتقاط النقدي
 title Sign Up,"Smarter way to Send money anytime, anywhere with best exchange rate ","Forma más inteligente de enviar dinero en cualquier momento, en cualquier lugar con el mejor tipo de cambio",طريقة أكثر ذكاءً لإرسال الأموال في أي وقت وفي أي مكان بأفضل سعر صرف
 select Pickup Point,Select Pickup Point,Seleccionar el punto de recogida,حدد نقطة التقاط
 pickup Point,Pickup Point,Punto de recogida,نقطة التقاط
 receiving Bank,Receiving Bank,Banco receptor,البنك المستلم
 select Receiving Bank,Select Receiving Bank,Seleccione el banco receptor,حدد استلام البنك
 account Holder Name,Account Holder Name,nombre del titular de la cuenta,اسم صاحب الحساب
-enter Account Holder Name,Enter Account Holder Name,Ingrese el nombre del titular de la cuenta,أدخل اسم حامل الحساب
+enter Account Holder Name,Enter Account Holder Name,Ingrese el nombre del titular de la cuenta,أدخل اسم صاحب الحساب
 enter Account Number,Enter Account Number,Ingrese el número de cuenta,أدخل رقم الحساب
 enter Bank Name,Enter Bank Name,Ingrese el nombre del banco,أدخل الاسم المصرفي
 united Bank,United Bank,Banco Unido,البنك المتحدة
 brack Bank,BRAC Bank,Banco brac,بنك براك
 city Bank,City Bank,Banco de la Ciudad,بنك المدينة
 recipient Information,Recipient Information,recipiente de información,معلومات المستلم
-enter Gmail Or Username,Enter Gmail or Username,Ingrese Gmail o nombre de usuario,أدخل gmail أو اسم المستخدم
+enter Gmail Or Username,Enter Gmail or Username,Ingrese Gmail o nombre de usuario,أدخل Gmail أو اسم المستخدم
 dhaka,Dhaka,Dhaka,دكا
-khulna,Khulna,Khulna,خولنا
+khulna,Khulna,Julna,خولنا
 rangpur,Rangpur,Rangpur,رانجبور
 payment Information,Payment Information,Información del pago,معلومات الدفع
 select Sending Purpose,Select Sending Purpose,Seleccionar el propósito de envío,حدد هدف إرسال
@@ -626,7 +626,7 @@ Secret Hash,Secret Hash,Hash secreto,التجزئة السرية
 Base Url,Base Url,URL base,عنوان URL الأساسي
 Feature Text,Feature Text,Texto,ميزة النص
 Default Charges,Default Charges,Cargos predeterminados,الرسوم الافتراضية
-Fixed Charge,Fixed Charge,Cargo fijo,شحنة ثابتة
+Fixed Charge,Fixed Charge,Cargo fijo,تهمة ثابتة
 Percent Charge,Percent Charge,Porcentaje de cargo,تكلفة في المئة
 Default Range,Default Range,Rango predeterminado,النطاق الافتراضي
 Range,Range,Rango,يتراوح
@@ -670,17 +670,21 @@ Currency Saved Successfully!,Currency Saved Successfully!,¡Moneda ahorrada con 
 Successfully updated the information.,Successfully updated the information.,Actualizó con éxito la información.,تم تحديث المعلومات بنجاح.
 Currency record not found in our system.,Currency record not found in our system.,Registro de divisas no se encuentra en nuestro sistema.,سجل العملة غير موجود في نظامنا.
 Currency status updated successfully!,Currency status updated successfully!,¡Estado de divisas actualizado con éxito!,تم تحديث حالة العملة بنجاح!
-Can\'t deletable default currency.,Can\'t deletable default currency.,Puede \ 't de la moneda predeterminada eliminable.,لا يمكن \ 't قابلة لحذف العملة الافتراضية.
-Currency deleted successfully!,Currency deleted successfully!,¡Moneda eliminada con éxito!,تم حذف العملة بنجاح!
+Can\'t deletable default currency.,Can\'t deletable default currency.,Puede \ 't de la moneda predeterminada eliminable.,لا يمكن \ 'الحذف العملة الافتراضية.
+Currency deleted successfully!,Currency deleted successfully!,Moneda eliminada con éxito!,تم حذف العملة بنجاح!
 Charge Updated Successfully!,Charge Updated Successfully!,¡Cargo actualizado con éxito!,تم تحديث الرسوم بنجاح!
-"Bank Method Updated Successfully","Bank Method Updated Successfully","Método bancario actualizado correctamente","تم تحديث طريقة البنك بنجاح"
+"Bank Method Updated Successfully
+","Bank Method Updated Successfully
+","Método bancario actualizado correctamente
+","تم تحديث طريقة البنك بنجاح
+"
 Add Coupon,Add Coupon,Agregar cupón,أضف عرض
 Price,Price,Precio,سعر
 Write Name,Write Name,Escribir nombre,اكتب الاسم
 Enter Price,Enter Price,Ingresar precio,أدخل السعر
 The price field is required.,The price field is required.,Se requiere el campo de precio.,حقل السعر مطلوب.
 Coupon Added Successfully,Coupon Added Successfully,Cupón agregado con éxito,وأضاف القسيمة بنجاح
-Coupon updated successfully!,Coupon updated successfully!,¡Cupón actualizado con éxito!,قسيمة تحديث بنجاح!
+Coupon updated successfully!,Coupon updated successfully!,¡Cupón actualizado con éxito!,قسيمة تم تحديثها بنجاح!
 Coupon Deleted Successfully!,Coupon Deleted Successfully!,¡Cupón eliminado con éxito!,تم حذف القسيمة بنجاح!
 Coupon status updated successfully!,Coupon status updated successfully!,Estado del cupón actualizado con éxito!,تم تحديث حالة القسيمة بنجاح!
 Add Mobile Method,Add Mobile Method,Agregar método móvil,أضف طريقة الهاتف المحمول
@@ -693,7 +697,7 @@ Mobile Method Deleted Successfully!,Mobile Method Deleted Successfully!,¡Métod
 Mobile Method status updated successfully!,Mobile Method status updated successfully!,Estado del método móvil actualizado correctamente!,تم تحديث حالة طريقة الهاتف المحمول بنجاح!
 Remittance Gateway,Remittance Gateway,Puerta de entrada de remesas,بوابة التحويلات
 Add Source of Fund,Add Source of Fund,Agregar fuente de fondo,إضافة مصدر الصندوق
-Source of Fund Added Successfully,Source of Fund Added Successfully,Fuente de Fondo agregado con éxito,مصدر الصندوق يضاف بنجاح
+Source of Fund Added Successfully,Source of Fund Added Successfully,Fuente de Fondo agregado con éxito,تمت إضافة مصدر الصندوق بنجاح
 Source of Fund updated successfully!,Source of Fund updated successfully!,¡Fuente de Fondo actualizado con éxito!,تم تحديث مصدر الصندوق بنجاح!
 Source of fund Deleted Successfully!,Source of fund Deleted Successfully!,¡Fuente de fondo eliminada con éxito!,تم حذف مصدر الصندوق بنجاح!
 Source of fund status updated successfully!,Source of fund status updated successfully!,Fuente de estado del fondo actualizado con éxito!,مصدر حالة الصندوق تم تحديثه بنجاح!
@@ -718,7 +722,7 @@ Login as Member,Login as Member,Iniciar sesión como miembro,تسجيل الدخ
 Email Logs,Email Logs,Registros de correo electrónico,سجلات البريد الإلكتروني
 Last Login,Last Login,Último acceso,آخر تسجيل دخول
 Information of User,Information of User,Información del usuario,معلومات المستخدم
-2FA Verification,2FA Verification,Verificación de 2FA,2FA التحقق
+2FA Verification,2FA Verification,VERIFICACIÓN 2FA,2FA التحقق
 User Status,User Status,Estatus de usuario,حالة المستخدم
 Banned,Banned,Prohibido,محظور
 Select Type,Select Type,Seleccione tipo,اختر صنف
@@ -748,7 +752,7 @@ Generate,Generate,Generar,يولد
 Edit Admin,Edit admin,Editar administrador,تحرير المسؤول
 New admin created successfully!,New admin created successfully!,¡Nuevo administrador creado con éxito!,تم إنشاء مسؤول جديد بنجاح!
 Failed to assign role.,Failed to assign role.,No se pudo asignar el rol.,فشل في تعيين الدور.
-Admin information updated successfully!,Admin information updated successfully!,Información de administración actualizada con éxito!,معلومات المسؤول تحديث بنجاح!
+Admin information updated successfully!,Admin information updated successfully!,Información de administrador actualizada con éxito!,معلومات المسؤول تحديث بنجاح!
 All Admin Roles,All Admin Roles,Todos los roles de administración,جميع أدوار المشرف
 Role Name,Role Name,Nombre de rol,اسم الدور
 Asign Admin,Asign admin,Asign Admin,asign المشرف
@@ -763,7 +767,7 @@ Opps! Target not found!,Opps! Target not found!,¡Opps! ¡Objetivo no encontrado
 Admin role updated successfully!,Admin role updated successfully!,¡Rol de administración actualizado con éxito!,تم تحديث دور المسؤول بنجاح!
 Super admin role can\'t deletable.,Super admin role can\'t deletable.,El rol super administrador puede ser eliminable.,دور المشرف الفائق يمكن أن يكون قابلاً للحذف.
 Target role not found!,Target role not found!,¡Rol de objetivo no encontrado!,الدور المستهدف لم يتم العثور عليه!
-Admin role deleted successfully!,Admin role deleted successfully!,¡Rol de administración eliminado con éxito!,تم حذف دور المسؤول بنجاح!
+Admin role deleted successfully!,Admin role deleted successfully!,¡Rol de administrador eliminado con éxito!,تم حذف دور المسؤول بنجاح!
 All Permissions,All Permissions,Todos los permisos,جميع الأذونات
 Permission Name,Permission Name,Nombre de permiso,اسم إذن
 Add New Permission,Add New Permission,Agregar nuevo permiso,أضف إذنًا جديدًا
@@ -772,7 +776,7 @@ Permission created successfully!,Permission created successfully!,¡Permiso crea
 Permission updated successfully!,Permission updated successfully!,¡Permiso actualizado con éxito!,تم تحديث إذن بنجاح!
 Permission deleted successfully!,Permission deleted successfully!,¡Permiso eliminado con éxito!,تم حذف إذن بنجاح!
 Role permission not found!,Role permission not found!,¡Permiso de rol no encontrado!,إذن الدور غير موجود!
-Permission assign successfully!,Permission assign successfully!,Permiso asignar con éxito!,إذن تعيين بنجاح!
+Permission assign successfully!,Permission assign successfully!,Permiso asignar con éxito!,إذن تخصيص بنجاح!
 Permission not found!,Permission not found!,¡Permiso no encontrado!,إذن لم يتم العثور عليه!
 Admin deleted successfully!,Admin deleted successfully!,Admin eliminado con éxito!,تم حذف المسؤول بنجاح!
 Site Base Color,Site Base Color,Color base del sitio,لون قاعدة الموقع
@@ -787,7 +791,7 @@ User Registration,User Registration,registro de usuario,تسجيل المستخ�
 Force SSL,Force SSL,Forzar SSL,قوة SSL
 Email Notification,Email Notification,Notificación de correo electrónico,إشعار البريد الإلكتروني
 Activated,Activated,Activado,مفعل
-Deactivated,Deactivated,Desactivado,إلغاء تنشيطه
+Deactivated,Deactivated,Desactivado,إلغاء تنشيط
 The base color field is required.,The base color field is required.,Se requiere el campo de color base.,حقل اللون الأساسي مطلوب.
 The web version field is required.,The web version field is required.,Se requiere el campo de la versión web.,حقل إصدار الويب مطلوب.
 The site name field is required.,The site name field is required.,Se requiere el campo Nombre del sitio.,حقل اسم الموقع مطلوب.
@@ -801,8 +805,8 @@ Basic settings not found!,Basic settings not found!,Configuración básica no en
 Basic settings status updated successfully!,Basic settings status updated successfully!,Estado de configuración básica actualizada correctamente!,تم تحديث حالة الإعدادات الأساسية بنجاح!
 Logo (Light Version),Logo (Light Version),Logotipo (versión ligera),شعار (إصدار الضوء)
 Logo (Dark Version),Logo (Dark Version),Logotipo (versión oscura),شعار (نسخة مظلمة)
-Favicon (Light Version),Favicon (Light Version),Favicon (versión ligera),الأيقونة المفضلة (الإصدار الخفيف)
-Favicon (Dark Version),Favicon (Dark Version),Favicon (versión oscura),الأيقونة المفضلة (الإصدار الداكن)
+Favicon (Light Version),Favicon (Light Version),Favicon (versión ligera),Favicon (نسخة خفيفة)
+Favicon (Dark Version),Favicon (Dark Version),Favicon (versión oscura),Favicon (نسخة مظلمة)
 Basic setting not found! Please run database seeder,Basic setting not found! Please run database seeder,Configuración básica no encontrada! Ejecute un semiller de base de datos,الإعداد الأساسي لم يتم العثور عليه! الرجاء تشغيل قاعدة البيانات بذور
 No changes to update.,No changes to update.,No hay cambios en la actualización.,لا توجد تغييرات للتحديث.
 Image assets updated successfully!,Image assets updated successfully!,¡Activos de imagen actualizados con éxito!,أصول الصورة تحديث بنجاح!
@@ -820,7 +824,7 @@ Splash screen updated successfully!,Splash screen updated successfully!,¡Pantal
 Android App URL,Android App URL,URL de la aplicación Android,Android App URL
 iOS App URL,iOS App URL,URL de la aplicación iOS,IOS APP URL
 The url title field is required.,The url title field is required.,Se requiere el campo de título de URL.,حقل عنوان عنوان URL مطلوب.
-The android url field is required.,The android url field is required.,Se requiere el campo URL de Android.,حقل عنوان URL Android مطلوب.
+The android url field is required.,The android url field is required.,Se requiere el campo URL de Android.,مطلوب حقل url Android.
 URL settings updated successfully!,URL settings updated successfully!,Configuración de URL actualizada con éxito!,تحديث إعدادات URL بنجاح!
 Add New Screen,Add New Screen,Agregar nueva pantalla,أضف شاشة جديدة
 Sub Title,Sub Title,Subtítulo,العنوان الفرعي
@@ -831,7 +835,7 @@ Information of Logs,Information of Logs,Información de los registros,معلوم
 File not found!,File not found!,¡Archivo no encontrado!,لم يتم العثور على الملف!
 Edit Screen,Edit Screen,Pantalla de edición,تحرير الشاشة
 The image field is required.,The image field is required.,Se requiere el campo de la imagen.,حقل الصورة مطلوب.
-Onboard Screen Added Successfully!,Onboard Screen Added Successfully!,¡Pantalla a bordo agregada con éxito!,أضيفت الشاشة على متن الطائرة بنجاح!
+Onboard Screen Added Successfully!,Onboard Screen Added Successfully!,¡Pantalla a bordo agregada con éxito!,أضافت الشاشة على متن الطائرة بنجاح!
 Onboard screen not found!,Onboard screen not found!,¡Pantalla a bordo no encontrada!,على متن الشاشة غير موجودة!
 Onboard screen status updated successfully!,Onboard screen status updated successfully!,Estado de la pantalla a bordo actualizado correctamente!,تم تحديث حالة الشاشة على متن الطائرة بنجاح!
 Onboard screen information updated successfully!,Onboard screen information updated successfully!,Información de pantalla a bordo actualizada correctamente!,تم تحديث معلومات الشاشة على متن الطائرة بنجاح!
@@ -854,7 +858,7 @@ Email Send Method,Email Send Method,Método de envío de correo electrónico,ط�
 Send Mail,Send Mail,Enviar correo,ارسل بريد
 Host,Host,Anfitrión,يستضيف
 Port,Port,Puerto,ميناء
-Excryption,Excryption,Excryción,الإثارة
+Excryption,Excryption,Excryción,excryption
 SSL,SSL,Ssl,SSL
 TLS,TLS,TLS,TLS
 Send Test Mail,Send Test Mail,Enviar correo de prueba,إرسال بريد الاختبار
@@ -895,7 +899,7 @@ Email Unverified Users,Email Unverified Users,Envíe un correo electrónico a us
 KYC Information not submitted yet,KYC Information not submitted yet,Información de KYC aún no se ha enviado,معلومات KYC لم يتم تقديمها بعد
 Approve,Approve,Aprobar,يعتمد
 Reject,Reject,Rechazar,يرفض
-KYC Unverified Users,KYC Unverified Users,Usuarios no verificados de KYC,kyc المستخدمين غير المؤكدين
+KYC Unverified Users,KYC Unverified Users,Usuarios no verificados de KYC,kyc المستخدمين غير التحقق منها
 Details,Details,Detalles,تفاصيل
 Admin Roles,Admin Roles,Roles de administración,أدوار المشرف
 Permission Group,Permission Group,Grupo de permisos,مجموعة الإذن
@@ -943,9 +947,9 @@ New Blog Create,New Blog Create,Nuevo blog crea,مدونة جديدة إنشاء
 Add Tags,Add Tags,Agregar etiquetas,اضف اشارة
 Blog Edit Page,Blog Edit Page,Página de edición de blog,صفحة تحرير المدونة
 Blog Categories,Blog Categories,Categorías de blogs,فئات المدونة
-Add Blog Category,Add Blog Category,Añadir categoría de blog,إضافة فئة المدونة
-Edit Blog Category,Edit Blog Category,Editar categoría de blog,تحرير فئة المدونة
-Category added successfully.,Category added successfully.,Categoría agregada con éxito.,أضافت الفئة بنجاح.
+Add Blog Category,Add Blog Category,Añadir categoría de blog,أضف فئة المدونة
+Edit Blog Category,Edit Blog Category,EDITAR Categoría de blog,تحرير فئة المدونة
+Category added successfully.,Category added successfully.,Categoría agregada con éxito.,وأضاف الفئة بنجاح.
 Category status updated successfully!,Category status updated successfully!,Estado de categoría actualizado con éxito!,تحديث حالة الفئة بنجاح!
 Blog Category Updated Successfully.,Blog Category Updated Successfully.,Categoría de blog actualizada con éxito.,تم تحديث فئة المدونة بنجاح.
 Category successfully deleted.,Category successfully deleted.,Categoría eliminada con éxito.,تم حذف الفئة بنجاح.
@@ -963,18 +967,18 @@ Add Link,Add Link,Añadir enlace,إضافة رابط
 Slug,Slug,Babosa,سبيكة
 Content,Content,Contenido,محتوى
 Use for make page link (URL),Use for make page link (URL),Usar para hacer el enlace de página (URL),استخدم لجعل رابط الصفحة (URL)
-Are you sure to delete this link?,Are you sure to delete this link?,¿Seguro que eliminará este enlace?,هل أنت متأكد من حذف هذا الرابط؟
+Are you sure to delete this link?,Are you sure to delete this link?,¿Estás seguro de eliminar este enlace?,هل أنت متأكد من حذف هذا الرابط؟
 Useful link added successfully!,Useful link added successfully!,Enlace útil agregado con éxito!,رابط مفيد أضيفت بنجاح!
 Edit Useful Link,Edit Useful Link,Editar enlace útil,تحرير رابط مفيد
 Useful link updated successfully!,Useful link updated successfully!,Enlace útil actualizado con éxito!,رابط مفيد تم تحديثه بنجاح!
-Useful link deleted successfully!,Useful link deleted successfully!,Enlace útil eliminado con éxito!,رابط مفيد تم حذفه بنجاح!
+Useful link deleted successfully!,Useful link deleted successfully!,¡Enlace útil eliminado con éxito!,رابط مفيد تم حذفه بنجاح!
 Useful link status updated successfully!,Useful link status updated successfully!,Estado útil del enlace actualizado correctamente!,تم تحديث حالة الرابط المفيدة بنجاح!
 Website Subscribers,Website Subscribers,Suscriptores del sitio web,مشتركي الموقع
 Send Mail to All,Send Mail to All,Enviar correo a todos,أرسل البريد إلى الجميع
 Send mail to all subscribers,Send mail to all subscribers,Enviar correo a todos los suscriptores,أرسل بريدًا إلى جميع المشتركين
 Reply sended successfully!,Reply sended successfully!,¡Respuesta enviada con éxito!,رد تم إرساله بنجاح!
 Heading,Heading,Título,عنوان
-Sub Heading,Sub Heading,Subtendente,العنوان الفرعي
+Sub Heading,Sub Heading,Subtítulos,العنوان الفرعي
 Button Name,Button Name,Nombre del botón,اسم الزر
 Video Link,Video Link,Enlace de video,رابط الفيديو
 Section updated successfully!,Section updated successfully!,Sección actualizada con éxito!,تم تحديث القسم بنجاح!
@@ -991,17 +995,17 @@ Edit Items,Edit Items,Editar elementos,تعديل البنود
 Add Testimonial,Add Testimonial,Agregar testimonio,إضافة شهادة
 Comment,Comment,Comentario,تعليق
 Designation,Designation,Designación,تعيين
-Edit Testimonial,Testimonial edit,Edición testimonial,تحرير شهادة
-Web Journal Dashboard,Web Journal Dashboard,Panel de diario web,لوحة تحكم مجلة الويب
+Edit Testimonial,Testimonial edit,Edición de testimonio,تحرير شهادة
+Web Journal Dashboard,Web Journal Dashboard,Panel de diario web,Web Journal Dashboard
 Add New Journal,Add New Journal,Agregar un nuevo diario,أضف مجلة جديدة
-Total Journal,Total Journal,Diario total,المجلة الكلية
+Total Journal,Total Journal,Diario total,مجلة إجمالي
 Active Journal,Active Journal,Diario activo,مجلة نشطة
 Deactive Journal,Deactive Journal,Diario desactivo,مجلة إلهي
 this journal?,this journal?,este diario?,هذه المجلة؟
 Web Journal Categories,Web Journal Categories,Categorías de diario web,فئات مجلة الويب
 Add Web Journal Category,Add Web Journal Category,Agregar categoría de diario web,أضف فئة مجلة الويب
 New Journal Create,New Journal Create,Nuevo diario crea,مجلة جديدة إنشاء
-Journal created successfully!,Journal created successfully!,Journal creado con éxito!,تم إنشاء مجلة بنجاح!
+Journal created successfully!,Journal created successfully!,Revista creada con éxito!,تم إنشاء مجلة بنجاح!
 Journal status updated successfully!,Journal status updated successfully!,Estado del diario actualizado con éxito!,تم تحديث حالة المجلة بنجاح!
 Journal Edit Page,Journal Edit Page,Página de edición de diario,مجلة تحرير صفحة
 Journal Data Updated Successfully.,Journal Data Updated Successfully.,Datos de revista actualizados con éxito.,تم تحديث بيانات المجلة بنجاح.
@@ -1045,15 +1049,15 @@ Percent,Percent,Por ciento,نسبه مئويه
 The gateway name has already been taken.,The gateway name has already been taken.,El nombre de la puerta de entrada ya ha sido tomado.,تم بالفعل أخذ اسم البوابة.
 Payment gateway added successfully!,Payment gateway added successfully!,¡PAGO GIERTWAY agregado con éxito!,وأضاف بوابة الدفع بنجاح!
 Payment gateway status updated successfully!,Payment gateway status updated successfully!,Estado de la pasarela de pago actualizado correctamente!,تم تحديث حالة بوابة الدفع بنجاح!
-Image upload failed! Please try again.,Image upload failed! Please try again.,¡Falló la carga de la imagen! Inténtalo de nuevo.,فشل تحميل الصورة! حاول مرة اخرى.
-Payment gateway updated successfully!,Payment gateway updated successfully!,¡Pase de pasar por la pasarela actualizada con éxito!,تم تحديث بوابة الدفع بنجاح!
+Image upload failed! Please try again.,Image upload failed! Please try again.,¡Falló la carga de imagen! Inténtalo de nuevo.,فشل تحميل الصورة! حاول مرة اخرى.
+Payment gateway updated successfully!,Payment gateway updated successfully!,¡Pase de entrada actualizada con éxito!,تم تحديث بوابة الدفع بنجاح!
 Payment gateway deleted successfully!,Payment gateway deleted successfully!,¡Pague pasarela eliminada con éxito!,تم حذف بوابة الدفع بنجاح!
 Manual Payment Method,Manual Payment Method,Método de pago manual,طريقة الدفع اليدوي
 Currency Code,Currency Code,Código de moneda,رمز العملة
 Currency Symbol,Currency Symbol,Símbolo de moneda,رمز العملة
-ex: Paypal,ex: Paypal,Ej: PayPal,على سبيل المثال: باي بال
-ex: United State Dollar,ex: United State Dollar,Ej: dólar estatal unido,على سبيل المثال: دولار الولايات المتحدة
-ex: USD,ex: USD,Ej: USD,على سبيل المثال: دولار أمريكي
+ex: Paypal,ex: Paypal,Ej: PayPal,على سبيل المثال: PayPal
+ex: United State Dollar,ex: United State Dollar,Ej: dólar estatal unido,على سبيل المثال: United State Dollar
+ex: USD,ex: USD,Ej: USD,على سبيل المثال: USD
 ex: $,ex: $,Ej: $,على سبيل المثال: $
 Manual Payment Method Edit,Manual Payment Method Edit,Método de pago manual editar,تحرير طريقة الدفع اليدوي
 Manual Payment Method Create,Manual Payment Method Create,Método de pago manual Crear,طريقة الدفع اليدوي
@@ -1074,7 +1078,7 @@ APP ID,APP ID,ID de aplicación,معرف التطبيق
 Body,Body,Cuerpo,جسم
 Time,Time,Tiempo,وقت
 Latest Notifications,Latest Notifications,Últimas notificaciones,أحدث الإخطارات
-Notification Body,Notification Body,Cuerpo de notificación,هيئة الإخطار
+Notification Body,Notification Body,Notificación Cuerpo,هيئة الإخطار
 Sorry! You have to configure first to send push notification.,Sorry! You have to configure first to send push notification.,¡Lo siento! Debe configurar primero para enviar una notificación push.,آسف! يجب عليك تكوين أولاً لإرسال إشعار الدفع.
 Opps! Failed to store information.,Opps! Failed to store information.,¡Opps! No pudo almacenar información.,أوس! فشل في تخزين المعلومات.
 Notification sended successfully!,Notification sended successfully!,¡Notificación enviada con éxito!,أرسل الإخطار بنجاح!
@@ -1103,393 +1107,393 @@ Password Change,Password Change,Cambio de contraseña,تغيير كلمة الس
 English,English,Inglés,إنجليزي
 Dark Mode,Dark Mode,Modo oscuro,الوضع المظلم
 Light Mode,Light Mode,Modo de luz,وضع الضوء
-Please configure your push notification with valid credentials.,Please configure your push notification with valid credentials.,Configure su notificación push con credenciales válidas.,على سبيل المثال: باي بال
-Broadcast configuration updated successfully!,Broadcast configuration updated successfully!,¡Configuración de transmisión actualizada con éxito!,على سبيل المثال: دولار الولايات المتحدة
-The body field is required.,The body field is required.,Se requiere el campo del cuerpo.,على سبيل المثال: دولار أمريكي
-Server Information,Server Information,información del servidor,على سبيل المثال: دولار أمريكي
-Language updated successfully!,Language updated successfully!,¡Lenguaje actualizado con éxito!,على سبيل المثال: دولار أمريكي
-Charges,Charges,Cargos,على سبيل المثال: دولار أمريكي
-Pending Ticket,Pending Ticket,Boleto pendiente,على سبيل المثال: دولار أمريكي
-Active Ticket,Active Ticket,Boleto activo,على سبيل المثال: دولار أمريكي
-Solved Ticket,Solved Ticket,Boleto resuelto,على سبيل المثال: دولار أمريكي
-All Ticket,All Ticket,Todo el boleto,على سبيل المثال: دولار أمريكي
-Pending Tickets,Pending Tickets,Boletos pendientes,على سبيل المثال: دولار أمريكي
-Active Tickets,Active Tickets,Boletos activos,على سبيل المثال: دولار أمريكي
-Solved Tickets,Solved Tickets,Boletos resueltos,على سبيل المثال: دولار أمريكي
-All Tickets,All Tickets,Todas las entradas,على سبيل المثال: دولار أمريكي
-View All,View All,Ver todo,على سبيل المثال: دولار أمريكي
-Support Chat,Support Chat,Chat de apoyo,على سبيل المثال: دولار أمريكي
-Mark as Solved,Mark as Solved,Marca como se resuelve,على سبيل المثال: دولار أمريكي
-Are you sure to mark as solved (Token:,Are you sure to mark as solved (Token:,¿Estás seguro de marcar como resuelto (Token:,على سبيل المثال: دولار أمريكي
-Because it's not reversible.,Because it's not reversible.,Porque no es reversible.,على سبيل المثال: دولار أمريكي
-appLPleaseFillOutTheField,appLPleaseFillOutTheField,ApplIeSeFilloutTheField,على سبيل المثال: دولار أمريكي
-appLSignIn,appLSignIn,aplicada,على سبيل المثال: دولار أمريكي
-appLSignUp,appLSignUp,aplicada,على سبيل المثال: دولار أمريكي
-appLEnterCity,appLEnterCity,aplicación de la aplicación,على سبيل المثال: دولار أمريكي
-appLUpload,appLUpload,aplicar,على سبيل المثال: دولار أمريكي
-appLBank,Applbank,Aplicado,على سبيل المثال: دولار أمريكي
-appLFrontPart,appLFrontPart,ApplfrontPart,على سبيل المثال: دولار أمريكي
-appLRecipientSummary,appLRecipientSummary,Applecipientsumario,على سبيل المثال: دولار أمريكي
-appLDeleteProfile,appLDeleteProfile,appldeleteprofile,على سبيل المثال: دولار أمريكي
-appLVerify,appLVerify,aplicar,على سبيل المثال: دولار أمريكي
-appLUploadImage,appLUploadImage,aplicada,على سبيل المثال: دولار أمريكي
-appLEvidenceNote,appLEvidenceNote,Applevidencenote,على سبيل المثال: دولار أمريكي
-appLCongratulations,appLCongratulations,aplicaciones aplicadas,على سبيل المثال: دولار أمريكي
-appLAccountSuccessfullyCreate,appLAccountSuccessfullyCreate,ApplaccountSuccessfyCreate,على سبيل المثال: دولار أمريكي
-appLFlutterWavePayment,appLFlutterWavePayment,ApplflutterWavePayment,على سبيل المثال: دولار أمريكي
-appLStripePayment,appLStripePayment,apagado,على سبيل المثال: دولار أمريكي
-appLPaypalPayment,appLPaypalPayment,applpaypalpayment,على سبيل المثال: دولار أمريكي
-appLRazorpayPayment,appLRazorpayPayment,applrazorpaypayment,على سبيل المثال: دولار أمريكي
-appLPagaditoPayment,appLPagaditoPayment,apagaditopeo,على سبيل المثال: دولار أمريكي
-appLNoNotification,appLNoNotification,Applnonotificación,على سبيل المثال: دولار أمريكي
-appLNoTransaction,appLNoTransaction,applnotransaction,على سبيل المثال: دولار أمريكي
-appLSignInWithTouchId,appLSignInWithTouchId,ApplsigninwithTouchid,على سبيل المثال: دولار أمريكي
-appLPleaseAgree,appLPleaseAgree,aplicado,على سبيل المثال: دولار أمريكي
-appLSendingAmount,appLSendingAmount,Aplicación de la cuenta,على سبيل المثال: دولار أمريكي
-appLPaymentMethod,appLPaymentMethod,métoda de aplicaciones,على سبيل المثال: دولار أمريكي
-appLRemittanceSummary,appLRemittanceSummary,ApplremittancesMary,على سبيل المثال: دولار أمريكي
-appLSameAsContact,appLSameAsContact,applsameScontact,على سبيل المثال: دولار أمريكي
-appLSelectMobileMethod,appLSelectMobileMethod,ApplSelectMobilemethod,على سبيل المثال: دولار أمريكي
-appLBackPart,appLBackPart,aparte,على سبيل المثال: دولار أمريكي
-appLSendRemittance,appLSendRemittance,applemita,على سبيل المثال: دولار أمريكي
-appLDummyMonth,appLDummyMonth,appldummymonth,على سبيل المثال: دولار أمريكي
-appLEnterState,Applentate,Aplicar,على سبيل المثال: دولار أمريكي
-appLSelectDocumentType,appLSelectDocumentType,ApplSelectDocumentType,على سبيل المثال: دولار أمريكي
-appLDocumentType,appLDocumentType,applDocumentType,على سبيل المثال: دولار أمريكي
-appLWriteHere,appLWriteHere,Applwritehere,على سبيل المثال: دولار أمريكي
-appLContactNumber,appLContactNumber,APPLCONTACTNumber,على سبيل المثال: دولار أمريكي
-appLUploadDocument,appLUploadDocument,apluploaddocumento,على سبيل المثال: دولار أمريكي
-appLIntervalFeesCharges,Applinter trap fees,Tarifas de trampa de aplicaciones,على سبيل المثال: دولار أمريكي
-appLPending,appLPending,aplicado,على سبيل المثال: دولار أمريكي
-appLVerified,appLVerified,aplicado,على سبيل المثال: دولار أمريكي
-appLUserNameOrEmailAddress,appLUserNameOrEmailAddress,AppluserNameoremailaddress,على سبيل المثال: دولار أمريكي
-appLPassword,appLPassword,Appl Word,على سبيل المثال: دولار أمريكي
-appLForgotPassword,appLForgotPassword,ApplForgotPassword,على سبيل المثال: دولار أمريكي
-appLForgotPassword2,appLForgotPassword2,ApplForGotPassword2,على سبيل المثال: دولار أمريكي
-appLForgotPasswordNormal,appLForgotPasswordNormal,ApplForGotPasswordNormal,على سبيل المثال: دولار أمريكي
-appLGetStarted,appLGetStarted,aplicado,على سبيل المثال: دولار أمريكي
-appLMale,apply,aplicar,على سبيل المثال: دولار أمريكي
-appLFemale,appLFemale,apolcibro,على سبيل المثال: دولار أمريكي
-appLEmailAddress,appLEmailAddress,Applemailaddress,على سبيل المثال: دولار أمريكي
-appLEnterTheOTPCodeSendTo,appLEnterTheOTPCodeSendTo,ApplenterTheotpCodesendTo,على سبيل المثال: دولار أمريكي
-appLRecipientEmail,appLRecipientEmail,ApplreCipientMail,على سبيل المثال: دولار أمريكي
-appLSubmit,appLSubmit,applsubmit,على سبيل المثال: دولار أمريكي
-appLFromCamera,appLFromCamera,ApplFromCamera,على سبيل المثال: دولار أمريكي
-appLTransferLog,appLTransferLog,applansferlog,على سبيل المثال: دولار أمريكي
-appLFromGallery,appLFromGallery,Applyfromgallery,على سبيل المثال: دولار أمريكي
-appLOTPVerification,appLOTPVerification,APLOTPVERIFICACIÓN,على سبيل المثال: دولار أمريكي
-appLEmailVerification,appLEmailVerification,AppleMailverificación,على سبيل المثال: دولار أمريكي
-appLResend,appLResend,aplaso,على سبيل المثال: دولار أمريكي
-appLNewPassword,appLNewPassword,Applnewpassword,على سبيل المثال: دولار أمريكي
-appLConfirmPassword,appLConfirmPassword,ApplconfirmPassword,على سبيل المثال: دولار أمريكي
-appLEnter,appLEnter,aplicador,على سبيل المثال: دولار أمريكي
-appLResetPassword,appLResetPassword,ApplesetPassword,على سبيل المثال: دولار أمريكي
-appLCongratulation,appLCongratulation,aplicaciones de aplicaciones,على سبيل المثال: دولار أمريكي
-appLOops,appLOops,apploops,على سبيل المثال: دولار أمريكي
-appLCreateAccount,appLCreateAccount,AppleateAcCount,على سبيل المثال: دولار أمريكي
-appLFirstName,appLFirstName,ApplfirstName,على سبيل المثال: دولار أمريكي
-appLLastName,applast name,nombre de la aplicación,على سبيل المثال: دولار أمريكي
-appLOkay,appLOkay,aplazamiento,على سبيل المثال: دولار أمريكي
-appLTransfer,appLTransfer,aplicatransfer,على سبيل المثال: دولار أمريكي
-appLHome,appLHome,aplicativo,على سبيل المثال: دولار أمريكي
-appLProfile,appLProfile,apropiado,على سبيل المثال: دولار أمريكي
-appLAddMoney,appLAddMoney,apequeo,على سبيل المثال: دولار أمريكي
-appLPaymentConfirmation,appLPaymentConfirmation,applepaymentConfirmación,على سبيل المثال: دولار أمريكي
-appLMoneyOut,appLMoneyOut,aplicado,على سبيل المثال: دولار أمريكي
-appLSavedRecipients,appLSavedRecipients,recipientes aplicados,على سبيل المثال: دولار أمريكي
-appLKycInformation,appLKycInformation,ApplyCinformation,على سبيل المثال: دولار أمريكي
-appLPasswordResetSuccessfully,appLPasswordResetSuccessfully,ApplPasswordResetSuccessly,على سبيل المثال: دولار أمريكي
-appLExchange,appLExchange,cambio de applex,على سبيل المثال: دولار أمريكي
-appLSomethingWentWrong,appLSomethingWentWrong,Applsomethingwentwrong,على سبيل المثال: دولار أمريكي
-appLMoneyTransferMsg,appLMoneyTransferMsg,ApplmoneyTransfermsg,على سبيل المثال: دولار أمريكي
-appLRequest,appLRequest,aplicador de aplicaciones,على سبيل المثال: دولار أمريكي
-appLRecentTransaction,appLRecentTransaction,ApplecentTransaction,على سبيل المثال: دولار أمريكي
-appLNotification,appLNotification,aplnotificación,على سبيل المثال: دولار أمريكي
-appLMyInvoice,appLMyInvoice,aplicación,على سبيل المثال: دولار أمريكي
-appLMyVoucher,appLMyVoucher,applmyvoucher,على سبيل المثال: دولار أمريكي
-appLTransactionLog,appLTransactionLog,AppltransactionLog,على سبيل المثال: دولار أمريكي
-appLTransferFeesCharges,appLTransferFeesCharges,aplicatransferfeescharges,على سبيل المثال: دولار أمريكي
-appLAmountConvert,appLAmountConvert,aplamountConvertir,على سبيل المثال: دولار أمريكي
-appLTwoFASecurity,appLTwoFASecurity,Appltwofasecurity,على سبيل المثال: دولار أمريكي
-appLTwoFASecurityLogMsg,appLTwoFASecurityLogMsg,AppltwofaseCurityLogmsg,على سبيل المثال: دولار أمريكي
-appLChangePassword,appLChangePassword,ApplchangePassword,على سبيل المثال: دولار أمريكي
-appLHelpCenter,appLHelpCenter,aplicador,على سبيل المثال: دولار أمريكي
-appLPrivacyAndPolicy,appLPrivacyAndPolicy,Applprivacyandpolicy,على سبيل المثال: دولار أمريكي
-appLAboutUs,AppleBoutus,Appleboutus,على سبيل المثال: دولار أمريكي
-appLSignOut,appLSignOut,aplicado,على سبيل المثال: دولار أمريكي
-appLAmount,appLAmount,aplamour,على سبيل المثال: دولار أمريكي
-appLAmountInformation,appLAmountInformation,ApplamountInformation,على سبيل المثال: دولار أمريكي
-appLPreviewScreen,appLPreviewScreen,ApplPreviewScreen,على سبيل المثال: دولار أمريكي
-appLExchangeRate,appLExchangeRate,applexcharter,على سبيل المثال: دولار أمريكي
-appLTotalFeesAndCharges,appLTotalFeesAndCharges,Appltotalfees y Charges,على سبيل المثال: دولار أمريكي
-appLWillGet,appLWillGet,aplicador,على سبيل المثال: دولار أمريكي
-appLWillGetAmount,appLWillGetAmount,AppleWillGetAmount,على سبيل المثال: دولار أمريكي
-appLTotalPayableAmount,appLTotalPayableAmount,AppltotalpayableAlount,على سبيل المثال: دولار أمريكي
-appLConfirm,appLConfirm,applconfirm,على سبيل المثال: دولار أمريكي
-appLMoneyExchange,appLMoneyExchange,ApplmoneyExchange,على سبيل المثال: دولار أمريكي
-appLFrom,appLFrom,aplicaciones,على سبيل المثال: دولار أمريكي
-appLPhoneNumberHintText,appLPhoneNumberHintText,aplhphonenumberhinttext,على سبيل المثال: دولار أمريكي
-appLTo,appliance,aparato,على سبيل المثال: دولار أمريكي
-appLRequestMoney,appLRequestMoney,ApplrequestMoney,على سبيل المثال: دولار أمريكي
-appLRemarks,appLRemarks,marcas de aplicaciones,على سبيل المثال: دولار أمريكي
-appLOptional,appLOptional,apaltical,على سبيل المثال: دولار أمريكي
-appLShareRequestMoney,appLShareRequestMoney,ApplSharerequestMoney,على سبيل المثال: دولار أمريكي
-appLShare,appLShare,aplicado,على سبيل المثال: دولار أمريكي
-appLMoneyTransfer,appLMoneyTransfer,ApplmoneyTransfer,على سبيل المثال: دولار أمريكي
-appLAvailableBalance,appLAvailableBalance,balance de aplave,على سبيل المثال: دولار أمريكي
-appLReceiver,appLReceiver,aplicador,على سبيل المثال: دولار أمريكي
-appLProfileLabel,appLProfileLabel,Approfilelabel,على سبيل المثال: دولار أمريكي
-appLFullName,appLFullName,nombre de la aplicación,على سبيل المثال: دولار أمريكي
-appLCountry,appLCountry,aplicado,على سبيل المثال: دولار أمريكي
-appLPhoneNumber,appLPhoneNumber,APPLPHONENENEMBER,على سبيل المثال: دولار أمريكي
-appLState,appLState,aplicar,على سبيل المثال: دولار أمريكي
-appLCity,appLCity,aplicación,على سبيل المثال: دولار أمريكي
-appLZipCode,appLZipCode,choque de aplicaciones,على سبيل المثال: دولار أمريكي
-appLAddress,appLAddress,appladdress,على سبيل المثال: دولار أمريكي
-appLUpdate,appLUpdate,aplicado,على سبيل المثال: دولار أمريكي
-appLUpdateProfile,appLUpdateProfile,Approfile de aplicaciones,على سبيل المثال: دولار أمريكي
-appLPaid,appLPaid,aplicado,على سبيل المثال: دولار أمريكي
-appLEnable,appLEnable,aplicado,على سبيل المثال: دولار أمريكي
-appLDisable,appLDisable,appLdisable,على سبيل المثال: دولار أمريكي
-appLSent,appLSent,aplicado,على سبيل المثال: دولار أمريكي
-appLUnPaid,appLUnPaid,apago,على سبيل المثال: دولار أمريكي
-appLInvoiceNumber,appLInvoiceNumber,AplinvoicEnumber,على سبيل المثال: دولار أمريكي
-appLInvoiceDate,appLInvoiceDate,applinVoisEdate,على سبيل المثال: دولار أمريكي
-appLCurrency,appLCurrency,aplicada,على سبيل المثال: دولار أمريكي
-appLPickGoods,appLPickGoods,Applpickgoods,على سبيل المثال: دولار أمريكي
-appLTrickGoods,appLTrickGoods,Appltrrickgoods,على سبيل المثال: دولار أمريكي
-appLTotalBill,appLTotalBill,aplicada,على سبيل المثال: دولار أمريكي
-appLCreateInvoice,appLCreateInvoice,apliqueinvoice,على سبيل المثال: دولار أمريكي
-appLInvoiceTo,appLInvoiceTo,aplinvoiceto,على سبيل المثال: دولار أمريكي
-appLBillingAddress,appLBillingAddress,ApplbillingAddress,على سبيل المثال: دولار أمريكي
-appLNotes,appLNotes,aplnotes,على سبيل المثال: دولار أمريكي
-appLItemDetails,appLItemDetails,aplicados,على سبيل المثال: دولار أمريكي
-appLClientName,appLClientName,ApplClientName,على سبيل المثال: دولار أمريكي
-appLAddNew,appLAddNew,appladdnew,على سبيل المثال: دولار أمريكي
-appLItemName,appLItemName,nombre de la solicitud,على سبيل المثال: دولار أمريكي
-appLVoucher,appLVoucher,aplicador,على سبيل المثال: دولار أمريكي
-appLRedeem,applials,aplicaciones,على سبيل المثال: دولار أمريكي
-appLUsed,appLUsed,aplicado,على سبيل المثال: دولار أمريكي
-appLNotUsed,Applnotus,Aplicación,على سبيل المثال: دولار أمريكي
-appLName,appLName,aplicar,على سبيل المثال: دولار أمريكي
-appLEmail,appLEmail,Applemail,على سبيل المثال: دولار أمريكي
-appLPhone,appLPhone,aplicación,على سبيل المثال: دولار أمريكي
-appLFeesAndCharge,appLFeesAndCharge,aplicados y cargo,على سبيل المثال: دولار أمريكي
-appLStatus,appLStatus,applstatus,على سبيل المثال: دولار أمريكي
-appLCode,appLCode,aplicar el código,على سبيل المثال: دولار أمريكي
-appLCreateVoucher,appLCreateVoucher,ApplicreeVoucher,على سبيل المثال: دولار أمريكي
-appLConfirmRedeem,Applconfirm Redema,Applconfirm Redema,على سبيل المثال: دولار أمريكي
-appLRedeemCode,Appledeem code,Código de Apelación,على سبيل المثال: دولار أمريكي
-appLAddMoneyLog,appLAddMoneyLog,Appladdmoneylog,على سبيل المثال: دولار أمريكي
-appLMoneyOutLog,appLMoneyOutLog,ApplmoneyOutlog,على سبيل المثال: دولار أمريكي
-appLExchangeLog,appLExchangeLog,applexchangelog,على سبيل المثال: دولار أمريكي
-appLRequestLog,appLRequestLog,Applrequestlog,على سبيل المثال: دولار أمريكي
-appLVerifiedCode,appLVerifiedCode,código aplicable,على سبيل المثال: دولار أمريكي
-appLBackToHome,appLBackToHome,Applbacktohome,على سبيل المثال: دولار أمريكي
-appLEnable2faSecurity,appLEnable2faSecurity,APLENABLE2FASECURIDAD,على سبيل المثال: دولار أمريكي
-appLSendVerificationCode,appLSendVerificationCode,ApplsendverificationCode,على سبيل المثال: دولار أمريكي
-appLOldPassword,appLOldPassword,ApploldPassword,على سبيل المثال: دولار أمريكي
-appLIndividual,appLIndividual,aplicativo,على سبيل المثال: دولار أمريكي
-appLBusiness,appLBusiness,aplicado,على سبيل المثال: دولار أمريكي
-appLMiddleName,appLMiddleName,Applmiddlename,على سبيل المثال: دولار أمريكي
-appLUserName,appLUserName,nombre de aplicación,على سبيل المثال: دولار أمريكي
-appLPostalCode,appLPostalCode,código de apostal,على سبيل المثال: دولار أمريكي
-appLCompanyName,appLCompanyName,ApplCompanyName,على سبيل المثال: دولار أمريكي
-appLGender,appLGender,aplicador,على سبيل المثال: دولار أمريكي
-appLDateOfBirth,appLDateOfBirth,appldateofbirth,على سبيل المثال: دولار أمريكي
-appLNationality,appLNationality,aplicaciones,على سبيل المثال: دولار أمريكي
-appLMyReceipt,appLMyReceipt,AplMyReceipt,على سبيل المثال: دولار أمريكي
-appLTotalExchangedAmount,appLTotalExchangedAmount,AppltotalExchangedMount,على سبيل المثال: دولار أمريكي
-appLConvertedAmount,appLConvertedAmount,ApplconvertedMount,على سبيل المثال: دولار أمريكي
-appLRequestedAmount,appLRequestedAmount,ApplrequestedMount,على سبيل المثال: دولار أمريكي
-appLTrackYourTransaction,appLTrackYourTransaction,ApplTrackYourTransaction,على سبيل المثال: دولار أمريكي
-appLTransferCalculator,appLTransferCalculator,Applansfercalculator,على سبيل المثال: دولار أمريكي
-appLNewUserHere,appLNewUserHere,aplheNewuserhere,على سبيل المثال: دولار أمريكي
-appLWelcomeToXRemit,appLWelcomeToXRemit,Applwelcometoxremit,على سبيل المثال: دولار أمريكي
-appLOnboardSubtitleText,appLOnboardSubtitleText,ApplonboardSubtitletext,على سبيل المثال: دولار أمريكي
-appLSafeAndSecureProcess,appLSafeAndSecureProcess,Aproceso de aplicación,على سبيل المثال: دولار أمريكي
-appLCustomerSupport,appLCustomerSupport,Applicustomersupport,على سبيل المثال: دولار أمريكي
-appLEnterMTCN,appLEnterMTCN,Applentermtcn,على سبيل المثال: دولار أمريكي
-appLMtcn,appLMtcn,aplicación,على سبيل المثال: دولار أمريكي
-appLCompleted,appLCompleted,appleted,على سبيل المثال: دولار أمريكي
-appLYourEmail,appLYourEmail,cola de apagado,على سبيل المثال: دولار أمريكي
-appLContinueAsGuest,appLContinueAsGuest,apliccontinueasguest,على سبيل المثال: دولار أمريكي
-appLOr,appLOr,aparato,على سبيل المثال: دولار أمريكي
-appLEnterYourEmail,applenteryouremail,mortero,على سبيل المثال: دولار أمريكي
-appLEnterPassword,appLEnterPassword,ApplenterPassword,على سبيل المثال: دولار أمريكي
-appLEnterRegisteredEmail,appLEnterRegisteredEmail,aplicador,على سبيل المثال: دولار أمريكي
-appLOtpVerification,appLOtpVerification,APLOTPVERIFICACIÓN,على سبيل المثال: دولار أمريكي
-appLVerificationCode,appLVerificationCode,Código de aplicaciones,على سبيل المثال: دولار أمريكي
-appLResendCode,applesendcode,Código de manzana,على سبيل المثال: دولار أمريكي
-appLEnterNewPassword,Applesternewpassword,ApplersterNewPassword,على سبيل المثال: دولار أمريكي
-appLEnterConfirmPassword,appLEnterConfirmPassword,ApplenerConFirmPassword,على سبيل المثال: دولار أمريكي
-appLEnterTheVerificationCode,appLEnterTheVerificationCode,ApplentertTheverificationCode,على سبيل المثال: دولار أمريكي
-appLEnterName,Applentername,Nombre de aplicación,على سبيل المثال: دولار أمريكي
-appLSelectCountry,appLSelectCountry,Applselectcountry,على سبيل المثال: دولار أمريكي
-appLTermsAndCondition,appLTermsAndCondition,Appltermsandcondition,على سبيل المثال: دولار أمريكي
-appLPrivacyPolicy,appLPrivacyPolicy,Applprivacypolicy,على سبيل المثال: دولار أمريكي
-appLUsa,appLUsa,aplicado,على سبيل المثال: دولار أمريكي
-appLIAgree,appLIAgree,aplicativo,على سبيل المثال: دولار أمريكي
-appLOfXRemit,appLOfXRemit,applefxremit,على سبيل المثال: دولار أمريكي
-appLAnd,appLAnd,aplicación,على سبيل المثال: دولار أمريكي
-appLSendingCountry,appLSendingCountry,aplicando country,على سبيل المثال: دولار أمريكي
-appLReceivingCountry,appLReceivingCountry,AppleceingCountry,على سبيل المثال: دولار أمريكي
-appLReceivingMethod,appLReceivingMethod,Applreceivingmethod,على سبيل المثال: دولار أمريكي
-appLSelectReceivingMethod,appLSelectReceivingMethod,ApplSelectriceingMethod,على سبيل المثال: دولار أمريكي
-appLCashPickup,appLCashPickup,aplicada,على سبيل المثال: دولار أمريكي
-appLBankTransfer,Appplbanktransfer,AppplBankTransfer,على سبيل المثال: دولار أمريكي
-appLTitleSignUp,appLTitleSignUp,appltitleSignup,على سبيل المثال: دولار أمريكي
-appLMobileMoney,appLMobileMoney,applmobilemoney,على سبيل المثال: دولار أمريكي
-appLSelectPickupPoint,appLSelectPickupPoint,ApplSelectPickUppoint,على سبيل المثال: دولار أمريكي
-appLPickupPoint,appLPickupPoint,ApplePickUppoint,على سبيل المثال: دولار أمريكي
-appLReceivingBank,appLReceivingBank,Applreceivingbank,على سبيل المثال: دولار أمريكي
-appLSelectReceivingBank,appLSelectReceivingBank,ApplSelectReceivingBank,على سبيل المثال: دولار أمريكي
-appLAccountHolderName,appLAccountHolderName,applaccounTholdername,على سبيل المثال: دولار أمريكي
-appLEnterAccountHolderName,appLEnterAccountHolderName,ApplenterAccountholdername,على سبيل المثال: دولار أمريكي
-appLAccountNumber,appLAccountNumber,aplicCountNumber,على سبيل المثال: دولار أمريكي
-appLEnterAccountNumber,AppLenteraccountnumbber,ApplenterAccountnumbber,على سبيل المثال: دولار أمريكي
-appLEnterBankName,Applesterbankname,ApplesterBankName,على سبيل المثال: دولار أمريكي
-appLIbanNumber,appLIbanNumber,aplicador,على سبيل المثال: دولار أمريكي
-appLEnterIbanNumber,applenter bannumber,bannumber de aplicador,على سبيل المثال: دولار أمريكي
-appLMethodName,appLMethodName,ApplMethodName,على سبيل المثال: دولار أمريكي
-appLUnitedBank,appLUnitedBank,APLUNITEDBANK,على سبيل المثال: دولار أمريكي
-appLBrackBank,appLBrackBank,Applackbank,على سبيل المثال: دولار أمريكي
-appLCityBank,appLCityBank,ApplcityBank,على سبيل المثال: دولار أمريكي
-appLRecipientInformation,appLRecipientInformation,AplecipientInformation,على سبيل المثال: دولار أمريكي
-appLEnterGmailOrUsername,AppLentergmailorusername,ApplenterGMailoruserName,على سبيل المثال: دولار أمريكي
-appLDhaka,applida,aplida,على سبيل المثال: دولار أمريكي
-appLKhulna,Applkhulna,Aplicado,على سبيل المثال: دولار أمريكي
-appLRangpur,appLRangpur,applangpur,على سبيل المثال: دولار أمريكي
-appLPaymentInformation,appLPaymentInformation,ApplPayMentInformation,على سبيل المثال: دولار أمريكي
-appLPaymentSummary,appLPaymentSummary,aplicados de aplicaciones,على سبيل المثال: دولار أمريكي
-appLRecipientPayment,appLRecipientPayment,apagado,على سبيل المثال: دولار أمريكي
-appLSendingPurpose,appLSendingPurpose,ApplicingPurpose,على سبيل المثال: دولار أمريكي
-appLSelectSendingPurpose,appLSelectSendingPurpose,ApplSelectsendingPurpose,على سبيل المثال: دولار أمريكي
-appLSaveUpTo,appLSaveUpTo,Applsaveupto,على سبيل المثال: دولار أمريكي
-appLShouldArrive,appLShouldArrive,aplicar aplicado,على سبيل المثال: دولار أمريكي
-appLSourceOfFund,appLSourceOfFund,Applsourceofund,على سبيل المثال: دولار أمريكي
-appLSelectSourceOfFund,appLSelectSourceOfFund,ApplSelectSourceOffund,على سبيل المثال: دولار أمريكي
-appLPaymentGateway,appLPaymentGateway,Applepaymentgateway,على سبيل المثال: دولار أمريكي
-appLSelectPaymentGateway,appLSelectPaymentGateway,ApplSelectPaymentGateway,على سبيل المثال: دولار أمريكي
-appLProceed,appLProceed,aplicada,على سبيل المثال: دولار أمريكي
-appLSalary,appLSalary,aplicativo,على سبيل المثال: دولار أمريكي
-appLMedicine,appLMedicine,aplicada de la aplicación,على سبيل المثال: دولار أمريكي
-appLCompany,appLCompany,aplicación de la aplicación,على سبيل المثال: دولار أمريكي
-appLPersonal,appLPersonal,aplicaponal,على سبيل المثال: دولار أمريكي
-appLFamily,appLFamily,aplfamilia,على سبيل المثال: دولار أمريكي
-appLEditBeneficiary,appLEditBeneficiary,AppleditBeneficiary,على سبيل المثال: دولار أمريكي
-appLAddNewRecipient,appLAddNewRecipient,Appladdnewrecipiente,على سبيل المثال: دولار أمريكي
-appLRecipientDetails,appLRecipientDetails,ApplrecipientDetails,على سبيل المثال: دولار أمريكي
-appLReceiveMethod,appLReceiveMethod,ApplReceivemethod,على سبيل المثال: دولار أمريكي
-appLSelectTransactionType,appLSelectTransactionType,ApplSelectTransactionType,على سبيل المثال: دولار أمريكي
-appLRecipientName,appLRecipientName,Applrecipientname,على سبيل المثال: دولار أمريكي
-appLEnterRecipientName,ApplenterRecipientname,ApplenterRecipientname,على سبيل المثال: دولار أمريكي
-appLRecipientEmailAddress,appLRecipientEmailAddress,ApplrecipientMailAddress,على سبيل المثال: دولار أمريكي
-appLEnterEmailAddress,appLEnterEmailAddress,ApplentereMailAddress,على سبيل المثال: دولار أمريكي
-appLRecipientCountry,appLRecipientCountry,ApplrecipientCountry,على سبيل المثال: دولار أمريكي
-appLSelectRecipientCountry,appLSelectRecipientCountry,ApplSelectRecipientCountry,على سبيل المثال: دولار أمريكي
-appLRecipientCity,appLRecipientCity,Applrecipientcity,على سبيل المثال: دولار أمريكي
-appLSelect,appLSelect,aplicar,على سبيل المثال: دولار أمريكي
-appLSelected,appLSelected,aplicado,على سبيل المثال: دولار أمريكي
-appLAdditionalAddressInfo,appLAdditionalAddressInfo,AppladditionalAddressInfo,على سبيل المثال: دولار أمريكي
-appLEnterRoadLandmark,AppLenterroadlandmark,ApplenterRoadlandmark,على سبيل المثال: دولار أمريكي
-appLRecipientPhoneNumber,appLRecipientPhoneNumber,AplecipientPhonEnumber,على سبيل المثال: دولار أمريكي
-appLDdmmyyyy,Applddmmyyyyyyyy,Applddmmyyyyyyy,على سبيل المثال: دولار أمريكي
-appLRelationshipWithRecipient,appLRelationshipWithRecipient,aplicaciones aplicaciones,على سبيل المثال: دولار أمريكي
-appLSelectRecipient,appLSelectRecipient,ApplelectRecipiente,على سبيل المثال: دولار أمريكي
-appLAddRecipient,appLAddRecipient,Appladdrecipiente,على سبيل المثال: دولار أمريكي
-appLFamilyRelation,appLFamilyRelation,Applfamilyrelación,على سبيل المثال: دولار أمريكي
-appLFriendshipRelation,appLFriendshipRelation,aplicaciones de aplicaciones,على سبيل المثال: دولار أمريكي
-appLAcquaintancesRelation,appLAcquaintancesRelation,Appliccaintancesrelación,على سبيل المثال: دولار أمريكي
-appLWorkOrProfessionalRelation,appLWorkOrProfessionalRelation,apropiamiento,على سبيل المثال: دولار أمريكي
-appLTeacherOrStudentRelation,appLTeacherOrStudentRelation,AppleeacherorStudentRelation,على سبيل المثال: دولار أمريكي
-appLCommunityOrGroupRelation,appLCommunityOrGroupRelation,APPLOMunityOrgroupelación,على سبيل المثال: دولار أمريكي
-appLPlaceBasedRelationships,appLPlaceBasedRelationships,AppliaceBasedrelationships,على سبيل المثال: دولار أمريكي
-appLLandlordOrTenantRelationships,appLLandlordOrTenantRelationships,ApplandlordortenAntrelationships,على سبيل المثال: دولار أمريكي
-appLSelectRelationship,appLSelectRelationship,selectelación de aplicaciones,على سبيل المثال: دولار أمريكي
-appLPaymentPreview,appLPaymentPreview,ApplPaymentPreview,على سبيل المثال: دولار أمريكي
-appLEnteredAmount,Applenteredamount,APLENTEREDMOUNT,على سبيل المثال: دولار أمريكي
-appLYouTransfer,appLYouTransfer,aplicar,على سبيل المثال: دولار أمريكي
-appLRecipientGets,appLRecipientGets,Aplecipientgets,على سبيل المثال: دولار أمريكي
-appLTransferFee,appLTransferFee,Applansferfee,على سبيل المثال: دولار أمريكي
-appLUnitedStates,appLUnitedStates,estados de aplicación,على سبيل المثال: دولار أمريكي
-appLAustralia,Applaustralia,Aplaustralia,على سبيل المثال: دولار أمريكي
-appLDba,applda,applda,على سبيل المثال: دولار أمريكي
-appLGift,appLGift,aplicado,على سبيل المثال: دولار أمريكي
-appLRetainedEarnings,appLRetainedEarnings,ApletinedRearnings,على سبيل المثال: دولار أمريكي
-appLPaypalUsd,appLPaypalUsd,applpaypalusd,على سبيل المثال: دولار أمريكي
-appLDepositToBank,Appldeposittobank,Appldeposittobank,على سبيل المثال: دولار أمريكي
-appLYouSending,appLYouSending,ausencia,على سبيل المثال: دولار أمريكي
-appLYouSendExactly,appLYouSendExactly,APLICACIÓN APTILIDA,على سبيل المثال: دولار أمريكي
-appLPayoutPartner,appLPayoutPartner,ApplPayoutPartner,على سبيل المثال: دولار أمريكي
-appLSingle,appLSingle,aplicado,على سبيل المثال: دولار أمريكي
-appLMarried,appLMarried,aplicado,على سبيل المثال: دولار أمريكي
-appLDivorced,appLDivorced,appLdivorced,على سبيل المثال: دولار أمريكي
-appLWidow,appLWidow,pilón,على سبيل المثال: دولار أمريكي
-appLUpdatePassword,appLUpdatePassword,ApplupdatePassword,على سبيل المثال: دولار أمريكي
-appLBkash,appled,certificado,على سبيل المثال: دولار أمريكي
-appLNogod,Applnogod,Aplicada,على سبيل المثال: دولار أمريكي
-appLTabAndHold,appLTabAndHold,aplicada,على سبيل المثال: دولار أمريكي
-appLRocket,appLRocket,aplicado,على سبيل المثال: دولار أمريكي
-appLMobileMethod,appLMobileMethod,aplicado,على سبيل المثال: دولار أمريكي
-appLSelectMethod,appLSelectMethod,ApplSelectMethod,على سبيل المثال: دولار أمريكي
-appLNoRecipient,ApplNorecipient,Aplicación,على سبيل المثال: دولار أمريكي
-appLTwoFactorAuthorization,appLTwoFactorAuthorization,AppltWofactorautorización,على سبيل المثال: دولار أمريكي
-appLEnterTheTwoFaVerification,appLEnterTheTwoFaVerification,aplicado,على سبيل المثال: دولار أمريكي
-appLBeneficiaries,appLBeneficiaries,apliciarios,على سبيل المثال: دولار أمريكي
-appLNext,appLNext,aplanado,على سبيل المثال: دولار أمريكي
-appLCancel,appLCancel,aplicado,على سبيل المثال: دولار أمريكي
-appLSignOutAlert,Applsignoutaled,Applsignoutaled,على سبيل المثال: دولار أمريكي
-appLDeleteProfileAlert,Appldeleteprofillealed,AppldeleteprofillEaled,على سبيل المثال: دولار أمريكي
-appLAreYouSure,appLAreYouSure,aplazar,على سبيل المثال: دولار أمريكي
-appLAreYouSureDelete,appLAreYouSureDelete,AppleyousuredElete,على سبيل المثال: دولار أمريكي
-appLYourPaymentIsSuccessfully,appLYourPaymentIsSuccessfully,APLEAURPAYMENTISSCcessamente,على سبيل المثال: دولار أمريكي
-appLDownloadReceiptPDF,appLDownloadReceiptPDF,applDownloadReceiptpdf,على سبيل المثال: دولار أمريكي
-appLGoToDashboard,appLGoToDashboard,Applgotodashboard,على سبيل المثال: دولار أمريكي
-appLCopyUrl,appLCopyUrl,applcopyurl,على سبيل المثال: دولار أمريكي
-appLSslcommerzPayment,appLSslcommerzPayment,ApplsslCommerzPayment,على سبيل المثال: دولار أمريكي
-appLChangeLanguage,appLChangeLanguage,ApplChangelguage,على سبيل المثال: دولار أمريكي
-appLChange,appLChange,aplicar,على سبيل المثال: دولار أمريكي
-appLLanguage,appLLanguage,aplanguage,على سبيل المثال: دولار أمريكي
-appLSettings,appLSettings,aplicadas,على سبيل المثال: دولار أمريكي
-appLCardNumber,appLCardNumber,APPLCARDNUMBER,على سبيل المثال: دولار أمريكي
-appLCardHolder,appLCardHolder,titular de aplicaciones,على سبيل المثال: دولار أمريكي
-appLValidThru,appLValidThru,Applvalidthru,على سبيل المثال: دولار أمريكي
-appLPayNow,appLPayNow,applepaynow,على سبيل المثال: دولار أمريكي
-appLCreditCardSampleText,appLCreditCardSampleText,ApplCreditCardSmplExtext,على سبيل المثال: دولار أمريكي
-appLMtcnNumber,appLMtcnNumber,applmtcnnumber,على سبيل المثال: دولار أمريكي
-appLTransactionType,appLTransactionType,AppltransactionType,على سبيل المثال: دولار أمريكي
-appLSenderAmount,appLSenderAmount,ApplsenderMount,على سبيل المثال: دولار أمريكي
-appLPayableAmount,appLPayableAmount,ApplPayableAlount,على سبيل المثال: دولار أمريكي
-appLCopyLink,appLCopyLink,applcopylink,على سبيل المثال: دولار أمريكي
-appLDownloadReceipt,appLDownloadReceipt,applDownloadReceipt,على سبيل المثال: دولار أمريكي
-appLCityAndState,appLCityAndState,Applcity y State,على سبيل المثال: دولار أمريكي
-appLChangeThemes,appLChangeThemes,Applchangethemes,على سبيل المثال: دولار أمريكي
-appLSuccess,appLSuccess,aplicativo,على سبيل المثال: دولار أمريكي
-appLAlert,appLAlert,aparato,على سبيل المثال: دولار أمريكي
-appLSelectBanksName,appLSelectBanksName,ApplSelectBankSname,على سبيل المثال: دولار أمريكي
-appLSelectMethodName,appLSelectMethodName,ApplSelectMethodName,على سبيل المثال: دولار أمريكي
-appLBankName,appLBankName,ApplbankName,على سبيل المثال: دولار أمريكي
-appLHaveACoupon,appLHaveACoupon,aplicada,على سبيل المثال: دولار أمريكي
-appLApply,appLApply,trayectoria,على سبيل المثال: دولار أمريكي
-appLRemoveCoupon,appLRemoveCoupon,Applremovecoupon,على سبيل المثال: دولار أمريكي
-appLApplied,appLApplied,aplazado,على سبيل المثال: دولار أمريكي
-appLEnterTheCouponCode,appLEnterTheCouponCode,ApplenterTheCoupOncode,على سبيل المثال: دولار أمريكي
-appLCoupon,appLCoupon,aplicaciones aplicadas,على سبيل المثال: دولار أمريكي
-appLApplyCoupon,appLApplyCoupon,aplazador,على سبيل المثال: دولار أمريكي
-appLDeleteRecipient,appLDeleteRecipient,AppLdeleterCipiente,على سبيل المثال: دولار أمريكي
-appLRecipientDeleteAlert,AppleCipientdeletealed,ApplecipientDelEltealed,على سبيل المثال: دولار أمريكي
-appLDelete,appLDelete,appLdelete,على سبيل المثال: دولار أمريكي
-appLCoinGatePayment,appLCoinGatePayment,apagado,على سبيل المثال: دولار أمريكي
-appLCryptoPaymentAddress,appLCryptoPaymentAddress,applcryppaymentDdress,على سبيل المثال: دولار أمريكي
-appLPayWithThisAddress,appLPayWithThisAddress,applepay con thisaddress,على سبيل المثال: دولار أمريكي
-appLAddressCopyTo,appLAddressCopyTo,AppladdressCopyto,على سبيل المثال: دولار أمريكي
-Admin Profile,Admin Profile,Perfil de administración,على سبيل المثال: دولار أمريكي
-Select State,Select State,Seleccione estado,على سبيل المثال: دولار أمريكي
-Select City,Select City,Ciudad selecta,على سبيل المثال: دولار أمريكي
-Profile Information Updated Successfully!,Profile Information Updated Successfully!,¡Información de perfil actualizada con éxito!,على سبيل المثال: دولار أمريكي
-The password field is required.,The password field is required.,Se requiere el campo de contraseña.,على سبيل المثال: دولار أمريكي
-The current password field is required.,The current password field is required.,Se requiere el campo de contraseña actual.,على سبيل المثال: دولار أمريكي
-Password updated successfully!,Password updated successfully!,¡Contraseña actualizada exitosamente!,على سبيل المثال: دولار أمريكي
-Add Source Fund,Add Source Fund,Agregar fondo fuente,على سبيل المثال: دولار أمريكي
-Web Version,Web Version,Versión web,على سبيل المثال: دولار أمريكي
+Please configure your push notification with valid credentials.,Please configure your push notification with valid credentials.,Configure su notificación push con credenciales válidas.,يرجى تكوين إشعار الدفع الخاص بك مع بيانات اعتماد صالحة.
+Broadcast configuration updated successfully!,Broadcast configuration updated successfully!,¡Configuración de transmisión actualizada con éxito!,تم تحديث تكوين البث بنجاح!
+The body field is required.,The body field is required.,Se requiere el campo del cuerpo.,حقل الجسم مطلوب.
+Server Information,Server Information,información del servidor,معلومات الخادم
+Language updated successfully!,Language updated successfully!,¡Lenguaje actualizado con éxito!,تم تحديث اللغة بنجاح!
+Charges,Charges,Cargos,رسوم
+Pending Ticket,Pending Ticket,Boleto pendiente,تذكرة معلقة
+Active Ticket,Active Ticket,Boleto activo,تذكرة نشطة
+Solved Ticket,Solved Ticket,Boleto resuelto,تذكرة حل
+All Ticket,All Ticket,Todo el boleto,كل التذاكر
+Pending Tickets,Pending Tickets,Boletos pendientes,تذاكر معلقة
+Active Tickets,Active Tickets,Boletos activos,تذاكر نشطة
+Solved Tickets,Solved Tickets,Boletos resueltos,حل التذاكر
+All Tickets,All Tickets,Todas las entradas,جميع التذاكر
+View All,View All,Ver todo,عرض الكل
+Support Chat,Support Chat,Chat de apoyo,دعم الدردشة
+Mark as Solved,Mark as Solved,Marca como se resuelve,علامة كما تم حلها
+Are you sure to mark as solved (Token:,Are you sure to mark as solved (Token:,¿Estás seguro de marcar como resuelto (Token:,هل أنت متأكد من أن تحل كما تم حلها (الرمز المميز:
+Because it's not reversable.,Because it's not reversable.,Porque no es reversible.,لأنه لا يمكن عكسه.
+appLPleaseFillOutTheField,Please Fill Out The Field,Por favor complete el campo,يرجى ملء الحقل
+appLSignIn,Sign In,Iniciar sesión,تسجيل الدخول
+appLSignUp,Sign Up,Inscribirse,اشتراك
+appLEnterCity,Enter City,Entrar en la ciudad,أدخل المدينة
+appLUpload,Upload,Subir,رفع
+appLBank,Bank,Banco,بنك
+appLFrontPart,Front Part,Parte delantera,الجزء الامامي
+appLRecipientSummary,Recipient Summary,Resumen del receptor,ملخص المستلم
+appLDeleteProfile,Delete Profile,Borrar perfil,حذف الملف الشخصي
+appLVerify,Verify,Verificar,يؤكد
+appLUploadImage,Upload Image,Cargar imagen,تحميل الصور
+appLEvidenceNote,Evidence Note,Nota de evidencia,ملاحظة الأدلة
+appLCongratulations,Congratulations,Felicidades,تهانينا
+appLAccountSuccessfullyCreate,your account has been successfully created.,Su cuenta ha sido creada satisfactoriamente.,تم إنشاء حسابك بنجاح.
+appLFlutterWavePayment,Flutterwave Payment,Pago de FlutterWave,مدفوعات الرفرفة
+appLStripePayment,Stripe Payment,Pago de rayas,دفع الشريط
+appLPaypalPayment,Paypal Payment,Pago PayPal,الدفع باي بال
+appLRazorpayPayment,Razorpay Payment,Pago de Razorpay,دفعة Razorpay
+appLPagaditoPayment,Pagadito Payment,Pago de pagadito,دفع Pagadito
+appLNoNotification,No notification found,No se encontró notificación,لم يتم العثور على إشعار
+appLNoTransaction,No transaction found,No se encontró transacción,لم يتم العثور على معاملة
+appLSignInWithTouchId,Sign In With Touch Id,Iniciar sesión con Touch ID,تسجيل الدخول مع معرف اللمس
+appLPleaseAgree,Please agreed our terms and privacy policy,Acordó nuestros Términos y Política de privacidad,يرجى الاتفاق على شروطنا وسياسة الخصوصية
+appLSendingAmount,Sending Amount,Cantidad de envío,إرسال المبلغ
+appLPaymentMethod,Payment Method,Método de pago,طريقة الدفع او السداد
+appLRemittanceSummary,Remittance Summary,Resumen de remesas,ملخص التحويلات
+appLSameAsContact,Same as Contact Number,Igual que el número de contacto,نفس رقم الاتصال
+appLSelectMobileMethod,Select Mobile Method,Seleccionar método móvil,حدد طريقة الهاتف المحمول
+appLBackPart,Back Part,Parte de atrás,الجزء الخلفي
+appLSendRemittance,Send Remittance,Enviar remesas,إرسال التحويلات
+appLDummyMonth,Dummy Month,Mes ficticio,شهر وهمية
+appLEnterState,Enter State,Ingrese el estado,إدخال الدولة
+appLSelectDocumentType,Select Document Type,Seleccionar tipo de documento,حدد نوع المستند
+appLDocumentType,Document Type,Tipo de Documento,نوع الوثيقة
+appLWriteHere,Write Here,Escribe aquí,اكتب هنا
+appLContactNumber,Contact Number,Número de contacto,رقم الاتصال
+appLUploadDocument,Upload Document,Cargar documento,تحميل وثيقة
+appLIntervalFeesCharges,Interval Fees & Charges,Tarifas y cargos de intervalo,رسوم الفاصل والرسوم
+appLPending,Pending,Pendiente,قيد الانتظار
+appLVerified,Verified,Verificado,تم التحقق
+appLUserNameOrEmailAddress,Username Or Email Address,Nombre de usuario o dirección de correo electrónico,اسم المستخدم أو البريد الالكتروني
+appLPassword,Password,Contraseña,كلمة المرور
+appLForgotPassword,Forgot Password?,¿Has olvidado tu contraseña?,هل نسيت كلمة السر؟
+appLForgotPassword2,Reset Your Forgotten Password,Restablece tu contraseña olvidada,أعد تعيين كلمة المرور المنسية
+appLForgotPasswordNormal,Forgot Password,Has olvidado tu contraseña,هل نسيت كلمة السر
+appLGetStarted,Get Started,Empezar,البدء
+appLMale,Male,Masculino,ذكر
+appLFemale,Female,Femenino,أنثى
+appLEmailAddress,Email Address,Dirección de correo electrónico,عنوان البريد الإلكتروني
+appLEnterTheOTPCodeSendTo,Enter The OTP Code Sent to,Ingrese el código OTP enviado a,أدخل رمز OTP المرسلة إلى
+appLRecipientEmail,Recipient Email,Receptor de E-mail,البريد الإلكتروني المستلم
+appLSubmit,Submit,Entregar,يُقدِّم
+appLFromCamera,From Camera,De la cámara,من الكاميرا
+appLTransferLog,Transfer Log,Transferencia,سجل النقل
+appLFromGallery,From Gallery,De la galería,من المعرض
+appLOTPVerification,OTP Verification,Verificación OTP,التحقق من OTP
+appLEmailVerification,Email Verification,verificacion de email,تأكيد بواسطة البريد الالكتروني
+appLResend,Resend,Revender,إعادة إرسال
+appLNewPassword,New Password,Nueva contraseña,كلمة المرور الجديدة
+appLConfirmPassword,Confirm Password,confirmar Contraseña,تأكيد كلمة المرور
+appLEnter,Enter,Ingresar,يدخل
+appLResetPassword,Reset Password,Restablecer la contraseña,إعادة تعيين كلمة المرور
+appLCongratulation,Congratulations!,¡Felicidades!,تهانينا!
+appLOops,Opps!,¡Opps!,أوس!
+appLCreateAccount,Create Account,Crear una cuenta,إنشاء حساب
+appLFirstName,First Name,Nombre de pila,الاسم الأول
+appLLastName,Last Name,Apellido,اسم العائلة
+appLOkay,Okay,Bueno,تمام
+appLTransfer,TRANSFER,TRANSFERIR,تحويل
+appLHome,Home,Hogar,بيت
+appLProfile,Profile,Perfil,حساب تعريفي
+appLAddMoney,Add Money,Agregar dinero,إضافة المال
+appLPaymentConfirmation,Payment Confirmation,Confirmación de pago,تأكيد الدفعة
+appLMoneyOut,Money Out,Apagarse,لم يبقى اي من المال
+appLSavedRecipients,Saved Recipients,Destinatarios guardados,المستفيدين المحفوظة
+appLKycInformation,Kyc Information,Información de KYC,معلومات KYC
+appLPasswordResetSuccessfully,"Your password has been reset successfully, sign in again now.","Su contraseña se ha restablecido correctamente, inicie sesión nuevamente ahora.",تمت إعادة تعيين كلمة المرور الخاصة بك بنجاح ، وقم بتسجيل الدخول مرة أخرى الآن.
+appLExchange,Exchange,Intercambio,تبادل
+appLSomethingWentWrong,"Something went wrong, Try again later.","Algo salió mal, intente de nuevo más tarde.",حدث خطأ ما ، حاول مرة أخرى لاحقًا.
+appLMoneyTransferMsg,Your money has been transfer successfully,Su dinero ha sido transferido con éxito,تم تحويل أموالك بنجاح
+appLRequest,Request,Pedido,طلب
+appLRecentTransaction,Recent Transaction,Transacción reciente,المعاملة الأخيرة
+appLNotification,Notification,Notificación,إشعار
+appLMyInvoice,My Invoice,Mi factura,فاتورتي
+appLMyVoucher,My Voucher,Mi cupón,قسيمي
+appLTransactionLog,Transaction Log,Registro de transacciones,سجل المعاملات
+appLTransferFeesCharges,Transfer Fees & Charges,Tarifas y cargos de transferencia,رسوم النقل والرسوم
+appLAmountConvert,Amount well convert,Cantidad bien convertir,مبلغ تحويل جيد
+appLTwoFASecurity,2FA Security,2FA SEGURIDAD,2FA الأمن
+appLTwoFASecurityLogMsg,We’ll ask for a verification code via your security method if we notice a sign in from an unrecognized device or browser. Enable your 2FA Security,Pediremos un código de verificación a través de su método de seguridad si notamos un inicio de sesión desde un dispositivo o navegador no reconocido. Habilite su seguridad de 2FA,سنطلب رمز التحقق من خلال طريقة الأمان الخاصة بك إذا لاحظنا تسجيل الدخول من جهاز أو متصفح غير معترف به. تمكين أمان 2FA الخاص بك
+appLChangePassword,Change Password,Cambiar la contraseña,تغيير كلمة المرور
+appLHelpCenter,Help Center,Centro de ayuda,مركز المساعدة
+appLPrivacyAndPolicy,Privacy & Policy,Política de privacidad,سياسة الخصوصية
+appLAboutUs,About Us,Sobre nosotros,معلومات عنا
+appLSignOut,Sign Out,Desconectar,خروج
+appLAmount,Amount,Cantidad,كمية
+appLAmountInformation,Amount Information,Cantidad de información,معلومات المبلغ
+appLPreviewScreen,Preview Screen,Pantalla previa,شاشة المعاينة
+appLExchangeRate,Exchange Rate,Tipo de cambio,سعر الصرف
+appLTotalFeesAndCharges,Total Fees & Charges,Tarifas y cargos totales,إجمالي الرسوم والرسوم
+appLWillGet,Will Get,Obtendrá,سوف تحصل
+appLWillGetAmount,Will Get Amount,Obtendrá la cantidad,سوف تحصل على المبلغ
+appLTotalPayableAmount,Total Payable Amount,Monto total por pagar,إجمالي المبلغ المستحق
+appLConfirm,Confirm,Confirmar,يتأكد
+appLMoneyExchange,Money Exchange,Cambio de dinero,حوالة نقدية
+appLFrom,From,De,من
+appLPhoneNumberHintText,X X X  X X X X  X X X,X x x x x x x x x x,x x x x x x x x x x
+appLTo,To,A,ل
+appLRequestMoney,Request Money,Pedir dinero,طلب المال
+appLRemarks,Remarks,Observaciones,ملاحظات
+appLOptional,Optional,Opcional,خياري
+appLShareRequestMoney,Share Request Money,Solicitar dinero para compartir dinero,مشاركة طلب المال
+appLShare,Share,Compartir,يشارك
+appLMoneyTransfer,Money Transfer,Transferencia de dinero,تحويل المال
+appLAvailableBalance,Available Balance,Saldo disponible,الرصيد المتوفر
+appLReceiver,Receiver,Receptor,المتلقي
+appLProfileLabel,Profile,Perfil,حساب تعريفي
+appLFullName,Full Name,Nombre completo,الاسم الكامل
+appLCountry,Country,País,دولة
+appLPhoneNumber,Phone Number,Número de teléfono,رقم التليفون
+appLState,State,Estado,ولاية
+appLCity,City,Ciudad,مدينة
+appLZipCode,Zip Code,Código postal,الرمز البريدي
+appLAddress,Address,DIRECCIÓN,عنوان
+appLUpdate,Update,Actualizar,تحديث
+appLUpdateProfile,Update Profile,Actualización del perfil,تحديث الملف
+appLPaid,Paid,Pagado,مدفوع
+appLEnable,Enable,Permitir,يُمكَِن
+appLDisable,Disable,Desactivar,إبطال
+appLSent,Sent,Enviado,مرسل
+appLUnPaid,Unpaid,No pagado,غير مدفوع الأجر
+appLInvoiceNumber,Invoice Number,Número de factura,رقم الفاتورة
+appLInvoiceDate,Invoice Date,Fecha de la factura,تاريخ الفاتورة
+appLCurrency,Currency,Divisa,عملة
+appLPickGoods,Pick Goods,Seleccionar artículos,اختر البضائع
+appLTrickGoods,Trick Goods,Artículos de truco,خدعة البضائع
+appLTotalBill,Total Bill,Cuenta total,إجمالي الفاتورة
+appLCreateInvoice,Create Invoice,Crear factura,إنشاء فاتورة
+appLInvoiceTo,Invoice To,Factura,فاتورة إلى
+appLBillingAddress,Billing Address,Dirección de Envio,عنوان وصول الفواتير
+appLNotes,Notes,Notas,ملحوظات
+appLItemDetails,Item Details,detalles del artículo,تفاصيل العنصر
+appLClientName,Client Name,nombre del cliente,اسم العميل
+appLAddNew,Add New,Agregar nuevo,اضف جديد
+appLItemName,Item Name,Nombre del árticulo,اسم العنصر
+appLVoucher,Voucher,Vale,فاتورة
+appLRedeem,Redeem,Canjear,يسترد
+appLUsed,Used,Usado,مستخدم
+appLNotUsed,Not Used,No utilizado,غير مستعمل
+appLName,Name,Nombre,اسم
+appLEmail,Email,Correo electrónico,بريد إلكتروني
+appLPhone,Phone,Teléfono,هاتف
+appLFeesAndCharge,Fees & Charge,Tarifas y cargo,الرسوم والشحن
+appLStatus,Status,Estado,حالة
+appLCode,Code,Código,شفرة
+appLCreateVoucher,Create Voucher,Crear cupón,إنشاء قسيمة
+appLConfirmRedeem,Confirm Redeem,Confirmar redimir,تأكيد الاسترداد
+appLRedeemCode,Redeem Code,Canjear código,استرداد رمز
+appLAddMoneyLog,Add Money Log,Agregar registro de dinero,أضف سجل الأموال
+appLMoneyOutLog,Money Out Log,Money Out Log,سجل الأموال
+appLExchangeLog,Exchange Log,Registro de intercambio,سجل التبادل
+appLRequestLog,Request Log,Registro de solicitud,طلب سجل
+appLVerifiedCode,Verified Code,Código verificado,رمز التحقق
+appLBackToHome,Back To Home,De vuelta a casa,العودة إلى المنزل
+appLEnable2faSecurity,Enable 2FA Security,Habilitar la seguridad de 2FA,تمكين 2FA الأمن
+appLSendVerificationCode,Send Verification Code,Envíe el código de verificación,إرسال رمز التحقق
+appLOldPassword,Old Password,Contraseña anterior,كلمة المرور القديمة
+appLIndividual,Individual,Individual,فردي
+appLBusiness,Business,Negocio,عمل
+appLMiddleName,Middle Name,Segundo nombre,الاسم الأوسط
+appLUserName,Username,Nombre de usuario,اسم المستخدم
+appLPostalCode,Postal Code,Código Postal,رمز بريدي
+appLCompanyName,Company Name,nombre de empresa,اسم الشركة
+appLGender,Gender,Género,جنس
+appLDateOfBirth,Date of Birth,Fecha de nacimiento,تاريخ الميلاد
+appLNationality,Nationality,Nacionalidad,جنسية
+appLMyReceipt,My Receipt,Mi recibo,إيصالي
+appLTotalExchangedAmount,Total Exchanged Amount,Cantidad total intercambiada,إجمالي المبلغ المتبادل
+appLConvertedAmount,Converted Amount,Cantidad convertida,المبلغ المحول
+appLRequestedAmount,Requested Amount,Monto requerido,الكمية المطلوبة
+appLTrackYourTransaction,Track Your Transaction,Seguimiento de su transacción,تتبع معاملتك
+appLTransferCalculator,Transfer Calculator,Calculadora de transferencia,نقل الآلة الحاسبة
+appLNewUserHere,New user here?,Nuevo usuario aquí?,مستخدم جديد هنا؟
+appLWelcomeToXRemit,Welcome to,Bienvenido a,مرحبا بك في
+appLOnboardSubtitleText,"Smarter way to Send money anytime, anywhere with best exchange rate","Forma más inteligente de enviar dinero en cualquier momento, en cualquier lugar con el mejor tipo de cambio",طريقة أكثر ذكاءً لإرسال الأموال في أي وقت وفي أي مكان بأفضل سعر صرف
+appLSafeAndSecureProcess,Safe & Secure Process,Proceso seguro y seguro,عملية آمنة ومأمونة
+appLCustomerSupport,24/7 Customer Support,Atención al cliente 24/7,24/7 دعم العملاء
+appLEnterMTCN,Enter your MTCN number,Ingrese su número MTCN,أدخل رقم MTCN الخاص بك
+appLMtcn,MTCN,Mtcn,MTCN
+appLCompleted,Completed,Terminado,مكتمل
+appLYourEmail,Your Email,Tu correo electrónico,بريدك الالكتروني
+appLContinueAsGuest,Continue as a Guest,Continuar como invitado,تواصل كضيف
+appLOr,or,o,أو
+appLEnterYourEmail,Enter Your Email,Introduce tu correo electrónico,أدخل بريدك الإلكتروني
+appLEnterPassword,Enter Password,Introducir la contraseña,أدخل كلمة المرور
+appLEnterRegisteredEmail,Enter Registered Email,Ingrese el correo electrónico registrado,أدخل البريد الإلكتروني المسجل
+appLOtpVerification,Otp Verification,Verificación OTP,التحقق من OTP
+appLVerificationCode,Take control of your account by resetting your password. Our password recovery page guides you through the necessary steps to securely reset your password.,Tome el control de su cuenta restableciendo su contraseña. Nuestra página de recuperación de contraseña lo guía a través de los pasos necesarios para restablecer de forma segura su contraseña.,تحكم في حسابك عن طريق إعادة تعيين كلمة المرور الخاصة بك. توجهك صفحة استرداد كلمة المرور الخاصة بنا من خلال الخطوات اللازمة لإعادة تعيين كلمة المرور الخاصة بك بشكل آمن.
+appLResendCode,Resend Code,Reenviar codigo,أعد إرسال الرمز
+appLEnterNewPassword,Enter New Password,Ingrese nueva clave,أدخل كلمة مرور جديدة
+appLEnterConfirmPassword,Enter Confirm Password,Ingrese Confirmar contraseña,أدخل تأكيد كلمة المرور
+appLEnterTheVerificationCode,We sent a 6-digit code to your email,Enviamos un código de 6 dígitos a su correo electrónico,أرسلنا رمز مكون من 6 أرقام إلى بريدك الإلكتروني
+appLEnterName,Enter Name,Ingrese su nombre,أدخل الاسم
+appLSelectCountry,Select Country,Seleccionar país,حدد الدولة
+appLTermsAndCondition,Terms and Condition,Términos y Condiciones,أحكام وشروط
+appLPrivacyPolicy,Terms and Condition,Términos y Condiciones,أحكام وشروط
+appLUsa,United States,Estados Unidos,الولايات المتحدة
+appLIAgree,I agree with the,Estoy de acuerdo con el,أتفق مع
+appLOfXRemit,Of Xremit,De xremit,من xremit
+appLAnd,&,Y,& &
+appLSendingCountry,Sending Country,Envío de país,إرسال البلد
+appLReceivingCountry,Receiving Country,País receptor,استلام الدولة
+appLReceivingMethod,Receiving Method,Método de recepción,استلام طريقة
+appLSelectReceivingMethod,Select Receiving Method,Seleccione el método de recepción,حدد طريقة الاستلام
+appLCashPickup,Cash Pickup,Recogida en efectivo,الالتقاط النقدي
+appLBankTransfer,Bank Transfer,Transferencia bancaria,التحويل المصرفي
+appLTitleSignUp,"Smarter way to Send money anytime, anywhere with best exchange rate","Forma más inteligente de enviar dinero en cualquier momento, en cualquier lugar con el mejor tipo de cambio",طريقة أكثر ذكاءً لإرسال الأموال في أي وقت وفي أي مكان بأفضل سعر صرف
+appLMobileMoney,Mobile Money,Dinero móvil,أموال الهاتف المحمول
+appLSelectPickupPoint,Select Pickup Point,Seleccionar el punto de recogida,حدد نقطة التقاط
+appLPickupPoint,Pickup Point,Punto de recogida,نقطة التقاط
+appLReceivingBank,Receiving Bank,Banco receptor,البنك المستلم
+appLSelectReceivingBank,Select Receiving Bank,Seleccione el banco receptor,حدد استلام البنك
+appLAccountHolderName,Account Holder Name,nombre del titular de la cuenta,اسم صاحب الحساب
+appLEnterAccountHolderName,Enter Account Holder Name,Ingrese el nombre del titular de la cuenta,أدخل اسم صاحب الحساب
+appLAccountNumber,Account Number,Número de cuenta,رقم حساب
+appLEnterAccountNumber,Enter Account Number,Ingrese el número de cuenta,أدخل رقم الحساب
+appLEnterBankName,Enter Bank Name,Ingrese el nombre del banco,أدخل الاسم المصرفي
+appLIbanNumber,Iban Number,Número IBAN,رقم IBAN
+appLEnterIbanNumber,Enter Iban Number,Ingrese el número Iban,أدخل رقم IBAN
+appLMethodName,Method Name,Nombre del método,اسم الطريقة
+appLUnitedBank,United Bank,Banco Unido,البنك المتحدة
+appLBrackBank,BRAC Bank,Banco brac,بنك براك
+appLCityBank,City Bank,Banco de la Ciudad,بنك المدينة
+appLRecipientInformation,Recipient Information,recipiente de información,معلومات المستلم
+appLEnterGmailOrUsername,Enter Gmail or Username,Ingrese Gmail o nombre de usuario,أدخل Gmail أو اسم المستخدم
+appLDhaka,Dhaka,Dhaka,دكا
+appLKhulna,Khulna,Julna,خولنا
+appLRangpur,Rangpur,Rangpur,رانجبور
+appLPaymentInformation,Payment Information,Información del pago,معلومات الدفع
+appLPaymentSummary,Payment Summary,Resumen de pago,ملخص الدفع
+appLRecipientPayment,Recipient Payment,Pago del destinatario,دفع المتلقي
+appLSendingPurpose,Sending Purpose,Propósito de envío,إرسال الغرض
+appLSelectSendingPurpose,Select Sending Purpose,Seleccionar el propósito de envío,حدد هدف إرسال
+appLSaveUpTo,You save up to,Ahorras hasta,يمكنك حفظ ما يصل إلى
+appLShouldArrive,Should Arrive,Deberia llegar,ينبغي أن تصل
+appLSourceOfFund,Source Of Fund,Origen de fondos,مصدر التمويل
+appLSelectSourceOfFund,Select Source of Fund,Seleccionar fuente de fondo,حدد مصدر الصندوق
+appLPaymentGateway,Payment Gateway,Pasarela,بوابة الدفع
+appLSelectPaymentGateway,Select Payment Gateway,Seleccione la pasarela de pago,حدد بوابة الدفع
+appLProceed,Proceed,Proceder,يتابع
+appLSalary,Salary,Salario,مرتب
+appLMedicine,Medicine,Medicamento,الدواء
+appLCompany,Company,Compañía,شركة
+appLPersonal,Personal,Personal,شخصي
+appLFamily,Family,Familia,عائلة
+appLEditBeneficiary,Edit Beneficiary,Editar beneficiario,تحرير المستفيد
+appLAddNewRecipient,Add New Recipient,Agregar nuevo destinatario,أضف مستلمًا جديدًا
+appLRecipientDetails,Recipient Details,Detalles del destinatario,تفاصيل المستلم
+appLReceiveMethod,Received Method,Método recibido,الطريقة المستلمة
+appLSelectTransactionType,Select Transaction Type,Seleccionar el tipo de transacción,حدد نوع المعاملة
+appLRecipientName,Recipient Name,Nombre del Recipiente,اسم المستلم
+appLEnterRecipientName,Enter Recipient Name,Ingrese el nombre del destinatario,أدخل اسم المستلم
+appLRecipientEmailAddress,Recipient Email Address,Dirección de Correo Electrónico del Destinatario,البريد الألكتروني للمتلقي
+appLEnterEmailAddress,Enter Email Address,Introducir la dirección de correo electrónico,أدخل عنوان البريد الالكتروني
+appLRecipientCountry,Recipient Country,País receptor,بلد المتلقي
+appLSelectRecipientCountry,Select Recipient Country,Seleccionar país receptor,حدد بلد المتلقي
+appLRecipientCity,Recipient City,Ciudad receptor,مدينة المستلم
+appLSelect,Select,Seleccionar,يختار
+appLSelected,Selected,Seleccionado,المحدد
+appLAdditionalAddressInfo,Additional Address Info,Información de dirección adicional,معلومات عنوان إضافية
+appLEnterRoadLandmark,"72/A1, Bevilian, School Road","72/a1, Bevilian, carretera escolar",72/A1 ، Bevilian ، طريق المدرسة
+appLRecipientPhoneNumber,Recipient Phone Number,Número de teléfono del destinatario,رقم هاتف المستلم
+appLDdmmyyyy,dd-mm-yyyy,dd-mm-yyyy,DD-MM-YYYY
+appLRelationshipWithRecipient,Relationship With Recipient,Relación con el destinatario,العلاقة مع المستلم
+appLSelectRecipient,Select Relationship,Relación seleccionada,حدد العلاقة
+appLAddRecipient,Add Recipient,Agregar destinatario,إضافة المستلم
+appLFamilyRelation,Familial Relationships,Relaciones familiares,العلاقات العائلية
+appLFriendshipRelation,Friendships,Amistades,صداقات
+appLAcquaintancesRelation,Acquaintances,Conocidos,المعارف
+appLWorkOrProfessionalRelation,Work or Professional Relationships,Relaciones laborales o profesionales,عمل أو علاقات مهنية
+appLTeacherOrStudentRelation,Teacher/Student Relationships,Relaciones de maestro/alumno,علاقات المعلم/الطالب
+appLCommunityOrGroupRelation,Community or Group Relationships,Relaciones comunitarias o grupales,علاقات المجتمع أو الجماعي
+appLPlaceBasedRelationships,Place-based Relationships,Relaciones basadas en el lugar,العلاقات القائمة على المكان
+appLLandlordOrTenantRelationships,Landlord/Tenant Relationships,Relaciones del propietario/inquilino,علاقات المالك/المستأجر
+appLSelectRelationship,Select Relationship,Relación seleccionada,حدد العلاقة
+appLPaymentPreview,Payment Preview,Vista previa del pago,معاينة الدفع
+appLEnteredAmount,Entered Amount,Cantidad ingresada,تم إدخال المبلغ
+appLYouTransfer,You Transfer,Transferirá,أنت تنقل
+appLRecipientGets,Recipient Gets,El destinatario obtiene,المستلم يحصل
+appLTransferFee,Transfer Fee,Tarifa de transferencia,رسوم التحويل
+appLUnitedStates,United States,Estados Unidos,الولايات المتحدة
+appLAustralia,Australia,Australia,أستراليا
+appLDba,DBA,Dba,DBA
+appLGift,Gift,Regalo,هدية
+appLRetainedEarnings,Retained Earnings,Ganancias retenidas,الأرباح المحتجزة
+appLPaypalUsd,Paypal Usd,PayPal USD,PayPal USD
+appLDepositToBank,Deposit to Bank Account,Depósito a la cuenta bancaria,إيداع الحساب المصرفي
+appLYouSending,You Sending,Enviando,ترسل
+appLYouSendExactly,You Sending Exactly,Enviando exactamente,أنت ترسل بالضبط
+appLPayoutPartner,Payout Partner,Socio de pago,شريك الدفع
+appLSingle,Single,Soltero,أعزب
+appLMarried,Married,Casado,متزوج
+appLDivorced,Divorced,Divorciado,مُطلّق
+appLWidow,Widow,Viuda,أرملة
+appLUpdatePassword,Update Password,Actualiza contraseña,تطوير كلمة السر
+appLBkash,Bkash,Bkash,بكاش
+appLNogod,Nogod,No Dios,نوغود
+appLTabAndHold,Tap & Hold to Remittance,Toque y mantenga presionado a la remesas,اضغط على التحويلات والاحتفاظ بها
+appLRocket,Rocket,Cohete,صاروخ
+appLMobileMethod,Mobile Method,Método móvil,طريقة الهاتف المحمول
+appLSelectMethod,Select Method,Método de selección,حدد الطريقة
+appLNoRecipient,No recipient found,No se encuentra ningún destinatario,لم يتم العثور على المستلم
+appLTwoFactorAuthorization,Two Factor Authorization,Autorización de dos factores,اثنين من التفويض عامل
+appLEnterTheTwoFaVerification,Please enter your authorization code to access dashboard,Ingrese su código de autorización para acceder al tablero,الرجاء إدخال رمز التفويض الخاص بك للوصول إلى لوحة القيادة
+appLBeneficiaries,Recipient Information,recipiente de información,معلومات المستلم
+appLNext,Next,Próximo,التالي
+appLCancel,Cancel,Cancelar,يلغي
+appLSignOutAlert,Sign Out?,¿Desconectar?,خروج؟
+appLDeleteProfileAlert,Delete Profile?,¿Borrar perfil?,حذف الملف الشخصي؟
+appLAreYouSure,Are you sure about signing out of the system? Then click Okay button,¿Estás seguro de firmar fuera del sistema? Luego haga clic en el botón OK,هل أنت متأكد من التوقيع على النظام؟ ثم انقر فوق زر موافق
+appLAreYouSureDelete,Are you sure about delete profile of the system? Then click Okay button,¿Estás seguro del perfil de eliminación del sistema? Luego haga clic en el botón OK,هل أنت متأكد من حذف ملف تعريف النظام؟ ثم انقر فوق زر موافق
+appLYourPaymentIsSuccessfully,Your Payment Is Successfully Completed,Su pago se completa con éxito,تم إكمال دفعتك بنجاح
+appLDownloadReceiptPDF,Download Receipt PDF,Descargar recibo PDF,تنزيل استلام PDF
+appLGoToDashboard,Go To Dashboard,Ir al panel de control,الذهاب إلى لوحة القيادة
+appLCopyUrl,Copy url successfully,Copiar URL con éxito,نسخ عنوان URL بنجاح
+appLSslcommerzPayment,Sslcommerz Payment,Pago de sslcommerz,دفع SSLCommerz
+appLChangeLanguage,Change Language,Cambiar idioma,تغيير اللغة
+appLChange,Change,Cambiar,يتغير
+appLLanguage,Language,Idioma,لغة
+appLSettings,Settings,Ajustes,إعدادات
+appLCardNumber,Card Number,Número de tarjeta,رقم البطاقة
+appLCardHolder,Card Holder,Titular de la tarjeta,حامل البطاقة
+appLValidThru,VALID THRU,Válido,صالح من خلال
+appLPayNow,Pay Now,Pagar ahora,ادفع الآن
+appLCreditCardSampleText,Credit Card,Tarjeta de crédito,بطاقة إئتمان
+appLMtcnNumber,Mtcn Number,Número de mtcn,رقم MTCN
+appLTransactionType,Transaction Type,tipo de transacción,نوع المعاملة
+appLSenderAmount,Sender Amount,Monto del remitente,مبلغ المرسل
+appLPayableAmount,Payable Amount,Cantidad a pagar,مبلغ مستحق الدفع
+appLCopyLink,Copy Link,Copiar link,نسخ الوصلة
+appLDownloadReceipt,Download Recipient,Descargar destinatario,تنزيل المستلم
+appLCityAndState,City And State,Ciudad y estado,المدينة والدولة
+appLChangeThemes,Change Themes,Cambiar temas,تغيير الموضوعات
+appLSuccess,Success,Éxito,نجاح
+appLAlert,Alert,Alerta,يُحذًِر
+appLSelectBanksName,Select Banks Name,Seleccionar el nombre de los bancos,حدد اسم البنوك
+appLSelectMethodName,Select Method Name,Seleccionar el nombre del método,حدد اسم الطريقة
+appLBankName,Bank Name,Nombre del banco,اسم البنك
+appLHaveACoupon,Have A Coupon,Tiene un cupón,هل لديك قسيمة
+appLApply,Apply,Aplicar,يتقدم
+appLRemoveCoupon,Remove Coupon,Eliminar cupón,إزالة القسيمة
+appLApplied,Applied,Aplicado,مُطبَّق
+appLEnterTheCouponCode,Enter The Coupon Code,Ingrese el código de cupón,أدخل رمز القسيمة
+appLCoupon,Coupon,Cupón,قسيمة
+appLApplyCoupon,Apply Coupon,Aplicar cupón,تطبيق القسيمة
+appLDeleteRecipient,Delete Recipient,Eliminar el destinatario,حذف المستلم
+appLRecipientDeleteAlert,Recipient Delete Alert,Alerta del eliminación del destinatario,المستلم حذف تنبيه
+appLDelete,Delete,Borrar,يمسح
+appLCoinGatePayment,CoinGate Payment,Pago,دفع كينغات
+appLCryptoPaymentAddress,Crypinto Payment Address,Dirección de pago de crypinto,CRYPINTO عنوان الدفع
+appLPayWithThisAddress,Pay With This Address,Pagar con esta dirección,ادفع مع هذا العنوان
+appLAddressCopyTo,Address Copy To,Dirección de copia a,عنوان نسخة إلى
+Admin Profile,Admin Profile,Perfil de administración,ملف تعريف المسؤول
+Select State,Select State,Seleccione estado,اختر ولايه
+Select City,Select City,Ciudad selecta,اختر مدينة
+Profile Information Updated Successfully!,Profile Information Updated Successfully!,¡Información de perfil actualizada con éxito!,معلومات الملف الشخصي تحديث بنجاح!
+The password field is required.,The password field is required.,Se requiere el campo de contraseña.,حقل كلمة المرور مطلوب.
+The current password field is required.,The current password field is required.,Se requiere el campo de contraseña actual.,حقل كلمة المرور الحالي مطلوب.
+Password updated successfully!,Password updated successfully!,¡Contraseña actualizada exitosamente!,تم تحديث كلمة السر بنجاح!
+Add Source Fund,Add Source Fund,Agregar fondo fuente,إضافة صندوق المصدر
+Web Version,Web Version,Versión web,إصدار الويب
