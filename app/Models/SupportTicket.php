@@ -106,22 +106,22 @@ class SupportTicket extends Model
         if($status == SupportTicketConst::ACTIVE) {
             $data = [
                 'class'     => "badge badge--info",
-                'value'     => "Active",
+                'value'     => __("Active"),
             ];
         }else if($status == SupportTicketConst::DEFAULT) {
             $data = [
                 'class'     => "badge badge--warning",
-                'value'     => "Default",
+                'value'     => __("Default"),
             ];
         }else if($status == SupportTicketConst::PENDING) {
             $data = [
                 'class'     => "badge badge--warning",
-                'value'     => "Pending",
+                'value'     => __("Pending"),
             ];
         }else if($status == SupportTicketConst::SOLVED) {
             $data = [
                 'class'     => "badge badge--success",
-                'value'     => "Solved",
+                'value'     => __("Solved"),
             ];
         }
 
