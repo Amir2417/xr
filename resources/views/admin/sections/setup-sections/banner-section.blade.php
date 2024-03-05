@@ -43,7 +43,7 @@
                 <div class="row justify-content-center mb-10-none">
                     <div class="col-xl-4 col-lg-4 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Image:",
+                            'label'             => __("Image"),
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),
@@ -67,28 +67,28 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="{{ $item->name }}" role="tabpanel" aria-labelledby="english-tab">
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Heading*",
+                                                'label'     => __("Heading")."*",
                                                 'name'      => $lang_code . "_heading",
                                                 'value'     => old($lang_code . "_heading",$data->value->language->$lang_code->heading ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Sub Heading*",
+                                                'label'     => __("Sub Heading")."*",
                                                 'name'      => $lang_code . "_sub_heading",
                                                 'value'     => old($lang_code . "_sub_heading",$data->value->language->$lang_code->sub_heading ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Button Name*",
+                                                'label'     => __("Button Name").'*',
                                                 'name'      => $lang_code . "_button_name",
                                                 'value'     => old($lang_code . "_button_name",$data->value->language->$lang_code->button_name ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Video Link*",
+                                                'label'     => __("Video Link")."*",
                                                 'name'      => $lang_code . "_video_link",
                                                 'value'     => old($lang_code . "_video_link",$data->value->language->$lang_code->video_link ?? "")
                                             ])
@@ -101,7 +101,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          => __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>

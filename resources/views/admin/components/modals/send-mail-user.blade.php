@@ -10,18 +10,18 @@
                     <div class="row mb-10-none">
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Subject*',
+                                'label'         => __('Subject').'*',
                                 'name'          => 'subject',
                                 'value'         => old('subject'),
-                                'placeholder'   => "Write Here...",
+                                'placeholder'   => __("Write Here")."...",
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input-text-rich',[
-                                'label'         => 'Message*',
+                                'label'         => __('Message').'*',
                                 'name'          => 'message',
                                 'value'         => old('message'),
-                                'placeholder'   => "Write Here...",
+                                'placeholder'   => __("Write Here")."...",
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group d-flex align-items-center justify-content-between mt-4">

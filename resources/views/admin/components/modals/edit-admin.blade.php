@@ -26,46 +26,46 @@
         
                             <div class="col-xl-6 col-lg-6 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'         => "First Name*",
+                                    'label'         => __("First Name")."*",
                                     'name'          => "edit_firstname",
-                                    'placeholder'   => "First Name",
+                                    'placeholder'   => __("First Name"),
                                     'value'         => old("edit_firstname"),  
                                 ])
                             </div>
                             <div class="col-xl-6 col-lg-6 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'         => "Last Name*",
+                                    'label'         => __("Last Name")."*",
                                     'name'          => "edit_lastname",
-                                    'placeholder'   => "Last Name",
-                                    'value'         => old("edit_lastname"),   
+                                    'placeholder'   => __("Last Name"),
+                                    'value'         => old("edit_lastname"),  
                                 ])
                             </div>
                             <div class="col-xl-6 col-lg-6 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'         => "Username*",
+                                    'label'         => __("username").'*',
                                     'name'          => "edit_username",
-                                    'placeholder'   => "Username",
-                                    'value'         => old("edit_username"),       
+                                    'placeholder'   => __("username"),
+                                    'value'         => old("edit_username"),    
                                 ])
                             </div>
                             <div class="col-xl-6 col-lg-6 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'         => "Email*",
+                                    'label'         => __("Email")."*",
                                     'name'          => "edit_email",
-                                    'placeholder'   => "Email",
-                                    'value'         => old("edit_email"),     
+                                    'placeholder'   => __("Email"),
+                                    'value'         => old("edit_email"),      
                                 ])
                             </div>
                             <div class="col-xl-6 col-lg-6 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'         => "Phone*",
+                                    'label'         => __("Phone"),
                                     'name'          => "edit_phone",
-                                    'placeholder'   => "Phone",
+                                    'placeholder'   => __("Phone"),
                                     'value'         => old("edit_phone"),
                                 ])
                             </div>
                             <div class="col-xl-6 col-lg-6 form-group role-select-wrp" data-admin-roles="{{ json_encode($admin_roles) }}">
-                                <label>{{ __("Role*") }}</label>
+                                <label>{{ __("Role") }}*</label>
                                 <select class="form--control select2-auto-tokenize" name="edit_role[]" data-old="{{ old("edit_role") }}" multiple data-placeholder="Select Role">
                                     @foreach ($admin_roles as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>

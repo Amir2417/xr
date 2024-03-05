@@ -63,52 +63,7 @@ fill: {
 var chart = new ApexCharts(document.querySelector("#chart2"), options);
 chart.render();
 
-var chart4 = $('#chart4');
-var user_chart_data = chart4.data('user_chart_data');
-var options = {
-  series: user_chart_data,
-  chart: {
-  width: 350,
-  type: 'pie'
-},
-colors: ['#5A5278', '#6F6593', '#8075AA', '#A192D9'],
-labels: ['Active', 'Unverified', 'Banned', 'All'],
-responsive: [{
-  breakpoint: 1480,
-  options: {
-    chart: {
-      width: 280
-    },
-    legend: {
-      position: 'bottom'
-    }
-  },
-  breakpoint: 1199,
-  options: {
-    chart: {
-      width: 380
-    },
-    legend: {
-      position: 'bottom'
-    }
-  },
-  breakpoint: 575,
-  options: {
-    chart: {
-      width: 280
-    },
-    legend: {
-      position: 'bottom'
-    }
-  }
-}],
-legend: {
-  position: 'bottom'
-},
-};
 
-var chart = new ApexCharts(document.querySelector("#chart4"), options);
-chart.render();
 
 var options = {
   series: [44, 55, 41, 17],

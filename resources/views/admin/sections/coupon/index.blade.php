@@ -33,7 +33,7 @@
                 <h5 class="title">{{ __($page_title) }}</h5>
                 <div class="table-btn-area">
                     @include('admin.components.link.add-default',[
-                        'text'          => "Add Coupon",
+                        'text'          => __("Add Coupon"),
                         'href'          => "#add-coupon",
                         'class'         => "modal-btn",
                         'permission'    => "admin.coupon.store",

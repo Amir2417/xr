@@ -28,7 +28,7 @@
         ],
         [
             'name'  => __("Web Journal Section"),
-            'url'   => setRoute('admin.setup.sections.section','journal')  
+            'url'   => setRoute('admin.setup.sections.section','journal')
         ]
     ], 'active' => __("New Journal Create")])
 @endsection
@@ -43,16 +43,16 @@
                 <div class="row justify-content-center mb-10-none">
                     <div class="col-xl-4 col-lg-4 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Image:",
+                            'label'             => __("Image").':',
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),
                             'old_files'         => old("old_image"),
                         ])
                     </div>
-                    
+
                     <div class="col-xl-8 col-lg-8">
-                        
+
                         <div class="product-tab">
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -62,16 +62,16 @@
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
-                                
+
                                 @foreach ($languages as $item)
                                     @php
                                         $lang_code = $item->code;
                                     @endphp
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="{{ $item->name }}" role="tabpanel" aria-labelledby="english-tab">
-                                        
+
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Title",
+                                                'label'         => __("Title"),
                                                 'label_after'   => "*",
                                                 'name'          => $item->code . "_title",
                                                 'value'         => old($item->code . "_title")
@@ -79,7 +79,7 @@
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input-text-rich',[
-                                                'label'         => "Description",
+                                                'label'         => __("Description"),
                                                 'label_after'   => "*",
                                                 'name'          => $item->code . "_description",
                                                 'value'         => old($item->code . "_description")
@@ -92,9 +92,9 @@
                                     </div>
                                 @endforeach
                                 <div class="form-group">
-                                    <label>{{ __("Select Category*") }}</label>
+                                    <label>{{ __("Select Category") }}.'*</label>
                                     <select class="form--control select2-basic" name="category">
-                                        <option disabled selected>Select Category</option>
+                                        <option disabled selected>{{ __("Select Category") }}</option>
                                         @foreach ($category as $data)
                                             <option value="{{ $data->id }}">{{ $data->name->language->$app_local->name }}</option>
                                         @endforeach
@@ -106,7 +106,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          => __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>

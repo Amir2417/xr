@@ -60,7 +60,7 @@
                                                                                                             
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Section Title*",
+                                                'label'     => __("Section Title")."*",
                                                 'name'      => $lang_code . "_title",
                                                 'value'     => old($lang_code . "_title",$data->value->language->$lang_code->title ?? "")
                                             ])
@@ -68,7 +68,7 @@
 
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Heading*",
+                                                'label'     => __("Heading")."*",
                                                 'name'      => $lang_code . "_heading",
                                                 'value'     => old($lang_code . "_heading",$data->value->language->$lang_code->heading ?? "")
                                             ])
@@ -81,7 +81,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          => __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>
@@ -95,7 +95,7 @@
             <div class="d-flex ">
                 <div class="button-link me-2">
                     @include('admin.components.link.custom',[
-                        'text'          => 'Add Category',
+                        'text'          => __('Add Category'),
                         'class'         => 'btn btn--base',
                         'href'          => setRoute('admin.setup.sections.category.index'),
                         'permission'    => 'admin.setup.sections.journal.create',
@@ -103,7 +103,7 @@
                 </div>
                 <div class="button-link">
                     @include('admin.components.link.custom',[
-                        'text'          => 'Add New Journal',
+                        'text'          => __('Add New Journal'),
                         'class'         => 'btn btn--base',
                         'href'          => setRoute('admin.setup.sections.journal.create'),
                         'permission'    => 'admin.setup.sections.journal.create',
@@ -206,10 +206,9 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Created at</th>
+                            <th>{{ __("Title") }}</th>
+                            <th>{{ __("Description") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -227,13 +226,12 @@
                                     @include('admin.components.form.switcher',[
                                         'name'          => 'status',
                                         'value'         => $item->status,
-                                        'options'       => ['Active' => 1,'Deactive' => 0],
+                                        'options'       => [__('Active') => 1,__('Deactive') => 0],
                                         'onload'        => true,
                                         'data_target'   => $item->id,
                                         'permission'    => "admin.setup.sections.journal.status.update",
                                     ])
                                 </td>
-                                <td> {{ $item->created_at ?? "" }} </td>
                                 <td>
                                     @include('admin.components.link.edit-default',[
                                         'href'          => setRoute('admin.setup.sections.journal.edit',$item->id),
@@ -269,7 +267,7 @@
 
             var actionRoute =  "{{ setRoute('admin.setup.sections.journal.delete') }}";
             var target      = oldData.id;
-            var message     = `Are you sure to <span>delete</span> this journal?`;
+            var message     = `{{ __("Are you sure to") }} <span>{{ __("delete") }}</span> {{ __("this journal?") }}`;
 
             openDeleteModal(actionRoute,target,message);
         });

@@ -1843,6 +1843,13 @@ input::-moz-focus-inner {
   -webkit-transition: all ease 0.5s;
   transition: all ease 0.5s;
 }
+
+@media only screen and (max-width: 768px) {
+  .btn--base{
+     padding: 10px 25px;
+  }
+}
+
 .btn--base.active {
   background: transparent;
   color: var(--primary-color);
@@ -3126,9 +3133,23 @@ option {
 }
 @media only screen and (max-width: 1199px) {
   .header-bottom-area .navbar-collapse .main-menu li {
-    padding-right: 22px !important;
+    padding-right: 12px !important;
   }
 }
+
+@media only screen and (max-width: 991px) {
+  .header-bottom-area .navbar-collapse .main-menu li {
+    padding-right: 10px !important;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .rtl .language-select{
+     margin-right: 10px;
+  }
+}
+
+
 .header-bottom-area .navbar-collapse .main-menu li:last-child {
   padding-right: 0;
   margin-right: 0;
@@ -3861,14 +3882,12 @@ option {
 }
 .client .client-slider .card {
   background-color: #ffffff;
-  -webkit-box-shadow: 0px 0px 35px -1px rgba(219, 219, 219, 0.57);
-          box-shadow: 0px 0px 35px -1px rgba(219, 219, 219, 0.57);
+  box-shadow: 0px 0px 35px -1px rgba(219, 219, 219, 0.57);
   margin-top: 30px;
-  margin-left: 10px;
-  margin-right: 10px;
   padding: 30px;
   border: none;
   border-radius: 10px;
+  height: 100%;
 }
 .client .client-slider .client-thumb img {
   width: 60px;
@@ -3963,8 +3982,8 @@ option {
 }
 .info-card .card {
   border-radius: 10px;
-  border: none !important;
   padding: 30px;
+  height: 100%;
   border: 2px solid var(--primary-color) !important;
 }
 .info-card .card .icon i {
@@ -4099,6 +4118,13 @@ option {
 .about-whyChoose {
   overflow: hidden;
 }
+@media only screen and (max-width: 425px) {
+  .about-whyChoose .left-content h3{
+      font-weight: 500;
+  }
+}
+
+
 .about-whyChoose .right-img img {
   width: 33rem;
   height: auto;
@@ -4320,6 +4346,7 @@ option {
 .blog .card {
   overflow: hidden !important;
   border-radius: 10px !important;
+  height: 100%;
   border: none !important;
   -webkit-box-shadow: 0px 0px 40px -2px rgba(207, 203, 203, 0.57);
           box-shadow: 0px 0px 40px -2px rgba(207, 203, 203, 0.57);
@@ -4780,7 +4807,7 @@ option {
     padding: 0 20px 0 10px;
   }
 }
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 915px) {
   .dashboard-title-part {
     display: block;
   }
@@ -4817,7 +4844,7 @@ option {
           align-items: center;
   margin: -8px;
 }
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 915px) {
   .dashboard-title-part .right {
     padding-top: 20px;
     -webkit-box-pack: end;
@@ -5021,6 +5048,11 @@ option {
   color: #000000 !important;
 }
 
+.rtl .apexcharts-legend-text{
+  padding-right: 5px;
+  margin-right:0px;
+}
+
 .apexcharts-yaxis text {
   fill: #000000 !important;
 }
@@ -5066,13 +5098,21 @@ option {
   color: #ffffff;
 }
 
+.dashboard-list-item-wrapper .dashboard-list-left{
+   width: calc(100% - 110px);
+}
+@media only screen and (max-width: 420px) {
+  .dashboard-list-item-wrapper .dashboard-list-left{
+    width: calc(100% - 60px);
+ }
+}
+
 .dashboard-list-user-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
+
 }
 .dashboard-list-user-wrapper .dashboard-list-user-icon {
   width: 60px;
@@ -5093,6 +5133,13 @@ option {
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
 }
+
+@media only screen and (max-width: 420px) {
+  .dashboard-list-user-wrapper .dashboard-list-user-icon{
+     display: none;
+  }
+}
+
 .dashboard-list-user-wrapper .dashboard-list-user-content {
   width: calc(100% - 60px);
   padding-left: 20px;
@@ -5151,15 +5198,12 @@ option {
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
 }
-@media only screen and (max-width: 400px) {
-  .dashboard-list-wrapper .dashboard-list-item {
-    display: block;
-  }
-}
-@media only screen and (max-width: 400px) {
+
+@media only screen and (max-width: 375px) {
     .dashboard-list-right {
-      text-align: center;
+      text-align: left;
       padding-top: 15px;
+      padding-left: 20px;
   }
 }
 
@@ -6385,8 +6429,16 @@ display: flex;
 }
 .dashboard-list-button{
   text-align: end;
-  padding-left: 8px;
+  margin-left: 8px;
+  width: 110px;
 }
+
+@media only screen and (max-width: 420px) {
+  .dashboard-list-button{
+    width: 60px;
+  }
+}
+
 .submit-btn-area {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7453,6 +7505,9 @@ input[type=number] {
    left: 10px;
    right: auto !important;
 }
+
+
+
 /* coupon */
 #couponcode .modal-body .modal-footer {
   border-top: none !important;

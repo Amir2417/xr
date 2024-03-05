@@ -33,7 +33,7 @@
                 <h5 class="title">{{ __($page_title) }}</h5>
                 <div class="table-btn-area">
                     @include('admin.components.link.add-default',[
-                        'text'          => "Add Mobile Method",
+                        'text'          => __("Add Mobile Method"),
                         'href'          => "#add-mobile-method",
                         'class'         => "modal-btn",
                         'permission'    => "admin.mobile.method.store",
@@ -44,9 +44,9 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Country</th>
-                            <th>Status</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Country") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -59,7 +59,7 @@
                                     @include('admin.components.form.switcher',[
                                         'name'        => 'status',
                                         'value'       => $item->status,
-                                        'options'     => ['Enable' => 1, 'Disable' => 0],
+                                        'options'     => [__('Enable') => 1,__('Disable') => 0],
                                         'onload'      => true,
                                         'data_target' => $item->id,
                                     ])

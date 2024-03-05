@@ -112,7 +112,7 @@
                     
                     clearInterval(x);
                     
-                    document.querySelector(".time-area").innerHTML = `Didn't get the code? <a class='text--danger' href='${resendCodeLink}'>Resend</a>`;
+                    document.querySelector(".time-area").innerHTML = `{{ __("Didn't get the code?") }} <a class='text--danger' href='${resendCodeLink}'>{{ __("Resend") }}</a>`;
                 }
                 second--
             }, 1000);

@@ -19,7 +19,7 @@ class SourceOfFundController extends Controller
      * @return view
      */
     public function index(){
-        $page_title     = "Source of Fund";
+        $page_title     = "Source Of Fund";
         $source_funds   = SourceOfFund::orderByDesc('id')->paginate(10);
 
         return view('admin.sections.source-fund.index',compact(

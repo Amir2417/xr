@@ -82,7 +82,7 @@
                     <div class="dashbord-item">
                         <div class="dashboard-content">
                             <div class="left">
-                                <h6 class="title">{{ ("Total Remittance") }}</h6>
+                                <h6 class="title">{{ __("Total Remittance") }}</h6>
                                 <div class="user-info">
                                     <h2 class="user-count">{{ formatNumberInkNotation($data['total_remittance_count']) }}</h2>
                                 </div>
@@ -145,7 +145,7 @@
                                 </div>
                                 <div class="user-badge">
                                     <span class="badge badge--info">{{ __("Active") }} {{ formatNumberInkNotation($data['active_mobile']) }}</span>
-                                    <span class="badge badge--warning">{{ _("Pending") }} {{ formatNumberInkNotation($data['pending_mobile']) }}</span>
+                                    <span class="badge badge--warning">{{ __("Pending") }} {{ formatNumberInkNotation($data['pending_mobile']) }}</span>
                                 </div>
                             </div>
                             <div class="right">
@@ -191,14 +191,14 @@
             <div class="col-xxxl-6 col-xxl-3 col-xl-6 col-lg-6 mb-15">
                 <div class="chart-wrapper">
                     <div class="chart-area-header">
-                        <h5 class="title">{{ ("User Analytics Chart") }}</h5>
+                        <h5 class="title">{{ __("User Analytics Chart") }}</h5>
                     </div>
                     <div class="chart-container">
                         <div id="chart4" class="balance-chart" data-user_chart_data="{{ json_encode($data['user_chart_data']) }}"></div>
                     </div>
                     <div class="chart-area-footer">
                         <div class="chart-btn">
-                            <a href="{{ setRoute('admin.users.index') }}" class="btn--base w-100">{{ __("View User") }}t</a>
+                            <a href="{{ setRoute('admin.users.index') }}" class="btn--base w-100">{{ __("View User") }}</a>
                         </div>
                     </div>
                 </div>
@@ -215,12 +215,12 @@
                     <thead>
                         <tr>
                             <th>{{ __("MTCN ID") }}</th>
-                            <th>{{ __("S. NAME") }}</th>
-                            <th>{{ __("R.NAME") }}</th>
-                            <th>{{ __("T.TYPE") }}</th>
+                            <th>{{ __("Sender Name") }}</th>
+                            <th>{{ __("Receiver Name") }}</th>
+                            <th>{{ __("Transaction Type") }}</th>
                             <th>{{ __("AMOUNT") }}</th>
-                            <th>{{ __("P. METHOD") }}</th>
-                            <th>{{ __("STATUS") }}</th>
+                            <th>{{ __("Payment Method") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -232,11 +232,11 @@
                             <td>{{ $item->remittance_data->first_name ?? '' }} {{ $item->remittance_data->middle_name ?? '' }} {{ $item->remittance_data->last_name ?? '' }}</td>
                             <td>{{ $item->remittance_data->type ?? '' }}</td>
                             <td>{{ get_amount($item->payable) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }} <span>{{ get_amount($item->will_get_amount) ?? '' }} {{ $item->remittance_data->receiver_currency ?? '' }}</span></td>
-                            
+
                             <td>{{ $item->remark ?? '' }}</td>
                             <td>
                                 @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
-                                    <span>{{ __("Under Review") }}</span> 
+                                    <span>{{ __("Under Review") }}</span>
                                 @elseif ($item->status == global_const()::REMITTANCE_STATUS_PENDING)
                                     <span>{{ __("Pending") }}</span>
                                 @elseif ($item->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
@@ -259,7 +259,7 @@
                             </td>
                             <td>
                                 <a href="{{ setRoute('admin.send.remittance.details',$item->trx_id) }}" class="btn btn--base btn--primary"><i class="las la-info-circle"></i></a>
-                                
+
                             </td>
                         </tr>
                     @empty
@@ -276,8 +276,6 @@
     <script>
         let stringMonths = '@json($months)';
         let chartMonths = JSON.parse(stringMonths);
-
-        
 
         var options = {
             series: [{
@@ -338,11 +336,11 @@ var chart_one_data = chart1.data('chart_one_data');
 var month_day = chart1.data('month_day');
 var options = {
   series: [{
-  name: 'Pending',
+  name: '{{ __("Pending") }}',
   color: "#5A5278",
   data: chart_one_data.pending_data
 }, {
-  name: 'Completed',
+  name: '{{ __("Completed") }}',
   color: "#6F6593",
   data: chart_one_data.complete_data
 },],
@@ -388,6 +386,52 @@ fill: {
 };
 
 var chart = new ApexCharts(document.querySelector("#chart1"), options);
+chart.render();
+var chart4 = $('#chart4');
+var user_chart_data = chart4.data('user_chart_data');
+var options = {
+  series: user_chart_data,
+  chart: {
+  width: 350,
+  type: 'pie'
+},
+colors: ['#5A5278', '#6F6593', '#8075AA', '#A192D9'],
+labels: ['{{ __("Active") }}', '{{ __("Unverified") }}', '{{ __("Banned") }}', '{{ __("ALL") }}'],
+responsive: [{
+  breakpoint: 1480,
+  options: {
+    chart: {
+      width: 280
+    },
+    legend: {
+      position: 'bottom'
+    }
+  },
+  breakpoint: 1199,
+  options: {
+    chart: {
+      width: 380
+    },
+    legend: {
+      position: 'bottom'
+    }
+  },
+  breakpoint: 575,
+  options: {
+    chart: {
+      width: 280
+    },
+    legend: {
+      position: 'bottom'
+    }
+  }
+}],
+legend: {
+  position: 'bottom'
+},
+};
+
+var chart = new ApexCharts(document.querySelector("#chart4"), options);
 chart.render();
     </script>
 @endpush

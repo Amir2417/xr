@@ -31,9 +31,9 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Status") }}</th>
+                            <th>{{ __("Action") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,7 +50,7 @@
                                         'name' => 'status',
                                         'data_target' => $item->id,
                                         'value' => $item->status,
-                                        'options' => ['Enable' => 1, 'Disabled' => 0],
+                                        'options' => [__('Enable') => 1, __('Disable') => 0],
                                         'onload' => true,
                                         'permission' => "admin.extension.status.update",
                                     ])

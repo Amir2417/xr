@@ -33,7 +33,7 @@
                 <h5 class="title">{{ __($page_title) }}</h5>
                 <div class="table-btn-area">
                     @include('admin.components.link.add-default',[
-                        'text'          => "Add Sending Purpose",
+                        'text'          => __("Add Sending Purpose"),
                         'href'          => "#add-sending-purpose",
                         'class'         => "modal-btn",
                         'permission'    => "admin.sending.purpose.store",
@@ -44,8 +44,8 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Status</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>

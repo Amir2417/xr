@@ -37,7 +37,7 @@
                 <div class="row mb-10-none">
                     <div class="col-xl-3 col-lg-3 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Gateway Image*",
+                            'label'             => __("Gateway Image"),
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files'         => $gateway->image,
@@ -51,10 +51,10 @@
                             {{-- Production/Sandbox Switcher --}}
                             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                                 @include('admin.components.form.switcher', [
-                                    'label'         => 'Gateway Environment',
+                                    'label'         => __('Gateway Environment'),
                                     'value'         => old('mode',$gateway->env),
                                     'name'          => "mode",
-                                    'options'       => ['Production' => payment_gateway_const()::ENV_PRODUCTION, 'Sandbox' => payment_gateway_const()::ENV_SANDBOX],
+                                    'options'       => [__('Production') => payment_gateway_const()::ENV_PRODUCTION, __('Sandbox') => payment_gateway_const()::ENV_SANDBOX],
                                 ])
                             </div>
 

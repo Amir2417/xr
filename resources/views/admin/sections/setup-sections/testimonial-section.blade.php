@@ -61,7 +61,7 @@
                                                                                                             
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Section Title*",
+                                                'label'     => __("Section Title")."*",
                                                 'name'      => $lang_code . "_title",
                                                 'value'     => old($lang_code . "_title",$data->value->language->$lang_code->title ?? "")
                                             ])
@@ -69,7 +69,7 @@
 
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Heading*",
+                                                'label'     =>  __("Heading")."*",
                                                 'name'      => $lang_code . "_heading",
                                                 'value'     => old($lang_code . "_heading",$data->value->language->$lang_code->heading ?? "")
                                             ])
@@ -82,7 +82,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          => __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>
@@ -101,8 +101,8 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Name</th>
+                            <th>{{ __("Image") }}</th>
+                            <th>{{ __("Name") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -156,7 +156,7 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                         <div class="form-group">
                                             @include('admin.components.form.textarea',[
-                                                'label'     => "Comment*",
+                                                'label'     => __("Comment")."*",
                                                 'name'      => $lang_code . "_comment_edit",
                                                 'value'     => old($lang_code . "_comment_edit",$data->value->language->$lang_code->comment ?? "")
                                             ])
@@ -167,21 +167,21 @@
                         </div>
                             <div class="form-group">
                                 @include('admin.components.form.input',[
-                                    'label'     => "Name*",
+                                    'label'     => __("Name")."*",
                                     'name'      => "name_edit",
                                     'value'     => old("name_edit",$data->value->language->$lang_code->name ?? "")
                                 ])
                             </div>
                             <div class="form-group">
                                 @include('admin.components.form.input',[
-                                    'label'     => "Designation*",
+                                    'label'     => __("Designation")."*",
                                     'name'      => "designation_edit",
                                     'value'     => old("designation_edit",$data->value->language->$lang_code->designation ?? "")
                                 ])
                             </div>
                             <div class="form-group">
                                 @include('admin.components.form.input-file',[
-                                    'label'             => "Image",
+                                    'label'             => __("Image"),
                                     'name'              => "image",
                                     'class'             => "file-holder",
                                     'old_files_path'    => files_asset_path("site-section"),
@@ -235,7 +235,7 @@
             var oldData        = JSON.parse($(this).parents("tr").attr("data-item"));
             var actionRoute    = "{{ setRoute('admin.setup.sections.section.item.delete',$slug) }}";
             var target         = oldData.id;
-            var message        = `Are you sure to <strong>delete</strong> this item?`;
+            var message        = `{{ __("Are you sure to") }} <strong>{{ __("delete") }}</strong> {{ __("this item?") }}`;
 
             openDeleteModal(actionRoute,target,message);
         });    

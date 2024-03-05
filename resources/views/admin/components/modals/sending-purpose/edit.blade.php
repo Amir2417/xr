@@ -12,7 +12,7 @@
                     <div class="row mb-10-none mt-2">
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Name*',
+                                'label'         => __("Name")."*",
                                 'name'          => 'edit_name',
                                 'value'         => old('edit_name')
                             ])

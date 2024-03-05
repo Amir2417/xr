@@ -40,7 +40,7 @@
                                     <div class="col-12 from-cruncy">
                                         <div class="input-group">
                                             <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
-                                            
+
                                             <div class="ad-select">
                                                 <div class="custom-select">
                                                     <div class="custom-select-inner">
@@ -53,14 +53,14 @@
                                                     <div class="custom-select-search-box">
                                                         <div class="custom-select-search-wrapper">
                                                             <button type="submit" class="search-btn"><i class="las la-search"></i></button>
-                                                            <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                            <input type="text" class="form--control custom-select-search" placeholder="{{ __("Search currency") }}...">
                                                         </div>
                                                     </div>
                                                     <div class="custom-select-list-wrapper">
                                                         <ul class="custom-select-list">
                                                             @foreach ($sender_currency as $item)
-                                                                <li class="custom-option 
-                                                                @if($item->code == $sender_currency_first->code) 
+                                                                <li class="custom-option
+                                                                @if($item->code == $sender_currency_first->code)
                                                                 active
                                                                 @endif"
                                                                 data-item='{{ json_encode($item) }}'>
@@ -129,7 +129,7 @@
                                     <div class="col-12 from-cruncy">
                                         <div class="input-group">
                                             <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money">
-                                            
+
                                             <div class="ad-select">
                                                 <div class="custom-select">
                                                     <div class="custom-select-inner">
@@ -142,15 +142,15 @@
                                                     <div class="custom-select-search-box">
                                                         <div class="custom-select-search-wrapper">
                                                             <button type="submit" class="search-btn"><i class="las la-search"></i></button>
-                                                            <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
+                                                            <input type="text" class="form--control custom-select-search" placeholder="{{ __("Search currency") }}...">
                                                         </div>
                                                     </div>
                                                     <div class="custom-select-list-wrapper">
                                                         <ul class="custom-select-list">
                                                             @foreach ($receiver_currency as $item)
-                                                                <li class="custom-option 
-                                                                    @if($item->code == $receiver_currency_first->code) 
-                                                                    active 
+                                                                <li class="custom-option
+                                                                    @if($item->code == $receiver_currency_first->code)
+                                                                    active
                                                                     @endif" data-item='{{ json_encode($item) }}'>
                                                                     <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
                                                                     <span class="custom-country">{{ $item->name }}</span>
@@ -171,8 +171,8 @@
                                 </div>
                                 <div class="transaction-type-select">
                                     <select class="nice-select trx-type-select" name="type">
-                                        @foreach ($transaction_settings as $item) 
-                                            <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ $item->title ?? ''}}</option>
+                                        @foreach ($transaction_settings as $item)
+                                            <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ __($item->title ?? '')}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -206,14 +206,14 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label>{{ __("Enter Your Coupon Code") }}<span></span></label>
-                                <input type="text" name="coupon" class="form--control" id="coupon" placeholder="Enter Coupon">
+                                <input type="text" name="coupon" class="form--control" id="coupon" placeholder="{{ __("Enter Coupon") }}">
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn--base w-100">{{ __("Apply") }}</button>
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>        
+                </div>
             </div>
         </div>
     </div>
@@ -255,26 +255,26 @@
     $('.sender-currency').on('change',function(){
         run();
     });
-    $('.receiver-currency').on('change',function(){ 
+    $('.receiver-currency').on('change',function(){
         runReverse();
     });
-    
+
     function applyCoupon(event){
-        
+
         event.preventDefault();
         var coupon  = $('#coupon').val();
         var url         = '{{ setRoute("coupon.apply") }}';
         $.post(url,{coupon:coupon,_token:"{{ csrf_token() }}"},function(response){
-            
+
             var couponId    = response.data.coupon.id;
             var couponName  = response.data.coupon.name;
             var couponPrice = parseFloat(response.data.coupon.price);
-            
+
             $('#coupon-id').val(couponId);
 
             var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
             sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")),couponPrice);
-            
+
             var successText = response.message.success;
             throwMessage("success",successText);
 
@@ -282,8 +282,8 @@
                 run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
                 sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")),couponPrice);
             });
-           
-            
+
+
         }).fail(function(response){
             var errorText = response.responseJSON;
             $('#coupon').val('');
@@ -292,7 +292,7 @@
         });
     }
     function sender(selectedItem,receiver = false,couponPrice){
-       
+
         function acceptVar() {
             var senderCurrency          = selectedItem.code;
             var senderCurrencyRate      = selectedItem.rate;
@@ -307,37 +307,37 @@
         var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
         var senderCurrency          = acceptVar().senderCurrency;
         var receiverRate            = parseFloat(receiverCurrencyRate) / parseFloat(senderCurrencyRate);
-        
+
         var bonus                   = parseFloat(couponPrice) * parseFloat(receiverRate);
         $('#coupon-price').val(bonus);
         var enterMoney              = $('#send_money').val();
         var receiveMoney            = parseFloat(enterMoney) * parseFloat(receiverRate)
         var totalReceiveMoney       = parseFloat(receiveMoney) + parseFloat(bonus);
-       
+
         $('#receive_money').val(totalReceiveMoney.toFixed(2));
-        
+
         $('.apply-button').addClass("d-none");
         $('.applied-button').removeClass("d-none");
         $('.coupon-text').removeClass("d-none");
         $('#coupon--bonus').removeClass("d-none");
         $('#couponcode').modal('hide');
         $('#coupon').val('');
-        
+
         $('#coupon--bonus').text(couponPrice + " " + senderCurrency);
         var removeCoupon    = `
         <span class="remove-coupon-code" onclick="remove(event)"><i class="las la-times"></i>Remove Coupon</span>
         `;
         $('.remove-coupon').html(removeCoupon);
-        
-        
+
+
         $('#couponcode').modal('hide');
     }
     function remove(event){
         event.preventDefault();
-       
+
         $('.apply-button').removeClass("d-none");
-        $('.applied-button').addClass("d-none"); 
-        
+        $('.applied-button').addClass("d-none");
+
         var CouponText    = `
         <h4 class="text--base remove-coupon">{{ __("Have a coupon code?") }}</h4>
                 `;
@@ -352,11 +352,11 @@
         removeAmount(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
         function removeAmount(selectedItem,receiver = false){
             function acceptVar() {
-                
+
                 var senderCurrencyRate      = selectedItem.rate;
                 var receiverCurrencyRate    = receiver.rate;
                 return {
-                    
+
                     senderCurrencyRate:senderCurrencyRate,
                     receiverCurrencyRate:receiverCurrencyRate
                 };
@@ -369,17 +369,17 @@
             $('#coupon-price').val(bonus);
             var recieveMoney            = $('#receive_money').val();
             var totalReceiveMoney       = parseFloat(recieveMoney) - parseFloat(bonus);
-            $('#receive_money').val(totalReceiveMoney.toFixed(2)); 
+            $('#receive_money').val(totalReceiveMoney.toFixed(2));
         }
-        
+
     };
     function run(selectedItem,receiver = false){
-        
+
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
-       
-        
+
+
         var enterAmount = $('#send_money').val();
- 
+
         $("#feature-list").html(selectedType.feature_text);
         function acceptVar() {
             var senderCurrency          = selectedItem.code;
@@ -401,14 +401,14 @@
             var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
             var senderRate              = senderCurrencyRate / senderCurrencyRate;
             var recieverRate            = receiverCurrencyRate / senderCurrencyRate;
-            
+
             let findPercentCharge       = (enterAmount / senderCurrencyRate) / 100;
 
             let fixedCharge             = selectedType.fixed_charge;
             let percentCharge           = selectedType.percent_charge;
-            
+
             let totalPercentCharge      = parseFloat(findPercentCharge) * parseFloat(percentCharge);
-            
+
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
             var totalChargeAmount  = totalCharge * senderCurrencyRate;
 
@@ -418,13 +418,13 @@
                 let convertAmount = enterAmount;
                 let receivedMoney = convertAmount * parseFloat(recieverRate).toFixed(2);
                 var intervals = selectedType.intervals;
-                
+
                 $.each(intervals,function(index,item){
-                    
+
                     if(parseFloat(enterAmount) >= item.min_limit  && parseFloat(enterAmount) <= item.max_limit) {
                         fixedCharge = item.fixed;
                         percentCharge = item.percent;
-                        
+
                         totalPercentCharge = parseFloat(findPercentCharge) * parseFloat(percentCharge);
                         totalCharge = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
                         totalChargeAmount  = totalCharge * senderCurrencyRate;
@@ -432,9 +432,9 @@
                         convertAmount = parseFloat(enterAmount);
                         recieverRate  = receiverCurrencyRate / senderCurrencyRate;
                         payableAmount = parseFloat(enterAmount) + totalChargeAmount;
-                        
+
                         receivedMoney = convertAmount * recieverRate;
-                        
+
                     }
                 });
 
@@ -448,14 +448,14 @@
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
 
                 var coupon      = $('#coupon-id').val();
-                
+
                 if(coupon   != 0){
                     var couponPrice     = $('#coupon-price').val();
                     receivedMoney   = parseFloat(receivedMoney) + parseFloat(couponPrice);
                 }else{
                     receivedMoney = receivedMoney;
                 }
-                
+
 
                 $('#receive_money').val(parseFloat(receivedMoney).toFixed(2));
                 $('#charge').val(parseFloat(totalChargeAmount).toFixed(2));
@@ -466,7 +466,7 @@
                 $('.receiver-ex-rate').val(parseFloat(recieverRate).toFixed(2));
                 $('.sender_currency').val(senderCurrency);
                 $('.receiver_currency').val(receiverCurrency);
-                
+
             }else{
                 $("#fees").text('');
                 $('#convert-amount').text('');
@@ -482,12 +482,12 @@
     }
     function runReverse(selectedItem,receiver = false){
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
-        
+
         var receiveAmount = $('#receive_money').val();
- 
+
         $("#feature-list").html(selectedType.feature_text);
         function acceptVar() {
-           
+
             var senderCurrency          = selectedItem.code;
             var senderCurrencyRate      = selectedItem.rate;
             var receiverCurrency        = receiver.code;
@@ -510,42 +510,42 @@
             let findPercentCharge       = (receiveAmount / receiverCurrencyRate) / 100;
             let percentCharge           = selectedType.percent_charge;
             var senderAmount            = receiveAmount / recieverRate;;
-            
+
             let totalPercentCharge = parseFloat(findPercentCharge) * parseFloat(percentCharge);
-            
+
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
             var totalChargeAmount  = totalCharge * senderCurrencyRate;
             let payableAmount = senderAmount + totalChargeAmount;
-            
+
             if(senderAmount == "") senderAmount = 0;
             if (senderAmount != 0) {
                 let convertAmount = senderAmount;
-                
+
                 let receivedMoney = convertAmount ;
-                
+
                 var intervals = selectedType.intervals;
-                
+
                 $.each(intervals,function(index,item){
-                    
+
                     if(parseFloat(senderAmount) >= item.min_limit  && parseFloat(senderAmount) <= item.max_limit) {
                         fixedCharge = item.fixed;
                         percentCharge = item.percent;
-                        
-                        
+
+
                         totalPercentCharge  = parseFloat(findPercentCharge) * parseFloat(percentCharge);
-                        
+
                         totalCharge         = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
                         totalChargeAmount   = totalCharge * senderCurrencyRate;
                         convertAmount       = parseFloat(senderAmount);
                         payableAmount       = parseFloat(senderAmount) + totalChargeAmount;
-                        
+
                         recieverRate        = receiverCurrencyRate / senderCurrencyRate;
                         receivedMoney       = convertAmount * recieverRate;
                     }
                 });
 
 
-                
+
                 $('#sending_amount').text(parseFloat(senderAmount).toFixed(2) + " " + senderCurrency);
                 $("#fees").text('+' + parseFloat(totalChargeAmount).toFixed(2) + " " + senderCurrency);
                 $("#convert-amount").text(parseFloat(senderAmount).toFixed(2) + " " + senderCurrency);
@@ -559,7 +559,7 @@
                 $('#get-amount').text(receivedMoney.toFixed(2) + " " + receiverCurrency);
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
 
-                
+
                 $('.sender-ex-rate').val(parseFloat(senderRate).toFixed(2));
                 $('.sender-base-rate').val(parseFloat(senderCurrencyRate).toFixed(2));
                 $('.receiver-ex-rate').val(parseFloat(recieverRate).toFixed(2));
@@ -579,17 +579,17 @@
     }
     $("#send_money").keyup(function(){
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
-        
+
     });
     $("#receive_money").keyup(function(){
         runReverse(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
-        
+
     });
 
     function adSelectActiveItem(input) {
         var adSelect        = $(input).parents(".ad-select");
         var selectedItem    = adSelect.find(".custom-option.active");
-        
+
         if(selectedItem.length > 0) {
             return selectedItem.attr("data-item");
         }
@@ -597,9 +597,9 @@
     }
     $(document).on("click",".custom-option",function() {
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));
-        
+
     });
-    
+
 
 </script>
 @endpush

@@ -25,7 +25,7 @@
                         <div class="custom-select-search-box">
                             <div class="custom-select-search-wrapper">
                                 <button type="submit" class="search-btn"><i class="las la-search"></i></button>
-                                <input type="text" class="form--control custom-select-search" placeholder="Search Here...">
+                                <input type="text" class="form--control custom-select-search" placeholder="{{ __("Search Here") }}...">
                             </div>
                         </div>
                         <div class="custom-select-list-wrapper">
@@ -59,21 +59,7 @@
                 <h3>{{ __("Receiving Country") }}</h3>
             </div>
             <div class="row g-4 country-list receiver-country">
-                {{-- @foreach ($receiver_currency as $item)
-                    <div class="col-lg-6 col-xl-4 col-md-6 col-12">
-                        <div class="card">
-                            <div class="d-flex">
-                                <div class="thumb">
-                                    <img src="{{ get_image($item->flag, 'currency-flag') }}" alt="icon">
-                                </div>
-                                <div>
-                                    <h3>{{ $item->country ?? '' }}</h3>
-                                    <p>1ALL = 3.7012NGN</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach --}}
+                
             </div>
         </div>
     </div>

@@ -10,14 +10,14 @@
                     <div class="row mb-10-none mt-2">
                         <div class="col-xl-6 col-lg-6 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Language Name*',
+                                'label'         => __('Language Name')."*",
                                 'name'          => 'name',
                                 'value'         => old('name')
                             ])
                         </div>
                         <div class="col-xl-6 col-lg-6 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Language Code*',
+                                'label'         => __('Language Code')."*",
                                 'name'          => 'code',
                                 'value'         => old('code')
                             ])
@@ -27,7 +27,7 @@
                                 'label'         => __('Direction')."*",
                                 'name'          => 'dir',
                                 'value'         => old('dir','ltr'),
-                                'options'       => ['LTR' => 'ltr','RTL' => 'rtl'],
+                                'options'       => [__('LTR') => 'ltr',__('RTL') => 'rtl'],
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group d-flex align-items-center justify-content-between mt-4">

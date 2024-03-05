@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="dashboard-list-user-content">
                                     <h4 class="title">{{ $item->remittance_data->first_name ?? '' }} {{ $item->remittance_data->middle_name ?? '' }} {{ $item->remittance_data->last_name ?? ''}}</h4>
-                                    <span class="sub-title text--danger">{{ $item->remittance_data->type ?? '' }}
+                                    <span class="sub-title text--danger">{{ __($item->remittance_data->type) ?? '' }}
                                         
                                         <span class="badge badge--warning ms-2">
                                             @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)

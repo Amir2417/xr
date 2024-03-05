@@ -45,8 +45,8 @@
                     <thead>
                         <tr>
                         
-                            <th>Name</th>
-                            <th>Status</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -58,7 +58,7 @@
                                     @include('admin.components.form.switcher',[
                                         'name'        => 'status',
                                         'value'       => $item->status,
-                                        'options'     => ['Enable' => 1, 'Disable' => 0],
+                                        'options'     => [__('Enable') => 1, __('Disable') => 0],
                                         'onload'      => true,
                                         'data_target' => $item->id,
                                     ])
@@ -104,10 +104,9 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                         <div class="col-xl-12 col-lg-12 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Name*",
+                                                'label'         => __("Name")."*",
                                                 'name'          => $item->code . "_name",
                                                 'data_limit'    => 150,
-                                                'placeholder'   => "Write Name...",
                                                 'value'         => old($lang_code . "_name"),
                                             ])
                                         </div>
@@ -118,7 +117,7 @@
                                 @include('admin.components.button.form-btn',[
                                     'class'         => "w-100 btn-loading",
                                     'permission'    => "admin.setup.sections.category.store",
-                                    'text'          => "Add",
+                                    'text'          => __("Add"),
                                 ])
                             </div>
                         </div>
@@ -138,7 +137,7 @@
             var actionRoute = "{{ setRoute('admin.setup.sections.category.delete') }}";
             var target      = oldData.id;
             // console.log(target);
-            var message     = `Are you sure to <span>delete</span> this category?`;
+            var message     = `{{ __("Are you sure to") }} <span>{{ __("delete") }}</span> {{ __("this category?") }}`;
             openDeleteModal(actionRoute,target,message);
         });
         

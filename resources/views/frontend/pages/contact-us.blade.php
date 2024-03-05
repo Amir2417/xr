@@ -10,7 +10,7 @@
     <section class="info-card pt-150 pb-80">
         <div class="container mx-auto">
             <div class="row g-4">
-                <div class="col-lg-4 col-md-6 col-12">
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-20">
                     <div class="card">
                         <div class="d-flex">
                             <div class="icon">
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-12">
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-20">
                     <div class="card">
                         <div class="d-flex">
                             <div class="icon">
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-12">
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-20">
                     <div class="card">
                         <div class="d-flex">
                             <div class="icon">

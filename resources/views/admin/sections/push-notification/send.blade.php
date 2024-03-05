@@ -29,7 +29,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="form-group">
                             @include('admin.components.form.input',[
-                                'label'         => "Title*",
+                                'label'         => __("Title")."*",
                                 'name'          => "title",
                                 'value'         => old("title"),
                                 'data_limit'    => 40,
@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-group">
                             @include('admin.components.form.textarea',[
-                                'label'         => "Notification Body*",
+                                'label'         => __("Notification Body")."*",
                                 'name'          => "body",
                                 'data_limit'    => 80,
                             ])
@@ -46,7 +46,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Send",
+                            'text'          => __("Send"),
                             'permission'    => "admin.push.notification.send",
                         ])
                     </div>
@@ -64,9 +64,9 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Title</th>
-                            <th>Body</th>
-                            <th>Time</th>
+                            <th>{{ __("Title") }}</th>
+                            <th>{{ __("Body") }}</th>
+                            <th>{{ __("Time") }}</th>
                         </tr>
                     </thead>
                     <tbody>

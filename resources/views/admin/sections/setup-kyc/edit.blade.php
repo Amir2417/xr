@@ -27,7 +27,7 @@
                 @include('admin.components.button.custom',[
                     'type'          => "button",
                     'class'         => "add-row-btn",
-                    'text'          => "Add",
+                    'text'          => __("Add"),
                     'icon'          => "fas fa-plus",
                     'permission'    => "admin.setup.kyc.update",
                 ])
@@ -38,7 +38,7 @@
                         <div class="row add-row-wrapper align-items-end">
                             <div class="col-xl-3 col-lg-3 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'     => "Field Name*",
+                                     'label'     => __("Field Name")."*",
                                     'name'      => "label[]",
                                     'attribute' => "required",
                                     'value'     => old('label[]',$item->label),
@@ -48,7 +48,7 @@
                                 @php
                                     $selectOptions = ['text' => "Input Text", 'file' => "File", 'textarea' => "Textarea",'select' => "Select"];
                                 @endphp
-                                <label>{{ __("Field Types*") }}</label>
+                                <label>{{ __("Field Types") }}*</label>
                                 <select class="form--control nice-select field-input-type" name="input_type[]" data-old="{{ $item->type }}" data-show-db="true">
                                     @foreach ($selectOptions as $key => $value)
                                         <option value="{{ $key }}" {{ ($key == $item->type) ? "selected" : "" }}>{{ $value }}</option>
@@ -61,7 +61,7 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Max File Size (mb)*",
+                                                'label'         => __("Max File Size (mb)"),
                                                 'name'          => "file_max_size[]",
                                                 'type'          => "number",
                                                 'attribute'     => "required",
@@ -71,7 +71,7 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-6 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "File Extension*",
+                                                'label'         => __("File Extension")."*",
                                                 'name'          => "file_extensions[]",
                                                 'attribute'     => "required",
                                                 'value'         => old('file_extensions[]',implode(",",$item->validation->mimes)),
@@ -83,7 +83,7 @@
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Options*",
+                                                'label'     => __("Options")."*",
                                                 'name'      => "select_options[]",
                                                 'attribute' => "required=true",
                                                 'value'     => old("select_options[]",implode(",",$item->validation->options)),
@@ -94,7 +94,7 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Min Character*",
+                                                'label'         => __("Min Character")."*",
                                                 'name'          => "min_char[]",
                                                 'type'          => "number",
                                                 'attribute'     => "required",
@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-6 form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Max Character*",
+                                                'label'         => __("Max Character")."*",
                                                 'name'          => "max_char[]",
                                                 'type'          => "number",
                                                 'attribute'     => "required",
@@ -119,7 +119,7 @@
             
                             <div class="col-xl-2 col-lg-2 form-group">
                                 @include('admin.components.form.switcher',[
-                                    'label'     => "Field Necessity*",
+                                    'label'     => __("Field Necessity")."*",
                                     'name'      => "field_necessity[]",
                                     'options'   => ['Required' => "1",'Optional' => "0"],
                                     'value'     => old("field_necessity[]",$item->required),
@@ -136,7 +136,7 @@
                         <div class="row add-row-wrapper align-items-end">
                             <div class="col-xl-3 col-lg-3 form-group">
                                 @include('admin.components.form.input',[
-                                    'label'     => "Field Name*",
+                                    'label'     => __("Field Name")."*",
                                     'name'      => "label[]",
                                     'attribute' => "required",
                                     'value'     => old('label[]'),
@@ -146,7 +146,7 @@
                                 @php
                                     $selectOptions = ['text' => "Input Text", 'file' => "File", 'textarea' => "Textarea",'select' => "Select"];
                                 @endphp
-                                <label>{{ __("Field Types*") }}</label>
+                                <label>{{ __("Field Types") }}*</label>
                                 <select class="form--control nice-select field-input-type" name="input_type[]" data-old="file">
                                     @foreach ($selectOptions as $key => $value)
                                         <option value="{{ $key }}">{{ $value }}</option>
@@ -160,9 +160,9 @@
             
                             <div class="col-xl-2 col-lg-2 form-group">
                                 @include('admin.components.form.switcher',[
-                                    'label'     => "Field Necessity*",
+                                    'label'     =>  __("Field Necessity")."*",
                                     'name'      => "field_necessity[]",
-                                    'options'   => ['Required' => "1",'Optional' => "0"],
+                                    'options'   => [__('Required') => "1",__('Optional') => "0"],
                                     'value'     => old("field_necessity[]","1"),
                                 ])
                             </div>
@@ -176,7 +176,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Save & Change",
+                            'text'          => __("Save & Change"),
                             'permission'    => "admin.setup.kyc.update",
                         ])
                     </div>

@@ -26,7 +26,7 @@
                                 <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                     <div class="form-group">
                                         @include('admin.components.form.textarea',[
-                                            'label'     => "Comment *",
+                                            'label'     => __("Comment")."*",
                                             'name'      => $lang_code . "_comment",
                                             'value'     => old($lang_code . "_comment",$data->value->language->$lang_code->comment ?? ""),
                                             'class'     => "form--control icp icp-auto iconpicker-element iconpicker-input",
@@ -38,21 +38,21 @@
                     </div>
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "Name *",
+                            'label'     => __("Name")."*",
                             'name'      => "name",
                             'value'     => old("name"),
                         ])
                     </div>
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "Designation *",
+                            'label'     => __("Designation")."*",
                             'name'      => "designation",
                             'value'     => old("designation"),
                         ])
                     </div>
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Image:",
+                            'label'             => __("Image"),
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),

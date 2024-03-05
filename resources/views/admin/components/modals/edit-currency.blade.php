@@ -27,41 +27,41 @@
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Type*',
+                                'label'         => __('Type').'*',
                                 'name'          => 'currency_type',
                                 'value'         => old('currency_type'),
-                                'options'       => ['FIAT' => 'FIAT','CRYPTO' => 'CRYPTO'],
+                                'options'       => [__('FIAT') => 'FIAT',__('CRYPTO') => 'CRYPTO'],
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
-                            <label>{{ __("Country*") }}</label>
+                            <label>{{ __("Country") }}*</label>
                             <select name="currency_country" class="form--control select2-auto-tokenize country-select" data-old="{{ old('currency_country') }}">
-                                <option selected disabled>Select Country</option>
+                                <option selected disabled>{{ __("Select Country") }}</option>
                             </select>
                         </div>
                         <div class="col-xl-6 col-lg-6 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Name*',
+                                'label'         => __('Name').'*',
                                 'name'          => 'currency_name',
                                 'value'         => old('currency_name'),
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Code*',
+                                'label'         => __('Code').'*',
                                 'name'          => 'currency_code',
                                 'value'         => old('currency_code'),
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => 'Symbol*',
+                                'label'         => __('Symbol').'*',
                                 'name'          => 'currency_symbol',
                                 'value'         => old('currency_symbol'),
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
-                            <label>{{ __("Rate*") }}</label>
+                            <label>{{ __("Rate") }}*</label>
                             <div class="input-group">
                                 <span class="input-group-text append">1 {{ get_default_currency_code($default_currency) }} = </span>
                                 <input type="number" class="form--control" value="{{ old('currency_rate') }}" name="currency_rate" step="any">
@@ -70,18 +70,18 @@
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.radio-button',[
-                                'label'         => 'Role*',
+                                'label'         => __('Role').'*',
                                 'name'          => 'currency_role',
                                 'value'         => old('currency_role'),
-                                'options'       => ['Both' => 'both', 'Sender' => 'sender', 'Receiver' => 'receiver'],
+                                'options'       => [__('Both') => 'both', __('Sender') => 'sender', __('Receiver') => 'receiver'],
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Option*',
+                                'label'         => __('Option').'*',
                                 'name'          => 'currency_option',
                                 'value'         => old('currency_option'),
-                                'options'       => ['Optional' => 0,'Default' => 1],
+                                'options'       => [__('Optional') => 0,__('Default') => 1],
                             ])
                         </div>
 

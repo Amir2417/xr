@@ -294,7 +294,7 @@ class PaymentGatewaysController extends Controller
             return Response::error($error,null,500);
         }
 
-        $success = ['success' => ['Payment gateway status updated successfully!']];
+        $success = ['success' => [__('Payment gateway status updated successfully!')]];
         return Response::success($success,null,200);
     }
 

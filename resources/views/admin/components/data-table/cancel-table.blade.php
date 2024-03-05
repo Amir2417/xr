@@ -2,11 +2,11 @@
     <thead>
         <tr>
             <th>{{ __("MTCN ID") }}</th>
-            <th>{{ __("S. Name") }}</th>
-            <th>{{ __("R. Name") }}</th>
-            <th>{{ __("T. Type") }}</th>
+            <th>{{ __("Sender Name") }}</th>
+            <th>{{ __("Receiver Name") }}</th>
+            <th>{{ __("Transaction Type") }}</th>
             <th>{{ __("Amount") }}</th>
-            <th>{{ __("P. Method") }}</th>
+            <th>{{ __("Payment Method") }}</th>
             <th>{{ __("Status") }}</th>
             <th></th>
         </tr>

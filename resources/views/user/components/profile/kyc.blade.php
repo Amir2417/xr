@@ -1,5 +1,5 @@
 @if ($basic_settings->kyc_verification == true && isset($user_kyc) && $user_kyc != null && $user_kyc->fields != null)
-    <h3 class="title">{{ __("KYC Information") }} &nbsp; <span class="{{ auth()->user()->kycStringStatus->class }}">{{ auth()->user()->kycStringStatus->value }}</span></h3>
+    <h3 class="title">{{ __("KYC Information") }} &nbsp; <span class="{{ auth()->user()->kycStringStatus->class }}">{{ __(auth()->user()->kycStringStatus->value) }}</span></h3>
 
     @if (auth()->user()->kyc_verified == global_const()::PENDING)
         <div class="pending text--warning kyc-text">{{ __("Your KYC information is submited. Please wait for admin confirmation. When you are KYC verified you will show your submited information here.") }}</div>

@@ -66,21 +66,21 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="{{ $item->name }}" role="tabpanel" aria-labelledby="english-tab">                                                                   
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Section Title*",
+                                                'label'     => __("Section Title")."*",
                                                 'name'      => $lang_code . "_title",
                                                 'value'     => old($lang_code . "_title",$data->value->language->$lang_code->title ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Heading*",
+                                                'label'     => __("Heading")."*",
                                                 'name'      => $lang_code . "_heading",
                                                 'value'     => old($lang_code . "_heading",$data->value->language->$lang_code->heading ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.textarea',[
-                                                'label'     => "Sub Heading*",
+                                                'label'     => __("Sub Heading")."*",
                                                 'name'      => $lang_code . "_sub_heading",
                                                 'value'     => old($lang_code . "_sub_heading",$data->value->language->$lang_code->sub_heading ?? "")
                                             ])
@@ -93,7 +93,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          =>  __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>
@@ -113,7 +113,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Title</th>
+                            <th>{{ __("Title") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -166,14 +166,14 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Title*",
+                                                'label'     => __("Title")."*",
                                                 'name'      => $lang_code . "_item_title_edit",
                                                 'value'     => old($lang_code . "_item_title_edit",$data->value->language->$lang_code->item_title ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.textarea',[
-                                                'label'     => "Description *",
+                                                'label'     => __("Description")."*",
                                                 'name'      => $lang_code . "_description_edit",
                                                 'value'     => old($lang_code . "_description_edit",$data->value->language->$lang_code->description ?? "")
                                             ])
@@ -184,7 +184,7 @@
                         </div>
                         <div class="form-group">
                             @include('admin.components.form.input-file',[
-                                'label'             => "Section Image:",
+                                'label'             => __("Image"),
                                 'name'              => "image",
                                 'class'             => "file-holder",
                                 'old_files_path'    => files_asset_path("site-section"),
@@ -241,7 +241,7 @@
             var oldData     = JSON.parse($(this).parents("tr").attr("data-item"));
             var actionRoute = "{{ setRoute('admin.setup.sections.section.item.delete',$slug) }}";
             var target      = oldData.id;
-            var message     = `Are you sure to <strong>delete</strong> this item?`;
+            var message     = `{{ __("Are you sure to") }} <strong>{{ __("delete") }}</strong> {{ __("this item?") }}`;
 
             openDeleteModal(actionRoute,target,message);
         });

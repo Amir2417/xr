@@ -36,30 +36,30 @@
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Web Version*",
+                            'label'         => __("Web Version")."*",
                             'type'          => "text",
                             'class'         => "form--control",
-                            'placeholder'   => "Write Name...",
+                            'placeholder'   => __("Write Here")."...",
                             'name'          => "web_version",
                             'value'         => old('web_version',$basic_settings->web_version),
                         ])
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Site Name*",
+                            'label'         =>  __("Site Name")."*",
                             'type'          => "text",
                             'class'         => "form--control",
-                            'placeholder'   => "Write Name...",
+                            'placeholder'   => __("Write Here")."...",
                             'name'          => "site_name",
                             'value'         => old('site_name',$basic_settings->site_name),
                         ])
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Site Title*",
+                            'label'         => __("Site Title")."*",
                             'type'          => "text",
                             'class'         => "form--control",
-                            'placeholder'   => "Write Name...",
+                            'placeholder'   => __("Write Here")."...",
                             'name'          => "site_title",
                             'value'         => old('site_title',$basic_settings->site_title),
                         ])
@@ -74,7 +74,7 @@
                     <div class="col-xl-4 col-lg-4 form-group">
                         <label>{{ __("Timezone") }}*</label>
                         <select name="timezone" class="form--control select2-auto-tokenize timezone-select" data-old="{{ old('timezone',$basic_settings->timezone) }}">
-                            <option selected disabled>Select Timezone</option>
+                            <option selected disabled>{{ __("Select Timezone") }}</option>
                         </select>
                     </div>
                 </div>
@@ -98,80 +98,80 @@
                     <div class="row mb-10-none">
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'User Registration',
+                                'label'         => __('User Registration'),
                                 'name'          => 'user_registration',
                                 'value'         => old('user_registration',$basic_settings->user_registration),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Secure Password',
+                                'label'         => __('Secure Password'),
                                 'name'          => 'secure_password',
                                 'value'         => old('secure_password',$basic_settings->secure_password),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Agree Policy',
+                                'label'         => __('Agree Policy'),
                                 'name'          => 'agree_policy',
                                 'value'         => old('agree_policy',$basic_settings->agree_policy),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Force SSL',
+                                 'label'         => __('Force SSL'),
                                 'name'          => 'force_ssl',
                                 'value'         => old('force_ssl',$basic_settings->force_ssl),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Email Verification',
+                                'label'         => __('Email Verification'),
                                 'name'          => 'email_verification',
                                 'value'         => old('email_verification',$basic_settings->email_verification),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Email Notification',
+                                'label'         => __('Email Notification'),
                                 'name'          => 'email_notification',
                                 'value'         => old('email_notification',$basic_settings->email_notification),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'Push Notification',
+                                'label'         => __('Push Notification'),
                                 'name'          => 'push_notification',
                                 'value'         => old('push_notification',$basic_settings->push_notification),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => 'KYC Verification',
+                                'label'         => __('KYC Verification'),
                                 'name'          => 'kyc_verification',
                                 'value'         => old('kyc_verification',$basic_settings->kyc_verification),
-                                'options'       => ['Activated' => 1,'Deactivated' => 0],
+                                'options'       => [__('Activated') => 1,__('Deactivated') => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])

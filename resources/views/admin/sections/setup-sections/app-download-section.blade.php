@@ -43,7 +43,7 @@
                 <div class="row justify-content-center mb-10-none">
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Section Image:",
+                            'label'             => __("Image"),
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),
@@ -70,7 +70,7 @@
                                                                         
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Section Title*",
+                                                'label'     => __("Title")."*",
                                                 'name'      => $lang_code . "_title",
                                                 'value'     => old($lang_code . "_title",$data->value->language->$lang_code->title ?? "")
                                             ])
@@ -78,14 +78,14 @@
 
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'     => "Heading*",
+                                                'label'     =>  __("Heading")."*",
                                                 'name'      => $lang_code . "_heading",
                                                 'value'     => old($lang_code . "_heading",$data->value->language->$lang_code->heading ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.textarea',[
-                                                'label'     => "Sub Heading*",
+                                                'label'     => __("Sub Heading")."*",
                                                 'name'      => $lang_code . "_sub_heading",
                                                 'value'     => old($lang_code . "_sub_heading",$data->value->language->$lang_code->sub_heading ?? "")
                                             ])
@@ -97,14 +97,14 @@
                     </div>
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "Google play Link*",
+                            'label'     => __("Google play Link")."*",
                             'name'      => "google_play_link",
                             'value'     => old("google_play_link",$data->value->google_play_link ?? "")
                         ])
                     </div>   
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "App Store Link*",
+                            'label'     => __("App Store Link")."*",
                             'name'      => "app_store_link",
                             'value'     => old("app_store_link",$data->value->app_store_link ?? "")
                         ])
@@ -112,7 +112,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          => __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>

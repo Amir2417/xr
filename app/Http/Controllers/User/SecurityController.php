@@ -12,11 +12,11 @@ class SecurityController extends Controller
 {
     /**
      * Method for show two factor page
-     * @param $string 
+     * @param $string
      * @return view
      */
     public function google2FA(){
-        $page_title = "| Two Factor Authentication";
+        $page_title = "Two Factor Authentication";
         $qr_code = generate_google_2fa_auth_qr();
         $client_ip = request()->ip() ?? false;
         $user_country = geoip()->getLocation($client_ip)['country'] ?? "";

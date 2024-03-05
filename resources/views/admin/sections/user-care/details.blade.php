@@ -35,7 +35,7 @@
                                     'href'          => setRoute('admin.users.login.logs',$user->username),
                                     'class'         => "bg--base two",
                                     'icon'          => "las la-sign-in-alt me-1",
-                                    'text'          => "Login Logs",
+                                    'text'          => __("Login Logs"),
                                     'permission'    => "admin.users.login.logs",
                                 ])
                             </div>
@@ -44,7 +44,7 @@
                                     'href'          => "#email-send",
                                     'class'         => "bg--base three modal-btn",
                                     'icon'          => "las la-mail-bulk me-1",
-                                    'text'          => "Send Email",
+                                    'text'          => __("Send Email"),
                                     'permission'    => "admin.users.send.mail",
                                 ])
                             </div>
@@ -52,7 +52,7 @@
                                 @include('admin.components.link.custom',[
                                     'class'         => "bg--base four login-as-member",
                                     'icon'          => "las la-user-check me-1",
-                                    'text'          => "Login as Member",
+                                    'text'          => __("Login as Member"),
                                     'permission'    => "admin.users.login.as.member",
                                 ])
                             </div>
@@ -61,7 +61,7 @@
                                     'href'          => setRoute('admin.users.mail.logs',$user->username),
                                     'class'         => "bg--base five",
                                     'icon'          => "las la-history me-1",
-                                    'text'          => "Email Logs",
+                                    'text'          => __("Email Logs"),
                                     'permission'    => "admin.users.mail.logs",
                                 ])
                             </div>
@@ -74,11 +74,11 @@
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">
                         <ul class="user-profile-list">
-                            <li class="bg--base one">{{ __("Full Name:") }} <span>{{ $user->fullname }}</span></li>
-                            <li class="bg--info two">{{ __("Username:") }} <span>{{ "@".$user->username }}</span></li>
-                            <li class="bg--success three">{{ __("Email:") }} <span>{{ $user->email }}</span></li>
-                            <li class="bg--warning four">{{ __("Status:") }} <span>{{ $user->stringStatus->value }}</span></li>
-                            <li class="bg--danger five">{{ __("Last Login:") }} <span>{{ $user->lastLogin }}</span></li>
+                            <li class="bg--base one">{{ __("Full Name") }} :<span>{{ $user->fullname }}</span></li>
+                            <li class="bg--info two">{{ __("username") }} : <span>{{ "@".$user->username }}</span></li>
+                            <li class="bg--success three">{{ __("Email") }} : <span>{{ $user->email }}</span></li>
+                            <li class="bg--warning four">{{ __("Status") }} : <span>{{ $user->stringStatus->value }}</span></li>
+                            <li class="bg--danger five">{{ __("Last Login") }} : <span>{{ $user->lastLogin }}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -96,20 +96,20 @@
                 <div class="row mb-10-none">
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "First Name*",
+                            'label'         => __("First Name")."*",
                             'name'          => "firstname",
                             'value'         => old("firstname",$user->firstname),
                             'attribute'     => "required",
-                            'placeholder'   => "Write Here...",
+                            'placeholder'   => __("Write Here")."...",
                         ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Last Name*",
+                            'label'         => __("Last Name")."*",
                             'name'          => "lastname",
                             'value'         => old("lastname",$user->lastname),
                             'attribute'     => "required",
-                            'placeholder'   => "Write Here...",
+                            'placeholder'   => __("Write Here")."...",
                         ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
@@ -121,7 +121,7 @@
                         <div class="input-group">
                             
                             <input class="phone-code" type="hidden" name="mobile_code" value="{{ $user->mobile_code }}" />
-                            <input type="text" class="form--control" placeholder="Write Here..." name="mobile" value="{{ old('mobile',$user->mobile) }}">
+                            <input type="text" class="form--control" placeholder="{{ __("Write Here") }}..." name="mobile" value="{{ old('mobile',$user->mobile) }}">
                         </div>
                         @error("mobile")
                             <span class="invalid-feedback d-block" role="alert">
@@ -147,61 +147,61 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Zip/Postal",
+                            'label'         => __("Zip Code"),
                             'name'          => "zip_code",
-                            'placeholder'   => "Write Here...",
+                            'placeholder'   => __("Write Here")."...",
                             'value'         => old('zip_code',$user->address->zip ?? "")
                         ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Address",
+                            'label'         => __("Address"),
                             'name'          => 'address',
                             'value'         => old("address",$user->address->address ?? ""),
-                            'placeholder'   => "Write Here...",
+                            'placeholder'   => __("Write Here")."...",
                         ])
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                         @include('admin.components.form.switcher', [
-                            'label'         => 'User Status',
+                            'label'         => __('User Status'),
                             'value'         => old('status',$user->status),
                             'name'          => "status",
-                            'options'       => ['Active' => 1, 'Banned' => 0],
+                            'options'       => [__('Active') => 1, __('Banned') => 0],
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                         @include('admin.components.form.switcher', [
-                            'label'         => 'Email Verification',
+                            'label'         => __('Email Verification'),
                             'value'         => old('email_verified',$user->email_verified),
                             'name'          => "email_verified",
-                            'options'       => ['Verified' => 1, 'Unverified' => 0],
+                            'options'       => [__('Verified') => 1, __('Unverified') => 0],
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                         @include('admin.components.form.switcher', [
-                            'label'     => '2FA Verification',
+                            'label'     => __('2FA Verification'),
                             'value'     => old('two_factor_verified',$user->two_factor_verified),
                             'name'      => "two_factor_verified",
-                            'options'   => ['Verified' => 1, 'Unverified' => 0],
+                            'options'   => [__('Verified') => 1, __('Unverified') => 0],
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
 
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                         @include('admin.components.form.switcher', [
-                            'label'     => 'KYC Verification',
+                            'label'     => __('KYC Verification'),
                             'value'     => old('kyc_verified',$user->kyc_verified),
                             'name'      => "kyc_verified",
-                            'options'   => ['Verified' => 1, 'Unverified' => 0],
+                            'options'   => [__('Verified') => 1, __('Unverified') => 0],
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
                     
                     <div class="col-xl-12 col-lg-12 form-group mt-4">
                         @include('admin.components.button.form-btn',[
-                            'text'          => "Update",
+                            'text'          => __("Update"),
                             'permission'    => "admin.users.details.update",
                             'class'         => "w-100 btn-loading",
                         ])

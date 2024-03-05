@@ -1,7 +1,7 @@
 @extends('user.layouts.master')
 
 @push('css')
-    
+
 @endpush
 
 @section('breadcrumb')
@@ -55,7 +55,7 @@
                                 @include('admin.components.form.textarea',[
                                     'label'         => __('Message').'<span class="text--base">'.'('.__("Optional").')'.'</span>',
                                     'name'          => "desc",
-                                    'placeholder'   => "Write Here...",
+                                    'placeholder'   => __("Write Here").'...',
                                 ])
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group">

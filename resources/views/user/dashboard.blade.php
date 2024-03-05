@@ -142,11 +142,11 @@
                             </div>
                             <div class="dashboard-list-user-content">
                                 <h4 class="title">{{ $item->remittance_data->first_name ?? '' }} {{ $item->remittance_data->middle_name ?? '' }} {{ $item->remittance_data->last_name ?? ''}}</h4>
-                                <span class="sub-title text--danger">{{ $item->remittance_data->type ?? '' }}
-                                    
+                                <span class="sub-title text--danger">{{ __($item->remittance_data->type ?? '') }}
+
                                     <span class="badge badge--warning ms-2">
                                         @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
-                                            <span>{{ __("Review Payment") }}</span> 
+                                            <span>{{ __("Review Payment") }}</span>
                                         @elseif ($item->status == global_const()::REMITTANCE_STATUS_PENDING)
                                             <span>{{ __("Pending") }}</span>
                                         @elseif ($item->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
@@ -167,7 +167,7 @@
                                             <span>{{ __("Delayed") }}</span>
                                         @endif
                                     </span>
-                                </span> 
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->remittance_data->type ?? '' }}</span>
+                            <span>{{ __($item->remittance_data->type) ?? '' }}</span>
                         </div>
                     </div>
                     <div class="preview-list-item">
@@ -319,7 +319,7 @@
                                     <i class="las la-comment-dollar"></i>
                                 </div>
                                 <div class="preview-list-user-content">
-                                    <span>{{ __("Payment Mathod") }}</span>
+                                    <span>{{ __("Payment Method") }}</span>
                                 </div>
                             </div>
                         </div>
@@ -335,7 +335,7 @@
                                         <i class="las la-exchange-alt"></i>
                                     </div>
                                     <div class="preview-list-user-content">
-                                        <span>{{ __("Payment Mathod Exchange Rate") }}</span>
+                                        <span>{{ __("Payment Method Exchange Rate") }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -344,7 +344,7 @@
                             </div>
                         </div>
                     @endif
-                    
+
                     <div class="preview-list-item">
                         <div class="preview-list-left">
                             <div class="preview-list-user-wrapper">
@@ -376,11 +376,11 @@
 
 <script>
     $('.copy').on('click',function(){
-        
+
         let input = $('.box').val();
         navigator.clipboard.writeText(input)
         .then(function() {
-            
+
             $('.copy').text("Copied");
         })
         .catch(function(err) {
@@ -395,11 +395,11 @@
 
     var options = {
       series: [{
-          name: 'Pending',
+          name: '{{ __("Pending") }}',
           color: "#8358ff",
           data: chart_one_data.pending_data
       }, {
-          name: 'Complete',
+          name: '{{ __("Complete") }}',
           data: chart_one_data.complete_data
       }],
       chart: {

@@ -27,7 +27,7 @@
 
                                 <p class="card-text"> {!! Str::words($item->data->language->$app_local->description ?? '','10','...') !!}</p>
                             </a>
-                            <a href="{{ setRoute('frontend.journal.details',$item->slug)}}" class="link">Read More <i class="las la-arrow-right"></i></a>
+                            <a href="{{ setRoute('frontend.journal.details',$item->slug)}}" class="link">{{ __("Read More") }} <i class="las la-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>

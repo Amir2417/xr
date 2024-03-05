@@ -1,7 +1,7 @@
 @extends('user.layouts.master')
 
 @push('css')
-    
+
 @endpush
 
 @section('breadcrumb')
@@ -31,7 +31,7 @@
                     <thead>
                         <tr>
                             <th>{{ __("Ticket ID") }}</th>
-                            <th>{{ __("User") }} ({{ __("Username") }})</th>
+                            <th>{{ __("User") }} ({{ __("username") }})</th>
                             <th>{{ __("Subject") }}</th>
                             <th>{{ __("Message") }}</th>
                             <th>{{ __("Status") }}</th>
@@ -43,7 +43,7 @@
                         @forelse($support_tickets as $item)
                             <tr>
                                 <td>#{{ $item->token ?? "" }}</td>
-                                <td> 
+                                <td>
                                     <span class="text--info">{{ $item->user->username ?? "" }}</span>
                                 </td>
                                 <td>
@@ -58,36 +58,27 @@
                                     @endif
                                 </td>
                                 <td>{{ Str::words($item->desc , 5, '...') }}</td>
-                                <td><span class="{{ $item->stringStatus->class }}">{{ $item->stringStatus->value }}</span></td>
+                                <td><span class="{{ $item->stringStatus->class }}">{{ __($item->stringStatus->value)}}</span></td>
                                 <td>
                                     @if (count($item->conversations) > 0)
                                         {{ $item->conversations->last()->created_at->format("Y-m-d H:i A") ?? "" }}</td>
                                      @endif
                                 </td>
                                 <td><a href="{{ setRoute('user.support.ticket.conversation',encrypt($item->id)) }}" class="btn btn--base"><i class="las la-comment"></i></a></td>
-                                
+
                             </tr>
                         @empty
                             @include('user.components.alerts.empty',['colspan' => 8])
                         @endforelse
-                        
+
                     </tbody>
                 </table>
             </div>
-            {{ get_paginate($support_tickets)}}
+
         </div>
         <nav>
             <ul class="pagination">
-                <li class="page-item disabled" aria-disabled="true">
-                    <span class="page-link" aria-hidden="true">&lsaquo;</span>
-                </li>
-                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" rel="next" aria-label="Next &raquo;">&rsaquo;</a>
-                </li>
+                {{ get_paginate($support_tickets)}}
             </ul>
         </nav>
     </div>

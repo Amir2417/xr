@@ -3,7 +3,7 @@
         $for_id = preg_replace('/[^A-Za-z0-9\-]/', '', Str::lower($label));
     }
 @endphp
-<label>Role*</label>
+<label>{{ __("Role") }}*</label>
 <div class="radio-form-group">
     @if ($options)
 

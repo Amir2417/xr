@@ -47,10 +47,10 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Gateway</th>
-                            <th>Supported Currency</th>
-                            <th>Enabled Currency</th>
-                            <th>Status</th>
+                            <th>{{ __("Gateway") }}</th>
+                            <th>{{ __("Supported Currency") }}</th>
+                            <th>{{ __("Enabled Currency") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -70,7 +70,7 @@
                                         'name'          => 'status',
                                         'data_target'   => $item->id,
                                         'value'         => $item->status,
-                                        'options'       => ['Enable' => 1, 'Disabled' => 0],
+                                        'options'       => [__('Enable') => 1, __('Disable') => 0],
                                         'onload'        => true,
                                         'permission'    => "admin.payment.gateway.status.update",
                                     ])
@@ -97,7 +97,7 @@
             <div id="p-gateway-automatic-add" class="mfp-hide large">
                 <div class="modal-data">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ __("Add Automatic Remittance Gateway (Bank)") }}</h5>
+                        <h5 class="modal-title">{{ __("Add Automatic Gateway") }}</h5>
                     </div>
                     <div class="modal-form-data">
                         <form class="modal-form" method="POST" action="{{ setRoute('admin.payment.gateway.store',['remittance-gateway','automatic']) }}" enctype="multipart/form-data">
@@ -116,7 +116,7 @@
 
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "Gateway Name*",
+                                        'label'         => __("Gateway Name")."*",
                                         'name'          => "gateway_name",
                                         'data_limit'    => 60,
                                         'value'         => old('gateway_name'),
@@ -125,7 +125,7 @@
 
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     @include('admin.components.form.input',[
-                                        'label'         => "Gateway Title*",
+                                        'label'         => __("Gateway Title")."*",
                                         'name'          => "gateway_title",
                                         'data_limit'    => 60,
                                         'value'         => old('gateway_title'),
@@ -134,7 +134,7 @@
 
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     @include('admin.components.form.select',[
-                                        'label'     => "Supported Currencies*",
+                                        'label'     => __("Supported Currencies")."*",
                                         'name'      => "supported_currencies[]",
                                         'multiple'  => true,
                                         'attribute' => "required",
@@ -145,7 +145,7 @@
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     <div class="custom-inner-card input-field-generator" data-source="add_money_automatic_gateway_credentials_field">
                                         <div class="card-inner-header">
-                                            <h6 class="title">{{ __("Genarate Fields") }}</h6>
+                                            <h6 class="title">{{ __("Generate Fields") }}</h6>
                                             <button type="button" class="btn--base add-row-btn"><i class="fas fa-plus"></i> {{ __("Add") }}</button>
                                         </div>
                                         <div class="card-inner-body">
@@ -153,20 +153,20 @@
                                                 <div class="row align-items-end">
                                                     <div class="col-xl-3 col-lg-3 form-group">
                                                         @include('admin.components.form.input',[
-                                                            'label'     => "Title*",
+                                                            'label'     => __("Title")."*",
                                                             'name'      => "title[]",
                                                         ])
                                                     </div>
                                                     <div class="col-xl-3 col-lg-3 form-group">
                                                         @include('admin.components.form.input',[
-                                                            'label'     => "Name*",
+                                                            'label'     => __("Name")."*",
                                                             'name'      => "name[]",
                                                         ])
                                                     </div>
 
                                                     <div class="col-xl-5 col-lg-5 form-group">
                                                         @include('admin.components.form.input',[
-                                                            'label'     => "Value",
+                                                            'label'     =>  __("Value"),
                                                             'name'      => "value[]",
                                                         ])
                                                     </div>

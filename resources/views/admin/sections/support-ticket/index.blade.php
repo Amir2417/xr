@@ -28,14 +28,14 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Ticket ID</th>
-                            <th>User (Username)</th>
-                            <th>Subject</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Message</th>
-                            <th>Status</th>
-                            <th>Last Reply</th>
+                            <th>{{ __("Ticket ID") }}</th>
+                            <th>{{ __("User") }} ({{ __("username") }})</th>
+                            <th>{{ __("Subject") }}</th>
+                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Email") }}</th>
+                            <th>{{ __("Message") }}</th>
+                            <th>{{ __("Status") }}</th>
+                            <th>{{ __("Last Reply") }}</th>
                             <th></th>
                         </tr>
                     </thead>

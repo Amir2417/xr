@@ -12,7 +12,7 @@
                             <div class="row mb-10-none">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 form-group">
                                     @include('admin.components.form.input-file',[
-                                        'label'             => 'Image: <span class="text--danger">(414*896)</span>',
+                                        'label'             => __('Image').': <span class="text--danger">(414*896)</span>',
                                         'class'             => "file-holder",
                                         'name'              => "image",
                                     ])
@@ -21,7 +21,7 @@
 
                                     <div class="form-group">
                                         @include('admin.components.form.input',[
-                                            'label'     => "Title",
+                                            'label'     => __("Title"),
                                             'name'      => "title",
                                             'attribute' => "data-limit=120",
                                             'value'     => old('title'),
@@ -30,7 +30,7 @@
 
                                     <div class="form-group">
                                         @include('admin.components.form.input',[
-                                            'label'     => "Sub Title",
+                                            'label'     => __("Sub Title"),
                                             'name'      => "sub_title",
                                             'attribute' => "data-limit=255",
                                             'value'     => old('sub_title'),

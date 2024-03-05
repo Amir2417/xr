@@ -21,14 +21,14 @@
     <div class="table-area">
         <div class="table-wrapper">
             <div class="table-header">
-                <h5 class="title">Setup KYC</h5>
+                <h5 class="title">{{ __("Setup KYC") }}</h5>
             </div>
             <div class="table-responsive">
                 <table class="custom-table two">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Status</th>
+                            <th>{{ __("Type") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,7 +40,7 @@
                                     @include('admin.components.form.switcher',[
                                         'label'         => false,
                                         'name'          => 'status',
-                                        'options'       => ['Active' => 1 , 'Deactive' => 0],
+                                        'options'       => [__('Active') => 1 , __('Deactive') => 0],
                                         'onload'        => true,
                                         'value'         => $item->status,
                                         'data_target'   => $item->id,

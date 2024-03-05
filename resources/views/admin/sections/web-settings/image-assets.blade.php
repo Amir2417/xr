@@ -45,7 +45,7 @@
                 <div class="row mb-10-none">
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group" style="height: 300px">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Logo (Light Version)",
+                            'label'             => __("Logo (Light Version)"),
                             'class'             => "file-holder",
                             'name'              => "site_logo",
                             'old_files'         => $basic_settings->site_logo,
@@ -54,7 +54,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group image-dark">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Logo (Dark Version)",
+                            'label'             => __("Logo (Dark Version)"),
                             'class'             => "file-holder",
                             'name'              => "site_logo_dark",
                             'old_files'         => $basic_settings->site_logo_dark,
@@ -63,7 +63,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Favicon (Light Version)",
+                            'label'             => __("Favicon (Light Version)"),
                             'class'             => "file-holder",
                             'name'              => "site_fav",
                             'old_files'         => $basic_settings->site_fav,
@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group image-dark">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Favicon (Dark Version)",
+                            'label'             => __("Favicon (Dark Version)"),
                             'class'             => "file-holder",
                             'name'              => "site_fav_dark",
                             'old_files'         => $basic_settings->site_fav_dark,
@@ -82,7 +82,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Update",
+                            'text'          => __("Update"),
                             'permission'    => "admin.web.settings.image.assets.update",
                         ])
                     </div>

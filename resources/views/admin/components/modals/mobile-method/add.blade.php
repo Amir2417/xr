@@ -19,10 +19,10 @@
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => "Name*",
+                                'label'         => __("Name")."*",
                                 'name'          => "name",
                                 'data_limit'    => 150,
-                                'placeholder'   => "Write Name...",
+                                'placeholder'   => __("Write Name")."...",
                                 'value'         => old('name'),
                             ])
                         </div>
@@ -30,7 +30,7 @@
                             @include('admin.components.button.form-btn',[
                                 'class'         => "w-100 btn-loading",
                                 'permission'    => "admin.mobile.method.store",
-                                'text'          => "Add",
+                                'text'          => __("Add"),
                             ])
                         </div>
                     </div>

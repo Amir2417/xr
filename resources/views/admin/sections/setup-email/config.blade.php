@@ -30,7 +30,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="row align-items-end">
                             <div class="col-xl-10 col-lg-10 form-group">
-                                <label>{{ __("Email Send Method*") }}</label>
+                                <label>{{ __("Email Send Method") }}*</label>
                                 <select class="form--control nice-select" name="method">
                                     <option disabled selected>Select Method</option>
                                     <option value="smtp" @if (isset($email_config->method) && $email_config->method == "smtp")
@@ -48,7 +48,7 @@
                                 @include('admin.components.link.custom',[
                                     'class'         => "btn--base modal-btn w-100",
                                     'href'          => "#test-mail",
-                                    'text'          => "Send Mail",
+                                    'text'          => __("Send Mail"),
                                     'permission'    => "admin.setup.email.test.mail.send",
                                 ])
                             </div>
@@ -56,14 +56,14 @@
                     </div>
                     <div class="col-xl-5 col-lg-5 form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "Host*",
+                            'label'     => __("Host")."*",
                             'name'      => 'host',
                             'value'     => old('host',$email_config->host ?? ""),
                         ])
                     </div>
                     <div class="col-xl-5 col-lg-5 form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "Port*",
+                            'label'     => __("Port")."*",
                             'name'      => 'port',
                             'type'      => 'number',
                             'value'     => old('port',$email_config->port ?? ""),
@@ -71,7 +71,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-2 form-group">
                         @include('admin.components.form.switcher',[
-                            'label'     => "Encryption*",
+                            'label'     => __("Encryption")."*",
                             'name'      => 'encryption',
                             'options'   => ['SSL' => "ssl",'TLS' => "tls"],
                             'value'     => old('encryption',$email_config->encryption ?? ""),
@@ -79,14 +79,14 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
-                            'label'     => "Username*",
+                            'label'     => __("username")."*",
                             'name'      => 'username',
                             'value'     => old('username',$email_config->username ?? ""),
                         ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group" id="show_hide_password">
                         @include('admin.components.form.input-password',[
-                            'label'         => 'Password*',
+                            'label'         => __('Password')."*",
                             'placeholder'   => 'Password' ,
                             'name'          => 'password',
                             'value'         => old('password',$email_config->password ?? ""),
@@ -95,7 +95,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Update",
+                            'text'          => __("Update"),
                             'permission'    => "admin.setup.email.config.update",
                         ])
                     </div>

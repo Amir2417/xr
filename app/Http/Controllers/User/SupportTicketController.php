@@ -51,8 +51,8 @@ class SupportTicketController extends Controller
         'notifications'));
     }
 
-    
-    
+
+
     public function store(Request $request)
     {
 
@@ -67,7 +67,7 @@ class SupportTicketController extends Controller
         $validated = $validator->validate();
         $validated['token']         = generate_unique_string('support_tickets','token',16);
         $validated['user_id']       = auth()->user()->id;
-        $validated['status']        = 0;
+        $validated['status']        = 3;
         $validated['type']          = SupportTicketConst::TYPE_USER;
         $validated['created_at']    = now();
         $validated = Arr::except($validated,['attachment']);
@@ -107,7 +107,7 @@ class SupportTicketController extends Controller
         }
 
         return redirect()->route('user.support.ticket.index')->with(['success' => ['Support ticket created successfully!']]);
-        
+
     }
 
     /**

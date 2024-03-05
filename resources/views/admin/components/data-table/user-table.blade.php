@@ -2,11 +2,11 @@
     <thead>
         <tr>
             <th></th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>{{ __("username") }}</th>
+            <th>{{ __("Email") }}</th>
+            <th>{{ __("Phone") }}</th>
+            <th>{{ __("Status") }}</th>
+            <th>{{ __("Action") }}</th>
         </tr>
     </thead>
     <tbody>

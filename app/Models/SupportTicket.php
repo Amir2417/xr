@@ -111,7 +111,7 @@ class SupportTicket extends Model
         }else if($status == SupportTicketConst::DEFAULT) {
             $data = [
                 'class'     => "badge badge--warning",
-                'value'     => "Pending",
+                'value'     => "Default",
             ];
         }else if($status == SupportTicketConst::PENDING) {
             $data = [

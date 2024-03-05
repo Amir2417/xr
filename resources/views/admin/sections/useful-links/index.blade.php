@@ -22,7 +22,7 @@
         <div class="table-header">
             <h5 class="title">{{ __($page_title) }}</h5>
             @include('admin.components.link.add-default',[
-                'text'          => "Add Link",
+                'text'          =>__("Add Link"),
                 'href'          => "#link-add",
                 'class'         => "modal-btn",
                 'permission'    => "admin.useful.links.store", 
@@ -32,9 +32,9 @@
             <table class="custom-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Slug</th>
-                        <th>Status</th>
+                        <th>{{ __("Title") }}</th>
+                        <th>{{ __("Slug") }}</th>
+                        <th>{{ __("Status") }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -47,7 +47,7 @@
                                 @include('admin.components.form.switcher',[
                                     'name'          => 'status',
                                     'value'         => $item->status,
-                                    'options'       => ['Enable' => 1,'Disable' => 0],
+                                    'options'       => [__('Enable') => 1,__('Disable') => 0],
                                     'onload'        => true,
                                     'data_target'   => $item->id,
                                     'permission'    => "admin.useful.links.status.update",
@@ -108,14 +108,14 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Title<span>*</span>",
+                                                'label'         => __("Title")."*",
                                                 'name'          => $lang_code . "_title",
                                                 'value'         => old($lang_code . "_title")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input-text-rich',[
-                                                'label'         => "Content*",
+                                                'label'         => __("Content"),
                                                 'name'          => $lang_code . "_content",
                                                 'value'         => old($lang_code . "_content"),
                                             ])
@@ -127,8 +127,7 @@
 
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => "Slug<span>*</span>(Use for make page link (URL))",
-                                'label_after'   => "* (Use for make page link (URL))",
+                                'label'         => __("Slug")."*".'('.__("Use for make page link (URL)").')',
                                 'name'          => "slug",
                                 'value'         => old("slug"),
                             ])
@@ -162,7 +161,7 @@
 
         var actionRoute =  "{{ setRoute('admin.useful.links.delete') }}";
         var target      = oldData.id;
-        var message     = `Are you sure to delete this link?`;
+        var message     = `{{ __("Are you sure to delete this link?") }}`;
 
         openDeleteModal(actionRoute,target,message);
     });

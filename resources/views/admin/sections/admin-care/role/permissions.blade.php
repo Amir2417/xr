@@ -35,7 +35,7 @@
                         'href'          => "#permission-add",
                         'class'         => "modal-btn",
                         'permission'    => "admin.admins.role.permission.store",
-                        'text'          => "Add New",
+                        'text'          => __("Add New"),
                     ])
                 </div>
             </div>
@@ -43,10 +43,10 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>SL NO</th>
-                            <th>Permission Name</th>
-                            <th>Role Name</th>
-                            <th>Status</th>
+                            <th>{{ __("SL") }}</th>
+                            <th>{{ __("Permission Name") }}</th>
+                            <th>{{ __("Role Name") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>

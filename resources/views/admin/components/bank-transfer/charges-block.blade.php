@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="form-group">
                     @include('admin.components.form.input-text-rich',[
-                        'label'         => "Feature Text*",
+                        'label'         => __("Feature Text").'*',
                         'name'          => "feature_text",
                         'value'         => old("feature_text",$item->feature_text)
                     ])
@@ -19,23 +19,23 @@
                     <div class="custom-inner-card">
                         <div class="card-inner-header">
                             @if ($item->title == global_const()::TRANSACTION_TYPE_BANK)
-                                <h5 class="title">{{ __(" Default Charges") }}</h5>
+                                <h5 class="title">{{ __("Default Charges") }}</h5>
                             @else
                                 <h5 class="title">{{ __("Charges") }}</h5>
                             @endif
-                            
+
                         </div>
                         <div class="card-inner-body">
                             <div class="row">
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
-                                    <label>{{ __("Fixed Charge*") }}</label>
+                                    <label>{{ __("Fixed Charge") }}*</label>
                                     <div class="input-group">
                                         <input type="text" class="form--control number-input" value="{{ old($item->slug.'_fixed_charge',get_amount($item->fixed_charge,null,4)) }}" name="{{$item->slug}}_fixed_charge">
                                         <span class="input-group-text">{{ get_default_currency_code($default_currency) }}</span>
                                     </div>
                                 </div>
                                 <div class="col-xxl-12 col-xl-6 col-lg-6 form-group">
-                                    <label>{{ __("Percent Charge*") }}</label>
+                                    <label>{{ __("Percent Charge") }}*</label>
                                     <div class="input-group">
                                         <input type="text" class="form--control number-input" value="{{ old($item->slug.'_percent_charge',get_amount($item->percent_charge,null,4)) }}" name="{{$item->slug}}_percent_charge">
                                         <span class="input-group-text">%</span>
@@ -49,9 +49,9 @@
                     <div class="custom-inner-card">
                         <div class="card-inner-header">
                             @if ($item->title == global_const()::TRANSACTION_TYPE_BANK)
-                                
+
                                 <h5 class="title">{{ __("Default Range") }}</h5>
-                                
+
                             @else
                                 <h5 class="title">{{ __("Range") }}</h5>
                             @endif
@@ -106,7 +106,7 @@
                 <div class="col-xl-12 col-lg-12 mb-10">
                     <div class="custom-inner-card">
                         <div class="card-inner-header">
-                            <h5 class="title">{{ $item->title . ' '. 'Intervals' }}</h5>
+                            <h5 class="title">{{ __($item->title) . ' '. __('Intervals') }}</h5>
                             <button type="button" class="btn btn--base {{ $item->slug.'addUserData' }}">
                                 <i class="la la-fw la-plus"></i>@lang('Add New')
                             </button>
@@ -164,7 +164,7 @@
             <div class="row mb-10-none">
                 <div class="col-xl-12 col-lg-12 form-group">
                     @include('admin.components.button.form-btn',[
-                        'text'          => "Update",
+                        'text'          => __("Update"),
                         'class'         => "w-100 btn-loading",
                         'permission'    => "admin.trx.settings.charges.update",
                     ])

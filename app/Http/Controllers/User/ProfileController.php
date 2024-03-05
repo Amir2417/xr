@@ -24,7 +24,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $page_title    = "| User Profile";
+        $page_title    = "User Profile";
         $client_ip     = request()->ip() ?? false;
         $user_country  = geoip()->getLocation($client_ip)['country'] ?? "";
         $kyc_data      = SetupKyc::userKyc()->first();
@@ -66,9 +66,9 @@ class ProfileController extends Controller
         $validated                  = Arr::except($validated,['agree','phone']);
         $validated['address']       = [
             'country'   => $validated['country'] ?? "",
-            'state'     => $validated['state'] ?? "", 
-            'city'      => $validated['city'] ?? "", 
-            'zip'       => $validated['zip_code'] ?? "", 
+            'state'     => $validated['state'] ?? "",
+            'city'      => $validated['city'] ?? "",
+            'zip'       => $validated['zip_code'] ?? "",
             'address'   => $validated['address'] ?? "",
         ];
 
@@ -111,7 +111,7 @@ class ProfileController extends Controller
             auth()->user()->update([
                 'password'  => Hash::make($request->password),
             ]);
-        }catch(Exception $e) {  
+        }catch(Exception $e) {
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
 

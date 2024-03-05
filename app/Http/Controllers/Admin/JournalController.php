@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 class JournalController extends Controller
 {
     public function journalCreate(){
-        $page_title = "New Journal Create ";
+        $page_title = "New Journal Create";
         $category   = WebJournalCategory::where('status',true)->get();
         $languages  = Language::get();
 
@@ -24,13 +24,13 @@ class JournalController extends Controller
             'page_title',
             'category',
             'languages'
-            
+
         ));
     }
     public function journalStore(Request $request) {
-        
+
         $basic_field_name = [
-            
+
             'title'         => "required|string|max:255",
             'description'   => "required|string|max:5000000",
             'tags'          => "required|array",
@@ -40,14 +40,14 @@ class JournalController extends Controller
             'image'         => "nullable",
             'category'      => 'required',
         ]);
-        
+
         $validated                              = $validator->validate();
 
         $data['language']  = $this->contentValidate($request,$basic_field_name);
 
         // make slug
         $not_removable_lang = LanguageConst::NOT_REMOVABLE;
-        $slug_text          = $data['language'][$not_removable_lang]['title'] ?? "";
+        $slug_text = $data['language'][$not_removable_lang]['title'] ?? "";
         if($slug_text == "") {
             $slug_text = $data['language'][get_default_language_code()]['title'] ?? "";
             if($slug_text == "") {
@@ -62,7 +62,7 @@ class JournalController extends Controller
         if($request->hasFile("image")) {
             $data['image']  = $this->imageValidate($request,"image",null);
         }
-      
+
         try{
             $update_value = [
                 'slug' => $slug,
@@ -72,10 +72,10 @@ class JournalController extends Controller
             ];
             Journal::updateOrCreate($update_value);
         }catch(Exception $e) {
-            
+
             return back()->with(['error' => ['Something went wrong. Please try again']]);
         }
-        
+
 
         return redirect()->route('admin.setup.sections.section','journal')->with(['success' => ['Journal created successfully!']]);
     }
@@ -92,7 +92,7 @@ class JournalController extends Controller
         }
         $validated = $validator->validate();
 
-        
+
         try {
             $journal = Journal::find($validated['data_target']);
             if($journal) {
@@ -114,7 +114,7 @@ class JournalController extends Controller
         $page_title   = "Journal Edit Page";
         $category   = WebJournalCategory::where('status',true)->get();
         $languages    = Language::get();
-        
+
 
         return view('admin.sections.setup-sections.web-journal.edit',compact(
             'journals',
@@ -133,10 +133,10 @@ class JournalController extends Controller
         $validator = Validator::make($request->all(),[
             'category'      => 'required',
         ]);
-        
+
         $validated  = $validator->validate();
         $data['language']   = $this->contentValidate($request,$basic_field_name);
-       
+
         $request->merge(['old_image' => $journal->data->image ?? null]);
 
         if($request->hasFile("image")){
@@ -146,7 +146,7 @@ class JournalController extends Controller
         }
         try{
             $update_value = [
-                
+
                 'category_id' => $validated['category'],
                 'data'=> $data
 
@@ -161,7 +161,7 @@ class JournalController extends Controller
 
 
     public function journalDelete(Request $request){
-        
+
         $request->validate([
             'target'    => "required|string"
         ]);
@@ -179,7 +179,7 @@ class JournalController extends Controller
         }catch(Exception $e) {
             return back()->with(['error' => ['Something went wrong. Please try again']]);
         }
-        return back()->with(['success' => ['journal deleted successfully!']]);
+        return back()->with(['success' => ['Journal deleted successfully!']]);
     }
 
 
@@ -212,7 +212,7 @@ class JournalController extends Controller
                         $language_wise_data[$langCode][$input_name_check] = $input_value;
                     }
                     break;
-                } 
+                }
             }
         }
         if($modal == null) {

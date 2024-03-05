@@ -2,12 +2,12 @@
     <thead>
         <tr>
             <th></th>
-            <th>Full Name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Role</th>
-            <th>Status</th>
+            <th>{{ __("Full Name") }}</th>
+            <th>{{ __("username") }}</th>
+            <th>{{ __("Email") }}</th>
+            <th>{{ __("Phone") }}</th>
+            <th>{{ __("Role") }}</th>
+            <th>{{ __("Status") }}</th>
             <th></th>
         </tr>
     </thead>
@@ -39,7 +39,7 @@
                         @include('admin.components.form.switcher',[
                             'name'          => 'status',
                             'value'         => $item->status,
-                            'options'       => ['Active' => 1,'Banned' => 0],
+                            'options'       => [__('Active') => 1,__('Banned') => 0],
                             'onload'        => true,
                             'data_target'   => $item->username,
                             'permission'    => "admin.admins.admin.status.update",

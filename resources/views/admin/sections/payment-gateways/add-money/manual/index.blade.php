@@ -14,7 +14,7 @@
             'name'  => __("Dashboard"),
             'url'   => setRoute("admin.dashboard"),
         ]
-    ], 'active' => __("Add Remiitance Gateway")])
+    ], 'active' => __("Manual Remittance Gateway")])
 @endsection
 
 @section('content')
@@ -25,7 +25,7 @@
                 <div class="table-btn-area">
                     @include('admin.components.link.add-default',[
                         'href'          => setRoute('admin.payment.gateway.create',['remittance-gateway','manual']),
-                        'text'          => "Add New",
+                        'text'          => __("Add New"),
                         'permission'    => "admin.payment.gateway.create",
                     ])
                 </div>
@@ -35,10 +35,10 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Gateway</th>
-                            <th>Currency Code</th>
-                            <th>Currency Symbol</th>
-                            <th>Status</th>
+                            <th>{{ __("Gateway") }}</th>
+                            <th>{{ __("Currency Code") }}</th>
+                            <th>{{ __("Currency Symbol") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -58,7 +58,7 @@
                                         'name'          => 'status',
                                         'data_target'   => $item->id,
                                         'value'         => $item->status,
-                                        'options'       => ['Enable' => 1, 'Disabled' => 0],
+                                        'options'       => [__('Enable') => 1, __('Disable') => 0],
                                         'onload'        => true,
                                         'permission'    => "admin.payment.gateway.status.update",
                                     ])

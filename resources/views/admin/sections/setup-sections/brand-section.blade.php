@@ -80,7 +80,7 @@
                 <div class="row mb-10-none mt-3">
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Image:",
+                            'label'             => __("Image").":",
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),
@@ -107,7 +107,7 @@
             var oldData     = JSON.parse($(this).parents("tr").attr("data-item"));
             var actionRoute = "{{ setRoute('admin.setup.sections.section.item.delete',$slug) }}";
             var target      = oldData.id;
-            var message     = `Are you sure to <strong>delete</strong> this brand?`;
+            var message     = `{{ __("Are you sure to") }} <strong>{{ __("delete") }}</strong> {{ __("this brand?") }}`;
             
             openDeleteModal(actionRoute,target,message);
         })

@@ -43,7 +43,7 @@
                 <div class="row justify-content-center mb-10-none">
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Section Image:",
+                            'label'             => __("Image"),
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),
@@ -67,14 +67,14 @@
                                     <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="{{ $item->name }}" role="tabpanel" aria-labelledby="english-tab">
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Section Title<span>*<span>",
+                                                'label'         => __("Title")."*",
                                                 'name'          => $item->code . "_title",
                                                 'value'         => old($item->code . "_title",$data->value->language->$lang_code->title ?? "")
                                             ])
                                         </div>
                                         <div class="form-group">
                                             @include('admin.components.form.input',[
-                                                'label'         => "Description<span>*<span>",
+                                                'label'         => __("Description")."*",
                                                 'name'          => $item->code . "_description",
                                                 'value'         => old($item->code . "_description",$data->value->language->$lang_code->description ?? "")
                                             ])
@@ -87,21 +87,21 @@
                     <div class="border-bottom my-3"></div>
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Phone<span>*<span>",
+                            'label'         =>__("Phone")."*",
                             'name'          => "phone",
                             'value'         => old("phone",$data->value->phone ?? "")
                         ])
                     </div>
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Address<span>*<span>",
+                            'label'         => __("Address")."*",
                             'name'          => "address",
                             'value'         => old("address",$data->value->address ?? "")
                         ])
                     </div>    
                     <div class="form-group">
                         @include('admin.components.form.input',[
-                            'label'         => "Email<span>*<span>",
+                            'label'         => __("Email")."*",
                             'name'          => "email",
                             'value'         => old("email",$data->value->email ?? "")
                         ])
@@ -122,7 +122,7 @@
                                             
                                             <div class="col-xl-11 col-lg-11 form-group">
                                                 @include('admin.components.form.input',[
-                                                    'label'         => "Schedule*",
+                                                    'label'         => __("Schedule")."*",
                                                     'name'          => "schedule[]",
                                                     'value'         => $item->schedule ?? "",
                                                 ])
@@ -136,7 +136,7 @@
                                             
                                             <div class="col-xl-11 col-lg-11 form-group">
                                                 @include('admin.components.form.input',[
-                                                    'label'         => "Schedule*",
+                                                    'label'         => __("Schedule")."*",
                                                     'name'          => "schedule[]",
                                                 ])
                                             </div>
@@ -152,7 +152,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Submit",
+                            'text'          => __("Submit"),
                             'permission'    => "admin.setup.sections.section.update"
                         ])
                     </div>

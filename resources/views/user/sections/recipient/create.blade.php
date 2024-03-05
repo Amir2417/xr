@@ -114,8 +114,8 @@
                                 <div class="form-group transaction-type">
                                     <label>{{ __("Transaction Type") }} <span>*</span></label>
                                     <select class="form--control trx-type-select select2-basic" name="method">
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ __(global_const()::TRANSACTION_TYPE_BANK) }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ __(global_const()::TRANSACTION_TYPE_MOBILE) }}</option>
                                     </select>
                                 </div>
                                 <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" style="display: none;">
@@ -166,9 +166,9 @@
                                                 <label class="title">{{ __("Document type") }}</label>
                                                 <select class="nice-select" name="document_type">
                                                     <option selected disabled>{{ __("Select Document Type") }}</option>
-                                                    <option value="{{ global_const()::DOCUMENT_TYPE_NID }}">{{ global_const()::DOCUMENT_TYPE_NID }}</option>
-                                                    <option value="{{ global_const()::DOCUMENT_TYPE_DRIVING_LICENCE }}">{{ global_const()::DOCUMENT_TYPE_DRIVING_LICENCE }}</option>
-                                                    <option value="{{ global_const()::DOCUMENT_TYPE_PASSPORT }}">{{ global_const()::DOCUMENT_TYPE_PASSPORT }}</option>
+                                                    <option value="{{ global_const()::DOCUMENT_TYPE_NID }}">{{ __(global_const()::DOCUMENT_TYPE_NID) }}</option>
+                                                    <option value="{{ global_const()::DOCUMENT_TYPE_DRIVING_LICENCE }}">{{ __(global_const()::DOCUMENT_TYPE_DRIVING_LICENCE) }}</option>
+                                                    <option value="{{ global_const()::DOCUMENT_TYPE_PASSPORT }}">{{ __(global_const()::DOCUMENT_TYPE_PASSPORT) }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4 col-md-6 pb-20">

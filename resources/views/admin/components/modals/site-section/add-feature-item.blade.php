@@ -26,7 +26,7 @@
                                 <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                     <div class="form-group">
                                         @include('admin.components.form.input',[
-                                            'label'     => "Title *",
+                                            'label'     => __("Title")."*",
                                             'name'      => $lang_code . "_item_title",
                                             'value'     => old($lang_code . "_item_title",$data->value->language->$lang_code->item_title ?? ""),
                                            
@@ -36,7 +36,7 @@
                                 <div class="tab-pane @if (get_default_language_code() == $item->code) fade show active @endif" id="modal-{{ $item->name }}" role="tabpanel" aria-labelledby="modal-{{$item->name}}-tab">
                                     <div class="form-group">
                                         @include('admin.components.form.textarea',[
-                                            'label'     => "Description *",
+                                            'label'     => __("Description")."*",
                                             'name'      => $lang_code . "_description",
                                             'value'     => old($lang_code . "_description",$data->value->language->$lang_code->description ?? ""),
                                            
@@ -49,7 +49,7 @@
                     
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => "Image:",
+                            'label'             => __("Image"),
                             'name'              => "image",
                             'class'             => "file-holder",
                             'old_files_path'    => files_asset_path("site-section"),

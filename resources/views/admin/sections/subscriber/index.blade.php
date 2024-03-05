@@ -33,7 +33,7 @@
                 <h5 class="title">{{ __($page_title) }}</h5>
                 <div class="table-btn-area">
                     @include('admin.components.link.add-default',[
-                        'text'          => "Send Mail to All",
+                        'text'          =>  __("Send Mail to All"),
                         'href'          => "#send-mail-subscribers",
                         'class'         => "modal-btn",
                         'permission'    => "admin.subscriber.send.mail",
@@ -45,7 +45,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Email</th>
+                            <th>{{ __("Email") }}</th>
                             <th></th>
                         </tr>
                     </thead>

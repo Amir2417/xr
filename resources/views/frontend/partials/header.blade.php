@@ -43,7 +43,7 @@
                                         </select>
                                     </div>   
                                 </div>
-                                <div class="header-action  ms-lg-3 ms-0">
+                                <div class="header-action ms-0">
                                     @auth
                                         <a href="{{ setRoute('user.dashboard')}}" class="btn--base">{{ __("Dashboard") }}</a>
                                     @else

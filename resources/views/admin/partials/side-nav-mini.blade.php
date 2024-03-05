@@ -11,7 +11,7 @@
             </button>
             <div class="header-search-wrapper">
                 <div class="position-relative">
-                    <input class="form-control sidebar-search-input" type="search" placeholder="Search . . . ." aria-label="Search">
+                    <input class="form-control sidebar-search-input" type="search" placeholder="{{ __("Search") }} . . . ." aria-label="Search">
                     <span class="las la-search"></span>
                 </div>
                 <div class="sidebar-search-result p-3"></div>
@@ -24,7 +24,7 @@
             </button>
         </div>
         <div class="header-notification-area header-btn">
-            <button class="header-notification-bar header-link" title="Notification">
+            <button class="header-notification-bar header-link" title="{{ __("Notification") }}">
                 <i class="las la-bell"></i>
                 <span class="bling-area d-none">
                     <span class="bling"></span>
@@ -52,9 +52,6 @@
                         </div>
                     @endforelse
                 </ul>
-                <div class="notification-footer">
-                    
-                </div>
             </div>
         </div>
         @if (admin_permission_by_name("admin.support.ticket.index"))
@@ -78,19 +75,19 @@
                         @include('admin.components.side-nav-mini.support.link',[
                             'links'     => [
                                 [
-                                    'title'     => "Pending Ticket $span",
+                                    'title'     => __("Pending Ticket").$span,
                                     'route'     => "admin.support.ticket.pending",
                                 ],
                                 [
-                                    'title'     => "Active Ticket",
+                                    'title'     => __("Active Ticket"),
                                     'route'     => "admin.support.ticket.active",
                                 ],
                                 [
-                                    'title'     => "Solved Ticket",
+                                    'title'     => __("Solved Ticket"),
                                     'route'     => "admin.support.ticket.solved",
                                 ],
                                 [
-                                    'title'     => "All Ticket",
+                                    'title'     => __("All Ticket"),
                                     'route'     => "admin.support.ticket.index",
                                 ],
                             ],

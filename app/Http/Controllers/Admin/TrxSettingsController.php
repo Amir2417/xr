@@ -45,8 +45,8 @@ class TrxSettingsController extends Controller
             $request->slug.'_com_min_limit.*'   => 'required|numeric',
             $request->slug.'_com_max_limit'     => 'array',
             $request->slug.'_com_max_limit.*'   => 'required|numeric',
-            $request->slug.'_fixed'        => 'array',
-            $request->slug.'_fixed.*'      => 'required|numeric',
+            $request->slug.'_fixed'             => 'array',
+            $request->slug.'_fixed.*'           => 'required|numeric',
             $request->slug.'_percent'           => 'array',
             $request->slug.'_percent.*'         => 'required|numeric',
         ]);

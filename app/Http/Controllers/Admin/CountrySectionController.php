@@ -68,7 +68,7 @@ class CountrySectionController extends Controller
         }catch(Exception $e){
             return back()->with(['error'=>'Something went wrong! Please try again.']);
         }
-        return back()->with(['success'  =>  ['Section updated successfully']]);
+        return back()->with(['success'  =>  ['Section updated successfully!']]);
     }
     /**
      * Method for get languages form record with little modification for using only this class

@@ -28,7 +28,7 @@
                             </div>
                             <div class="dashboard-list-user-content">
                                 <h4 class="title">{{ $item->first_name }} {{ $item->middle_name ?? '' }} {{ $item->last_name }}</h4>
-                                <span class="badge badge--warning">{{ $item->method ?? '' }}</span>
+                                <span class="badge badge--warning">{{ __($item->method) ?? '' }}</span>
                             </div>
                         </div>
                     </div>

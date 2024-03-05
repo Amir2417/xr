@@ -37,7 +37,7 @@
                 <div class="row mb-10-none">
                     <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 form-group">
                         @include('admin.components.form.input-file',[
-                            'label'             => 'Image: <span class="text--danger">(414*896)</span>',
+                            'label'             => __('Image').': <span class="text--danger">(414*896)</span>',
                             'class'             => "file-holder",
                             'name'              => "image",
                             'old_files_path'    => files_asset_path('app-images'),
@@ -47,7 +47,7 @@
                     <div class="col-xl-10 col-lg-10 col-md-9 col-sm-8">
                         <div class="form-group">
                             @include('admin.components.form.input',[
-                                'label'         => "App Version*",
+                                'label'         => __("App Version")."*",
                                 'name'          => "version",
                                 'attribute'     => "data-limit=15",
                                 'value'         => old('version',$app_settings->version),

@@ -34,7 +34,7 @@
                     @include('admin.components.link.add-default',[
                         'href'          => "#role-add",
                         'class'         => "modal-btn",
-                        'text'          => "Add New",
+                        'text'          => __("Add New"),
                         'permission'    => "admin.admins.role.store",
                     ])
                 </div>
@@ -43,9 +43,9 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>SL NO</th>
-                            <th>Role Name</th>
-                            <th>Asign Admin</th>
+                            <th>{{ __("SL") }}</th>
+                            <th>{{ __("Role Name") }}</th>
+                            <th>{{ __("Asign Admin") }}</th>
                             <th></th>
                         </tr>
                     </thead>

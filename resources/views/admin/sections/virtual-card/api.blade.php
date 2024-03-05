@@ -28,28 +28,28 @@
                 @method("PUT")
                 <div class="row mb-10-none">
                     <div class="col-xl-12   col-lg-12 form-group">
-                        <label>{{ __("Name*") }}</label>
+                        <label>{{ __("Name") }}*</label>
                         <input type="text" readonly class="form--control text-capitalize" name="api_method" value="{{ $api->config->name }}">
-                        
+
                     </div>
                     <div class="col-xl-12 col-lg-12 form-group configForm" id="flutterwave">
                         <div class="row" >
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
-                                <label>{{ __("Secret Key*") }}</label>
+                                <label>{{ __("Secret Key") }}*</label>
                                 <div class="input-group append">
                                     <span class="input-group-text"><i class="las la-key"></i></span>
                                     <input type="text" class="form--control" name="flutterwave_secret_key" value="{{ @$api->config->flutterwave_secret_key }}">
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
-                                <label>{{ __("Secret Hash*") }}</label>
+                                <label>{{ __("Secret Hash") }}*</label>
                                 <div class="input-group append">
                                     <span class="input-group-text"><i class="las la-hashtag"></i></span>
                                     <input type="text" class="form--control" name="flutterwave_secret_hash" value="{{ @$api->config->flutterwave_secret_hash }}">
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 form-group">
-                                <label>{{ __("Base Url*") }}</label>
+                                <label>{{ __("Base Url") }}*</label>
                                 <div class="input-group append">
                                     <span class="input-group-text"><i class="las la-link"></i></span>
                                     <input type="text" class="form--control" name="flutterwave_url" value="{{ @$api->config->flutterwave_url }}">
@@ -58,11 +58,11 @@
 
                         </div>
                     </div>
-                    
+
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => "Update",
+                            'text'          => __("Update"),
                             'permission'    => "admin.virtual.card.api.update"
                         ])
                     </div>

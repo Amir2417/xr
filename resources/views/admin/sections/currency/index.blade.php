@@ -36,7 +36,7 @@
                         'name'  => 'currency_search',
                     ])
                     @include('admin.components.link.add-default',[
-                        'text'          => "Add Currency",
+                        'text'          => __("Add Currency"),
                         'href'          => "#currency-add",
                         'class'         => "modal-btn",
                         'permission'    => "admin.currency.store",
@@ -113,7 +113,7 @@
             selectedValue.parents("form").find("input[name=name],input[name=currency_name]").prop("readonly",readOnly);
             selectedValue.parents("form").find("input[name=code],input[name=currency_code]").prop("readonly",readOnly);
             selectedValue.parents("form").find("input[name=symbol],input[name=currency_symbol]").prop("readonly",readOnly);
-           
+
         }
 
         $(".delete-modal-button").click(function(){
