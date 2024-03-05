@@ -116,7 +116,7 @@
                             </div>
                             <div class="form-group">
                                 @include('admin.components.form.input',[
-                                    'label'         => __("Secret key")."*",
+                                    'label'         => __("Secret Key")."*",
                                     'name'          => "broadcast_secret_key",
                                     'value'         => old("broadcast_secret_key", $broadcast_config->secret_key ?? ""),
                                 ])
