@@ -97,7 +97,7 @@ class UsefulLinkController extends Controller
         if(!$useful_link) return back()->with(['error'  => ['Link not found!']]);
         
         $section_data['title']['language']    = $this->contentValidate($request,['title' => 'required|string|max:255']);
-        $section_data['content']['language']  = $this->contentValidate($request,['content' => 'required|string|max:6000']);
+        $section_data['content']['language']  = $this->contentValidate($request,['content' => 'required|string|max:50000']);
 
         try{
             $useful_link->update($section_data);
