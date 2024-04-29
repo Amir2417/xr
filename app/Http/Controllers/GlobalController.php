@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Admin\Language;
+use Jenssegers\Agent\Facades\Agent;
 use Illuminate\Support\Facades\Session;
 
 class GlobalController extends Controller
@@ -50,83 +52,6 @@ class GlobalController extends Controller
 
         return response()->json($timeZones,200);
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     /**
      * Language switcher
      */
@@ -139,6 +64,28 @@ class GlobalController extends Controller
         Session::put('local',$code);
         Session::put('local_dir',$language->dir);
         return back()->with(['success' => ['Language switch to ' . $language->name ]]);
+    }
+    /**
+     * Method for setcookie
+     */
+    public function setCookie(Request $request){
+        $userAgent = $request->header('User-Agent');
+        $cookie_status = $request->type;
+        if($cookie_status == 'allow'){
+            $response_message = __("Cookie Allowed Success");
+            $expirationTime = 2147483647; //Maximum Unix timestamp.
+        }else{
+            $response_message = __("Cookie Declined");
+            $expirationTime = Carbon::now()->addHours(24)->timestamp;// Set the expiration time to 24 hours from now.
         }
+        $browser = Agent::browser();
+        $platform = Agent::platform();
+        $ipAddress = $request->ip();
+        return response($response_message)->cookie('approval_status', $cookie_status,$expirationTime)
+                                            ->cookie('user_agent', $userAgent,$expirationTime)
+                                            ->cookie('ip_address', $ipAddress,$expirationTime)
+                                            ->cookie('browser', $browser,$expirationTime)
+                                            ->cookie('platform', $platform,$expirationTime);
+    }
         
 }

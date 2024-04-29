@@ -470,6 +470,12 @@
                 @if (admin_permission_by_name_array($bonus_routes))
                     <li class="sidebar-menu-header">{{ __("Bonus") }}</li>
                 @endif
+                
+                @include('admin.components.side-nav.link',[
+                    'route'     => 'admin.cookie.index',
+                    'title'     => __("GDPR Cookie"),
+                    'icon'      => "menu-icon las la-cookie-bite",
+                ])
 
                 @include('admin.components.side-nav.link',[
                     'route'     => 'admin.server.info.index',

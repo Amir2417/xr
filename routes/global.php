@@ -11,6 +11,7 @@ Route::controller(GlobalController::class)->prefix('global')->name('global.')->g
     Route::post('get-cities','getCities')->name('country.cities');
     Route::post('get-countries','getCountries')->name('countries');
     Route::post('get-timezones','getTimezones')->name('timezones');
+    Route::post('set-cookie','setCookie')->name('set.cookie');
 });
 Route::post('languages/switch',[GlobalController::class,'languageSwitch'])->name('frontend.languages.switch');
 // FileHolder Routes

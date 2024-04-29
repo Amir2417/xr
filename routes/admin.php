@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
+use App\Http\Controllers\Admin\CookieController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -381,6 +382,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Broadcasting Setup Section
     Route::controller(BroadcastingController::class)->prefix('broadcast')->name('broadcast.')->group(function(){
         Route::put("config/update","configUpdate")->name('config.update');
+    });
+
+    //  GDPR Cookie Section
+    Route::controller(CookieController::class)->prefix('cookie')->name('cookie.')->group(function () {
+        Route::get('index', 'index')->name('index');
+        Route::put('update', 'update')->name('update');
     });
 
     // Server Info Section

@@ -7609,3 +7609,105 @@ input[type=number] {
   margin-top: 10px;
   font-weight: 600;
 }
+
+/*-------------------------------------------------
+    [ ## cookie block ]
+*/
+.cookie-main-wrapper {
+  background-color: rgb(31, 41, 55);
+  padding: 20px 30px;
+  border-radius: 20px;
+  position: fixed;
+  bottom: -300px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 80%;
+  z-index: 999;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+@media only screen and (max-width: 767px) {
+  .cookie-main-wrapper {
+    display: block;
+    width: 90%;
+  }
+}
+.cookie-main-wrapper .cookie-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 70%;
+}
+@media only screen and (max-width: 767px) {
+  .cookie-main-wrapper .cookie-content {
+    width: unset;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .cookie-main-wrapper .cookie-content {
+    width: 100%;
+    display: block;
+  }
+}
+.cookie-main-wrapper .cookie-content svg {
+  width: 40px;
+  height: auto;
+  fill: rgb(125, 211, 252);
+  margin-right: 15px;
+}
+@media only screen and (max-width: 575px) {
+  .cookie-main-wrapper .cookie-content svg {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+.cookie-main-wrapper .cookie-content p {
+  width: calc(100% - 40px);
+  color: rgb(255, 255, 255);
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+.cookie-main-wrapper .cookie-content p a {
+  text-underline-offset: 2px;
+  text-decoration-style: dotted;
+  text-decoration-line: underline;
+}
+@media only screen and (max-width: 575px) {
+  .cookie-main-wrapper .cookie-content p {
+    width: 100%;
+    display: block;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .cookie-main-wrapper .cookie-btn-area {
+    margin-top: 20px;
+  }
+}
+.cookie-main-wrapper .cookie-btn-area button, .cookie-main-wrapper .cookie-btn-area input[type=button], .cookie-main-wrapper .cookie-btn-area input[type=reset], .cookie-main-wrapper .cookie-btn-area input[type=submit] {
+  color: rgb(255, 255, 255);
+  padding: 0.5rem 0.75rem;
+  background-color: rgb(55, 65, 81);
+  border-radius: 0.5rem;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.cookie-main-wrapper .cookie-btn-area button:hover, .cookie-main-wrapper .cookie-btn-area input[type=button]:hover, .cookie-main-wrapper .cookie-btn-area input[type=reset]:hover, .cookie-main-wrapper .cookie-btn-area input[type=submit]:hover {
+  background-color: rgba(75, 85, 99, 0.8);
+}
+/*-------------------------------------------------
+    [ ## cookie block end ]
+*/
