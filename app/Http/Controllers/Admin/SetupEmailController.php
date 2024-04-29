@@ -56,6 +56,7 @@ class SetupEmailController extends Controller
             'port'          => 'required|numeric',
             'encryption'    => 'required|string|in:ssl,tls,auto|max:15',
             'username'      => 'required|string|max:60',
+            'mail_address'  => 'required|string|max:60',
             'password'      => 'required|string|max:60'
         ]);
 
@@ -74,6 +75,7 @@ class SetupEmailController extends Controller
             'encryption'        => $validated['encryption'] ?? false,
             'username'          => $validated['username'] ?? false,
             'password'          => $validated['password'] ?? false,
+            'mail_address'      => $validated['mail_address'] ?? false,
             'from'              => $validated['username'] ?? false,
             'app_name'          => $basic_settings['site_name'] ?? env("APP_NAME"),
         ];
@@ -93,7 +95,7 @@ class SetupEmailController extends Controller
             "MAIL_USERNAME"     => $data['username'],
             "MAIL_PASSWORD"     => $data['password'],
             "MAIL_ENCRYPTION"   => $data['encryption'],
-            "MAIL_FROM_ADDRESS" => $data['from'],
+            "MAIL_FROM_ADDRESS" => $data['mail_address'],
             "MAIL_FROM_NAME"    => $data['app_name'],
         ];
 

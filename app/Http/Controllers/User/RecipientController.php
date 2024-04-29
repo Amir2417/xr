@@ -54,7 +54,7 @@ class RecipientController extends Controller
         $user                 = auth()->user();
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('country',$temporary_data->data->receiver_country)->first();
-        
+        $mobile_methods       = MobileMethod::where('country',$receiver_currency->country)->where('status',true)->get();
         
 
         return view('user.sections.recipient.add',compact(
@@ -64,7 +64,8 @@ class RecipientController extends Controller
             'notifications',
             'receiver_currency',
             'user_country',
-            'temporary_data'
+            'temporary_data',
+            'mobile_methods'
         ));
     }
    

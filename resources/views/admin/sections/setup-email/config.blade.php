@@ -92,6 +92,14 @@
                             'value'         => old('password',$email_config->password ?? ""),
                         ])
                     </div>
+                    <div class="col-xl-12 col-lg-12 form-group" id="show_hide_password">
+                        @include('admin.components.form.input',[
+                            'label'         => __('Mail From Address')."*",
+                            'placeholder'   => __('Mail From Address'),
+                            'name'          => 'mail_address',
+                            'value'         => old('mail_address',$email_config->mail_address ?? ""),
+                        ])
+                    </div>
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",

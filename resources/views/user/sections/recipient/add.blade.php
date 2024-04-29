@@ -140,7 +140,9 @@
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Mobile Method") }}<span>*</span></label>
                                             <select class="form--control select2-basic" name="mobile_name">
-                                                
+                                                @foreach ($mobile_methods ?? [] as $item)
+                                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
@@ -207,9 +209,7 @@
         var transactionType = $("select[name=method] :selected").val();
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        }else{
-            getMobileList(country,transactionType);
-        }  
+        } 
     });
     
     $("select[name=method]").change(function(){
@@ -219,8 +219,6 @@
         $(".bank-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        }else{
-            getMobileList(country,transactionType);
         }
     });
     function getBankList(country,transactionType){
@@ -239,22 +237,7 @@
                 });
             });
     }
-    function getMobileList(country,transactionType){
-        var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
-        
-        $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    option += `<option value="${item.name}">${item.name}</option>`
-                });
-                $("select[name=mobile_name]").html(option);
-                $("select[name=mobile_name]").select2();
-            }
-        }).fail(function(response){
-            var errorText = response.responseJSON;
-        });
-    }
+    
 </script>
     
 @endpush
