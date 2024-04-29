@@ -1042,7 +1042,6 @@ class SendRemittanceController extends Controller
             return Response::error($message);
         }
     }
-
     /**
      * Redirect Users for collecting payment via Button Pay (JS Checkout)
      */

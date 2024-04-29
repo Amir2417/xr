@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\SetupSectionsController;
 use App\Http\Controllers\Admin\SupportTicketController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\CountrySectionController;
+use App\Http\Controllers\Admin\RemittanceBankController;
 use App\Http\Controllers\Admin\SendingPurposeController;
 use App\Http\Controllers\Admin\PaymentGatewaysController;
 use App\Http\Controllers\Admin\PushNotificationController;
@@ -79,6 +80,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //coupon
     Route::controller(CouponController::class)->prefix('coupon')->name('coupon.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('delete','delete')->name('delete');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    // Rem,ittance Bank
+    Route::controller(RemittanceBankController::class)->prefix('remittance-bank')->name('remittance.bank.')->group(function (){
         Route::get('/','index')->name('index');
         Route::post('store','store')->name('store');
         Route::put('update','update')->name('update');

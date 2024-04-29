@@ -254,10 +254,19 @@ class RecipientController extends Controller
      * Method for get the bank list data
      */
     public function getBank(Request $request){
+        $validator    = Validator::make($request->all(),[
+            'country'  => 'required',           
+        ]);
+        if($validator->fails()) {
+            return Response::error($validator->errors()->all());
+        }
         $user_country       = Currency::where('country',$request->country)->first();
         $country            = get_specific_country($user_country->country);
-        $bank_list          = getFlutterwaveBanks($country['country_code']);
-
+        $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
+        $manual_bank_list   = RemittanceBank::where('country',$request->country)->get();
+        $manual_bank_list_array = $manual_bank_list->isNotEmpty() ? $manual_bank_list->toArray() : [];
+        $bank_list = array_merge($automatic_bank_list, $manual_bank_list_array);
+        
         return Response::success(['Data fetch successfully'],['bank_list' => $bank_list],200);
     }
     public function recipientDataStore(Request $request){

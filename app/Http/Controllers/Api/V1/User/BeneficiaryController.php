@@ -86,11 +86,19 @@ class BeneficiaryController extends Controller
      * Method for create beneficiary
      */
     public function create(Request $request){
-        
+        $validator      = Validator::make($request->all(),[
+            'country'   => 'required'
+        ]);
+        if($validator->fails()){
+            return Response::error($validator->errors()->all(),[]);
+        }
         $user_country       = Currency::where('country',$request->country)->where('receiver',true)->first();
         if(!$user_country) return Response::error([$request->country .' '.'is not receiver country']);
         $country            = get_specific_country($user_country->country);
-        $bank_list          = getFlutterwaveBanks($country['country_code']);
+        $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
+        $manual_bank_list   = RemittanceBank::where('country',$request->country)->get();
+        $manual_bank_list_array = $manual_bank_list->isNotEmpty() ? $manual_bank_list->toArray() : [];
+        $bank_list = array_merge($automatic_bank_list, $manual_bank_list_array);
 
         $mobile_methods       = MobileMethod::where('status',true)->get()->map(function($data){
             return [

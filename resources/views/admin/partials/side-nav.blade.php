@@ -60,6 +60,11 @@
                     'group_title'       => __("Remittance Settings"),
                     'group_links'       => [
                         [
+                            'title'     => "Remittance Bank",
+                            'route'     => "admin.remittance.bank.index",
+                            'icon'      => "menu-icon las la-university",
+                        ],
+                        [
                             'title'     => __("Mobile Method"),
                             'route'     => "admin.mobile.method.index",
                             'icon'      => "menu-icon las la-money-bill-alt",

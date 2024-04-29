@@ -16,7 +16,7 @@
                     <h3>{{ $choose->value->language->$app_local->heading ?? "" }}</h3>
                 </div>
                 <div>
-                    <p>{!! $choose->value->language->$app_local->sub_heading !!}</p>
+                    <p>{!! @$choose->value->language->$app_local->sub_heading !!}</p>
                 </div>
                 <div class="d-flex mt-5">
                     <div class="me-5 banner-join-btn">
