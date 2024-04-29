@@ -97,7 +97,15 @@ class BeneficiaryController extends Controller
         $country            = get_specific_country($user_country->country);
         $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
         $manual_bank_list   = RemittanceBank::where('country',$request->country)->get();
-        $manual_bank_list_array = $manual_bank_list->isNotEmpty() ? $manual_bank_list->toArray() : [];
+        if ($manual_bank_list->isNotEmpty()) {
+            $manual_bank_list->each(function ($bank) {
+                $bank->name = $bank->name . " (Manual)";
+            });
+    
+            $manual_bank_list_array = $manual_bank_list->toArray();
+        } else {
+            $manual_bank_list_array = [];
+        }
         $bank_list = array_merge($automatic_bank_list, $manual_bank_list_array);
 
         $mobile_methods       = MobileMethod::where('status',true)->get()->map(function($data){
