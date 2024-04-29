@@ -122,7 +122,7 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Mobile Method") }}<span>*</span></label>
-                                            <select class="form--control select2-basic" name="mobile_name">
+                                            <select class="form--control select2-basic mobile-list" name="mobile_name">
                                                 <option selected disabled>{{ __("Select Method") }}</option>
                                             </select>
                                         </div>
@@ -237,6 +237,7 @@
         var transactionType = $(this).val();
        
         $(".bank-list").html('');
+        $(".mobile-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
         }else{
@@ -262,17 +263,18 @@
     function getMobileList(country,transactionType){
         var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
         
+        $(".mobile-list").html('');
         $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    option += `<option value="${item.name}">${item.name}</option>`
-                });
-                $("select[name=mobile_name]").html(option);
-                $("select[name=mobile_name]").select2();
+            if(response.data.country == null || response.data.country == ''){
+                $('.mobile-list').html('<option value="" disabled>No Mobile Method Aviliable</option>');
+            }else{
+                $('.mobile-list').html('<option value="" disabled>Select Mobile Method</option>');
             }
-        }).fail(function(response){
-            var errorText = response.responseJSON;
+            console.log(response);
+            $.each(response.data.country,function(index,item){
+                $(".mobile-list").append('<option value="' + item.name + '" ' + ' >' + item.name + '</option>');
+            });
+            
         });
     }
     
