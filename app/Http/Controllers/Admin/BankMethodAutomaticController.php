@@ -27,13 +27,13 @@ class BankMethodAutomaticController extends Controller
         ));
     }
     /**
-     * Method for view bank method automatic page
+     * Method for view bank method automatic edit page
      * @param $slug
      * @param Illuminate\Http\Request $request 
      */
     public function edit($slug)
     {
-        $page_title                 = "Bank Methods";
+        $page_title                 = "Bank Methods Automatic Edit";
         $bank_method_automatic      = BankMethodAutomatic::where('slug',$slug)->first();
         if(!$bank_method_automatic) return back()->with(['error' => ['Data not found']]);
 

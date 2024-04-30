@@ -78,10 +78,7 @@
 <script src="{{ asset('public/backend/js/smoothscroll.js') }}"></script>
 <!-- easypiechart js -->
 <script src="{{ asset('public/backend/js/jquery.easypiechart.js') }}"></script>
-<!-- apexcharts js -->
-<script src="{{ asset('public/backend/js/apexcharts.js') }}"></script>
-<!-- chart js -->
-<script src="{{ asset('public/backend/js/chart.js') }}"></script>
+
 <!-- nice select js -->
 <script src="{{ asset('public/backend/js/jquery.nice-select.js') }}"></script>
 <!-- select2 js -->

@@ -6007,3 +6007,53 @@ textPath {
   padding: 20px;
   justify-content: space-between;
 }
+
+
+.bank-list-wrapper{
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+  padding: 15px;
+  overflow: hidden;
+}
+.bank-list-wrapper .bank-list-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f1f1f1;
+  padding: 8px 10px;
+  margin: -15px -15px 10px -15px;
+}
+.bank-list-wrapper .bank-list-header .title{
+  margin-bottom: 0 !important;
+  margin-right: 5px;
+}
+@media only screen and (max-width: 1399px) {
+  .bank-list-wrapper .bank-list-header .title{
+    font-size: 14px;
+  }
+}
+.bank-list-wrapper .bank-list-header .search-area{
+  position: relative;
+  display: inline-block;
+}
+.bank-list-wrapper .bank-list-header .search-area input{
+  max-width: 140px;
+  height: 30px;
+  padding-left: 30px;
+}
+.bank-list-wrapper .bank-list-header .search-area i{
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+.bank-list-wrapper .bank-list li{
+  margin-bottom: 5px;
+}
+.bank-list-wrapper .bank-list li:last-child{
+  margin-bottom: 0;
+}
+.bank-list-wrapper .bank-list{
+  max-height: 300px;
+  overflow-y: auto;
+}
