@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('virtual_card_apis', function (Blueprint $table) {
+        Schema::create('bank_method_automatics', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("admin_id");
+            $table->string("slug")->unique();
+            $table->string("name");
             $table->string('image')->nullable();
-            $table->text('card_details')->nullable();
+            $table->text('details')->nullable();
             $table->text('config')->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
 
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade')->onUpdate('cascade');
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('virtual_card_apis');
+        Schema::dropIfExists('bank_method_automatics');
     }
 };

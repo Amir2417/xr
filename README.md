@@ -18,3 +18,6 @@ Please User Those Command On Your Terminal To Update Full System
 2. To Update Basic Settings Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Update\\BasicSettingsSeeder
 
+2. To Update BankMethod Automatic Seeder Please Run This Command On Your Terminal
+    php artisan db:seed --class=Database\\Seeders\\Admin\\BankMethodAutomaticSeeder
+

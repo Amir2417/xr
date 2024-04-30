@@ -40,25 +40,10 @@
                             'icon'      => "menu-icon las la-coins",
                         ],
                         [
-                            'title'     => __("Fees & Charges"),
-                            'route'     => "admin.trx.settings.index",
-                            'icon'      => "menu-icon las la-wallet",
-                        ],
-                        [
                             'title'     => __("Bank Methods"),
-                            'route'     => "admin.virtual.card.api",
+                            'route'     => "admin.bank.method.automatic.index",
                             'icon'      => "menu-icon las la-vr-cardboard",
                         ],
-                        [
-                            'title'     => __("Coupons"),
-                            'route'     => "admin.coupon.index",
-                            'icon'      => "menu-icon las la-percentage",
-                        ]
-                    ]
-                ])
-                @include('admin.components.side-nav.link-group',[
-                    'group_title'       => __("Remittance Settings"),
-                    'group_links'       => [
                         [
                             'title'     => "Remittance Bank",
                             'route'     => "admin.remittance.bank.index",
@@ -70,6 +55,11 @@
                             'icon'      => "menu-icon las la-money-bill-alt",
                         ],
                         [
+                            'title'     => __("Fees & Charges"),
+                            'route'     => "admin.trx.settings.index",
+                            'icon'      => "menu-icon las la-wallet",
+                        ],
+                        [
                             'title'     => __("Source Of Fund"),
                             'route'     => "admin.source.fund.index",
                             'icon'      => "menu-icon las la-wallet",
@@ -78,10 +68,16 @@
                             'title'     => __("Sending Purpose"),
                             'route'     => "admin.sending.purpose.index",
                             'icon'      => 'menu-icon las la-share-alt'
+                        ],
+                        [
+                            'title'     => __("Coupons"),
+                            'route'     => "admin.coupon.index",
+                            'icon'      => "menu-icon las la-percentage",
                         ]
-
                     ]
                 ])
+                
+                
 
                 @include('admin.components.side-nav.link-group',[
                     'group_title'       => __("Transactions & Logs"),
@@ -140,6 +136,12 @@
                         ],
                         [
                             'title'             => "Statements",
+                            'icon'              => "menu-icon las la-sign-out-alt",
+                            'route'             => "admin.statements.index",
+
+                        ],
+                        [
+                            'title'             => "Coupon Logs",
                             'icon'              => "menu-icon las la-sign-out-alt",
                             'route'             => "admin.statements.index",
 

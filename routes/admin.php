@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\SendingPurposeController;
 use App\Http\Controllers\Admin\PaymentGatewaysController;
 use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AppOnboardScreensController;
+use App\Http\Controllers\Admin\BankMethodAutomaticController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
 use App\Http\Controllers\Admin\PaymentGatewayCurrencyController;
 
@@ -176,10 +177,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('charges/update', 'trxChargeUpdate')->name('charges.update');
     });
 
-    // virtual card api
-    Route::controller(VirtualCardController::class)->prefix('bank-methods')->name('virtual.card.')->group(function () {
-        Route::get('index', 'cardApi')->name('api');
-        Route::put('update', 'cardApiUpdate')->name('api.update');
+    //bank method automatic
+    Route::controller(BankMethodAutomaticController::class)->prefix('bank-method-automatic')->name('bank.method.automatic.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('edit/{slug}', 'edit')->name('edit');
+        Route::put('update/{slug}', 'update')->name('update');
+        Route::put('status/update','statusUpdate')->name('status.update');
     });
 
     // User Care Section

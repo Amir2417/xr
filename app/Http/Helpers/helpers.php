@@ -22,6 +22,7 @@ use Intervention\Image\Facades\Image;
 use App\Constants\PaymentGatewayConst;
 use Buglinjo\LaravelWebp\Facades\Webp;
 use App\Models\Admin\AdminNotification;
+use App\Models\Admin\BankMethodAutomatic;
 use App\Models\Admin\VirtualCardApi;
 use App\Providers\Admin\CurrencyProvider;
 
@@ -1592,7 +1593,7 @@ function get_api_languages(){
 
 //flutterwave automatic withdrawal helper functions
 function getFlutterwaveBanks($iso2){
-    $cardApi = VirtualCardApi::first();
+    $cardApi = BankMethodAutomatic::where('status',true)->first();
     $secretKey = $cardApi->config->flutterwave_secret_key;
     $base_url =$cardApi->config->flutterwave_url;
     

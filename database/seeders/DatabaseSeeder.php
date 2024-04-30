@@ -27,6 +27,7 @@ use Database\Seeders\Admin\RemittanceBankSeeder;
 use Database\Seeders\Admin\SendingPurposeSeeder;
 use Database\Seeders\Admin\VirtualCardApiSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
+use Database\Seeders\Admin\BankMethodAutomaticSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -58,7 +59,7 @@ class DatabaseSeeder extends Seeder
             UsefulLinkSeeder::class,
             AppOnboardScreensSeeder::class,
             JournalSeeder::class,
-            VirtualCardApiSeeder::class,
+            BankMethodAutomaticSeeder::class,
         ]);
 
         //demo
@@ -81,8 +82,7 @@ class DatabaseSeeder extends Seeder
         //     UsefulLinkSeeder::class,
         //     AppOnboardScreensSeeder::class,
         //     JournalSeeder::class,
-        //     VirtualCardApiSeeder::class,
-
+        //     BankMethodAutomaticSeeder::class,
         //     UserSeeder::class,
         //     RemittanceBankSeeder::class,
         //     MobileMethodSeeder::class,

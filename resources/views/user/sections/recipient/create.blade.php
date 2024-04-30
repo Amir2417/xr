@@ -270,7 +270,6 @@
             }else{
                 $('.mobile-list').html('<option value="" disabled>Select Mobile Method</option>');
             }
-            console.log(response);
             $.each(response.data.country,function(index,item){
                 $(".mobile-list").append('<option value="' + item.name + '" ' + ' >' + item.name + '</option>');
             });
