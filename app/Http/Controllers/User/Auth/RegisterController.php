@@ -11,6 +11,7 @@ use App\Models\Admin\UsefulLink;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
+use App\Traits\User\RegisteredUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
@@ -32,7 +33,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers,RegisteredUsers;
 
     protected $basic_settings;
 
@@ -144,6 +145,7 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         try{
+            $this->createCoupon($user);
             return redirect()->intended(route('user.dashboard'));
         }catch(Exception $e) {
             

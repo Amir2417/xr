@@ -15,8 +15,8 @@ class UserCoupon extends Model
         'id'            => 'integer',
         'user_id'       => 'integer',
         'coupon_name'   => 'string',
-        'amount'        => 'decimal:8',
+        'price'        => 'decimal:8',
         'status'        => 'integer'
     ];
-    
+
 }
