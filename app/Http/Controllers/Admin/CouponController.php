@@ -18,7 +18,7 @@ class CouponController extends Controller
      * Method for show all the coupon 
      */
     public function index(){
-        $page_title         = "Coupons";
+        $page_title         = "New User Bonus";
         $data               = Coupon::orderByDesc('id')->paginate(15);
 
         return  view('admin.sections.coupon.index',compact(
@@ -35,17 +35,19 @@ class CouponController extends Controller
         $validator     = Validator::make($request->all(),[
             'name'     => 'required|string',
             'price'    => 'required',
+            'max_used' => 'required',
         ]);
 
         if($validator->fails()) return back()->withErrors($validator)->withInput()->with("modal","add-coupon");
 
-        $validated     = $validator->validate();
-        $validated['slug']   = Str::slug($request->name);
+        $validated              = $validator->validate();
+        $validated['slug']      = Str::slug($request->name);
         if(Coupon::where('name',$validated['name'])->exists()){
             throw ValidationException::withMessages([
                 'name'   => 'Coupon already exists',
             ]);
         }
+        $validated['name']          = strtoupper($validated['name']);
         $validated['last_edit_by']  = auth()->user()->id;
         try{
             Coupon::create($validated);
@@ -77,13 +79,12 @@ class CouponController extends Controller
         $validated = replace_array_key($validated,"edit_");
         $validated = Arr::except($validated,['target']);
         $validated['slug']   = $slug;
-
-        if(Coupon::where('name',$validated['name'])->exists()){
+        $coupon = Coupon::find($request->target);
+        if(Coupon::whereNot('id',$coupon->id)->where('name',$validated['name'])->exists()){
             throw ValidationException::withMessages([
                 'name'    => 'Coupon already exists',
             ]);
         }
-        $coupon = Coupon::find($request->target);
         
         try{
             $coupon->update($validated);

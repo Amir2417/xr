@@ -53,14 +53,30 @@
                             'title'     => __("Sending Purpose"),
                             'route'     => "admin.sending.purpose.index",
                             'icon'      => 'menu-icon las la-share-alt'
-                        ],
-                        [
-                            'title'     => __("Coupons"),
-                            'route'     => "admin.coupon.index",
-                            'icon'      => "menu-icon las la-percentage",
                         ]
                     ]
                 ])
+                <li class="sidebar-menu-item sidebar-dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon las la-percentage"></i>
+                        <span class="menu-title">{{ __("Coupon") }}</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li class="sidebar-menu-item">
+                            <a href="{{ setRoute('admin.new.user.bonus.index') }}" class="nav-link">
+                                <i class="menu-icon las la-ellipsis-h"></i>
+                                <span class="menu-title">{{ __("New User Bonus") }}</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="{{ setRoute('admin.coupon.index') }}" class="nav-link">
+                                <i class="menu-icon las la-ellipsis-h"></i>
+                                <span class="menu-title">{{ __("All Coupons") }}</span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
 
                 <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)">

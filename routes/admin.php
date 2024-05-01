@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\PaymentGatewaysController;
 use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\BankMethodAutomaticController;
+use App\Http\Controllers\Admin\NewUserBonusController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
 use App\Http\Controllers\Admin\PaymentGatewayCurrencyController;
 use App\Http\Controllers\Admin\ReceivingMethodCategoryController;
@@ -56,11 +57,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('notifications/clear','notificationsClear')->name('notifications.clear');
     });
 
-    //pdf download
-    Route::controller(RemittanceLogController::class)->group(function(){
-        Route::get('download-pdf/{trx_id}','downloadPdf')->name('download.pdf');
-    });
-
     // Admin Profile
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
         Route::get('index', 'index')->name('index');
@@ -69,59 +65,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('update', 'update')->name('update');
     });
 
-    // Subscriber
-    Route::controller(SubscribeController::class)->prefix('subscriber')->name('subscriber.')->group(function(){
-        Route::get('/','index')->name('index');
-        Route::post('send-mail','SendMail')->name('send.mail');
-    });
-
-    //category
-    Route::controller(ReceivingMethodCategoryController::class)->prefix('receiving-method-category')->name('receiving.method.category.')->group(function(){
-        Route::get('/','index')->name('index');
-        Route::get('edit/{slug}', 'edit')->name('edit');
-        Route::put('update/{slug}', 'update')->name('update');
-        Route::put('status/update','statusUpdate')->name('status.update');
-    });
-
-    //contact request
-    Route::controller(ContactMessageController::class)->prefix('contact')->name('contact.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('reply-message', 'reply')->name('messages.reply');
-    });
-
-    //bank method automatic
-    Route::controller(BankMethodAutomaticController::class)->prefix('bank-method-automatic')->name('bank.method.automatic.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('edit/{slug}', 'edit')->name('edit');
-        Route::put('update/{slug}', 'update')->name('update');
-        Route::put('status/update','statusUpdate')->name('status.update');
-    });
-
-    //coupon
-    Route::controller(CouponController::class)->prefix('coupon')->name('coupon.')->group(function(){
-        Route::get('/','index')->name('index');
-        Route::post('store','store')->name('store');
-        Route::put('update','update')->name('update');
+    // Setup Currency Section
+    Route::controller(CurrencyController::class)->prefix('currency')->name('currency.')->group(function () {
+        Route::get('index', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::put('status/update', 'statusUpdate')->name('status.update');
+        Route::put('update', 'update')->name('update');
         Route::delete('delete','delete')->name('delete');
-        Route::put('status/update','statusUpdate')->name('status.update');
+        Route::post('search','search')->name("search");
     });
 
-    // Rem,ittance Bank
-    Route::controller(RemittanceBankController::class)->prefix('remittance-bank')->name('remittance.bank.')->group(function (){
-        Route::get('/','index')->name('index');
-        Route::post('store','store')->name('store');
-        Route::put('update','update')->name('update');
-        Route::delete('delete','delete')->name('delete');
-        Route::put('status/update','statusUpdate')->name('status.update');
-    });
-
-    // Mobile Method
-    Route::controller(MobileMethodController::class)->prefix('mobile-method')->name('mobile.method.')->group(function (){
-        Route::get('/','index')->name('index');
-        Route::post('store','store')->name('store');
-        Route::put('update','update')->name('update');
-        Route::delete('delete','delete')->name('delete');
-        Route::put('status/update','statusUpdate')->name('status.update');
+    // Fees & Charges Section
+    Route::controller(TrxSettingsController::class)->prefix('trx-settings')->name('trx.settings.')->group(function () {
+        Route::get('index', 'index')->name('index');
+        Route::put('charges/update', 'trxChargeUpdate')->name('charges.update');
     });
 
     //Source of Fund
@@ -135,6 +92,49 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //Sending Purpose
     Route::controller(SendingPurposeController::class)->prefix('sending-purpose')->name('sending.purpose.')->group(function() {
+        Route::get('/','index')->name('index');
+        Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('delete','delete')->name('delete');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    //coupon
+    Route::controller(CouponController::class)->prefix('coupon')->name('coupon.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('delete','delete')->name('delete');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    //category
+    Route::controller(ReceivingMethodCategoryController::class)->prefix('receiving-method-category')->name('receiving.method.category.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::get('edit/{slug}', 'edit')->name('edit');
+        Route::put('update/{slug}', 'update')->name('update');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    //bank method automatic
+    Route::controller(BankMethodAutomaticController::class)->prefix('bank-method-automatic')->name('bank.method.automatic.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('edit/{slug}', 'edit')->name('edit');
+        Route::put('update/{slug}', 'update')->name('update');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    // Remittance Bank
+    Route::controller(RemittanceBankController::class)->prefix('bank-method-manual')->name('remittance.bank.')->group(function (){
+        Route::get('/','index')->name('index');
+        Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('delete','delete')->name('delete');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    // Mobile Method
+    Route::controller(MobileMethodController::class)->prefix('mobile-method-manual')->name('mobile.method.')->group(function (){
         Route::get('/','index')->name('index');
         Route::post('store','store')->name('store');
         Route::put('update','update')->name('update');
@@ -171,14 +171,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     });
 
-    // Setup Currency Section
-    Route::controller(CurrencyController::class)->prefix('currency')->name('currency.')->group(function () {
-        Route::get('index', 'index')->name('index');
-        Route::post('store', 'store')->name('store');
-        Route::put('status/update', 'statusUpdate')->name('status.update');
-        Route::put('update', 'update')->name('update');
-        Route::delete('delete','delete')->name('delete');
-        Route::post('search','search')->name("search");
+    //pdf download
+    Route::controller(RemittanceLogController::class)->group(function(){
+        Route::get('download-pdf/{trx_id}','downloadPdf')->name('download.pdf');
     });
 
     //Statements
@@ -188,13 +183,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('download','download')->name('download');
     });
 
-    // Fees & Charges Section
-    Route::controller(TrxSettingsController::class)->prefix('trx-settings')->name('trx.settings.')->group(function () {
-        Route::get('index', 'index')->name('index');
-        Route::put('charges/update', 'trxChargeUpdate')->name('charges.update');
-    });
+    // Subscriber
+    Route::controller(SubscribeController::class)->prefix('subscriber')->name('subscriber.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::post('send-mail','SendMail')->name('send.mail');
+    }); 
 
-    
+    //contact request
+    Route::controller(ContactMessageController::class)->prefix('contact')->name('contact.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('reply-message', 'reply')->name('messages.reply');
+    });
 
     // User Care Section
     Route::controller(UserCareController::class)->prefix('users')->name('users.')->group(function () {

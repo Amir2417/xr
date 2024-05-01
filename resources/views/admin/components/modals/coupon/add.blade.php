@@ -12,7 +12,6 @@
                             @include('admin.components.form.input',[
                                 'label'         => __("Name").'*',
                                 'name'          => "name",
-                                'data_limit'    => 150,
                                 'placeholder'   => __("Write Name")."...",
                                 'value'         => old('name'),
                             ])
@@ -24,6 +23,15 @@
                                 'class'         => 'number-input',
                                 'placeholder'   => __("Enter Price")."...",
                                 'value'         => old('price'),
+                            ])
+                        </div>
+                        <div class="col-xl-12 col-lg-12 form-group">
+                            @include('admin.components.form.input',[
+                                'label'         => __("Maximum Used").'*',
+                                'name'          => "max_used",
+                                'class'         => 'number-input',
+                                'placeholder'   => __("Enter maximum used")."...",
+                                'value'         => old('max_used'),
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">

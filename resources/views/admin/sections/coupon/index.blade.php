@@ -23,7 +23,7 @@
             'name'  => __("Dashboard"),
             'url'   => setRoute("admin.dashboard"),
         ]
-    ], 'active' => __("Coupons")])
+    ], 'active' => __($page_title)])
 @endsection
 
 @section('content')
@@ -31,20 +31,23 @@
         <div class="table-wrapper">
             <div class="table-header">
                 <h5 class="title">{{ __($page_title) }}</h5>
-                <div class="table-btn-area">
-                    @include('admin.components.link.add-default',[
-                        'text'          => __("Add Coupon"),
-                        'href'          => "#add-coupon",
-                        'class'         => "modal-btn",
-                        'permission'    => "admin.coupon.store",
-                    ])
+                <div class="d-flex">
+                    <div class="table-btn-area">
+                        @include('admin.components.link.add-default',[
+                            'text'          => __("Add New Coupon"),
+                            'href'          => "#add-coupon",
+                            'class'         => "modal-btn",
+                            'permission'    => "admin.coupon.store",
+                        ])
+                    </div>
                 </div>
+                
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>{{ __("Name") }}</th>
+                            <th>{{ __("Coupon Name") }}</th>
                             <th>{{ __("Price") }}</th>
                             <th>{{ __("Status") }}</th>
                             <th></th>
@@ -59,7 +62,7 @@
                                     @include('admin.components.form.switcher',[
                                         'name'        => 'status',
                                         'value'       => $item->status,
-                                        'options'     => ['Enable' => 1, 'Disable' => 0],
+                                        'options'     => ['Used' => 1, 'Unused' => 0],
                                         'onload'      => true,
                                         'data_target' => $item->id,
                                     ])
