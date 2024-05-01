@@ -108,6 +108,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('status/update','statusUpdate')->name('status.update');
     });
 
+    //new user bonus 
+    Route::controller(NewUserBonusController::class)->prefix('new-user-bonus')->name('new.user.bonus.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::put('update','update')->name('update');
+    });
+
     //category
     Route::controller(ReceivingMethodCategoryController::class)->prefix('receiving-method-category')->name('receiving.method.category.')->group(function(){
         Route::get('/','index')->name('index');

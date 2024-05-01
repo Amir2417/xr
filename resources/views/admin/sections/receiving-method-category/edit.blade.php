@@ -1,13 +1,7 @@
 @extends('admin.layouts.master')
 
 @push('css')
-<style>
-    .highlight {
-        background-color: #f1f1f1;
-        padding: 2px 10px;
-        font-weight: bold;         
-    }
-</style>
+
 @endpush
 
 @section('page-title')

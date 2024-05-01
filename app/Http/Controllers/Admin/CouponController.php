@@ -18,7 +18,7 @@ class CouponController extends Controller
      * Method for show all the coupon 
      */
     public function index(){
-        $page_title         = "New User Bonus";
+        $page_title         = "All Coupons";
         $data               = Coupon::orderByDesc('id')->paginate(15);
 
         return  view('admin.sections.coupon.index',compact(
