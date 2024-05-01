@@ -2,7 +2,7 @@
     <div id="add-remittance-bank" class="mfp-hide large">
         <div class="modal-data">
             <div class="modal-header px-0">
-                <h5 class="modal-title">{{ __("Add Remittance Bank") }}</h5>
+                <h5 class="modal-title">{{ __("Add Bank Method Manual") }}</h5>
             </div>
             <div class="modal-form-data">
                 <form class="card-form" action="{{ setRoute('admin.remittance.bank.store') }}" method="POST">

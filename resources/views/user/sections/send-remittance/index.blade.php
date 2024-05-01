@@ -184,8 +184,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endif
-                                    
+                                    @endif                                    
                                     <div class="col-12">
                                         <button type="submit" class="btn--base btn--base-e text-center w-100 ">{{ __("Send Now") }}</button>
                                     </div>

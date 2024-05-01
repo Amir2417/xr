@@ -40,26 +40,6 @@
                             'icon'      => "menu-icon las la-coins",
                         ],
                         [
-                            'title'     => __("Categories"),
-                            'route'     => "admin.receiving.method.category.index",
-                            'icon'      => "menu-icon las la-vr-cardboard",
-                        ],
-                        [
-                            'title'     => __("Bank Methods"),
-                            'route'     => "admin.bank.method.automatic.index",
-                            'icon'      => "menu-icon las la-vr-cardboard",
-                        ],
-                        [
-                            'title'     => "Remittance Bank",
-                            'route'     => "admin.remittance.bank.index",
-                            'icon'      => "menu-icon las la-university",
-                        ],
-                        [
-                            'title'     => __("Mobile Method"),
-                            'route'     => "admin.mobile.method.index",
-                            'icon'      => "menu-icon las la-money-bill-alt",
-                        ],
-                        [
                             'title'     => __("Fees & Charges"),
                             'route'     => "admin.trx.settings.index",
                             'icon'      => "menu-icon las la-wallet",
@@ -89,7 +69,7 @@
                     </a>
                     <ul class="sidebar-submenu">
                         <li class="sidebar-menu-item">
-                            <a href="javascript:void(0)" class="nav-link">
+                            <a href="{{ setRoute('admin.receiving.method.category.index') }}" class="nav-link">
                                 <i class="menu-icon las la-ellipsis-h"></i>
                                 <span class="menu-title">{{ __("Categories") }}</span>
                             </a>
@@ -101,13 +81,13 @@
                             </a>
                             <ul class="sidebar-submenu">
                                 <li class="sidebar-menu-item">
-                                    <a href="javascript:void(0)" class="nav-link">
+                                    <a href="{{ setRoute('admin.bank.method.automatic.index') }}" class="nav-link">
                                         <i class="menu-icon las la-ellipsis-h"></i>
                                         <span class="menu-title">{{ __("Automatic") }}</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-menu-item">
-                                    <a href="javascript:void(0)" class="nav-link">
+                                    <a href="{{ setRoute('admin.remittance.bank.index') }}" class="nav-link">
                                         <i class="menu-icon las la-ellipsis-h"></i>
                                         <span class="menu-title">{{ __("Manual") }}</span>
                                     </a>
@@ -121,13 +101,7 @@
                             </a>
                             <ul class="sidebar-submenu">
                                 <li class="sidebar-menu-item">
-                                    <a href="javascript:void(0)" class="nav-link">
-                                        <i class="menu-icon las la-ellipsis-h"></i>
-                                        <span class="menu-title">{{ __("Automatic") }}</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-menu-item">
-                                    <a href="javascript:void(0)" class="nav-link">
+                                    <a href="{{ setRoute('admin.mobile.method.index') }}" class="nav-link">
                                         <i class="menu-icon las la-ellipsis-h"></i>
                                         <span class="menu-title">{{ __("Manual") }}</span>
                                     </a>
