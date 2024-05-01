@@ -1622,8 +1622,10 @@ function getFlutterwaveBanks($iso2){
 
 //flutterwave automatic withdrawal helper functions
 function getFlutterwaveBanksForAdmin($iso2){
-    $secretKey = 'FLWSECK_TEST-SANDBOXDEMOKEY-X';
-    $base_url = 'https://api.flutterwave.com/v3';
+    $cardApi = BankMethodAutomatic::first();
+    
+    $secretKey = $cardApi->config->flutterwave_secret_key;
+    $base_url =$cardApi->config->flutterwave_url;
    
     $curl = curl_init();
     curl_setopt_array($curl, array(

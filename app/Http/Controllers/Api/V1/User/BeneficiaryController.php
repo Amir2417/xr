@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use Exception;
 
+use App\Models\Recipient;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\Admin\MobileMethod;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\RemittanceBank;
-use App\Models\Recipient;
+use App\Models\Admin\BankMethodAutomatic;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -95,7 +96,12 @@ class BeneficiaryController extends Controller
         $user_country       = Currency::where('country',$request->country)->where('receiver',true)->first();
         if(!$user_country) return Response::error([$request->country .' '.'is not receiver country']);
         $country            = get_specific_country($user_country->country);
-        $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
+        $bank_method_automatic = BankMethodAutomatic::where('status',true)->first();
+        if(!$bank_method_automatic){
+            $automatic_bank_list  = [];
+        }else{
+            $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
+        }
         $manual_bank_list   = RemittanceBank::where('country',$request->country)->get();
         if ($manual_bank_list->isNotEmpty()) {
             $manual_bank_list->each(function ($bank) {

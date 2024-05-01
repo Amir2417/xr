@@ -11,6 +11,7 @@ use App\Models\Admin\Currency;
 use App\Models\UserNotification;
 use App\Models\Admin\MobileMethod;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\BankMethodAutomatic;
 use App\Models\Admin\RemittanceBank;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -263,7 +264,13 @@ class RecipientController extends Controller
         }
         $user_country       = Currency::where('country',$request->country)->first();
         $country            = get_specific_country($user_country->country);
-        $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
+        $bank_method_automatic = BankMethodAutomatic::where('status',true)->first();
+        if(!$bank_method_automatic){
+            $automatic_bank_list  = [];
+        }else{
+            $automatic_bank_list  = getFlutterwaveBanks($country['country_code']) ?? [];
+        }
+       
         $manual_bank_list   = RemittanceBank::where('country',$request->country)->get();
         if ($manual_bank_list->isNotEmpty()) {
             $manual_bank_list->each(function ($bank) {
