@@ -30,9 +30,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($bank_method_automatic ?? [] as $key => $item)
+                    @forelse ($categories ?? [] as $key => $item)
                         <tr data-item="{{ $item }}">
-                            <td>{{ $item->name ?? ''}}</td>
+                            <td>{{ $item->title ?? ''}}</td>
                             
                             <td>
                                 @include('admin.components.form.switcher',[
@@ -43,31 +43,30 @@
                                     'data_target' => $item->id,
                                 ])
                             </td>
-                            
                             <td>
                                 @include('admin.components.link.edit-default',[
-                                    'href'          => setRoute('admin.bank.method.automatic.edit',$item->slug),
+                                    'href'          => setRoute('admin.receiving.method.category.edit',$item->slug),
                                     'class'         => "edit-modal-button",
-                                    'permission'    => "admin.bank.method.automatic.update",
+                                    'permission'    => "admin.receiving.method.category.update",
                                 ])
                                
                             </td>
                         </tr>
                     @empty
-                        @include('admin.components.alerts.empty',['colspan' => 3])
+                        @include('admin.components.alerts.empty',['colspan' => 2])
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-    {{ get_paginate($bank_method_automatic) }}
+    {{ get_paginate($categories) }}
 </div>
 @endsection
 @push('script')
     <script>
         $(document).ready(function(){
             // Switcher
-            switcherAjax("{{ setRoute('admin.bank.method.automatic.status.update') }}");
+            switcherAjax("{{ setRoute('admin.receiving.method.category.status.update') }}");
         })
     </script>
 @endpush

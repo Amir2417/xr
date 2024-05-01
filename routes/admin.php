@@ -44,6 +44,7 @@ use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\BankMethodAutomaticController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
 use App\Http\Controllers\Admin\PaymentGatewayCurrencyController;
+use App\Http\Controllers\Admin\ReceivingMethodCategoryController;
 
 // All Admin Route Is Here
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -74,10 +75,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('send-mail','SendMail')->name('send.mail');
     });
 
+    //category
+    Route::controller(ReceivingMethodCategoryController::class)->prefix('receiving-method-category')->name('receiving.method.category.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::get('edit/{slug}', 'edit')->name('edit');
+        Route::put('update/{slug}', 'update')->name('update');
+        Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
     //contact request
     Route::controller(ContactMessageController::class)->prefix('contact')->name('contact.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('reply-message', 'reply')->name('messages.reply');
+    });
+
+    //bank method automatic
+    Route::controller(BankMethodAutomaticController::class)->prefix('bank-method-automatic')->name('bank.method.automatic.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('edit/{slug}', 'edit')->name('edit');
+        Route::put('update/{slug}', 'update')->name('update');
+        Route::put('status/update','statusUpdate')->name('status.update');
     });
 
     //coupon
@@ -177,13 +194,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('charges/update', 'trxChargeUpdate')->name('charges.update');
     });
 
-    //bank method automatic
-    Route::controller(BankMethodAutomaticController::class)->prefix('bank-method-automatic')->name('bank.method.automatic.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('edit/{slug}', 'edit')->name('edit');
-        Route::put('update/{slug}', 'update')->name('update');
-        Route::put('status/update','statusUpdate')->name('status.update');
-    });
+    
 
     // User Care Section
     Route::controller(UserCareController::class)->prefix('users')->name('users.')->group(function () {

@@ -168,6 +168,11 @@
                             <div class="form-group transaction-type">
                                 <div class="transaction-title">
                                     <label>{{__("Receive Method")}}</label>
+                                    
+                                    @if (!$transaction_settings)
+                                    <p>Reciving method is not available right now. Please contact with system administrator</p>
+                                        
+                                    @endif
                                 </div>
                                 <div class="transaction-type-select">
                                     <select class="nice-select trx-type-select" name="type">

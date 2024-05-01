@@ -40,6 +40,11 @@
                             'icon'      => "menu-icon las la-coins",
                         ],
                         [
+                            'title'     => __("Categories"),
+                            'route'     => "admin.receiving.method.category.index",
+                            'icon'      => "menu-icon las la-vr-cardboard",
+                        ],
+                        [
                             'title'     => __("Bank Methods"),
                             'route'     => "admin.bank.method.automatic.index",
                             'icon'      => "menu-icon las la-vr-cardboard",
@@ -76,6 +81,61 @@
                         ]
                     ]
                 ])
+
+                <li class="sidebar-menu-item sidebar-dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon las la-terminal"></i>
+                        <span class="menu-title">{{ __("Receive Methods") }}</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li class="sidebar-menu-item">
+                            <a href="javascript:void(0)" class="nav-link">
+                                <i class="menu-icon las la-ellipsis-h"></i>
+                                <span class="menu-title">{{ __("Categories") }}</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item sidebar-dropdown">
+                            <a href="javascript:void(0)" class="nav-link">
+                                <i class="menu-icon las la-ellipsis-h"></i>
+                                <span class="menu-title">{{ __("Bank Methods") }}</span>
+                            </a>
+                            <ul class="sidebar-submenu">
+                                <li class="sidebar-menu-item">
+                                    <a href="javascript:void(0)" class="nav-link">
+                                        <i class="menu-icon las la-ellipsis-h"></i>
+                                        <span class="menu-title">{{ __("Automatic") }}</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a href="javascript:void(0)" class="nav-link">
+                                        <i class="menu-icon las la-ellipsis-h"></i>
+                                        <span class="menu-title">{{ __("Manual") }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-menu-item sidebar-dropdown">
+                            <a href="javascript:void(0)" class="nav-link">
+                                <i class="menu-icon las la-ellipsis-h"></i>
+                                <span class="menu-title">{{ __("Mobile Methods") }}</span>
+                            </a>
+                            <ul class="sidebar-submenu">
+                                <li class="sidebar-menu-item">
+                                    <a href="javascript:void(0)" class="nav-link">
+                                        <i class="menu-icon las la-ellipsis-h"></i>
+                                        <span class="menu-title">{{ __("Automatic") }}</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a href="javascript:void(0)" class="nav-link">
+                                        <i class="menu-icon las la-ellipsis-h"></i>
+                                        <span class="menu-title">{{ __("Manual") }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
                 
                 
 

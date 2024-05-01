@@ -3524,6 +3524,19 @@ select.form--control {
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
 }
+.sidebar-menu .sidebar-menu-item.sidebar-dropdown li.sidebar-dropdown a::after {
+  display: block;
+  transform: none;
+}
+.sidebar-menu .sidebar-menu-item.sidebar-dropdown li.sidebar-dropdown.active a::after {
+  transform: rotate(90deg);
+}
+.sidebar-menu .sidebar-menu-item.sidebar-dropdown li.sidebar-dropdown .sidebar-submenu li a {
+  padding-left: 15px;
+}
+.sidebar-menu .sidebar-menu-item.sidebar-dropdown li.sidebar-dropdown .sidebar-submenu li a::after {
+  display: none;
+}
 .sidebar-menu .sidebar-menu-item .sidebar-submenu {
   position: relative;
   display: none;

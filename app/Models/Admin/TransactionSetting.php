@@ -10,7 +10,7 @@ class TransactionSetting extends Model
     use HasFactory;
 
 
-    protected $guarded = ['id','slug'];
+    protected $guarded = ['id'];
     
     protected $casts = [
         'admin_id'       => 'integer',
