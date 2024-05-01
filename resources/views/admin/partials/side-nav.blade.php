@@ -110,9 +110,6 @@
                         </li>
                     </ul>
                 </li>
-                
-                
-
                 @include('admin.components.side-nav.link-group',[
                     'group_title'       => __("Transactions & Logs"),
                     'group_links'       => [
@@ -180,7 +177,6 @@
                             'route'             => "admin.statements.index",
 
                         ],
-
                     ]
                 ])
                 {{-- Interface Panel --}}
@@ -241,7 +237,6 @@
                                 ],
                             ],
                         ],
-
                     ]
                 ])
 
@@ -309,7 +304,6 @@
                                 ],
                             ]
                         ],
-
                     ]
                 ])
 
@@ -340,7 +334,6 @@
                             setRoute('admin.setup.sections.section','contact'),
                             setRoute('admin.setup.sections.section','login'),
                             setRoute('admin.setup.sections.section','register'),
-
                         ];
                     @endphp
 
