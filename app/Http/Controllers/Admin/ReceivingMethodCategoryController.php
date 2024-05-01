@@ -56,7 +56,6 @@ class ReceivingMethodCategoryController extends Controller
         $validated  = $validator->validate();
         $validated['slug']  = Str::slug($validated['title']);
         try{
-            
             $category->update([
                 'slug'  => $validated['slug'],
                 'title' => $validated['title'],

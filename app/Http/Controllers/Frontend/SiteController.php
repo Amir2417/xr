@@ -53,7 +53,7 @@ class SiteController extends Controller{
         $subscribe_slug             = Str::slug(SiteSectionConst::SUBSCRIBE_SECTION);
         $subscribe                  = SiteSections::getData($subscribe_slug)->first();
         $useful_link                = UsefulLink::where('status',true)->get();
-        $message                = Session::get('message');
+        $message                    = Session::get('message');
 
         return view('frontend.index',compact(
             'transaction_settings',

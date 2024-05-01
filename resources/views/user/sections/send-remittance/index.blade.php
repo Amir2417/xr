@@ -168,12 +168,15 @@
                                         </div>
                                         <div class="transaction-type-select">
                                             <select class="nice-select trx-type-select" name="type">
-                                                @foreach ($transaction_settings as $item)
+                                                @forelse ($transaction_settings as $item)
                                                     <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ __($item->title ?? '')}}</option>
-                                                @endforeach
+                                                @empty
+                                                    <option>{{ __("No data found") }}</option>
+                                                @endforelse
                                             </select>
                                         </div>
                                     </div>
+                                    @if ($transaction_settings->isNotEmpty())
                                     <div class="form-footer-content mt-10-none mb-20">
                                         <div class="note send-form-footer-note" id="feature-list">
                                             <div class="left-side">
@@ -181,6 +184,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
+                                    
                                     <div class="col-12">
                                         <button type="submit" class="btn--base btn--base-e text-center w-100 ">{{ __("Send Now") }}</button>
                                     </div>
