@@ -36,9 +36,10 @@ class NewUserBonusController extends Controller
             return back()->withErrors($validator)->withInput($request->all());
         }
         $validated  = $validator->validate();
-        dd($request->all());
-        $bonus      = NewUserBonus::where('id',$validated['id'])->first();
+        $bonus      = NewUserBonus::where('slug',$request->slug)->first();
         if(!$bonus){
+            $validated['slug']          = $request->slug;
+            $validated['last_edit_by']  = auth()->user()->id;
             try{
                 NewUserBonus::create($validated);
             }catch(Exception $e){
@@ -46,6 +47,7 @@ class NewUserBonusController extends Controller
             }
             return back()->with(['success' => ['New user bonus information updated successfully.']]);
         }else{
+            $validated['last_edit_by']  = auth()->user()->id;
             try{
                 $bonus->update($validated);
             }catch(Exception $e){

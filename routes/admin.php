@@ -112,6 +112,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::controller(NewUserBonusController::class)->prefix('new-user-bonus')->name('new.user.bonus.')->group(function(){
         Route::get('/','index')->name('index');
         Route::put('update','update')->name('update');
+        Route::put('status/update','statusUpdate')->name('status.update');
     });
 
     //category

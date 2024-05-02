@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('new_user_bonuses', function (Blueprint $table) {
             $table->id();
+            $table->string('slug');
             $table->decimal('price',28,8,true)->default(0);
             $table->bigInteger('max_used')->default(1);
             $table->unsignedBigInteger('last_edit_by');

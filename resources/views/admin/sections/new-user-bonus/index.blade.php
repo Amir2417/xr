@@ -26,20 +26,20 @@
             <form class="card-form" action="{{ setRoute('admin.new.user.bonus.update') }}" method="POST">
                 @csrf
                 @method("PUT")
-                <input type="hidden" name="id" value="{{ old('id',@$bonus->id) }}">
+                <input type="hidden" name="slug" value="{{ global_const()::NEW_USER_BONUS }}">
                 <div class="row mb-10-none">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 form-group">
                         @include('admin.components.form.switcher', [
-                            'label'         => 'Status*',
+                            'label'         => __('Status').'*',
                             'value'         => old('staus',@$bonus->status),
                             'name'          => "staus",
-                            'options'       => ['Enable' => 1 , 'Disable' => 0]
+                            'options'       => [__('Enable') => 1 , __('Disable') => 0]
                         ])
                     </div>
                     <div class="d-flex">
                         <div class="col-xl-6 col-lg-6 form-group">
                             <label>{{ __("Price") }}*</label>
-                            <input type="text" class="form--control" name="price" placeholder="{{ __("Enter Price") }}" value="{{ old('price',@$bonus->price) }}">
+                            <input type="text" class="form--control" name="price" placeholder="{{ __("Enter Price") }}" value="{{ old('price',get_amount(@$bonus->price)) }}">
                         </div>
                         <div class="col-xl-6 col-lg-6 form-group ms-1">
                             <label>{{ __("Maximum Used") }}*</label>
@@ -58,6 +58,9 @@
     </div>
 @endsection
 @push('script')
-
-    
+<script>
+    $(document).ready(function(){
+        switcherAjax("{{ setRoute('admin.new.user.bonus.status.update') }}");
+    })
+</script>    
 @endpush

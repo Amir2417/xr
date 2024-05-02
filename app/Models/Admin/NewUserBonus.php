@@ -13,6 +13,7 @@ class NewUserBonus extends Model
 
     protected $casts    = [
         'id'            => 'integer',
+        'slug'          => 'string',
         'price'         => 'decimal:8',
         'max_used'      => 'integer',
         'last_edit_by'  => 'integer',
