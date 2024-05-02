@@ -24,16 +24,23 @@
             <table class="custom-table">
                 <thead>
                     <tr>
+                        <th>{{ __("SL") }}</th>
                         <th>{{ __("Name") }}</th>
                         <th>{{ __("Status") }}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $step_key = 0;
+                    @endphp
                     @forelse ($categories ?? [] as $key => $item)
+                        @php
+                            $step_key++;
+                        @endphp
                         <tr data-item="{{ $item }}">
+                            <td>{{ $step_key ?? ''}}</td>
                             <td>{{ $item->title ?? ''}}</td>
-                            
                             <td>
                                 @include('admin.components.form.switcher',[
                                     'name'        => 'status',

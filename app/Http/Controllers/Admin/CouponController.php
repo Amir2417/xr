@@ -113,37 +113,5 @@ class CouponController extends Controller
         }
         return back()->with(['success' => ['Coupon Deleted Successfully!']]);
     }
-    /**
-     * Method for status update for coupon
-     * @param string
-     * @param \Illuminate\Http\Request $request
-     */
-    public function statusUpdate(Request $request) {
-        $validator = Validator::make($request->all(),[
-            'data_target'       => 'required|numeric|exists:coupons,id',
-            'status'            => 'required|boolean',
-        ]);
-
-        if($validator->fails()) {
-            $errors = ['error' => $validator->errors() ];
-            return Response::error($errors);
-        }
-
-        $validated = $validator->validate();
-
-
-        $coupon = Coupon::find($validated['data_target']);
-
-        try{
-            $coupon->update([
-                'status'        => ($validated['status']) ? false : true,
-            ]);
-        }catch(Exception $e) {
-            $errors = ['error' => ['Something went wrong! Please try again.'] ];
-            return Response::error($errors,null,500);
-        }
-
-        $success = ['success' => ['Coupon status updated successfully!']];
-        return Response::success($success);
-    }
+    
 }

@@ -49,7 +49,6 @@
                         <tr>
                             <th>{{ __("Coupon Name") }}</th>
                             <th>{{ __("Price") }}</th>
-                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -57,17 +56,7 @@
                         @forelse ($data ?? [] as $key => $item)
                             <tr data-item="{{ $item }}">
                                 <td>{{ $item->name ?? ''}}</td>
-                                <td>{{ get_amount($item->price) ?? ''}}</td>
-                                <td>
-                                    @include('admin.components.form.switcher',[
-                                        'name'        => 'status',
-                                        'value'       => $item->status,
-                                        'options'     => ['Used' => 1, 'Unused' => 0],
-                                        'onload'      => true,
-                                        'data_target' => $item->id,
-                                    ])
-                                </td>
-                                
+                                <td>{{ get_amount($item->price) ?? ''}}</td>                                
                                 <td>
                                     @include('admin.components.link.edit-default',[
                                         'class'         => "edit-modal-button",
@@ -105,8 +94,5 @@
 
         });
 
-        $(document).ready(function(){
-            switcherAjax("{{ setRoute('admin.coupon.status.update') }}");
-        })
     </script>
 @endpush
