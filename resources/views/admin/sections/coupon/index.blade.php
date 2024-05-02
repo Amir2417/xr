@@ -49,6 +49,9 @@
                         <tr>
                             <th>{{ __("Coupon Name") }}</th>
                             <th>{{ __("Price") }}</th>
+                            <th>{{ __("Maximum Limit") }}</th>
+                            <th>{{ __("Remaining") }}</th>
+                            <th>{{ __("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -57,6 +60,9 @@
                             <tr data-item="{{ $item }}">
                                 <td>{{ $item->name ?? ''}}</td>
                                 <td>{{ get_amount($item->price) ?? ''}}</td>                                
+                                <td>{{ @$item->max_used }}</td>                                
+                                <td>{{ @$item->max_used }}</td>                                
+                                <td><span class="badge badge--primary">{{ __("Unused") }}</span></td>                                
                                 <td>
                                     @include('admin.components.link.edit-default',[
                                         'class'         => "edit-modal-button",
@@ -88,7 +94,7 @@
             var oldData     = JSON.parse($(this).parents("tr").attr("data-item"));
             var actionRoute = "{{ setRoute('admin.coupon.delete') }}";
             var target      = oldData.id;
-            var message     = `Are you sure to <strong>delete</strong> this Coupon?`;
+            var message     = `Are you sure to <strong>delete</strong> this coupon?`;
 
             openDeleteModal(actionRoute,target,message);
 
