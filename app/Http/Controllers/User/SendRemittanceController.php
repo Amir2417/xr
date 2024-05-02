@@ -36,6 +36,7 @@ class SendRemittanceController extends Controller
         $user                       = auth()->user();
         $notifications              = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $message                    = Session::get('message');
+        
         return view('user.sections.send-remittance.index',compact(
             'page_title',
             'transaction_settings',
