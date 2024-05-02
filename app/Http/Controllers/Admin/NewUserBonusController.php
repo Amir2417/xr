@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Response;
 use App\Models\Admin\NewUserBonus;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -55,5 +56,33 @@ class NewUserBonusController extends Controller
             }
             return back()->with(['success' => ['New user bonus information updated successfully.']]);
         }
+    }
+    /**
+     * Method for update new user bonus status
+     * @param string
+     * @param Illuminate\Http\Request $request
+     */
+    public function statusUpdate(Request $request){
+        $validator          = Validator::make($request->all(),[
+            'data_target'   => 'required|numeric|exists:new_user_bonuses,id',
+            'status'        => 'required|boolean'
+        ]);
+        if($validator->fails()){
+            $errors     = ['error' => $validator->errors()];
+            return Response::error($errors);
+        }
+        $validated      = $validator->validate();
+        $bonus          = NewUserBonus::find($validated['data_target']);
+
+        try{
+            $bonus->update([
+                'status'    => ($validated['status']) ? false : true,
+            ]);
+        }catch(Exception $e){
+            $errors = ['error' => ['Something went wrong! Please try again.'] ];
+            return Response::error($errors,null,500);
+        }
+        $success = ['success' => ['New user bonus status updated successfully.']];
+        return Response::success($success);
     }
 }

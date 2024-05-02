@@ -29,12 +29,19 @@
                 <input type="hidden" name="slug" value="{{ global_const()::NEW_USER_BONUS }}">
                 <div class="row mb-10-none">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 form-group">
-                        @include('admin.components.form.switcher', [
+                        @include('admin.components.form.switcher',[
+                            'name'        => 'status',
+                            'value'       => @$bonus->status,
+                            'options'     => ['Used' => 1, 'Unused' => 0],
+                            'onload'      => true,
+                            'data_target' => @$bonus->id,
+                        ])
+                        {{-- @include('admin.components.form.switcher', [
                             'label'         => __('Status').'*',
                             'value'         => old('staus',@$bonus->status),
                             'name'          => "staus",
                             'options'       => [__('Enable') => 1 , __('Disable') => 0]
-                        ])
+                        ]) --}}
                     </div>
                     <div class="d-flex">
                         <div class="col-xl-6 col-lg-6 form-group">
