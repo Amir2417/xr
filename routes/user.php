@@ -9,6 +9,7 @@ use App\Http\Controllers\User\RecipientController;
 use App\Http\Controllers\User\RemittanceController;
 use App\Http\Controllers\User\TransactionController;
 use App\Http\Controllers\User\AuthorizationController;
+use App\Http\Controllers\User\MyCouponController;
 use App\Http\Controllers\User\SupportTicketController;
 use App\Http\Controllers\User\SendRemittanceController;
 
@@ -31,12 +32,6 @@ Route::prefix("user")->name("user.")->group(function(){
         
     });
 
-    //transaction
-    Route::controller(TransactionController::class)->prefix('transaction')->name('transaction.')->group(function(){
-        Route::get('/','transaction')->name('index');
-        Route::get('search', 'search')->name('search');
-    });
-    
     //beneficary 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('index/{identifier}','index')->name('index');
@@ -89,6 +84,21 @@ Route::prefix("user")->name("user.")->group(function(){
         //payment confirmation
         Route::get('payment-confirmation/{trx_id}','paymentConfirmation')->name('payment.confirmation');  
     });
+
+    //my-coupon
+    Route::controller(MyCouponController::class)->prefix('my-coupon')->name('my.coupon.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+
+    //transaction
+    Route::controller(TransactionController::class)->prefix('transaction')->name('transaction.')->group(function(){
+        Route::get('/','transaction')->name('index');
+        Route::get('search', 'search')->name('search');
+    });
+    
+    
+
+    
 
     Route::controller(ProfileController::class)->prefix("profile")->name("profile.")->group(function(){
         Route::get('/','index')->name('index');

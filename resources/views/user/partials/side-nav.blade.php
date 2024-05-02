@@ -25,17 +25,24 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="{{ setRoute('user.transaction.index') }}">
-                            <i class="menu-icon las la-wallet"></i>
-                            <span class="menu-title">{{__("Transactions")}}</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-menu-item">
                         <a href="{{ setRoute('user.recipient.show') }}">
                             <i class="menu-icon las la-user-friends"></i>
                             <span class="menu-title">{{__("Recipients")}}</span>
                         </a>
                     </li>
+                    <li class="sidebar-menu-item">
+                        <a href="{{ setRoute('user.my.coupon.index') }}">
+                            <i class="menu-icon las la-percentage"></i>
+                            <span class="menu-title">{{__("My Coupons")}}</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item">
+                        <a href="{{ setRoute('user.transaction.index') }}">
+                            <i class="menu-icon las la-wallet"></i>
+                            <span class="menu-title">{{__("Transactions")}}</span>
+                        </a>
+                    </li>
+                    
                     <li class="sidebar-menu-item">
                         <a href="{{ setRoute('user.authorize.kyc') }}">
                             <i class="menu-icon las la-user-alt"></i>

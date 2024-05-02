@@ -56,20 +56,27 @@
                         ]
                     ]
                 ])
-                <li class="sidebar-menu-item sidebar-dropdown">
+                @php
+                    $current_url = URL::current();
+                    $coupon_child  = [
+                        setRoute('admin.new.user.bonus.index'),
+                        setRoute('admin.coupon.index'),
+                    ]
+                @endphp
+                <li class="sidebar-menu-item sidebar-dropdown @if (in_array($current_url,$coupon_child)) active @endif">
                     <a href="javascript:void(0)">
                         <i class="menu-icon las la-percentage"></i>
                         <span class="menu-title">{{ __("Coupon") }}</span>
                     </a>
                     <ul class="sidebar-submenu">
                         <li class="sidebar-menu-item">
-                            <a href="{{ setRoute('admin.new.user.bonus.index') }}" class="nav-link">
+                            <a href="{{ setRoute('admin.new.user.bonus.index') }}" class="nav-link @if($current_url == setRoute('admin.new.user.bonus.index')) active @endif">
                                 <i class="menu-icon las la-ellipsis-h"></i>
                                 <span class="menu-title">{{ __("New User Bonus") }}</span>
                             </a>
                         </li>
                         <li class="sidebar-menu-item">
-                            <a href="{{ setRoute('admin.coupon.index') }}" class="nav-link">
+                            <a href="{{ setRoute('admin.coupon.index') }}" class="nav-link @if($current_url == setRoute('admin.coupon.index')) active @endif">
                                 <i class="menu-icon las la-ellipsis-h"></i>
                                 <span class="menu-title">{{ __("All Coupons") }}</span>
                             </a>
@@ -77,15 +84,23 @@
                         
                     </ul>
                 </li>
-
-                <li class="sidebar-menu-item sidebar-dropdown">
+                @php
+                    $current_url = URL::current();
+                    $receiving_method_child  = [
+                        setRoute('admin.receiving.method.category.index'),
+                        setRoute('admin.bank.method.automatic.index'),
+                        setRoute('admin.remittance.bank.index'),
+                        setRoute('admin.mobile.method.index')
+                    ]
+                @endphp
+                <li class="sidebar-menu-item sidebar-dropdown  @if (in_array($current_url,$receiving_method_child)) active @endif">
                     <a href="javascript:void(0)">
                         <i class="menu-icon las la-terminal"></i>
                         <span class="menu-title">{{ __("Receive Methods") }}</span>
                     </a>
                     <ul class="sidebar-submenu">
                         <li class="sidebar-menu-item">
-                            <a href="{{ setRoute('admin.receiving.method.category.index') }}" class="nav-link">
+                            <a href="{{ setRoute('admin.receiving.method.category.index') }}" class="nav-link @if($current_url == setRoute('admin.receiving.method.category.index')) active @endif">
                                 <i class="menu-icon las la-ellipsis-h"></i>
                                 <span class="menu-title">{{ __("Categories") }}</span>
                             </a>
@@ -97,13 +112,13 @@
                             </a>
                             <ul class="sidebar-submenu">
                                 <li class="sidebar-menu-item">
-                                    <a href="{{ setRoute('admin.bank.method.automatic.index') }}" class="nav-link">
+                                    <a href="{{ setRoute('admin.bank.method.automatic.index') }}" class="nav-link @if($current_url == setRoute('admin.bank.method.automatic.index')) active @endif">
                                         <i class="menu-icon las la-ellipsis-h"></i>
                                         <span class="menu-title">{{ __("Automatic") }}</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-menu-item">
-                                    <a href="{{ setRoute('admin.remittance.bank.index') }}" class="nav-link">
+                                    <a href="{{ setRoute('admin.remittance.bank.index') }}" class="nav-link @if($current_url == setRoute('admin.remittance.bank.index')) active @endif">
                                         <i class="menu-icon las la-ellipsis-h"></i>
                                         <span class="menu-title">{{ __("Manual") }}</span>
                                     </a>
@@ -117,7 +132,7 @@
                             </a>
                             <ul class="sidebar-submenu">
                                 <li class="sidebar-menu-item">
-                                    <a href="{{ setRoute('admin.mobile.method.index') }}" class="nav-link">
+                                    <a href="{{ setRoute('admin.mobile.method.index') }}" class="nav-link @if($current_url == setRoute('admin.mobile.method.index')) active @endif">
                                         <i class="menu-icon las la-ellipsis-h"></i>
                                         <span class="menu-title">{{ __("Manual") }}</span>
                                     </a>
