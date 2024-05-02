@@ -19,10 +19,18 @@
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => __("Price"),
+                                'label'         => __("Price").'*',
                                 'name'          => 'edit_price',
                                 'class'         => 'number-input',
                                 'value'         => old('edit_price')
+                            ])
+                        </div>
+                        <div class="col-xl-12 col-lg-12 form-group">
+                            @include('admin.components.form.input',[
+                                'label'         => __("Maximum Limit")."*",
+                                'name'          => 'edit_max_used',
+                                'class'         => 'number-input',
+                                'value'         => old('edit_max_used')
                             ])
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group d-flex align-items-center justify-content-between mt-4">
@@ -45,8 +53,7 @@
                 editModal.find("form").first().find("input[name=target]").val(oldData.id);
                 editModal.find("input[name=edit_name]").val(oldData.name);
                 editModal.find("input[name=edit_price]").val(oldData.price);
-
-                
+                editModal.find("input[name=edit_max_used]").val(oldData.max_used);                
 
                 openModalBySelector("#edit-coupon");
             });

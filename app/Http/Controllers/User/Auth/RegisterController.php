@@ -11,6 +11,7 @@ use App\Models\Admin\UsefulLink;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\NewUserBonus;
 use App\Traits\User\RegisteredUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -145,7 +146,10 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         try{
-            $this->createCoupon($user);
+            $bonus  = NewUserBonus::where('status',true)->first();
+            if($bonus){
+                $this->createCoupon($user,$bonus);
+            }
             return redirect()->intended(route('user.dashboard'));
         }catch(Exception $e) {
             

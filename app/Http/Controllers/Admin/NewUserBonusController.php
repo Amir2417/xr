@@ -63,26 +63,32 @@ class NewUserBonusController extends Controller
      * @param Illuminate\Http\Request $request
      */
     public function statusUpdate(Request $request){
-        $validator          = Validator::make($request->all(),[
-            'data_target'   => 'required|numeric|exists:new_user_bonuses,id',
-            'status'        => 'required|boolean'
-        ]);
-        if($validator->fails()){
-            $errors     = ['error' => $validator->errors()];
-            return Response::error($errors);
-        }
-        $validated      = $validator->validate();
-        $bonus          = NewUserBonus::find($validated['data_target']);
-
-        try{
-            $bonus->update([
-                'status'    => ($validated['status']) ? false : true,
-            ]);
-        }catch(Exception $e){
-            $errors = ['error' => ['Something went wrong! Please try again.'] ];
+        if($request->data_target == null){
+            $errors = ['error' => ['Please setup new user bonus first.'] ];
             return Response::error($errors,null,500);
+        }else{
+            $validator          = Validator::make($request->all(),[
+                'data_target'   => 'required|numeric|exists:new_user_bonuses,id',
+                'status'        => 'required|boolean'
+            ]);
+            if($validator->fails()){
+                $errors     = ['error' => $validator->errors()];
+                return Response::error($errors);
+            }
+            $validated      = $validator->validate();
+            $bonus          = NewUserBonus::find($validated['data_target']);
+            
+            try{
+                $bonus->update([
+                    'status'    => ($validated['status']) ? false : true,
+                ]);
+            }catch(Exception $e){
+                $errors = ['error' => ['Something went wrong! Please try again.'] ];
+                return Response::error($errors,null,500);
+            }
+            $success = ['success' => ['New user bonus status updated successfully.']];
+            return Response::success($success);
         }
-        $success = ['success' => ['New user bonus status updated successfully.']];
-        return Response::success($success);
+        
     }
 }

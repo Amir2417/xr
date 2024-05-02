@@ -66,7 +66,8 @@ class CouponController extends Controller
         $validator = Validator::make($request->all(),[
             'target'        => 'required|numeric|exists:coupons,id',
             'edit_name'     => 'required|string|max:80|',
-            'edit_price'    => 'required|string',
+            'edit_price'    => 'required',
+            'edit_max_used' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -79,6 +80,7 @@ class CouponController extends Controller
         $validated = replace_array_key($validated,"edit_");
         $validated = Arr::except($validated,['target']);
         $validated['slug']   = $slug;
+        $validated['name']   = strtoupper($validated['name']);
         $coupon = Coupon::find($request->target);
         if(Coupon::whereNot('id',$coupon->id)->where('name',$validated['name'])->exists()){
             throw ValidationException::withMessages([

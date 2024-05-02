@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('user_coupons', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('new_user_bonus_id');
             $table->string('coupon_name');
             $table->decimal('price',28,8,true)->default(0);
-            $table->boolean('status')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('new_user_bonus_id')->references('id')->on('new_user_bonuses')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

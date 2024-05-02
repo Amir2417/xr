@@ -8,13 +8,14 @@ use App\Models\UserCoupon;
 trait RegisteredUsers {
 
     //function for create user coupon
-    protected function createCoupon($user){
-        $coupon_name        = strtoupper($user->username)."10";
-        $data               = [
-            'user_id'       => $user->id,
-            'coupon_name'   => $coupon_name,
-            'price'        => 10,
-            'status'        => 0
+    protected function createCoupon($user,$bonus){
+        $price                      = explode('.',$bonus->price);
+        $coupon_name                = strtoupper($user->username).$price[0];
+        $data                       = [
+            'user_id'               => $user->id,
+            'new_user_bonus_id'     => $bonus->id,
+            'coupon_name'           => $coupon_name,
+            'price'                 => $bonus->price,
         ];
         
         try{

@@ -10,15 +10,16 @@ use App\Models\UserLoginLog;
 trait LoggedInUsers {
 
     //function refresh user coupon 
-    protected function refreshCounpon($user){
+    protected function refreshCounpon($user,$bonus){
         $coupon     = UserCoupon::where('user_id',$user->id)->first();
         if(!$coupon){
-            $coupon_name        = strtoupper($user->username)."10";
-            $data               = [
-                'user_id'       => $user->id,
-                'coupon_name'   => $coupon_name,
-                'price'        => 10,
-                'status'        => 0
+            $price                      = explode('.',$bonus->price);
+            $coupon_name                    = strtoupper($user->username).$price[0];
+            $data                           = [
+                'user_id'                   => $user->id,
+                'new_user_bonus_id'         => $bonus->id,
+                'coupon_name'               => $coupon_name,
+                'price'                     => $bonus->price,
             ];
             try{
                 UserCoupon::insert($data);
@@ -26,11 +27,11 @@ trait LoggedInUsers {
                 throw new Exception($e->getMessage());
             }
         }else{
-            $data               = [
-                'user_id'       => $coupon->user_id,
-                'coupon_name'   => $coupon->coupon_name,
-                'price'         => $coupon->price,
-                'status'        => $coupon->status
+            $data                           = [
+                'user_id'                   => $coupon->user_id,
+                'new_user_bonus_id'         => $bonus->id,
+                'coupon_name'               => $coupon->coupon_name,
+                'price'                     => $bonus->price,
             ];
             try{
                $coupon->update($data);

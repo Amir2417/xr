@@ -9,6 +9,7 @@ use App\Models\Admin\SiteSections;
 use App\Traits\User\LoggedInUsers;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\NewUserBonus;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Validation\ValidationException;
@@ -135,7 +136,10 @@ class LoginController extends Controller
     {
         $user->two_factor_verified = 0;
         $user->save();
-        $this->refreshCounpon($user);
+        $bonus  = NewUserBonus::where('status',true)->first();
+        if($bonus){
+            $this->refreshCounpon($user,$bonus);
+        }        
         $this->createLoginLog($user);
         return redirect()->intended(route('user.dashboard'));
     }

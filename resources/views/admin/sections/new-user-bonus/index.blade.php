@@ -32,21 +32,15 @@
                         @include('admin.components.form.switcher',[
                             'name'        => 'status',
                             'value'       => @$bonus->status,
-                            'options'     => ['Used' => 1, 'Unused' => 0],
+                            'options'     => [__('Enable') => 1, __('Disable') => 0],
                             'onload'      => true,
                             'data_target' => @$bonus->id,
                         ])
-                        {{-- @include('admin.components.form.switcher', [
-                            'label'         => __('Status').'*',
-                            'value'         => old('staus',@$bonus->status),
-                            'name'          => "staus",
-                            'options'       => [__('Enable') => 1 , __('Disable') => 0]
-                        ]) --}}
                     </div>
                     <div class="d-flex">
                         <div class="col-xl-6 col-lg-6 form-group">
                             <label>{{ __("Price") }}*</label>
-                            <input type="text" class="form--control" name="price" placeholder="{{ __("Enter Price") }}" value="{{ old('price',get_amount(@$bonus->price)) }}">
+                            <input type="text" class="form--control" name="price" placeholder="{{ __("Enter Price") }}" value="{{ isset($bonus) ? get_amount($bonus->price) : old('price') }}">
                         </div>
                         <div class="col-xl-6 col-lg-6 form-group ms-1">
                             <label>{{ __("Maximum Used") }}*</label>

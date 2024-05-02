@@ -27,10 +27,10 @@
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">
                             @include('admin.components.form.input',[
-                                'label'         => __("Maximum Used").'*',
+                                'label'         => __("Maximum Limit").'*',
                                 'name'          => "max_used",
                                 'class'         => 'number-input',
-                                'placeholder'   => __("Enter maximum used")."...",
+                                'placeholder'   => __("Enter maximum limit")."...",
                                 'value'         => old('max_used'),
                             ])
                         </div>

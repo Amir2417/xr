@@ -7710,3 +7710,72 @@ input[type=number] {
 /*-------------------------------------------------
     [ ## cookie block end ]
 */
+
+/* coupon-code */
+.coupon-code-item .coupon-code-area{
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px 2px #f3f3f3;
+}
+@media (max-width: 600px) {
+  .coupon-code-item .coupon-code-area{
+    padding: 10px;
+  }
+}
+.transaction-table-container {
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+}
+
+.transaction-table {
+  width: 100%; /* Ensures the table takes the full width of its container */
+  border-collapse: collapse; /* Merges borders for a cleaner look */
+  margin-bottom: 20px; /* Space between the table and other elements below */
+}
+
+.transaction-table th,
+.transaction-table td {
+  border: 1px solid #ddd; 
+  padding: 8px; 
+  text-align: left;
+}
+
+.transaction-table th {
+  background-color: #F2F2F2; 
+}
+
+.transaction-table tr:nth-child(even) {
+  background-color: #f9f9f9; 
+}
+
+.transaction-table tr:hover {
+  background-color: #f1f1f1; 
+}
+
+/* Responsive design: Adjust styles for smaller screens */
+@media (max-width: 600px) {
+  .transaction-table {
+    font-size: 12px; 
+  }
+
+  .transaction-table-container {
+    overflow-x: scroll;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 6px; 
+  }
+}
+.transaction-table .cupone-name{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.transaction-table .cupone-name i{
+  background-color: #7367f0;
+  color: #ffffff;
+  padding: 6px;
+  border-radius: 5px;
+  margin-left: 10px;
+}

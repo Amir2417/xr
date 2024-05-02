@@ -19,4 +19,5 @@ class NewUserBonus extends Model
         'last_edit_by'  => 'integer',
         'status'        => 'integer',
     ];
+
 }
