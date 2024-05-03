@@ -38,6 +38,9 @@ class Transaction extends Model
         'updated_at'                  => 'date:Y-m-d',
     ];
 
+    public function scopeAuth($q){
+        return $q->where('user_id',auth()->user()->id);
+    }
 
 
 

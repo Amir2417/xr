@@ -7767,12 +7767,12 @@ input[type=number] {
     padding: 6px; 
   }
 }
-.transaction-table .cupone-name{
+.transaction-table .coupon-name{
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.transaction-table .cupone-name i{
+.transaction-table .coupon-name i{
   background-color: #7367f0;
   color: #ffffff;
   padding: 6px;

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Constants\GlobalConst;
 use Exception;
 use App\Models\Subscribe;
+use App\Models\UserCoupon;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
@@ -314,17 +317,37 @@ class SiteController extends Controller{
         $matchingCoupon = $coupons->first(function ($coupon) use ($request) {
             return $coupon->name === $request->coupon;
         });
-
+        $matching_with_new_user     = UserCoupon::with(['new_user_bonus'])->where('coupon_name',$request->coupon)->first();
         if($matchingCoupon){
             if(auth()->check() == true){
-                if($user->coupon_status  == 0){
-                    return Response::success(['Coupon Applied Successfully'],['coupon' => $matchingCoupon],200);
-                   
+                $transaction    = Transaction::auth()->where('coupon_id',$matchingCoupon->id)->count();
+                if($transaction >= $matchingCoupon->max_used){
+                    return Response::error(['Sorry! Your Coupon limit is over.']);
                 }else{
-                    return Response::error(['Already Applied the coupon']);
+                    $data = [
+                        'coupon_type'   => GlobalConst::COUPON,
+                        'coupon'        => $matchingCoupon    
+                    ];
+                    return Response::success(['Coupon Applied Successfully'],['coupon_info' => $data],200);
                 }
             }else{
+                return Response::error(['Please Login First']);
+            }
+        }elseif($matching_with_new_user){
+            if(auth()->check() == true){
+                $transaction    = Transaction::auth()->where('user_coupon_id',$matching_with_new_user->id)->count();
+                if($transaction >= $matching_with_new_user->new_user_bonus->max_used){
+                    return Response::error(['Sorry! Your Coupon limit is over.']);
+                }else{
+                    $data = [
+                        'coupon_type'   => GlobalConst::NEW_USER_BONUS,
+                        'coupon'        => $matching_with_new_user    
+                    ];
+                    return Response::success(['Coupon Applied Successfully'],['coupon_info' => $data],200);
+                }
+                   
                 
+            }else{
                 return Response::error(['Please Login First']);
             }
         }else{

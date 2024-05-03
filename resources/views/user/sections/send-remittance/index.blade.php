@@ -108,6 +108,7 @@
                                         <div class="right-side">
                                             <input type="hidden" id="coupon-price">
                                             <input type="hidden" name="coupon_id" id="coupon-id">
+                                            <input type="hidden" name="coupon_type" id="coupon-type">
                                             <p id="coupon--bonus"></p>
                                         </div>
                                     </div>
@@ -325,24 +326,21 @@
         var receiver = JSON.parse(adSelectActiveItem("input[name=receiver_currency]"))
         run(selectedItem,receiver);
     });
-    $('.sender-currency').on('change',function(){
-        run();
-    });
-    $('.receiver-currency').on('change',function(){
-        runReverse();
-    });
+    
     function applyCoupon(event){
 
         event.preventDefault();
         var coupon  = $('#coupon').val();
         var url         = '{{ setRoute("coupon.apply") }}';
         $.post(url,{coupon:coupon,_token:"{{ csrf_token() }}"},function(response){
+            console.log(response.data.coupon_info.coupon);
+            var couponId    = response.data.coupon_info.coupon.id;
+            var couponPrice = parseFloat(response.data.coupon_info.coupon.price);
+            var couponType  = response.data.coupon_info.coupon_type;
 
-            var couponId    = response.data.coupon.id;
-            var couponName  = response.data.coupon.name;
-            var couponPrice = parseFloat(response.data.coupon.price);
 
             $('#coupon-id').val(couponId);
+            $('#coupon-type').val(couponType);
 
             var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
             sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")),couponPrice);
@@ -415,7 +413,9 @@
                 `;
         $('.remove-coupon').html(CouponText);
         couponId  = 0;
+        couponType  = '';
         $('#coupon-id').val(couponId);
+        $('#coupon-type').val(couponType);
         $('#coupon--bonus').addClass("d-none");
         $('.coupon-text').addClass("d-none");
         var couponPrice = $('#coupon--bonus').text();
@@ -445,42 +445,28 @@
         }
 
     };
-    function run(selectedItem,receiver = false){
 
+
+    function run(selectedItem,receiver){
         var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
-
-
         var enterAmount = $('#send_money').val();
-
         $("#feature-list").html(selectedType.feature_text);
 
-        function acceptVar() {
-            var senderCurrency          = selectedItem.code;
-            var senderCurrencyRate      = selectedItem.rate;
-            var receiverCurrency        = receiver.code;
-            var receiverCurrencyRate    = receiver.rate;
-            return {
-                senderCurrency:senderCurrency,
-                senderCurrencyRate:senderCurrencyRate,
-                receiverCurrency:receiverCurrency,
-                receiverCurrencyRate:receiverCurrencyRate
-            }
-        }
+        var selectedCurrencies      = acceptVar(selectedItem,receiver);
 
-        function getCharges(selectedType,enterAmount){
-            var senderCurrencyRate      = acceptVar().senderCurrencyRate;
-            var senderCurrency          = acceptVar().senderCurrency;
-            var receiverCurrency        = acceptVar().receiverCurrency;
-            var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
+        var senderCurrencyRate      = selectedCurrencies.senderCurrencyRate;
+        var senderCurrency          = selectedCurrencies.senderCurrency;
+        var receiverCurrency        = selectedCurrencies.receiverCurrency;
+        var receiverCurrencyRate    = selectedCurrencies.receiverCurrencyRate;
+        
+        function getCharges(selectedType,enterAmount,senderCurrencyRate,senderCurrency,receiverCurrency,receiverCurrencyRate){
+            
             var senderRate              = senderCurrencyRate / senderCurrencyRate;
             var recieverRate            = receiverCurrencyRate / senderCurrencyRate;
-
             let findPercentCharge       = (enterAmount / senderCurrencyRate) / 100;
-
             let fixedCharge             = selectedType.fixed_charge;
             let percentCharge           = selectedType.percent_charge;
             let totalPercentCharge      = parseFloat(findPercentCharge) * parseFloat(percentCharge);
-
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
             var totalChargeAmount  = totalCharge * senderCurrencyRate;
 
@@ -492,19 +478,15 @@
                 var intervals = selectedType.intervals;
 
                 $.each(intervals,function(index,item){
-
                     if(parseFloat(enterAmount) >= item.min_limit  && parseFloat(enterAmount) <= item.max_limit) {
                         fixedCharge = item.fixed;
                         percentCharge = item.percent;
-
                         totalPercentCharge = parseFloat(findPercentCharge) * parseFloat(percentCharge);
                         totalCharge = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
                         totalChargeAmount  = totalCharge * senderCurrencyRate;
-
                         convertAmount = parseFloat(enterAmount);
                         recieverRate  = receiverCurrencyRate / senderCurrencyRate;
                         payableAmount = parseFloat(enterAmount) + totalChargeAmount;
-
                         receivedMoney = convertAmount * recieverRate;
 
                     }
@@ -518,10 +500,7 @@
                 $('#fees-and-charges').text(parseFloat(totalChargeAmount ).toFixed(2) + " " + senderCurrency);
                 $('#get-amount').text(parseFloat(receivedMoney).toFixed(2) + " " + receiverCurrency);
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
-
                 var coupon      = $('#coupon-id').val();
-
-
                 if(coupon  != 0){
 
                     var couponPrice     = $('#coupon-price').val();
@@ -551,84 +530,89 @@
                 $('#get-amount').text('');
             }
         }
-        getCharges(selectedType,enterAmount);
+        getCharges(selectedType,enterAmount,senderCurrencyRate,senderCurrency,receiverCurrency,receiverCurrencyRate);
     }
-    function runReverse(selectedItem,receiver = false){
-        var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
 
+    function acceptVar(selectedItem,receiver) {
+        var senderCurrency          = selectedItem.code;
+        var senderCurrencyRate      = selectedItem.rate;
+        var receiverCurrency        = receiver.code;
+        var receiverCurrencyRate    = receiver.rate;
+        return {
+            senderCurrency:senderCurrency,
+            senderCurrencyRate:senderCurrencyRate,
+            receiverCurrency:receiverCurrency,
+            receiverCurrencyRate:receiverCurrencyRate
+        }
+    }
+    function runReverse(selectedItem,receiver){
+        var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
         var receiveAmount = $('#receive_money').val();
 
         $("#feature-list").html(selectedType.feature_text);
-        function acceptVar() {
+        var selectedCurrencies      = acceptVar(selectedItem,receiver);
+        var senderCurrencyRate      = selectedCurrencies.senderCurrencyRate;
+        var senderCurrency          = selectedCurrencies.senderCurrency;
+        var receiverCurrency        = selectedCurrencies.receiverCurrency;
+        var receiverCurrencyRate    = selectedCurrencies.receiverCurrencyRate;
 
-            var senderCurrency          = selectedItem.code;
-            var senderCurrencyRate      = selectedItem.rate;
-            var receiverCurrency        = receiver.code;
-            var receiverCurrencyRate    = receiver.rate;
-           return {
-               senderCurrency:senderCurrency,
-               senderCurrencyRate:senderCurrencyRate,
-               receiverCurrency:receiverCurrency,
-               receiverCurrencyRate:receiverCurrencyRate
-           };
-        }
-        function getReverseCharges(selectedType,receiveAmount){
-            var senderCurrencyRate      = acceptVar().senderCurrencyRate;
-            var senderCurrency          = acceptVar().senderCurrency;
-            var receiverCurrency        = acceptVar().receiverCurrency;
-            var receiverCurrencyRate    = acceptVar().receiverCurrencyRate;
+        
+        function getReverseCharges(selectedType,receiveAmount,senderCurrencyRate,senderCurrency,receiverCurrency,receiverCurrencyRate){
+            
             var senderRate              = senderCurrencyRate / senderCurrencyRate;
             var recieverRate            = receiverCurrencyRate / senderCurrencyRate;
-            let fixedCharge             = selectedType.fixed_charge;
             let findPercentCharge       = (receiveAmount / receiverCurrencyRate) / 100;
+
+            let fixedCharge             = selectedType.fixed_charge;
             let percentCharge           = selectedType.percent_charge;
-            var senderAmount            = receiveAmount / recieverRate;;
+            var enterAmount            = receiveAmount / recieverRate;
 
             let totalPercentCharge = parseFloat(findPercentCharge) * parseFloat(percentCharge);
 
             let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
             var totalChargeAmount  = totalCharge * senderCurrencyRate;
-            let payableAmount = senderAmount + totalChargeAmount;
+            let payableAmount = enterAmount + totalChargeAmount;
 
-            if(senderAmount == "") senderAmount = 0;
-            if (senderAmount != 0) {
-                let convertAmount = senderAmount;
-
+            if(enterAmount == "") enterAmount = 0;
+            if (enterAmount != 0) {
+                let convertAmount = enterAmount;
                 let receivedMoney = convertAmount ;
-
                 var intervals = selectedType.intervals;
-
+                
                 $.each(intervals,function(index,item){
-
-                    if(parseFloat(senderAmount) >= item.min_limit  && parseFloat(senderAmount) <= item.max_limit) {
+                    if(parseFloat(enterAmount) >= item.min_limit  && parseFloat(enterAmount) <= item.max_limit) {
                         fixedCharge = item.fixed;
                         percentCharge = item.percent;
-
-
                         totalPercentCharge  = parseFloat(findPercentCharge) * parseFloat(percentCharge);
-
                         totalCharge         = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
                         totalChargeAmount   = totalCharge * senderCurrencyRate;
-                        convertAmount       = parseFloat(senderAmount);
-                        payableAmount       = parseFloat(senderAmount) + totalChargeAmount;
-
+                        convertAmount       = parseFloat(enterAmount);
+                        payableAmount       = parseFloat(enterAmount) + totalChargeAmount;
                         recieverRate        = receiverCurrencyRate / senderCurrencyRate;
                         receivedMoney       = convertAmount * recieverRate;
                     }
                 });
 
-
-
-                $('#sending_amount').text(parseFloat(senderAmount).toFixed(2) + " " + senderCurrency);
+                $('#sending_amount').text(parseFloat(enterAmount).toFixed(2) + " " + senderCurrency);
                 $("#fees").text('+' + parseFloat(totalChargeAmount).toFixed(2) + " " + senderCurrency);
-                $("#convert-amount").text(parseFloat(senderAmount).toFixed(2) + " " + senderCurrency);
+                $("#convert-amount").text(parseFloat(enterAmount).toFixed(2) + " " + senderCurrency);
                 $('#payable').text(parseFloat(payableAmount).toFixed(2) + " " + senderCurrency);
                 $('#charge').val(parseFloat(totalChargeAmount).toFixed(2));
-                $('#convert--amount').val(parseFloat(senderAmount).toFixed(2));
+                $('#convert--amount').val(parseFloat(enterAmount).toFixed(2));
                 $('#payable--amount').val(parseFloat(payableAmount).toFixed(2));
-                $('#send_money').val(parseFloat(senderAmount).toFixed(2));
+
+                var coupon      = $('#coupon-id').val();
+                if(coupon  != 0){
+
+                    var couponPrice     = $('#coupon-price').val();
+                    enterAmount = enterAmount - (couponPrice / recieverRate);
+                }else{
+                    enterAmount = enterAmount;
+                }
+
+                $('#send_money').val(parseFloat(enterAmount).toFixed(2));
                 $('#fees-and-charges').text(totalChargeAmount.toFixed(2) + " " + senderCurrency);
-                $('#convert_amount').text(parseFloat(senderAmount).toFixed(2) + " " + senderCurrency);
+                $('#convert_amount').text(parseFloat(enterAmount).toFixed(2) + " " + senderCurrency);
                 $('#get-amount').text(receivedMoney.toFixed(2) + " " + receiverCurrency);
                 $('.exchange_rate').text(parseFloat(senderRate).toFixed(2) + " " + senderCurrency + " = " + parseFloat(recieverRate).toFixed(2) + " " + receiverCurrency);
 
@@ -648,7 +632,7 @@
                 $('#get-amount').text('');
             }
         }
-        getReverseCharges(selectedType,receiveAmount);
+        getReverseCharges(selectedType,receiveAmount,senderCurrencyRate,senderCurrency,receiverCurrency,receiverCurrencyRate);
     }
     $("#send_money").keyup(function(){
         run(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")));

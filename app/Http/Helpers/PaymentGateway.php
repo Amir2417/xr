@@ -444,6 +444,7 @@ class PaymentGateway {
                     'sender_base_rate'          => $data->data->sender_base_rate,
                     'receiver_ex_rate'          => $data->data->receiver_ex_rate,
                     'coupon_id'                 => $data->data->coupon_id,
+                    'coupon_type'               => $data->data->coupon_type,
                     'first_name'                => $data->data->first_name,
                     'middle_name'               => $data->data->middle_name,
                     'last_name'                 => $data->data->last_name,

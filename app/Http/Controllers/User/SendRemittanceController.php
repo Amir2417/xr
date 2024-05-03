@@ -56,7 +56,7 @@ class SendRemittanceController extends Controller
      * @param \Illuminate\Http\Request $request
      */
     public function store(Request $request){
-       
+        
         $validator = Validator::make($request->all(),[
             'type'           => 'required',
             'send_money'     => 'required',
@@ -70,80 +70,47 @@ class SendRemittanceController extends Controller
         $send_money = $validated['send_money'] / $request->sender_base_rate;
         $receiver_country = Currency::where('status',true)->where('receiver',true)->where('code',$request->receiver_currency)->first();
         
-        $limit_amount = TransactionSetting::where('title',$validated['type'])->first();
-        $isWithinLimits = false;
-        foreach($limit_amount->intervals as $item){
-            $min_limit = $item->min_limit;
-            $max_limit = $item->max_limit;
-            if($send_money >= $min_limit && $send_money <= $max_limit){
-                $isWithinLimits = true;
-                break; 
-            }
+        $limit_amount = TransactionSetting::where('title',$validated['type'])->where('status',true)->first();
+        
+        
+        
+        $intervals = get_intervals_data($send_money,$limit_amount);
+        if($intervals == false){
+            return back()->with(['error' => ['Please follow the transaction limit.']]);
         }
-        if ($isWithinLimits) {
-            $validated['identifier']    = Str::uuid();
-            $data = [
-                'type'                  => $validated['type'],
-                'identifier'            => $validated['identifier'],
-                'data'                  => [
-                    'send_money'        => $validated['send_money'],
-                    'fees'              => $request->fees,
-                    'convert_amount'    => $request->convert_amount,
-                    'payable_amount'    => $request->payable,
-                    'payable'           => $request->payable,
-                    'receive_money'     => $request->receive_money,
-                    'sender_name'       => auth()->user()->fullname,
-                    'sender_email'      => auth()->user()->email,
-                    'sender_currency'   => $request->sender_currency,
-                    'receiver_currency' => $request->receiver_currency,
-                    'receiver_country'  => $receiver_country->country,
-                    'sender_ex_rate'    => $request->sender_ex_rate,
-                    'sender_base_rate'  => $request->sender_base_rate,
-                    'receiver_ex_rate'  => $request->receiver_ex_rate,
-                    'coupon_id'         => $request->coupon_id ?? 0,
-                ],
-                
-            ];
+
+        $validated['identifier']    = Str::uuid();
+        $data = [
+            'type'                  => $validated['type'],
+            'identifier'            => $validated['identifier'],
+            'data'                  => [
+                'send_money'        => $validated['send_money'],
+                'fees'              => $request->fees,
+                'convert_amount'    => $request->convert_amount,
+                'payable_amount'    => $request->payable,
+                'payable'           => $request->payable,
+                'receive_money'     => $request->receive_money,
+                'sender_name'       => auth()->user()->fullname,
+                'sender_email'      => auth()->user()->email,
+                'sender_currency'   => $request->sender_currency,
+                'receiver_currency' => $request->receiver_currency,
+                'receiver_country'  => $receiver_country->country,
+                'sender_ex_rate'    => $request->sender_ex_rate,
+                'sender_base_rate'  => $request->sender_base_rate,
+                'receiver_ex_rate'  => $request->receiver_ex_rate,
+                'coupon_id'         => $request->coupon_id ?? 0,
+                'coupon_type'       => $request->coupon_type ?? '',
+            ],
             
-            try { 
-                $temporary_data = TemporaryData::create($data);
-            } catch (Exception $e) {
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('user.recipient.index',$temporary_data->identifier);
-        }else if($send_money >= $limit_amount->min_limit && $send_money <= $limit_amount->max_limit) {
-            $validated['identifier']    = Str::uuid();
-            $data = [
-                'type'                  => $validated['type'],
-                'identifier'            => $validated['identifier'],
-                'data'                  => [
-                    'send_money'        => $validated['send_money'],
-                    'fees'              => $request->fees,
-                    'convert_amount'    => $request->convert_amount,
-                    'payable_amount'    => $request->payable,
-                    'payable'           => $request->payable,
-                    'receive_money'     => $request->receive_money,
-                    'sender_name'       => auth()->user()->fullname,
-                    'sender_email'      => auth()->user()->email,
-                    'sender_currency'   => $request->sender_currency,
-                    'receiver_currency' => $request->receiver_currency,
-                    'receiver_country'  => $receiver_country->country,
-                    'sender_ex_rate'    => $request->sender_ex_rate,
-                    'sender_base_rate'  => $request->sender_base_rate,
-                    'receiver_ex_rate'  => $request->receiver_ex_rate,
-                    'coupon_id'         => $request->coupon_id ?? 0,
-                ],
-                
-            ];
-            try {
-                $temporary_data = TemporaryData::create($data);
-            } catch (Exception $e) {
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('user.recipient.index',$temporary_data->identifier);
-        }else{
-            return back()->with(['error' => ['Please follow the transaction limit']]);
+        ];
+        
+        try { 
+            $temporary_data = TemporaryData::create($data);
+        } catch (Exception $e) {
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
+        return redirect()->route('user.recipient.index',$temporary_data->identifier);
+        
     }
     
     /**
@@ -210,6 +177,7 @@ class SendRemittanceController extends Controller
                 'sender_base_rate'    => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
                 'coupon_id'           => $temporary_data->data->coupon_id ?? 0,
+                'coupon_type'         => $temporary_data->data->coupon_type ?? '',
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,

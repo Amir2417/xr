@@ -24,6 +24,7 @@
                               <thead>
                                 <tr>
                                   <th>{{ __("Coupon Name") }}</th>
+                                  <th>{{ __("Price") }}</th>
                                   <th>{{ __("Maximum Used") }}</th>
                                   <th>{{ __("Remaining") }}</th>
                                 </tr>
@@ -31,11 +32,12 @@
                               <tbody>
                                 <tr>
                                   <td>
-                                    <div class="cupone-name">
+                                    <div class="coupon-name">
                                       <span id="coupon-text">{{ @$bonus->coupon_name }}</span>
                                       <i class="las la-copy copy-coupon"></i>
                                     </div>
                                   </td>
+                                  <td>{{ get_amount(@$bonus->price) }}</td>
                                   <td>{{ @$bonus->new_user_bonus->max_used }}</td>
                                   <td>{{ @$bonus->new_user_bonus->max_used }}</td>
                                 </tr>

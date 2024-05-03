@@ -66,6 +66,7 @@ class GlobalConst {
     const LIVE = 'live';
     const SANDBOX = 'sandbox';
 
-    const NEW_USER_BONUS    ="new-user-bonus";
+    const NEW_USER_BONUS                         = "new-user-bonus";
+    const COUPON                                 = "coupon";
 
 }
