@@ -17,4 +17,9 @@ class AppliedCoupon extends Model
         'coupon_id'         => 'integer',
         'transaction_id'    => 'integer'
     ];
+
+    //auth relation
+    public function scopeAuth($q){
+        return $q->where('user_id',auth()->user()->id);
+    }
 }

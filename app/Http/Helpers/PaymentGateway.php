@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Helpers;
 
+use App\Constants\GlobalConst;
 use Exception;
 use App\Models\User;
 use App\Models\Transaction;
@@ -491,14 +492,20 @@ class PaymentGateway {
             ]);
 
             if($data->data->coupon_id != 0){
+                if($data->data->coupon_type == GlobalConst::COUPON){
+                    $coupon_id  = $data->data->coupon_id;
+                    $user_coupon_id = null;
+                }else{
+                    $coupon_id  = null;
+                    $user_coupon_id = $data->data->coupon_id;
+                }
                 $user   = auth()->user();
-                $user->update([
-                    'coupon_status'     => 1,
-                ]);
+                
                 
                 AppliedCoupon::create([
                     'user_id'   => $user->id,
-                    'coupon_id'   => $data->data->coupon_id,
+                    'coupon_id'   => $coupon_id,
+                    'coupon_id'   => $user_coupon_id,
                     'transaction_id'   => $id,
                 ]);
             }

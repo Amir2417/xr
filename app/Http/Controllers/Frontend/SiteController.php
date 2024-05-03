@@ -22,6 +22,7 @@ use App\Models\Admin\CountrySection;
 use Illuminate\Support\Facades\Session;
 use App\Models\Admin\TransactionSetting;
 use App\Models\Admin\WebJournalCategory;
+use App\Models\AppliedCoupon;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -320,7 +321,7 @@ class SiteController extends Controller{
         $matching_with_new_user     = UserCoupon::with(['new_user_bonus'])->where('coupon_name',$request->coupon)->first();
         if($matchingCoupon){
             if(auth()->check() == true){
-                $transaction    = Transaction::auth()->where('coupon_id',$matchingCoupon->id)->count();
+                $transaction    = AppliedCoupon::auth()->where('coupon_id',$matchingCoupon->id)->count();
                 if($transaction >= $matchingCoupon->max_used){
                     return Response::error(['Sorry! Your Coupon limit is over.']);
                 }else{
@@ -335,7 +336,7 @@ class SiteController extends Controller{
             }
         }elseif($matching_with_new_user){
             if(auth()->check() == true){
-                $transaction    = Transaction::auth()->where('user_coupon_id',$matching_with_new_user->id)->count();
+                $transaction    = AppliedCoupon::auth()->where('user_coupon_id',$matching_with_new_user->id)->count();
                 if($transaction >= $matching_with_new_user->new_user_bonus->max_used){
                     return Response::error(['Sorry! Your Coupon limit is over.']);
                 }else{
