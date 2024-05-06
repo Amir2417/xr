@@ -31,6 +31,7 @@ use App\Traits\PaymentGateway\PagaditoTrait;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use App\Models\Admin\PaymentGateway as PaymentGatewayModel;
+use App\Models\CouponTransaction;
 
 class PaymentGateway {
 
@@ -494,20 +495,22 @@ class PaymentGateway {
             if($data->data->coupon_id != 0){
                 if($data->data->coupon_type == GlobalConst::COUPON){
                     $coupon_id  = $data->data->coupon_id;
-                    $user_coupon_id = null;
+                    $user   = auth()->user();
+                    CouponTransaction::create([
+                        'user_id'   => $user->id,
+                        'coupon_id'   => $coupon_id,
+                        'transaction_id'   => $id,
+                    ]);
                 }else{
-                    $coupon_id  = null;
                     $user_coupon_id = $data->data->coupon_id;
+                    $user   = auth()->user();
+                    CouponTransaction::create([
+                        'user_id'           => $user->id,
+                        'new_user_bonus_id' => $user_coupon_id,
+                        'transaction_id'    => $id,
+                    ]);
                 }
-                $user   = auth()->user();
                 
-                
-                AppliedCoupon::create([
-                    'user_id'   => $user->id,
-                    'coupon_id'   => $coupon_id,
-                    'coupon_id'   => $user_coupon_id,
-                    'transaction_id'   => $id,
-                ]);
             }
 
             DB::commit();
