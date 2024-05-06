@@ -9,6 +9,7 @@ use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Http\Controllers\Controller;
+use App\Models\CouponTransaction;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -18,12 +19,14 @@ class CouponController extends Controller
      * Method for show all the coupon 
      */
     public function index(){
-        $page_title         = "All Coupons";
-        $data               = Coupon::orderByDesc('id')->paginate(15);
+        $page_title             = "All Coupons";
+        $data                   = Coupon::orderByDesc('id')->paginate(15);
+        
+        
 
         return  view('admin.sections.coupon.index',compact(
             'page_title',
-            'data'
+            'data',
         ));
     }
     /**

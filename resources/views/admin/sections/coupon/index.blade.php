@@ -60,9 +60,19 @@
                             <tr data-item="{{ $item }}">
                                 <td>{{ $item->name ?? ''}}</td>
                                 <td>{{ get_amount($item->price) ?? ''}}</td>                                
-                                <td>{{ @$item->max_used }}</td>                                
-                                <td>{{ @$item->max_used }}</td>                                
-                                <td><span class="badge badge--primary">{{ __("Unused") }}</span></td>                                
+                                <td>{{ @$item->max_used }}</td>
+                                @php
+                                    $coupon_transactions    = App\Models\CouponTransaction::where('coupon_id',$item->id)->count();
+                                    $remaining = @$item->max_used - @$coupon_transactions;
+                                @endphp                                
+                                <td>{{ @$remaining }}</td>                                
+                                <td>
+                                    @if (@$remaining == 0)
+                                        <span class="badge badge--danger">{{ __("Used") }}</span>
+                                    @else
+                                        <span class="badge badge--primary">{{ __("Unused") }}</span>
+                                    @endif
+                                </td>                                
                                 <td>
                                     @include('admin.components.link.edit-default',[
                                         'class'         => "edit-modal-button",

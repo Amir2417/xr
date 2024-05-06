@@ -17,13 +17,13 @@ class MyCouponController extends Controller
      * @return view
      */
     public function index(){
-        $page_title     = "| My Coupon";
-        $bonus          = UserCoupon::with(['new_user_bonus'])->auth()->first();
-        $coupon_transaction = CouponTransaction::with(['user_coupon'])->count();
+        $page_title         = "| My Coupon";
+        $bonus              = UserCoupon::with(['new_user_bonus'])->auth()->first();
+        $coupon_transaction = CouponTransaction::auth()->with(['user_coupon'])->whereNot('user_coupon_id',null)->count();
         $remaining          = $bonus->new_user_bonus->max_used - $coupon_transaction;
-        $coupons        = Coupon::where('status',true)->orderBy('id','desc')->get();
-        $user           = auth()->user();
-        $notifications  = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
+        $coupons            = Coupon::where('status',true)->orderBy('id','desc')->get();
+        $user               = auth()->user();
+        $notifications      = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
 
         return view('user.sections.my-coupon.index',compact(
             'page_title',
