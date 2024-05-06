@@ -10,6 +10,7 @@ use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\UserNotification;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\BasicSettings;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\remittanceNotification;
@@ -24,7 +25,7 @@ class RemittanceLogController extends Controller
      */
     public function index(){
         $page_title           = "All Logs";
-        $transactions         = Transaction::orderBy('id','desc')->paginate(10);
+        $transactions         = Transaction::doesntHave('coupon_transaction')->orderBy('id','desc')->paginate(10);
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
         
@@ -61,6 +62,7 @@ class RemittanceLogController extends Controller
      * @param Illuminate\Http\Request $request
      */
     public function statusUpdate(Request $request,$trx_id){
+        $basic_settings  = BasicSettings::first();
         
         $validator = Validator::make($request->all(),[
             'status'            => 'required|integer',
@@ -85,7 +87,9 @@ class RemittanceLogController extends Controller
             $transaction->update([
                 'status' => $validated['status'],
             ]);
-            Notification::route("mail",$transaction->remittance_data->sender_email)->notify(new remittanceNotification($form_data));
+            if($basic_settings->email_notification == true){
+                Notification::route("mail",$transaction->remittance_data->sender_email)->notify(new remittanceNotification($form_data));
+            }
             if(auth()->check()){
                 UserNotification::create([
                     'user_id'  => auth()->user()->id,
@@ -106,7 +110,9 @@ class RemittanceLogController extends Controller
      */
     public function reviewPayment(){
         $page_title    = "Review Payment Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.review-payment',compact(
             'page_title',
@@ -120,7 +126,9 @@ class RemittanceLogController extends Controller
      */
     public function pending(){
         $page_title    = "Pending Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_PENDING)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_PENDING)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.pending',compact(
             'page_title',
@@ -134,7 +142,9 @@ class RemittanceLogController extends Controller
      */
     public function confirmPayment(){
         $page_title    = "Confirm Payment Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.confirm-payment',compact(
             'page_title',
@@ -148,7 +158,9 @@ class RemittanceLogController extends Controller
      */
     public function hold(){
         $page_title    = "Hold Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_HOLD)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_HOLD)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.hold',compact(
             'page_title',
@@ -162,7 +174,9 @@ class RemittanceLogController extends Controller
      */
     public function settled(){
         $page_title    = "Settled Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_SETTLED)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_SETTLED)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.settled',compact(
             'page_title',
@@ -176,7 +190,9 @@ class RemittanceLogController extends Controller
      */
     public function complete(){
         $page_title    = "Complete Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.complete',compact(
             'page_title',
@@ -190,7 +206,9 @@ class RemittanceLogController extends Controller
      */
     public function canceled(){
         $page_title    = "Canceled Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_CANCEL)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_CANCEL)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.cancel',compact(
             'page_title',
@@ -204,7 +222,9 @@ class RemittanceLogController extends Controller
      */
     public function failed(){
         $page_title    = "Failed Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_FAILED)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_FAILED)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.failed',compact(
             'page_title',
@@ -218,7 +238,9 @@ class RemittanceLogController extends Controller
      */
     public function refunded(){
         $page_title    = "Refunded Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_REFUND)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_REFUND)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.refunded',compact(
             'page_title',
@@ -232,7 +254,9 @@ class RemittanceLogController extends Controller
      */
     public function delayed(){
         $page_title    = "Delayed Logs";
-        $transactions  = Transaction::where('status',global_const()::REMITTANCE_STATUS_DELAYED)->orderBy('id','desc')->paginate(10);
+        $transactions  = Transaction::doesntHave('coupon_transaction')
+                            ->where('status',global_const()::REMITTANCE_STATUS_DELAYED)
+                            ->orderBy('id','desc')->paginate(10);
 
         return view('admin.sections.remittance-log.delayed',compact(
             'page_title',
@@ -242,9 +266,7 @@ class RemittanceLogController extends Controller
     /**
      * Method for remittance log search 
      */
-    /** 
-    * Method for search buy crypto log  
-    */
+   
     public function search(Request $request) {
         $validator = Validator::make($request->all(),[
             'text'  => 'required|string',
@@ -284,9 +306,6 @@ class RemittanceLogController extends Controller
     /**
      * Method for remittance log search 
      */
-    /** 
-    * Method for search buy crypto log  
-    */
     public function cancelSearch(Request $request) {
         $validator = Validator::make($request->all(),[
             'text'  => 'required|string',
@@ -306,7 +325,6 @@ class RemittanceLogController extends Controller
     /**
      * Method for remittance log search 
      */
-    
     public function completeSearch(Request $request) {
         $validator = Validator::make($request->all(),[
             'text'  => 'required|string',

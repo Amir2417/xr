@@ -47,7 +47,7 @@
                         [
                             'title'     => __("Source Of Fund"),
                             'route'     => "admin.source.fund.index",
-                            'icon'      => "menu-icon las la-wallet",
+                            'icon'      => "menu-icon las la-money-bill-wave",
                         ],
                         [
                             'title'     => __("Sending Purpose"),
@@ -204,8 +204,8 @@
                         ],
                         [
                             'title'             => "Coupon Logs",
-                            'icon'              => "menu-icon las la-sign-out-alt",
-                            'route'             => "admin.statements.index",
+                            'icon'              => "menu-icon las la-record-vinyl",
+                            'route'             => "admin.coupon.log.index",
 
                         ],
                     ]

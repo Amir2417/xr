@@ -754,7 +754,6 @@ trait Tatum {
 
         DB::beginTransaction();
         try{
-
             DB::table("crypto_transactions")->insert($record);
 
             DB::commit();

@@ -42,6 +42,9 @@ class Transaction extends Model
         return $q->where('user_id',auth()->user()->id);
     }
 
+    public function coupon_transaction(){
+        return $this->hasMany(CouponTransaction::class);
+    }
 
 
     public function getConfirmAttribute()

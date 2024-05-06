@@ -26,7 +26,6 @@ use App\Http\Controllers\Admin\UsefulLinkController;
 use App\Http\Controllers\Admin\AppSettingsController;
 use App\Http\Controllers\Admin\CryptoAssetController;
 use App\Http\Controllers\Admin\TrxSettingsController;
-use App\Http\Controllers\Admin\VirtualCardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\BroadcastingController;
 use App\Http\Controllers\Admin\MobileMethodController;
@@ -42,6 +41,7 @@ use App\Http\Controllers\Admin\PaymentGatewaysController;
 use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\BankMethodAutomaticController;
+use App\Http\Controllers\Admin\CouponTransactionController;
 use App\Http\Controllers\Admin\NewUserBonusController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
 use App\Http\Controllers\Admin\PaymentGatewayCurrencyController;
@@ -188,6 +188,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/','index')->name('index');
         Route::get('statement-filter','statementFilter')->name('filter');
         Route::get('download','download')->name('download');
+    });
+
+    //coupon transactions 
+    Route::controller(CouponTransactionController::class)->prefix('coupon-logs')->name('coupon.log.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::get('details/{trx_id}','details')->name('details');
+    });
+
+    // download coupon logs
+    Route::controller(CouponTransactionController::class)->prefix('coupon')->name('coupon.')->group(function(){
+        Route::get('download-pdf/{trx_id}','downloadPdf')->name('download.pdf');
     });
 
     // Subscriber

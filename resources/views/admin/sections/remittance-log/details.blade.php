@@ -32,12 +32,11 @@
     
     <div class="col-lg-6 mb-30">
         <div class="transaction-area">
-            <h4 class="title mb-0"><i class="fas fa-user text--base me-2"></i>{{ __("Remittance Summary") }}</h4>
+            <h4 class="title mb-0"><i class="fas fa-money-bill text--base me-2"></i>{{ __("Remittance Summary") }}</h4>
             <div class="content pt-0">
                 <div class="list-wrapper">
                     <ul class="list">
-                        
-                        <li>{{ __("Sending Amount") }}<span>{{ get_amount($transaction->remittance_data->send_money) ?? '' }} {{ $sender_currency->code ?? '' }}</span></li>
+                        <li>{{ __("Sending Amount") }}<span>{{ get_amount($transaction->remittance_data->send_money) ?? '' }} {{ $transaction->remittance_data->sender_currency ?? '' }}</span></li>
                         <li>{{ __("Exchange Rate") }}<span>{{ get_amount($transaction->remittance_data->sender_ex_rate) }} {{ $transaction->remittance_data->sender_currency}} = {{ get_amount($transaction->remittance_data->receiver_ex_rate) }} {{ $transaction->remittance_data->receiver_currency}}</span></li>
                         <li>{{ __("Total Fees & Charges") }}<span>{{ get_amount($transaction->fees) ?? "" }} {{ $transaction->remittance_data->sender_currency }}</span></li>
                         <li>{{ __("Amount we'll Convert") }}<span>{{ get_amount($transaction->remittance_data->convert_amount) ?? "" }} {{ $transaction->remittance_data->sender_currency }}</span></li>
@@ -58,7 +57,7 @@
                 <div class="list-wrapper">
                     <ul class="list">
                         <li>{{ __("Recipient Name") }}<span>{{ $transaction->remittance_data->first_name ?? '' }} {{ $transaction->remittance_data->middle_name ?? 'N/A' }} {{ $transaction->remittance_data->last_name ?? '' }}</span></li>
-                        <li>{{ __("Recipient Email") }}<span>{{ $transaction->remittance_data->email ?? 'N/A' }}</span></li>
+                        <li>{{ __("Recipient Email") }}<span class="text-lowercase">{{ $transaction->remittance_data->email ?? 'N/A' }}</span></li>
                         <li>{{ __("Phone Number") }}<span>{{ $transaction->remittance_data->phone ?? 'N/A' }}</span></li>
                         <li>{{ __("Country") }}<span>{{ $transaction->remittance_data->country ?? '' }}</span></li>
                         <li>{{ __("State & City") }}<span class="text--warning">{{ $transaction->remittance_data->city ?? "N/A" }} </span><span class="ms-1">({{ $transaction->remittance_data->state ?? "N/A" }})</span></li>
@@ -74,7 +73,7 @@
         <div class="transaction-area">
             <div class="d-flex justify-content-between align-items-center">
 
-                <h4 class="title"><i class="fas fa-user text--base me-2"></i>{{ __("Payment Summary") }}</h4>
+                <h4 class="title"><i class="fas fa-credit-card text--base me-2"></i>{{ __("Payment Summary") }}</h4>
                 <div class="d-flex">
                     <div class="button-link me-2">
                         <input type="hidden" name="" class="box" value="{{ setRoute('share.link',$transaction->trx_id) }}">
@@ -95,7 +94,7 @@
                         <li>{{ __("Method Name") }} <span>{{ $transaction->remittance_data->method_name ?? ''  }}</span> </li>
                         <li>{{ __("Account Number") }} <span>{{ $transaction->remittance_data->account_number ?? ''  }}</span> </li>
                         <li>{{ __("Payment Method") }} <span>{{ $transaction->remittance_data->currency->name ?? ''  }}</span> </li>
-                        <li>{{ __("Exchange Rate") }} <span>{{ get_amount($sender_currency->rate) }} {{ $sender_currency->code}} = {{ get_amount($transaction->exchange_rate) }} {{ $transaction->remittance_data->currency->code}}</span> </li>
+                        <li>{{ __("Exchange Rate") }} <span>{{ get_amount($transaction->remittance_data->sender_ex_rate) }} {{ $transaction->remittance_data->sender_currency}} = {{ get_amount($transaction->remittance_data->currency->rate / $transaction->remittance_data->sender_base_rate) }} {{ $transaction->remittance_data->currency->code}}</span> </li>
                         <li>{{ __("Payable Amount") }} <span>{{ get_amount($transaction->payable) ?? '' }} {{ $transaction->remittance_data->currency->code}}</span> </li>
                         <li>{{ __("Payment Status") }}
                             @if ($transaction->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
@@ -132,7 +131,7 @@
         @csrf
         <div class="col-lg-12 mb-30">
             <div class="transaction-area">
-                <h4 class="title"><i class="fas fa-user text--base me-2"></i>{{ __("Progress of Remittance Transactions") }}</h4>
+                <h4 class="title"><i class="fas fa-spinner text--base me-2"></i>{{ __("Progress of Remittance Transactions") }}</h4>
                 <div class="content pt-0">
                     <div class="radio-area">
                         <div class="radio-wrapper">

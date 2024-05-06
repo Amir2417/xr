@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CouponTransactionController;
 use App\Http\Controllers\GlobalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
@@ -26,3 +27,9 @@ Route::get("file/download/{path_source}/{name}",function($path_source,$file_name
 
 Route::get('share-link/{trx_id}',[RemittanceController::class,'shareLink'])->name('share.link');
 Route::get('download-pdf/{trx_id}',[RemittanceController::class,'downloadPdf'])->name('download.pdf');
+
+//share and download for coupon log
+Route::controller(CouponTransactionController::class)->prefix('coupon')->name('coupon.')->group(function(){
+    Route::get('share-link/{trx_id}','shareLink')->name('share.link');
+    Route::get('download-pdf/{trx_id}','downloadPdf')->name('download.pdf');
+});

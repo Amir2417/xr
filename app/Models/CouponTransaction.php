@@ -33,4 +33,8 @@ class CouponTransaction extends Model
     public function coupon(){
         return $this->belongsTo(Coupon::class,'coupon_id');
     }
+    //transaction
+    public function transaction(){
+        return $this->belongsTo(Transaction::class,'transaction_id');
+    }
 }

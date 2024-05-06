@@ -122,10 +122,6 @@
                 flex: 0 0 auto;
                 width: 33.3333333333%;
             }
-            .col-lg-6 {
-                flex: 0 0 auto;
-                width: 50%;
-            }
         }
         @media (min-width: 1200px){
             .col-xl-4 {
@@ -167,7 +163,7 @@
         .custom-card .card-body {
             background: #f7f7f7;
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 10px;
         }
         @media (max-width: 570px){
             .custom-card .card-body {
@@ -176,7 +172,6 @@
         }
         .preview-list-wrapper {
             background: #f0eff5;
-            border-radius: 0;
             overflow: hidden;
             height: 100%;
         }
@@ -241,18 +236,11 @@
         .table-wrapper {
             background-color: #f7f7f7;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 15px;
         }
-        @media (max-width: 570px){
-            .table-wrapper {
-                padding: 10px;
-          }
-        }
-
         .custom-card .table-wrapper {
             background-color: #f0eff5;
-            overflow-x: auto;
-            height: 100%;
+            overflow-y: auto;
         }
         .dashboard-header-wrapper {
             display: -webkit-box;
@@ -358,7 +346,7 @@
                         <div class="pdf-logo" style="padding-top: 30px">
                             <div class="logo-wrapper">
                                 <img src="{{ get_logo($basic_settings,"dark") }}" alt="logo">
-                                <span class="number">MTCN Number : {{ $transaction->trx_id }}</span>
+                                <span class="number">MTCN Number : {{ $data->transaction->trx_id }}</span>
                             </div>
                         </div>
                         <div class="custom-card">
@@ -375,7 +363,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ get_amount($transaction->request_amount) }} {{ $transaction->remittance_data->sender_currency }}</span>
+                                                    <span><span class="text--base">{{ get_amount($data->transaction->request_amount) }} {{ $data->transaction->remittance_data->sender_currency }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -387,7 +375,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ get_amount($transaction->will_get_amount) }} {{ $transaction->remittance_data->receiver_currency }}</span>
+                                                    <span><span class="text--base">{{ get_amount($data->transaction->will_get_amount) }} {{ $data->transaction->remittance_data->receiver_currency }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -399,7 +387,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ $transaction->remittance_data->sender_ex_rate }} {{ $transaction->remittance_data->sender_currency }} = {{ $transaction->remittance_data->receiver_ex_rate }} {{ $transaction->remittance_data->receiver_currency }}</span>
+                                                    <span>{{ $data->transaction->remittance_data->sender_ex_rate }} {{ $data->transaction->remittance_data->sender_currency }} = {{ $data->transaction->remittance_data->receiver_ex_rate }} {{ $data->transaction->remittance_data->receiver_currency }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -411,7 +399,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ get_amount($transaction->fees) }} {{ $transaction->remittance_data->sender_currency }}</span>
+                                                    <span>{{ get_amount($data->transaction->fees) }} {{ $data->transaction->remittance_data->sender_currency }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -427,7 +415,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ $transaction->remittance_data->type }}</span>
+                                                    <span><span class="text--base">{{ $data->transaction->remittance_data->type }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -439,7 +427,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ $transaction->remittance_data->country }}</span>
+                                                    <span><span class="text--base">{{ $data->transaction->remittance_data->country }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -451,7 +439,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ $transaction->remittance_data->city ?? 'N/A' }} ({{ $transaction->remittance_data->state ?? 'N/A'}})</span>
+                                                    <span>{{ $data->transaction->remittance_data->city ?? 'N/A' }} ({{ $data->transaction->remittance_data->state ?? 'N/A'}})</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -463,7 +451,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ $transaction->created_at->format("d-m-Y") }}</span>
+                                                    <span>{{ $data->transaction->created_at->format("d-m-Y") }}</span>
                                                 </div>
                                             </div>
                                             
@@ -477,23 +465,23 @@
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
                                                     <span>
-                                                        @if ($transaction->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
+                                                        @if ($data->transaction->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
                                                             <span>{{ __("Review Payment") }}</span> 
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_PENDING)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_PENDING)
                                                             <span>{{ __("Pending") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
                                                             <span>{{ __("Confirm Payment") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_HOLD)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_HOLD)
                                                             <span>{{ __("On Hold") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_SETTLED)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_SETTLED)
                                                             <span>{{ __("Settled") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_COMPLETE)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_COMPLETE)
                                                             <span>{{ __("Completed") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_CANCEL)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_CANCEL)
                                                             <span>{{ __("Canceled") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_FAILED)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_FAILED)
                                                             <span>{{ __("Failed") }}</span>
-                                                        @elseif ($transaction->status == global_const()::REMITTANCE_STATUS_REFUND)
+                                                        @elseif ($data->transaction->status == global_const()::REMITTANCE_STATUS_REFUND)
                                                             <span>{{ __("Refunded") }}</span>
                                                         @else
                                                             <span>{{ __("Delayed") }}</span>
@@ -514,7 +502,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ $transaction->remittance_data->sending_purpose ?? "" }}</span>
+                                                    <span><span class="text--base">{{ $data->transaction->remittance_data->sending_purpose ?? "" }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -526,7 +514,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span><span class="text--base">{{ $transaction->remittance_data->source ?? "" }}</span>
+                                                    <span><span class="text--base">{{ $data->transaction->remittance_data->source ?? "" }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -538,7 +526,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ $transaction->remittance_data->currency->name ?? "" }}</span>
+                                                    <span>{{ $data->transaction->remittance_data->currency->name ?? "" }}</span>
                                                 </div>
                                             </div>
                                             <div class="preview-list-item" style="width: 100%">
@@ -550,68 +538,97 @@
                                                     </div>
                                                 </div>
                                                 <div class="preview-list-right" style="width: 40%; display: inline-block">
-                                                    <span>{{ $transaction->created_at->format("d-m-Y") }}</span>
+                                                    <span>{{ $data->transaction->created_at->format("d-m-Y") }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-area">
+                                
+                                <div class="sender-coupon">
                                     <div class="row">
-                                        <div class="col-lg-6" style="padding-bottom: 10px">
-                                            <div class="table-wrapper">
-                                                <div class="dashboard-header-wrapper">
-                                                    <h4 class="title">Sender</h4>
-                                                </div>
-                                                <div class="table-responsive">
-                                                    <table class="custom-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>Email</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>{{ $transaction->remittance_data->sender_name ?? ""}}</td>
-                                                                <td>{{ $transaction->remittance_data->sender_email ?? "" }}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                        <div class="col-lg-6 col-md-6" style="padding-bottom: 10px">
+                                            <div class="table-area">
+                                                <div class="table-wrapper">
+                                                    <div class="dashboard-header-wrapper">
+                                                        <h4 class="title">Sender</h4>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table class="custom-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Email</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>{{ $data->transaction->remittance_data->sender_name ?? ""}}</td>
+                                                                    <td>{{ $data->transaction->remittance_data->sender_email ?? "" }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6" style="padding-bottom: 10px">
-                                            <div class="table-wrapper">
-                                                <div class="dashboard-header-wrapper">
-                                                    <h4 class="title">Receiver</h4>
-                                                </div>
-                                                <div class="table-responsive">
-                                                    <table class="custom-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>Country</th>
-                                                                <th>City</th>
-                                                                <th>Address</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td weight="100px">{{ $transaction->remittance_data->first_name . " " . $transaction->remittance_data->middle_name . " " . $transaction->remittance_data->last_name }}</td>
-                                                                <td weight="100px">{{ $transaction->remittance_data->country ?? "" }}</td>
-                                                                <td weight="100px">{{ $transaction->remittance_data->city ?? "" }}</td>
-                                                                <td weight="100px">{{ $transaction->remittance_data->address ?? "" }}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                        <div class="col-lg-6 col-md-6" style="padding-bottom: 10px">
+                                            <div class="table-area">
+                                                <div class="table-wrapper">
+                                                    <div class="dashboard-header-wrapper">
+                                                        <h4 class="title">Coupon</h4>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table class="custom-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Bonus</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>{{ $data->coupon->name ?? $data->user_coupon->coupon_name }}</td>
+                                                                    <td>{{ $data->coupon->price ?? $data->user_coupon->price }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-area mt-20">
+                                    <div class="table-wrapper">
+                                        <div class="dashboard-header-wrapper">
+                                            <h4 class="title">Receiver</h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="custom-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Country</th>
+                                                        <th>City</th>
+                                                        <th>Address</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td weight="100px">{{ $data->transaction->remittance_data->first_name . " " . $data->transaction->remittance_data->middle_name . " " . $data->transaction->remittance_data->last_name }}</td>
+                                                        <td weight="100px">{{ $data->transaction->remittance_data->country ?? "" }}</td>
+                                                        <td weight="100px">{{ $data->transaction->remittance_data->city ?? "" }}</td>
+                                                        <td weight="100px">{{ $data->transaction->remittance_data->address ?? "" }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="receipt-download" style="text-align: center; padding-top: 20px;">
-                                    <a href="{{ setRoute('download.pdf',$transaction->trx_id) }}" class="btn btn--base">Download Receipt</a>
+                                    <a href="{{ setRoute('coupon.download.pdf',$data->transaction->trx_id) }}" class="btn btn--base">Download Receipt</a>
                                 </div>
                             </div>
                         </div>

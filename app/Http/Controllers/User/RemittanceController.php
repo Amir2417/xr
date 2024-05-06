@@ -8,10 +8,12 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
+use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\Admin\SetupKyc;
 use App\Models\UserNotification;
+use App\Models\CouponTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
@@ -294,6 +296,7 @@ class RemittanceController extends Controller
                     'sender_base_rate'          => $data->data->sender_base_rate,
                     'receiver_ex_rate'          => $data->data->receiver_ex_rate,
                     'coupon_id'                 => $data->data->coupon_id,
+                    'coupon_type'               => $data->data->coupon_type,
                     'first_name'                => $data->data->first_name,
                     'middle_name'               => $data->data->middle_name,
                     'last_name'                 => $data->data->last_name,
@@ -338,16 +341,23 @@ class RemittanceController extends Controller
                 'callback_ref'                  => $output['callback_ref'] ?? null,
             ]);
             if($data->data->coupon_id != 0){
-                $user   = auth()->user();
-                $user->update([
-                    'coupon_status'     => 1,
-                ]);
-                
-                AppliedCoupon::create([
-                    'user_id'   => $user->id,
-                    'coupon_id'   => $data->data->coupon_id,
-                    'transaction_id'   => $id,
-                ]);
+                if($data->data->coupon_type == GlobalConst::COUPON){
+                    $coupon_id  = $data->data->coupon_id;
+                    $user   = auth()->user();
+                    CouponTransaction::create([
+                        'user_id'   => $user->id,
+                        'coupon_id'   => $coupon_id,
+                        'transaction_id'   => $id,
+                    ]);
+                }else{
+                    $user_coupon_id = $data->data->coupon_id;
+                    $user   = auth()->user();
+                    CouponTransaction::create([
+                        'user_id'           => $user->id,
+                        'user_coupon_id'    => $user_coupon_id,
+                        'transaction_id'    => $id,
+                    ]);
+                }
             }
             if( $basic_setting->email_notification == true){
                 Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
@@ -445,8 +455,6 @@ class RemittanceController extends Controller
         DB::beginTransaction();
         try{
 
-            
-
             // update crypto transaction as used
             DB::table($crypto_transaction->getTable())->where('id', $crypto_transaction->id)->update([
                 'status'        => PaymentGatewayConst::USED,
@@ -508,14 +516,10 @@ class RemittanceController extends Controller
     public function shareLink(Request $request,$trx_id){
         $page_title         = "| Information";
         $transaction        = Transaction::where('trx_id',$trx_id)->first();
-        $sender_currency    = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency  = Currency::where('status',true)->where('receiver',true)->first();
-
+        
         return view('share-link.index',compact(
             'page_title',
             'transaction',
-            'sender_currency',
-            'receiver_currency',
         ));   
     }
 

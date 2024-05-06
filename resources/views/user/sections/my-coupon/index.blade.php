@@ -24,7 +24,7 @@
                               <thead>
                                 <tr>
                                   <th>{{ __("Coupon Name") }}</th>
-                                  <th>{{ __("Price") }}</th>
+                                  <th>{{ __("Bonus") }}</th>
                                   <th>{{ __("Maximum Used") }}</th>
                                   <th>{{ __("Remaining") }}</th>
                                 </tr>

@@ -203,7 +203,7 @@ trait SslCommerz {
         $response_status = $output['capture']->status ?? "";
 
         if($response_status == "SUCCESS") {
-            $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
+            $status = global_const()::REMITTANCE_STATUS_PENDING;
         }else {
             $status = global_const()::REMITTANCE_STATUS_PENDING;
         }
