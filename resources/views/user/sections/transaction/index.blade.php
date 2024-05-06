@@ -27,6 +27,11 @@
                                 <div class="dashboard-list-user-icon">
                                     <i class="las la-arrow-up"></i>
                                 </div>
+                                @php
+                                    $coupon_data = get_coupon_information($item->id) ?? [];
+                                    
+                                @endphp
+                                
                                 <div class="dashboard-list-user-content">
                                     <h4 class="title">{{ $item->remittance_data->first_name ?? '' }} {{ $item->remittance_data->middle_name ?? '' }} {{ $item->remittance_data->last_name ?? ''}}</h4>
                                     <span class="sub-title text--danger">{{ __($item->remittance_data->type) ?? '' }}
@@ -61,6 +66,8 @@
                         <div class="dashboard-list-right">
                             <h4 class="main-money text--base">{{ get_amount($item->will_get_amount) ?? '' }} {{ $item->remittance_data->receiver_currency ?? '' }}</h4>
                             <h6 class="exchange-money">{{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }}</h6>
+                            
+                            <h6 class="exchange-money">Coupon Name: {{  $coupon_data['coupon']  }}</h6>
                         </div>
                     </div>
                     <div class="preview-list-wrapper">
@@ -226,8 +233,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @php
+                                    $rate   = $item->remittance_data->currency->rate / $item->remittance_data->sender_base_rate;
+                                @endphp
                                 <div class="preview-list-right">
-                                    <span>{{ $item->remittance_data->sender_ex_rate ?? ''}} {{ $item->remittance_data->sender_currency ?? ''}} = {{ floatVal($item->remittance_data->currency->rate ?? '' / $item->remittance_data->sender_base_rate ?? '')}} {{ $item->remittance_data->currency->code ?? '' }}</span>
+                                    <span>{{ $item->remittance_data->sender_ex_rate ?? ''}} {{ $item->remittance_data->sender_currency ?? ''}} = {{ get_amount($rate) }} {{ $item->remittance_data->currency->code ?? '' }}</span>
                                 </div>
                             </div>
                         @endif
@@ -244,7 +254,7 @@
                                 </div>
                             </div>
                             <div class="preview-list-right">
-                                <span>{{ get_amount($item->payable,$item->remittance_data->currency->code,8)}}</span>
+                                <span>{{ get_amount($item->payable,$item->remittance_data->currency->code)}}</span>
                             </div>
                         </div>
                         @if ($item->currency->gateway->isTatum($item->currency->gateway) && $item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)

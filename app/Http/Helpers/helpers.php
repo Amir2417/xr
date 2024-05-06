@@ -24,6 +24,7 @@ use Buglinjo\LaravelWebp\Facades\Webp;
 use App\Models\Admin\AdminNotification;
 use App\Models\Admin\BankMethodAutomatic;
 use App\Models\Admin\VirtualCardApi;
+use App\Models\CouponTransaction;
 use App\Providers\Admin\CurrencyProvider;
 
 use App\Providers\Admin\BasicSettingsProvider;
@@ -1678,5 +1679,23 @@ function get_intervals_data($amount,$receiving_method){
     }else{
 
         return false;
+    }
+}
+
+//get the coupon transaction data 
+function get_coupon_information($id){
+    $transaction    = CouponTransaction::auth()->with(['coupon','user_coupon'])->where('transaction_id',$id)->first();
+    if($transaction == null) {
+        $data = [
+            'coupon'    => '',
+            'price'     => ''
+        ];
+        return $data;
+    }else{
+        $data = [
+            'coupon'    => $transaction->coupon->name ?? $transaction->user_coupon->coupon_name,
+            'price'     => $transaction->coupon->price ?? $transaction->user_coupon->price
+        ];
+        return $data;
     }
 }

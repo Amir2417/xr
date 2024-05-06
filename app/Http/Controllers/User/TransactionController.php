@@ -16,9 +16,9 @@ class TransactionController extends Controller
      */
     public function transaction(){
         $page_title           = "| Transactions";
-        $transactions         = Transaction::with(['currency'])->where('user_id',auth()->user()->id)->orderByDESC('id')->get();
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
+        $transactions         = Transaction::with(['currency','coupon_transaction'])
+                                ->auth()
+                                ->orderByDESC('id')->get();
         
         $client_ip            = request()->ip() ?? false;
         $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
@@ -28,8 +28,6 @@ class TransactionController extends Controller
         return view('user.sections.transaction.index',compact(
             'page_title',
             'transactions',
-            'sender_currency',
-            'receiver_currency',
             'user_country',
             'user',
             'notifications'

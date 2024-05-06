@@ -29,5 +29,9 @@ class UserCoupon extends Model
     public function new_user_bonus(){
         return $this->belongsTo(NewUserBonus::class,'new_user_bonus_id');
     }
+    //new coupon transactions
+    public function coupon_transactions(){
+        return $this->hasMany(CouponTransaction::class);
+    }
 
 }
