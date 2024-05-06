@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\UserNotification;
 use App\Models\Admin\NewUserBonus;
 use App\Http\Controllers\Controller;
+use App\Models\CouponTransaction;
 
 class MyCouponController extends Controller
 {
@@ -18,6 +19,8 @@ class MyCouponController extends Controller
     public function index(){
         $page_title     = "| My Coupon";
         $bonus          = UserCoupon::with(['new_user_bonus'])->auth()->first();
+        $coupon_transaction = CouponTransaction::with(['user_coupon'])->count();
+        $remaining          = $bonus->new_user_bonus->max_used - $coupon_transaction;
         $coupons        = Coupon::where('status',true)->orderBy('id','desc')->get();
         $user           = auth()->user();
         $notifications  = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
@@ -26,7 +29,8 @@ class MyCouponController extends Controller
             'page_title',
             'bonus',
             'coupons',
-            'notifications'
+            'notifications',
+            'remaining'
         ));
     }
 }

@@ -506,7 +506,7 @@ class PaymentGateway {
                     $user   = auth()->user();
                     CouponTransaction::create([
                         'user_id'           => $user->id,
-                        'new_user_bonus_id' => $user_coupon_id,
+                        'user_coupon_id'    => $user_coupon_id,
                         'transaction_id'    => $id,
                     ]);
                 }

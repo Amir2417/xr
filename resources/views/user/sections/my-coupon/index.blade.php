@@ -39,7 +39,7 @@
                                   </td>
                                   <td>{{ get_amount(@$bonus->price) }}</td>
                                   <td>{{ @$bonus->new_user_bonus->max_used }}</td>
-                                  <td>{{ @$bonus->new_user_bonus->max_used }}</td>
+                                  <td>{{ @$remaining }}</td>
                                 </tr>
                               </tbody>
                             </table>

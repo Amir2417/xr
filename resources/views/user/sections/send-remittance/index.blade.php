@@ -37,7 +37,6 @@
                                             <div class="col-12 from-cruncy">
                                                 <div class="input-group">
                                                     <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money">
-
                                                     <div class="ad-select">
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">

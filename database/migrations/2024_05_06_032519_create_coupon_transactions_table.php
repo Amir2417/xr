@@ -17,13 +17,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('coupon_id')->nullable();
-            $table->unsignedBigInteger('new_user_bonus_id')->nullable();
+            $table->unsignedBigInteger('user_coupon_id')->nullable();
             $table->unsignedBigInteger('transaction_id');
             $table->timestamps();
 
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade")->onUpdate("cascade");
             $table->foreign("coupon_id")->references("id")->on("coupons")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreign("new_user_bonus_id")->references("id")->on("new_user_bonuses")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign("user_coupon_id")->references("id")->on("user_coupons")->onDelete("cascade")->onUpdate("cascade");
             $table->foreign("transaction_id")->references("id")->on("transactions")->onDelete("cascade")->onUpdate("cascade");
         });
     }

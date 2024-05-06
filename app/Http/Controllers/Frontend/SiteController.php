@@ -337,7 +337,7 @@ class SiteController extends Controller{
             }
         }elseif($matching_with_new_user){
             if(auth()->check() == true){
-                $transaction    = CouponTransaction::auth()->where('new_user_bonus_id',$matching_with_new_user->id)->count();
+                $transaction    = CouponTransaction::auth()->where('user_coupon_id',$matching_with_new_user->id)->count();
                 if($transaction >= $matching_with_new_user->new_user_bonus->max_used){
                     return Response::error(['Sorry! Your Coupon limit is over.']);
                 }else{
