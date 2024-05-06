@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\CouponTransaction;
+use PDF;
 use Illuminate\Http\Request;
+use App\Models\CouponTransaction;
+use App\Http\Controllers\Controller;
+use App\Providers\Admin\BasicSettingsProvider;
 
 class CouponTransactionController extends Controller
 {
@@ -56,20 +58,40 @@ class CouponTransactionController extends Controller
             'data',
         ));   
     }
-
+    /**
+     * Method for download pdf file
+     * @param $trx_id
+     */
     public function downloadPdf($trx_id){
-        $transaction             = CouponTransaction::with(['coupon','user_coupon','transaction'])->whereHas()->first(); 
-
+        $transaction             = CouponTransaction::with(['coupon','user_coupon','transaction'])->whereHas('transaction',function($q) use ($trx_id){
+            $q->where('trx_id',$trx_id);
+        })->first(); 
         $data   = [
             'transaction'        => $transaction,
-            'sender_currency'    => $sender_currency,
-            'receiver_currency'  => $receiver_currency,
         ];
         
-        $pdf = PDF::loadView('pdf-templates.index', $data);
+        $pdf = PDF::loadView('pdf-templates.coupon', $data);
         
         $basic_settings = BasicSettingsProvider::get();
         
-        return $pdf->download($basic_settings->site_name.'-'.$transaction->trx_id.'.pdf');
+        return $pdf->download($basic_settings->site_name.'-'.$transaction->transaction->trx_id.'.pdf');
+    }
+    /**
+     * Method for download pdf file
+     * @param $trx_id
+     */
+    public function downloadCouponPdf($trx_id){
+        $transaction             = CouponTransaction::with(['coupon','user_coupon','transaction'])->whereHas('transaction',function($q) use ($trx_id){
+            $q->where('trx_id',$trx_id);
+        })->first(); 
+        $data   = [
+            'transaction'        => $transaction,
+        ];
+        
+        $pdf = PDF::loadView('pdf-templates.coupon', $data);
+        
+        $basic_settings = BasicSettingsProvider::get();
+        
+        return $pdf->download($basic_settings->site_name.'-'.$transaction->transaction->trx_id.'.pdf');
     }
 }

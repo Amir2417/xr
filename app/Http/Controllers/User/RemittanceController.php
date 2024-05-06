@@ -526,13 +526,9 @@ class RemittanceController extends Controller
     public function downloadPdf($trx_id)
     {
         $transaction             = Transaction::where('trx_id',$trx_id)->first(); 
-        $sender_currency         = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency       = Currency::where('status',true)->where('receiver',true)->first();
 
         $data   = [
             'transaction'        => $transaction,
-            'sender_currency'    => $sender_currency,
-            'receiver_currency'  => $receiver_currency,
         ];
         
         $pdf = PDF::loadView('pdf-templates.index', $data);

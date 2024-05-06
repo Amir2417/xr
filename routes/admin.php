@@ -198,7 +198,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // download coupon logs
     Route::controller(CouponTransactionController::class)->prefix('coupon')->name('coupon.')->group(function(){
-        Route::get('download-pdf/{trx_id}','downloadPdf')->name('download.pdf');
+        Route::get('download-pdf/{trx_id}','downloadCouponPdf')->name('download.pdf');
     });
 
     // Subscriber
