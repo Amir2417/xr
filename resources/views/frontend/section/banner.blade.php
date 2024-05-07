@@ -111,6 +111,7 @@
                                 <div class="right-side">
                                     <input type="hidden" id="coupon-price">
                                     <input type="hidden" name="coupon_id" id="coupon-id">
+                                    <input type="hidden" name="coupon_type" id="coupon-type">
                                     <p id="coupon--bonus"></p>
                                 </div>
                             </div>
@@ -273,11 +274,13 @@
         var url         = '{{ setRoute("coupon.apply") }}';
         $.post(url,{coupon:coupon,_token:"{{ csrf_token() }}"},function(response){
 
-            var couponId    = response.data.coupon.id;
-            var couponName  = response.data.coupon.name;
-            var couponPrice = parseFloat(response.data.coupon.price);
+            var couponId    = response.data.coupon_info.coupon.id;
+            var couponPrice = parseFloat(response.data.coupon_info.coupon.price);
+            var couponType  = response.data.coupon_info.coupon_type;
+
 
             $('#coupon-id').val(couponId);
+            $('#coupon-type').val(couponType);
 
             var selectedType = JSON.parse($('.trx-type-select').find(':selected').attr('data-item'));
             sender(JSON.parse(adSelectActiveItem("input[name=sender_currency]")),JSON.parse(adSelectActiveItem("input[name=receiver_currency]")),couponPrice);
@@ -350,7 +353,9 @@
                 `;
         $('.remove-coupon').html(CouponText);
         couponId  = 0;
+        couponType  = '';
         $('#coupon-id').val(couponId);
+        $('#coupon-type').val(couponType);
         $('#coupon--bonus').addClass("d-none");
         $('.coupon-text').addClass("d-none");
         var couponPrice = $('#coupon--bonus').text();

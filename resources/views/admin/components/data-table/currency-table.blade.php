@@ -2,7 +2,8 @@
     <thead>
         <tr>
             <th></th>
-            <th>{{ __("Name") }} | {{ __("Code") }}</th>
+            <th>{{ __("Country") }} | {{ __("Code") }}</th>
+            <th>{{ __("Name") }}</th>
             <th>{{ __("Symbol") }}</th>
             <th>{{ __("Type") }} | {{ __("Rate") }}</th>
             <th>{{ __("Role") }}</th>
@@ -18,11 +19,12 @@
                         <li><img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag"></li>
                     </ul>
                 </td>
-                <td>{{ $item->name }}
+                <td>{{ $item->country }}
                     @if ($item->default)
                         <span class="badge badge--success ms-1">{{ __("Default") }}</span>
                     @endif
                     <br> <span>{{ $item->code }}</span></td>
+                <td>{{ $item->name }}</td>
                 <td>{{ $item->symbol }}</td>
                 <td><span class="text--info">{{ $item->type }}</span> <br> 1 {{ get_default_currency_code($default_currency) }} = {{ get_amount($item->rate,$item->code,4) }}</td>
                 <td>
@@ -61,7 +63,7 @@
                 </td>
             </tr>
         @empty
-            @include('admin.components.alerts.empty',['colspan' => 7])
+            @include('admin.components.alerts.empty',['colspan' => 8])
         @endforelse
     </tbody>
 </table>

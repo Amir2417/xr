@@ -29,7 +29,6 @@
 
 @section('content')
 <div class="row mb-30-none">
-    
     <div class="col-lg-6 mb-30">
         <div class="transaction-area">
             <h4 class="title mb-0"><i class="fas fa-money-bill text--base me-2"></i>{{ __("Remittance Summary") }}</h4>

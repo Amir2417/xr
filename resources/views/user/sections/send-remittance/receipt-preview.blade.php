@@ -326,7 +326,7 @@
                                         </div>
                                     </div>
                                     <div class="preview-list-right">
-                                        <span class="text--info">{{ $temporary_data->data->sender_ex_rate ?? "1" }} {{ $temporary_data->data->sender_currency }} = {{ get_amount($temporary_data->data->currency->rate / $temporary_data->data->sender_base_rate) ?? "" }} {{ $temporary_data->data->currency->code }}</span>
+                                        <span class="text--info">{{ $temporary_data->data->sender_ex_rate ?? "1" }} {{ $temporary_data->data->sender_currency }} = {{ $temporary_data->data->rate ?? "" }} {{ $temporary_data->data->currency->code }}</span>
                                     </div>
                                 </div>
                                 <div class="preview-list-item">

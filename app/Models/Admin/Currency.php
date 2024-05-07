@@ -66,6 +66,7 @@ class Currency extends Model
             $role = "receiver";
         }
         $data = [
+            'id'        => $this->id,
             'name'      => $this->name,
             'code'      => $this->code,
             'flag'      => $this->flag,

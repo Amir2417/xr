@@ -332,7 +332,6 @@
         var coupon  = $('#coupon').val();
         var url         = '{{ setRoute("coupon.apply") }}';
         $.post(url,{coupon:coupon,_token:"{{ csrf_token() }}"},function(response){
-            console.log(response.data.coupon_info.coupon);
             var couponId    = response.data.coupon_info.coupon.id;
             var couponPrice = parseFloat(response.data.coupon_info.coupon.price);
             var couponType  = response.data.coupon_info.coupon_type;

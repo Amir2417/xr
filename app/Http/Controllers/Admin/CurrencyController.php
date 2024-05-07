@@ -10,6 +10,7 @@ use App\Models\Admin\Currency;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CurrencyController extends Controller
 {
@@ -21,13 +22,13 @@ class CurrencyController extends Controller
     public function index()
     {
         $page_title = "Setup Currency";
-        $currencies = Currency::orderByDesc('default')->paginate(15);
+        $currencies = Currency::orderByDesc('default')->paginate(50);
         return view('admin.sections.currency.index',compact(
             'page_title',
             'currencies'
         ));
     }
-/**
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -37,9 +38,9 @@ class CurrencyController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'type'      => 'required|string',
-            'country'   => 'required|string',
+            'country'   => 'required|string|unique:currencies',
             'name'      => 'required|string',
-            'code'      => 'required|string|unique:currencies',
+            'code'      => 'required|string',
             'symbol'    => 'required|string',
             'role'      => 'required|string',
             'option'    => 'required|string',
@@ -136,7 +137,7 @@ class CurrencyController extends Controller
         }
         $validated = $validator->safe()->all();
         $currency_code = $validated['data_target'];
-
+        
         $currency = Currency::where('code',$currency_code)->first();
         if(!$currency) {
             $error = ['error' => ['Currency record not found in our system.']];
@@ -165,7 +166,7 @@ class CurrencyController extends Controller
     public function update(Request $request)
     {
         $target = $request->target ?? $request->currency_code;
-        $currency = Currency::where('code',$target)->first();
+        $currency = Currency::where('id',$target)->first();
         if(!$currency) {
             return back()->with(['warning' => ['Currency not found!']]);
         }
@@ -173,9 +174,9 @@ class CurrencyController extends Controller
 
         $validator = Validator::make($request->all(),[
             'currency_type'      => 'required|string',
-            'currency_country'   => 'required|string',
+            'currency_country'   => 'required',
             'currency_name'      => 'required|string',
-            'currency_code'      => ['required','string',Rule::unique('currencies','code')->ignore($currency->id)],
+            'currency_code'      => 'required',
             'currency_symbol'    => 'required|string',
             'currency_rate'      => 'required|numeric',
             'currency_option'    => 'required|string',
@@ -211,6 +212,12 @@ class CurrencyController extends Controller
             '1' => true,
             '0'  => false,
         ];
+       
+        if(Currency::whereNot('id',$currency->id)->where('country',$validated['currency_country'])->exists()){
+            throw ValidationException::withMessages([
+                'name'  => "Currency already exists!",
+            ]);
+        }
         // If Default is already available
         if($default[$validated['currency_option']] == true) {
             $check_default = Currency::where('default',true);

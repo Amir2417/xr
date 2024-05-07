@@ -111,8 +111,7 @@
 
                     editModal.find(".invalid-feedback").remove();
                     editModal.find(".form--control").removeClass("is-invalid");
-
-                    editModal.find("form").first().find("input[name=target]").val(oldData.code);
+                    editModal.find("form").first().find("input[name=target]").val(oldData.id);
                     editModal.find("input[name=currency_code]").val(oldData.code).prop("readonly",readOnly);
                     editModal.find("input[name=currency_name]").val(oldData.name).prop("readonly",readOnly);
                     editModal.find("input[name=currency_symbol]").val(oldData.symbol).prop("readonly",readOnly);

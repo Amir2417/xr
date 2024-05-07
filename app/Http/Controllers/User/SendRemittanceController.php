@@ -220,6 +220,7 @@ class SendRemittanceController extends Controller
                 'payable'             => $temporary_data->data->payable,
                 'payable_amount'      => $temporary_data->data->payable * $rate,
                 'receive_money'       => $temporary_data->data->receive_money,
+                'rate'                => $rate,
             ],
             
         ];

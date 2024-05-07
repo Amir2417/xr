@@ -43,73 +43,42 @@ Route::post('frontend/request/send-money',function(Request $request) {
     $send_money = $validated['send_money'] / $request->sender_base_rate;
         
     $limit_amount = TransactionSetting::where('title',$validated['type'])->first();
-    $isWithinLimits = false;
-    foreach($limit_amount->intervals as $item){
-        $min_limit = $item->min_limit;
-        $max_limit = $item->max_limit;
-        if($send_money >= $min_limit && $send_money <= $max_limit){
-            $isWithinLimits = true;
-            break; 
-        }
+    $intervals = get_intervals_data($send_money,$limit_amount);
+    if($intervals == false){
+        return back()->with(['error' => ['Please follow the transaction limit.']]);
     }
-    if ($isWithinLimits) {
-        $validated['identifier']    = Str::uuid();
     
-        $data = [
-            'type'                  => $validated['type'],
-            'identifier'            => $validated['identifier'],
-            'data'                  => [
-                'send_money'        => $validated['send_money'],
-                'fees'              => $request->fees,
-                'convert_amount'    => $request->convert_amount,
-                'payable_amount'    => $request->payable,
-                'payable'           => $request->payable,
-                'receive_money'     => $request->receive_money,
-                'sender_currency'   => $request->sender_currency,
-                'receiver_currency' => $request->receiver_currency,
-                'receiver_country'  => $receiver_country->country,
-                'sender_ex_rate'    => $request->sender_ex_rate,
-                'sender_base_rate'  => $request->sender_base_rate,
-                'receiver_ex_rate'  => $request->receiver_ex_rate,
-                'coupon_id'         => $request->coupon_id ?? 0,
-            ],
-            
-        ];
-        
-        $record = TemporaryData::create($data);
+    $validated['identifier']    = Str::uuid();
 
-        return redirect()->route('user.recipient.index',$record->identifier);
-    }else if($send_money >= $limit_amount->min_limit && $send_money <= $limit_amount->max_limit) {
-        $validated['identifier']    = Str::uuid();
-    
-        $data = [
-            'type'                  => $validated['type'],
-            'identifier'            => $validated['identifier'],
-            'data'                  => [
-                'send_money'        => $validated['send_money'],
-                'fees'              => $request->fees,
-                'convert_amount'    => $request->convert_amount,
-                'payable_amount'    => $request->payable,
-                'payable'           => $request->payable,
-                'receive_money'     => $request->receive_money,
-                'sender_currency'   => $request->sender_currency,
-                'receiver_currency' => $request->receiver_currency,
-                'sender_ex_rate'    => $request->sender_ex_rate,
-                'sender_base_rate'  => $request->sender_base_rate,
-                'receiver_ex_rate'  => $request->receiver_ex_rate,
-                'coupon_id'         => $request->coupon_id ?? 0,
-                'coupon_type'       => $request->coupon_type ?? '',
-            ],
-            
-        ];
+    $data = [
+        'type'                  => $validated['type'],
+        'identifier'            => $validated['identifier'],
+        'data'                  => [
+            'send_money'        => $validated['send_money'],
+            'fees'              => $request->fees,
+            'convert_amount'    => $request->convert_amount,
+            'payable_amount'    => $request->payable,
+            'payable'           => $request->payable,
+            'receive_money'     => $request->receive_money,
+            'sender_currency'   => $request->sender_currency,
+            'receiver_currency' => $request->receiver_currency,
+            'receiver_country'  => $receiver_country->country,
+            'sender_ex_rate'    => $request->sender_ex_rate,
+            'sender_base_rate'  => $request->sender_base_rate,
+            'receiver_ex_rate'  => $request->receiver_ex_rate,
+            'coupon_id'         => $request->coupon_id ?? 0,
+            'coupon_type'       => $request->coupon_type ?? '',
+        ],
         
+    ];
+    try { 
         $record = TemporaryData::create($data);
-
-        return redirect()->route('user.recipient.index',$record->identifier);
+    } catch (Exception $e) {
+        return back()->with(['error' => ['Something went wrong! Please try again.']]);
     }
-    else {
-        return back()->with(['error' => ['Please follow the transaction limit']]);
-    } 
+
+    return redirect()->route('user.recipient.index',$record->identifier);
+    
     
 
 })->name('frontend.request.send.money');
