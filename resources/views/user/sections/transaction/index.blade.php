@@ -66,8 +66,6 @@
                         <div class="dashboard-list-right">
                             <h4 class="main-money text--base">{{ get_amount($item->will_get_amount) ?? '' }} {{ $item->remittance_data->receiver_currency ?? '' }}</h4>
                             <h6 class="exchange-money">{{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }}</h6>
-                            
-                            <h6 class="exchange-money">Coupon Name: {{  $coupon_data['coupon']  }}</h6>
                         </div>
                     </div>
                     <div class="preview-list-wrapper">
@@ -146,6 +144,38 @@
                                 <span>{{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency ?? '' }}</span>
                             </div>
                         </div>
+                        @if (!empty($coupon_data['coupon']) && !empty($coupon_data['price']))
+                        <div class="preview-list-item">
+                            <div class="preview-list-left">
+                                <div class="preview-list-user-wrapper">
+                                    <div class="preview-list-user-icon">
+                                        <i class="las la-coins"></i>
+                                    </div>
+                                    <div class="preview-list-user-content">
+                                        <span>{{ __("Coupon Name") }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-list-right">
+                                <span>{{ $coupon_data['coupon'] }}</span>
+                            </div>
+                        </div>
+                        <div class="preview-list-item">
+                            <div class="preview-list-left">
+                                <div class="preview-list-user-wrapper">
+                                    <div class="preview-list-user-icon">
+                                        <i class="las la-coins"></i>
+                                    </div>
+                                    <div class="preview-list-user-content">
+                                        <span>{{ __("Bonus") }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-list-right">
+                                <span>{{ get_amount($coupon_data['price'],$item->remittance_data->sender_currency)  }}</span>
+                            </div>
+                        </div>
+                        @endif
                         <div class="preview-list-item">
                             <div class="preview-list-left">
                                 <div class="preview-list-user-wrapper">
