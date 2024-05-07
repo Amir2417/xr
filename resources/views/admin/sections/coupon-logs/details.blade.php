@@ -134,7 +134,7 @@
                         @php
                             $price = floatval($data->coupon->price ?? $data->user_coupon->price);
                         @endphp
-                        <li>{{ __("Bonus") }} <span>{{ get_amount($price)  }}</span> </li>
+                        <li>{{ __("Bonus") }} <span>{{ get_amount($price,$data->transaction->remittance_data->sender_currency)  }}</span> </li>
                         <li>{{ __("Max Limit") }} <span>{{ $data->coupon->max_used ?? $data->user_coupon->new_user_bonus->max_used  }}</span> </li>
                     </ul>
                 </div>
