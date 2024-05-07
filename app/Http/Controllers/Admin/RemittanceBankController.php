@@ -20,9 +20,9 @@ class RemittanceBankController extends Controller
      * @return view
      */
     public function index(){
-        $page_title       = "Bank Methods Manual";
-        $remittance_banks = RemittanceBank::orderByDesc('id')->paginate(10);
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
+        $page_title             = "Bank Methods Manual";
+        $remittance_banks       = RemittanceBank::orderByDesc('id')->paginate(50);
+        $receiver_currency      = Currency::where('status',true)->where('receiver',true)->get();
         
         return view('admin.sections.remittance-bank.index',compact(
             'page_title',

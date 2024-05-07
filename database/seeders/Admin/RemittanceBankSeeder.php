@@ -84,10 +84,69 @@ class RemittanceBankSeeder extends Seeder
             array('name' => 'Commercial Bank of Ethiopia','slug' => 'commercial-bank-of-ethiopia','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:01','updated_at' => '2023-11-02 10:59:01'),
             array('name' => 'Cooperative Bank of South Sudan','slug' => 'cooperative-bank-of-south-sudan','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:13','updated_at' => '2023-11-02 10:59:13'),
             array('name' => 'Qatar National Bank','slug' => 'qatar-national-bank','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:27','updated_at' => '2023-11-02 10:59:27'),
-            array('name' => 'National Bank of Sudan','slug' => 'national-bank-of-sudan','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:40','updated_at' => '2023-11-02 10:59:40')
+            array('name' => 'National Bank of Sudan','slug' => 'national-bank-of-sudan','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:40','updated_at' => '2023-11-02 10:59:40'),
         
+
+            array('name' => 'Land Bank of the Philippines (LBP)','slug' => 'land-bank-of-the-philippines-lbp','country' => 'Philippines','status' => '1','created_at' => '2024-05-07 10:16:42','updated_at' => '2024-05-07 10:16:42'),
+            array('name' => 'Metropolitan Bank and Trust Company (Metrobank)','slug' => 'metropolitan-bank-and-trust-company-metrobank','country' => 'Philippines','status' => '1','created_at' => '2024-05-07 10:16:57','updated_at' => '2024-05-07 10:16:57'),
+            array('name' => 'International Commercial Bank I.C.B. Benin','slug' => 'international-commercial-bank-icb-benin','country' => 'Benin','status' => '1','created_at' => '2024-05-07 10:20:15','updated_at' => '2024-05-07 10:20:15'),
+            array('name' => 'Financial Bank Benin','slug' => 'financial-bank-benin','country' => 'Benin','status' => '1','created_at' => '2024-05-07 10:20:31','updated_at' => '2024-05-07 10:20:31'),
+            array('name' => 'Central Bank of Brazil','slug' => 'central-bank-of-brazil','country' => 'Brazil','status' => '1','created_at' => '2024-05-07 10:22:03','updated_at' => '2024-05-07 10:22:03'),
+            array('name' => 'Banco do Brasil','slug' => 'banco-do-brasil','country' => 'Brazil','status' => '1','created_at' => '2024-05-07 10:22:19','updated_at' => '2024-05-07 10:22:19'),
+            array('name' => 'Bank of Africa','slug' => 'bank-of-africa','country' => 'Burkina Faso','status' => '1','created_at' => '2024-05-07 10:23:25','updated_at' => '2024-05-07 10:23:25'),
+            array('name' => 'Banque Atlantique Burkina Faso','slug' => 'banque-atlantique-burkina-faso','country' => 'Burkina Faso','status' => '1','created_at' => '2024-05-07 10:23:51','updated_at' => '2024-05-07 10:23:51'),
+            array('name' => 'AEON Specialized Bank (Cambodia) PLC','slug' => 'aeon-specialized-bank-cambodia-plc','country' => 'Cambodia','status' => '1','created_at' => '2024-05-07 10:25:11','updated_at' => '2024-05-07 10:25:11'),
+            array('name' => 'Agribank Cambodia Branch','slug' => 'agribank-cambodia-branch','country' => 'Cambodia','status' => '1','created_at' => '2024-05-07 10:25:27','updated_at' => '2024-05-07 10:25:27'),
+            array('name' => 'Commercial Bank Cameroon','slug' => 'commercial-bank-cameroon','country' => 'Cameroon','status' => '1','created_at' => '2024-05-07 10:58:39','updated_at' => '2024-05-07 10:58:39'),
+            array('name' => 'BGFI Bank Cameroon','slug' => 'bgfi-bank-cameroon','country' => 'Cameroon','status' => '1','created_at' => '2024-05-07 11:01:23','updated_at' => '2024-05-07 11:01:23'),
+            array('name' => 'BBVA Colombia','slug' => 'bbva-colombia','country' => 'Colombia','status' => '1','created_at' => '2024-05-07 11:03:30','updated_at' => '2024-05-07 11:03:30'),
+            array('name' => 'Banco Colpatria','slug' => 'banco-colpatria','country' => 'Colombia','status' => '1','created_at' => '2024-05-07 11:03:46','updated_at' => '2024-05-07 11:03:46'),
+            array('name' => 'Central Bank of the Dominican Republic','slug' => 'central-bank-of-the-dominican-republic','country' => 'Dominican Republic','status' => '1','created_at' => '2024-05-07 11:04:24','updated_at' => '2024-05-07 11:04:24'),
+            array('name' => 'Banco Popular Dominicano','slug' => 'banco-popular-dominicano','country' => 'Dominican Republic','status' => '1','created_at' => '2024-05-07 11:04:37','updated_at' => '2024-05-07 11:04:37'),
+            array('name' => 'National Bank of Egypt','slug' => 'national-bank-of-egypt','country' => 'Egypt','status' => '1','created_at' => '2024-05-07 11:05:18','updated_at' => '2024-05-07 11:05:24'),
+            array('name' => 'Banque Misr','slug' => 'banque-misr','country' => 'Egypt','status' => '1','created_at' => '2024-05-07 11:05:37','updated_at' => '2024-05-07 11:05:37'),
+            array('name' => 'Nib International Bank','slug' => 'nib-international-bank','country' => 'Ethiopia','status' => '1','created_at' => '2024-05-07 11:06:15','updated_at' => '2024-05-07 11:06:15'),
+            array('name' => 'Abay Bank','slug' => 'abay-bank','country' => 'Ethiopia','status' => '1','created_at' => '2024-05-07 11:06:29','updated_at' => '2024-05-07 11:06:29'),
+            array('name' => 'The Bank of Guatemala','slug' => 'the-bank-of-guatemala','country' => 'Guatemala','status' => '1','created_at' => '2024-05-07 11:06:55','updated_at' => '2024-05-07 11:06:55'),
+            array('name' => 'Bancredit','slug' => 'bancredit','country' => 'Guatemala','status' => '1','created_at' => '2024-05-07 11:07:57','updated_at' => '2024-05-07 11:07:57'),
+            array('name' => 'UBA Guinée (UBA)','slug' => 'uba-guinee-uba','country' => 'Guinea','status' => '1','created_at' => '2024-05-07 11:08:22','updated_at' => '2024-05-07 11:08:22'),
+            array('name' => 'Afriland First Bank Guinée.','slug' => 'afriland-first-bank-guinee','country' => 'Guinea','status' => '1','created_at' => '2024-05-07 11:08:33','updated_at' => '2024-05-07 11:08:33'),
+            array('name' => 'Bank Audi','slug' => 'bank-audi','country' => 'Lebanon','status' => '1','created_at' => '2024-05-07 11:09:00','updated_at' => '2024-05-07 11:09:00'),
+            array('name' => 'Byblos Bank','slug' => 'byblos-bank','country' => 'Lebanon','status' => '1','created_at' => '2024-05-07 11:09:13','updated_at' => '2024-05-07 11:09:13'),
+            array('name' => 'Afriland First Bank Liberia','slug' => 'afriland-first-bank-liberia','country' => 'Liberia','status' => '1','created_at' => '2024-05-07 11:09:38','updated_at' => '2024-05-07 11:09:38'),
+            array('name' => 'AccessBank Liberia','slug' => 'accessbank-liberia','country' => 'Liberia','status' => '1','created_at' => '2024-05-07 11:09:48','updated_at' => '2024-05-07 11:09:48'),
+            array('name' => 'Bank Atlantic Mali','slug' => 'bank-atlantic-mali','country' => 'Mali','status' => '1','created_at' => '2024-05-07 11:10:12','updated_at' => '2024-05-07 11:10:12'),
+            array('name' => 'Banque Atlantique Mali','slug' => 'banque-atlantique-mali','country' => 'Mali','status' => '1','created_at' => '2024-05-07 11:10:43','updated_at' => '2024-05-07 11:10:43'),
+            array('name' => 'Banorte','slug' => 'banorte','country' => 'Mexico','status' => '1','created_at' => '2024-05-07 11:11:05','updated_at' => '2024-05-07 11:11:05'),
+            array('name' => 'Banamex','slug' => 'banamex','country' => 'Mexico','status' => '1','created_at' => '2024-05-07 11:11:21','updated_at' => '2024-05-07 11:11:21'),
+            array('name' => 'Attijariwafa Bank','slug' => 'attijariwafa-bank','country' => 'Morocco','status' => '1','created_at' => '2024-05-07 11:11:51','updated_at' => '2024-05-07 11:11:51'),
+            array('name' => 'Banque Populaire','slug' => 'banque-populaire','country' => 'Morocco','status' => '1','created_at' => '2024-05-07 11:12:02','updated_at' => '2024-05-07 11:12:02'),
+            array('name' => 'Absa Bank Mozambique','slug' => 'absa-bank-mozambique','country' => 'Mozambique','status' => '1','created_at' => '2024-05-07 11:12:29','updated_at' => '2024-05-07 11:12:29'),
+            array('name' => 'Banco Comercial e de Investimentos','slug' => 'banco-comercial-e-de-investimentos','country' => 'Mozambique','status' => '1','created_at' => '2024-05-07 11:12:48','updated_at' => '2024-05-07 11:12:48'),
+            array('name' => 'DFCC Bank','slug' => 'dfcc-bank','country' => 'Sri Lanka','status' => '1','created_at' => '2024-05-07 11:13:12','updated_at' => '2024-05-07 11:13:12'),
+            array('name' => 'Amana Bank','slug' => 'amana-bank','country' => 'Sri Lanka','status' => '1','created_at' => '2024-05-07 11:13:28','updated_at' => '2024-05-07 11:13:28'),
+            array('name' => 'Absa Bank Tanzania','slug' => 'absa-bank-tanzania','country' => 'Tanzania','status' => '1','created_at' => '2024-05-07 11:13:58','updated_at' => '2024-05-07 11:13:58'),
+            array('name' => 'Akiba Commercial Bank','slug' => 'akiba-commercial-bank','country' => 'Tanzania','status' => '1','created_at' => '2024-05-07 11:14:13','updated_at' => '2024-05-07 11:14:13'),
+            array('name' => 'Ziraat Bank','slug' => 'ziraat-bank','country' => 'Turkey','status' => '1','created_at' => '2024-05-07 11:14:34','updated_at' => '2024-05-07 11:14:34'),
+            array('name' => 'Akbank','slug' => 'akbank','country' => 'Turkey','status' => '1','created_at' => '2024-05-07 11:14:47','updated_at' => '2024-05-07 11:14:47'),
+            array('name' => 'Cairo Bank Uganda','slug' => 'cairo-bank-uganda','country' => 'Uganda','status' => '1','created_at' => '2024-05-07 11:15:10','updated_at' => '2024-05-07 11:15:10'),
+            array('name' => 'Citibank Uganda','slug' => 'citibank-uganda','country' => 'Uganda','status' => '1','created_at' => '2024-05-07 11:15:32','updated_at' => '2024-05-07 11:15:32'),
+            array('name' => 'Bank for Investment and Development of Vietnam','slug' => 'bank-for-investment-and-development-of-vietnam','country' => 'Vietnam','status' => '1','created_at' => '2024-05-07 11:16:16','updated_at' => '2024-05-07 11:16:16'),
+            array('name' => 'Joint Stock Commercial Bank for Foreign Trade of Vietnam','slug' => 'joint-stock-commercial-bank-for-foreign-trade-of-vietnam','country' => 'Vietnam','status' => '1','created_at' => '2024-05-07 11:16:30','updated_at' => '2024-05-07 11:16:30'),
+            array('name' => 'Access Bank Zambia','slug' => 'access-bank-zambia','country' => 'Zambia','status' => '1','created_at' => '2024-05-07 11:16:53','updated_at' => '2024-05-07 11:16:53'),
+            array('name' => 'Stanbic Bank','slug' => 'stanbic-bank','country' => 'Zambia','status' => '1','created_at' => '2024-05-07 11:17:06','updated_at' => '2024-05-07 11:17:06'),
+            array('name' => 'Reserve Bank of Zimbabwe','slug' => 'reserve-bank-of-zimbabwe','country' => 'Zimbabwe','status' => '1','created_at' => '2024-05-07 11:17:27','updated_at' => '2024-05-07 11:17:27'),
+            array('name' => 'ZB BANK','slug' => 'zb-bank','country' => 'Zimbabwe','status' => '1','created_at' => '2024-05-07 11:17:40','updated_at' => '2024-05-07 11:17:40')
+          
         );
 
-        RemittanceBank::insert($remittance_banks);
+        foreach($remittance_banks as $item){
+            $bank   = RemittanceBank::where('name',$item['name'])->where('country',$item['country'])->first();
+            if($bank == null){
+                RemittanceBank::insert($item);
+            }
+        }
+
+        
     }
 }
