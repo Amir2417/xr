@@ -4,9 +4,11 @@ namespace App\Http\Controllers\User;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
 use App\Models\UserNotification;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
@@ -37,30 +39,22 @@ class TransactionController extends Controller
      * Method for search transaction data using AJAX
      * @param Illuminate\Http\Request $request
      */
-    public function search(Request $request)
-    {
-        
-
-        $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
-        $client_ip            = request()->ip() ?? false;
-        $user_country         = geoip()->getLocation($client_ip)['country'] ?? "";
-        $user                 = auth()->user();
-        $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
-
-        
-        $searchTerm = $request->input('search_term');
-
-        if ($searchTerm) {
-            $transactions = Transaction::where('user_id', auth()->user()->id)
-                ->where('trx_id', $searchTerm)
-                ->get();
-        } else {
-            $transactions = Transaction::where('user_id', auth()->user()->id)->get();
+    public function search(Request $request){
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
         }
 
-        return response()->json(['transactions' => $transactions,'sender_currency'=>$sender_currency,'receiver_currency'=>$receiver_currency]);
+        $validated = $validator->validate();
         
+        $transactions    = Transaction::auth()->with(['currency','coupon_transaction'])
+                                    ->search($validated['text'])->get();
+                                  
+        return view('user.components.search-log.index',compact('transactions'));
+
         
     }
 }

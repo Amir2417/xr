@@ -93,7 +93,7 @@ Route::prefix("user")->name("user.")->group(function(){
     //transaction
     Route::controller(TransactionController::class)->prefix('transaction')->name('transaction.')->group(function(){
         Route::get('/','transaction')->name('index');
-        Route::get('search', 'search')->name('search');
+        Route::post('search', 'search')->name('search');
     });
     
     

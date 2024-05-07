@@ -17,7 +17,7 @@
             @if ($current_url == setRoute('user.transaction.index'))
                 <form class="header-search-wrapper">
                     <div class="position-relative">
-                        <input class="form--control" type="text" placeholder="{{ __("Ex: Transactions") }}"
+                        <input class="form--control" type="text" name="search_text" placeholder="{{ __("Ex: Transactions") }}"
                             aria-label="Search">
                         <span class="las la-search"></span>
                     </div>

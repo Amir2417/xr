@@ -653,3 +653,55 @@ $('textarea').keydown(function (e) {
     e.preventDefault();
   }
 });
+
+
+var timeOut;
+function itemSearch(inputElement,tableElement,URL,minTextLength = 3) {
+  $(inputElement).bind("keyup",function(){
+    clearTimeout(timeOut);
+    timeOut = setTimeout(executeItemSearch, 500,$(this),tableElement,URL,minTextLength);
+  });
+}
+function executeItemSearch(inputElement,tableElement,URL,minTextLength) {
+  $(tableElement).parent().find(".search-result-table").remove();
+  var searchText = inputElement.val();
+  if(searchText.length > minTextLength) {
+    // console.log(searchText);
+    $(tableElement).addClass("d-none");
+    makeSearchItemXmlRequest(searchText,tableElement,URL);
+  }else {
+    $(tableElement).removeClass("d-none");
+  }
+}
+
+function makeSearchItemXmlRequest(searchText,tableElement,URL) {
+  var data = {
+    _token      : laravelCsrf(),
+    text        : searchText,
+  };
+  $.post(URL,data,function(response) {
+    //response
+  }).done(function(response){
+    itemSearchResult(response,tableElement);
+    // if($(tableElement).siblings(".search-result-table").length > 0) {
+    //     $(tableElement).parent().find(".search-result-table").html(response);
+    // }else{
+    //     $(tableElement).after(`<div class="search-result-table"></div>`);
+    //     $(tableElement).parent().find(".search-result-table").html(response);
+    // }
+  }).fail(function(response) {
+    throwMessage('error',["Something went wrong! Please try again."]);
+  });
+}
+
+function itemSearchResult(response,tableElement) {
+  if(response == "") {
+    throwMessage('error',["No data found!"]);
+  }
+  if($(tableElement).siblings(".search-result-table").length > 0) {
+    $(tableElement).parent().find(".search-result-table").html(response);
+  }else{
+    $(tableElement).after(`<div class="search-result-table"></div>`);
+    $(tableElement).parent().find(".search-result-table").html(response);
+  }
+}
