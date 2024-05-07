@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use PDF;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Response;
 use App\Models\CouponTransaction;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Providers\Admin\BasicSettingsProvider;
 
 class CouponTransactionController extends Controller
@@ -93,5 +95,27 @@ class CouponTransactionController extends Controller
         $basic_settings = BasicSettingsProvider::get();
         
         return $pdf->download($basic_settings->site_name.'-'.$transaction->transaction->trx_id.'.pdf');
+    }
+    /**
+     * Method for remittance log search 
+     */
+   
+     public function search(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'text'  => 'required|string',
+        ]);
+        if($validator->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $validated = $validator->validate();
+        $data = $validated['text'];
+        $transactions    =  CouponTransaction::with(['coupon','user_coupon','transaction'])->whereHas('transaction',function($q) use ($data){
+            $q->where("trx_id",'LIKE','%'.$data.'%')->orderBy('id','desc');
+        })->get(); 
+       
+        return view('admin.components.search.coupon-search',compact('transactions'));
+        
     }
 }

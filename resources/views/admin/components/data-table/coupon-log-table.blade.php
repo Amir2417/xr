@@ -1,4 +1,4 @@
-<table class="custom-table remittance-search-table">
+<table class="custom-table coupon-search-table">
     <thead>
         <tr>
             <th>{{ __("MTCN ID") }}</th>

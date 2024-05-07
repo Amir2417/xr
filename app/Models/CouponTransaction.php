@@ -37,4 +37,10 @@ class CouponTransaction extends Model
     public function transaction(){
         return $this->belongsTo(Transaction::class,'transaction_id');
     }
+
+    //for search transaction log
+    public function scopeSearch($query,$data) {
+        return $query->where("trx_id",'LIKE','%'.$data.'%')
+                     ->orderBy('id','desc');
+    }
 }

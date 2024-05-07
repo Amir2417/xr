@@ -194,6 +194,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::controller(CouponTransactionController::class)->prefix('coupon-logs')->name('coupon.log.')->group(function(){
         Route::get('/','index')->name('index');
         Route::get('details/{trx_id}','details')->name('details');
+        Route::post('search','search')->name("search");
     });
 
     // download coupon logs

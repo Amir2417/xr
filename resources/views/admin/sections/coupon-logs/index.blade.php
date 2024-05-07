@@ -34,7 +34,7 @@
             <h5 class="title">{{ __($page_title) }}</h5>
             <div class="table-btn-area">
                 @include('admin.components.search-input',[
-                    'name'  => 'remittance_search',
+                    'name'  => 'coupon_search',
                 ])
             </div>
         </div>
@@ -50,6 +50,6 @@
 @endsection
 @push('script')
     <script>
-        itemSearch($("input[name=remittance_search]"),$(".remittance-search-table"),"{{ setRoute('admin.send.remittance.search') }}",1);
+        itemSearch($("input[name=coupon_search]"),$(".coupon-search-table"),"{{ setRoute('admin.coupon.log.search') }}",1);
     </script>
 @endpush
