@@ -85,7 +85,8 @@ class RemittanceBankSeeder extends Seeder
             array('name' => 'Cooperative Bank of South Sudan','slug' => 'cooperative-bank-of-south-sudan','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:13','updated_at' => '2023-11-02 10:59:13'),
             array('name' => 'Qatar National Bank','slug' => 'qatar-national-bank','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:27','updated_at' => '2023-11-02 10:59:27'),
             array('name' => 'National Bank of Sudan','slug' => 'national-bank-of-sudan','country' => 'Sudan','status' => '1','created_at' => '2023-11-02 10:59:40','updated_at' => '2023-11-02 10:59:40'),
-        
+            array('name' => 'Investec','slug' => 'investec','country' => 'South Africa','status' => '1','created_at' => '2024-05-07 11:48:56','updated_at' => '2024-05-07 11:48:56'),
+            array('name' => 'African Bank Limited','slug' => 'african-bank-limited','country' => 'South Africa','status' => '1','created_at' => '2024-05-07 11:49:09','updated_at' => '2024-05-07 11:49:09'),
 
             array('name' => 'Land Bank of the Philippines (LBP)','slug' => 'land-bank-of-the-philippines-lbp','country' => 'Philippines','status' => '1','created_at' => '2024-05-07 10:16:42','updated_at' => '2024-05-07 10:16:42'),
             array('name' => 'Metropolitan Bank and Trust Company (Metrobank)','slug' => 'metropolitan-bank-and-trust-company-metrobank','country' => 'Philippines','status' => '1','created_at' => '2024-05-07 10:16:57','updated_at' => '2024-05-07 10:16:57'),

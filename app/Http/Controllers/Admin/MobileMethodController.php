@@ -21,9 +21,9 @@ class MobileMethodController extends Controller
      * @return view
      */
     public function index(){
-        $page_title     = "Mobile Method";
-        $mobile_methods = MobileMethod::orderByDesc('id')->paginate(10);
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->get();
+        $page_title             = "Mobile Method";
+        $mobile_methods         = MobileMethod::orderByDesc('id')->paginate(50);
+        $receiver_currency      = Currency::where('status',true)->where('receiver',true)->get();
         
         return view('admin.sections.mobile-method.index',compact(
             'page_title',
