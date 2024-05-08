@@ -392,8 +392,8 @@ class PaymentGateway {
         $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
         UserNotification::create([
             'user_id'  => $user->id,
-            'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount).",
-            Get Amount: ".get_amount($output['amount']->will_get).") Successfully Sended.", 
+            'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount)." ". $data->data->sender_currency .",
+            Get Amount: ".get_amount($output['amount']->will_get)." ". $data->data->receiver_currency .") Successfully Sended.", 
         ]);
         $trx_id     = Transaction::where('id',$inserted_id)->first();
         
@@ -403,8 +403,7 @@ class PaymentGateway {
         if($temp_remove == true) {
             $this->removeTempData($output);
         }
-        
-        
+             
 
         if($this->requestIsApiUser()) {
             // logout user
