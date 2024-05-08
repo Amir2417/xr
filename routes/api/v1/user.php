@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Api\V1\User\AuthorizationController;
 use App\Http\Controllers\Api\V1\User\BeneficiaryController;
+use App\Http\Controllers\Api\V1\User\MyCouponController;
 use App\Http\Controllers\Api\V1\User\NotificationController;
 use App\Http\Controllers\Api\V1\User\ProfileController;
 use App\Http\Controllers\Api\V1\User\SendRemittanceController;
@@ -79,7 +80,7 @@ Route::prefix("user")->name("api.user.")->group(function(){
             
         });
 
-        //beneficiary
+        // beneficiary
         Route::controller(BeneficiaryController::class)->prefix('beneficiary')->group(function(){
             Route::get('index','index');
             Route::get('receiver-country','receiverCountry');
@@ -89,8 +90,13 @@ Route::prefix("user")->name("api.user.")->group(function(){
             Route::post('delete','delete');
         });
 
-        //transaction 
 
+        // coupon
+        Route::controller(MyCouponController::class)->prefix('my-coupon')->group(function(){
+            Route::get('/','index');
+        });
+
+        //transaction 
         Route::controller(TransactionController::class)->prefix('transaction')->group(function(){
             Route::get('index','index');
         });
