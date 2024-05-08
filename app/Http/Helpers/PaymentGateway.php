@@ -1,15 +1,17 @@
 <?php
 namespace App\Http\Helpers;
 
-use App\Constants\GlobalConst;
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
+use App\Constants\GlobalConst;
 use App\Models\Admin\Currency;
 use App\Models\UserNotification;
+use App\Models\CouponTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Models\Admin\BasicSettings;
 use App\Traits\PaymentGateway\Gpay;
@@ -20,6 +22,7 @@ use App\Traits\PaymentGateway\Paypal;
 use App\Traits\PaymentGateway\Stripe;
 use Illuminate\Support\Facades\Route;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\AdminNotification;
 use App\Traits\PaymentGateway\CoinGate;
 use App\Traits\PaymentGateway\Razorpay;
 use App\Notifications\paypalNotification;
@@ -31,7 +34,6 @@ use App\Traits\PaymentGateway\PagaditoTrait;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use App\Models\Admin\PaymentGateway as PaymentGatewayModel;
-use App\Models\CouponTransaction;
 
 class PaymentGateway {
 
@@ -400,9 +402,27 @@ class PaymentGateway {
         if( $basic_setting->email_notification == true){
             Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id->trx_id));
         }
+
+        $notification_message = [
+            'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
+            'time'      => Carbon::now()->diffForHumans(),
+            'image'     => get_image($user->image,'user-profile'),
+        ];
+        AdminNotification::create([
+            'type'      => "Send Remittance",
+            'admin_id'  => 1,
+            'message'   => $notification_message,
+        ]);
+        (new PushNotificationHelper())->prepare([1],[
+            'title' => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
+            'desc'  => "",
+            'user_type' => 'admin',
+        ])->send();
+
         if($temp_remove == true) {
             $this->removeTempData($output);
         }
+
              
 
         if($this->requestIsApiUser()) {

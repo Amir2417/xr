@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\User\Auth;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Admin\UsefulLink;
+use App\Models\Admin\NewUserBonus;
 use App\Models\Admin\SiteSections;
 use App\Constants\SiteSectionConst;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\NewUserBonus;
 use App\Traits\User\RegisteredUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use App\Models\Admin\AdminNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use App\Http\Helpers\PushNotificationHelper;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Validation\ValidationException;
@@ -150,6 +153,21 @@ class RegisterController extends Controller
             if($bonus){
                 $this->createCoupon($user,$bonus);
             }
+            $notification_message = [
+                'title'     => "New User" . "(" . $user->username . ")" . " register successfully.",
+                'time'      => Carbon::now()->diffForHumans(),
+                'image'     => get_image($user->image,'user-profile'),
+            ];
+            AdminNotification::create([
+                'type'      => "New User Register",
+                'admin_id'  => 1,
+                'message'   => $notification_message,
+            ]);
+            (new PushNotificationHelper())->prepare([1],[
+                'title' => "New User" . "(" . $user->username . ")" . " register successfully.",
+                'desc'  => "",
+                'user_type' => 'admin',
+            ])->send();
             return redirect()->intended(route('user.dashboard'));
         }catch(Exception $e) {
             

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use PDF;
 use Exception;
+use Carbon\Carbon;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\AppliedCoupon;
@@ -21,11 +22,13 @@ use App\Models\Admin\PaymentGateway;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\AdminNotification;
 use App\Models\Admin\CryptoTransaction;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\paypalNotification;
 use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Helpers\PushNotificationHelper;
 use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\manualEmailNotification;
@@ -362,6 +365,21 @@ class RemittanceController extends Controller
             if( $basic_setting->email_notification == true){
                 Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
             }
+            $notification_message = [
+                'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'time'      => Carbon::now()->diffForHumans(),
+                'image'     => get_image($user->image,'user-profile'),
+            ];
+            AdminNotification::create([
+                'type'      => "Send Remittance",
+                'admin_id'  => 1,
+                'message'   => $notification_message,
+            ]);
+            (new PushNotificationHelper())->prepare([1],[
+                'title' => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'desc'  => "",
+                'user_type' => 'admin',
+            ])->send();
             DB::table("temporary_datas")->where("identifier",$token)->delete();
             DB::commit();
         }catch(Exception $e) {

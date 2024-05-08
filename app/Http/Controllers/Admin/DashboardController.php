@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\RemittanceBank;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\SupportTicketConst;
+use App\Http\Helpers\PushNotificationHelper;
 use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
 
@@ -40,6 +41,7 @@ class DashboardController extends Controller
     public function index()
     {
         $page_title      = "Dashboard"; 
+    
 
         //remittance log
 
@@ -229,26 +231,26 @@ class DashboardController extends Controller
      */
     public function logout(Request $request) {
 
-        $push_notification_setting = BasicSettingsProvider::get()->push_notification_config;
+        // $push_notification_setting = BasicSettingsProvider::get()->push_notification_config;
 
-        if($push_notification_setting) {
-            $method = $push_notification_setting->method ?? false;
+        // if($push_notification_setting) {
+        //     $method = $push_notification_setting->method ?? false;
 
-            if($method == "pusher") {
-                $instant_id     = $push_notification_setting->instance_id ?? false;
-                $primary_key    = $push_notification_setting->primary_key ?? false;
+        //     if($method == "pusher") {
+        //         $instant_id     = $push_notification_setting->instance_id ?? false;
+        //         $primary_key    = $push_notification_setting->primary_key ?? false;
 
-                if($instant_id && $primary_key) {
-                    $pusher_instance = new PushNotifications([
-                        "instanceId"    => $instant_id,
-                        "secretKey"     => $primary_key,
-                    ]);
+        //         if($instant_id && $primary_key) {
+        //             $pusher_instance = new PushNotifications([
+        //                 "instanceId"    => $instant_id,
+        //                 "secretKey"     => $primary_key,
+        //             ]);
 
-                    $pusher_instance->deleteUser("".Auth::user()->id."");
-                }
-            }
+        //             $pusher_instance->deleteUser("".Auth::user()->id."");
+        //         }
+        //     }
 
-        }
+        // }
 
         $admin = auth()->user();
         try{

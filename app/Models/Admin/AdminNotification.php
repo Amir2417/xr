@@ -30,4 +30,8 @@ class AdminNotification extends Model
     public function scopeNotAuth($query) {
         $query->where("admin_id","!=",auth()->user()->id);
     }
+
+    public function scopeAuth($query) {
+        $query->where("admin_id",auth()->user()->id);
+    }
 }

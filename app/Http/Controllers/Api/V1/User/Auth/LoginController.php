@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Models\UserAuthorization;
+use App\Models\Admin\NewUserBonus;
 use App\Traits\User\LoggedInUsers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -152,6 +153,10 @@ class LoginController extends Controller
         $user->update([
             'two_factor_verified'   => false,
         ]);
+        $bonus  = NewUserBonus::where('status',true)->first();
+        if($bonus){
+            $this->refreshCounpon($user,$bonus);
+        } 
         try{
             $this->createLoginLog($user);
         }catch(Exception $e) {

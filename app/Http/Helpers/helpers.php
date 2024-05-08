@@ -1085,16 +1085,7 @@ function remove_spaces($string)
 
 function get_admin_notifications()
 {
-    $admin = auth()->user();
-    $notification_clear_at =   $admin->notification_clear_at;
-    if ($notification_clear_at  == null) {
-        $notifications = AdminNotification::notAuth()->getByType([NotificationConst::SIDE_NAV])->get();
-    } else {
-        $notifications = AdminNotification::notAuth()->getByType([NotificationConst::SIDE_NAV])->where(function ($query) use ($notification_clear_at) {
-            $query->where("created_at", ">", $notification_clear_at);
-        })->select('message', 'created_at', 'type')->get();
-    }
-
+    $notifications = AdminNotification::auth()->latest()->get();
     return $notifications;
 }
 

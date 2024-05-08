@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\User;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Recipient;
 use App\Models\UserCoupon;
 use App\Models\Transaction;
@@ -17,22 +18,24 @@ use App\Models\Admin\Currency;
 use App\Models\CouponTransaction;
 use App\Models\Admin\MobileMethod;
 use App\Models\Admin\SourceOfFund;
-use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Admin\BasicSettings;
 use App\Traits\PaymentGateway\Gpay;
-use App\Http\Controllers\Controller;
 
+use App\Http\Controllers\Controller;
 use App\Models\Admin\RemittanceBank;
 use App\Models\Admin\SendingPurpose;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\AdminNotification;
 use App\Models\Admin\CryptoTransaction;
 use App\Models\Admin\TransactionSetting;
 use App\Notifications\paypalNotification;
 use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Helpers\PushNotificationHelper;
 use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\manualEmailNotification;
@@ -149,28 +152,41 @@ class SendRemittanceController extends Controller
         $matchingCoupon = $coupons->first(function ($coupon) use ($request) {
             return $coupon->name === $request->coupon;
         });
+
+        $matching_with_new_user     = UserCoupon::with(['new_user_bonus'])->where('coupon_name',$request->coupon)->first();
+
         $user   = auth()->user();
-        $couponBonus = '';
+        $coupon_type = '';
         $couponId = 0;
+        $coupon_bonus = 0;
         if($request->coupon){
             if($matchingCoupon){
-                if($user->coupon_status == 0){
-                    $couponBonus    = $matchingCoupon->price;
-                    $couponId       = $matchingCoupon->id;
-                    
+                $transaction    = CouponTransaction::auth()->where('coupon_id',$matchingCoupon->id)->count();
+                if($transaction >= $matchingCoupon->max_used){
+                    return Response::error(['Sorry! Your Coupon limit is over.']);
                 }else{
-                    return Response::error(['Already applied the coupon!'],[],404);
+                    $coupon_type    = GlobalConst::COUPON;
+                    $couponId       = $matchingCoupon->id;
+                    $coupon_bonus   = $matchingCoupon->price;
                 }
             }else{
-                return Response::error(['Coupon not found!'],[],404);  
+                $transaction    = CouponTransaction::auth()->where('user_coupon_id',$matching_with_new_user->id)->count(); 
+                if($transaction >= $matching_with_new_user->new_user_bonus->max_used){
+                    return Response::error(['Sorry! Your Coupon limit is over.']);
+                }else{
+                    $coupon_type    = GlobalConst::NEW_USER_BONUS;
+                    $couponId       = $matching_with_new_user->id;
+                    $coupon_bonus   = $matching_with_new_user->price;
+                }
             }
         }
         
         
         $transaction_type     = TransactionSetting::where('status',true)->where('title','like','%'.$request->type.'%')->first();
         $sender_currency      = Currency::where('status',true)->where('sender',true)->where('id',$request->sender_currency)->first();
+        if(!$sender_currency) return Response::error(['Sender Currency not found!'],[],404);
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('id',$request->receiver_currency)->first();
-
+        if(!$receiver_currency) return Response::error(['Receiver Currency not found!'],[],404);
         if($request->type == PaymentGatewayConst::TRANSACTION_TYPE_BANK || $request->type == PaymentGatewayConst::TRANSACTION_TYPE_MOBILE){
             $sender_currency_code   = $sender_currency->code;
             $sender_currency_rate   = $sender_currency->rate;
@@ -179,7 +195,10 @@ class SendRemittanceController extends Controller
             $receiver_currency_rate = $receiver_currency->rate;
 
             $enter_amount           = floatval($request->send_money) / $sender_currency_rate;
-
+            $intervals = get_intervals_data($enter_amount,$transaction_type);
+            if($intervals == false){
+                return Response::error(['Please follow the transaction limit.'],[],404);  
+            }
             $find_percent_charge    = ($enter_amount) / 100;
 
             $fixed_charge           = $transaction_type->fixed_charge;
@@ -189,7 +208,6 @@ class SendRemittanceController extends Controller
             $total_percent_charge   = $find_percent_charge * $percent_charge;
             $total_charge           = $fixed_charge + $total_percent_charge;
             $total_charge_amount    = $total_charge * $sender_currency_rate;
-
 
             $payable_amount       = $enter_amount + $total_charge_amount;
             if ($request->send_money == 0) {
@@ -219,7 +237,7 @@ class SendRemittanceController extends Controller
         }
         
         if($couponId != 0){
-            $coupon_price    = $couponBonus * $reciver_rate;
+            $coupon_price    = $coupon_bonus * $reciver_rate;
             $receive_money   = $receive_money + $coupon_price;
         }else{
             $receive_money  = $receive_money;
@@ -230,20 +248,22 @@ class SendRemittanceController extends Controller
             'type'                  => $validated['type'],
             'identifier'            => $validated['identifier'],
             'data'                  => [
-                'sender_name'       => auth()->user()->fullname,
-                'sender_email'      => auth()->user()->email,
                 'send_money'        => floatval($request->send_money),
                 'fees'              => $total_charge_amount,
                 'convert_amount'    => $convert_amount,
                 'payable_amount'    => $payable_amount,
                 'payable'           => $payable_amount,
                 'receive_money'     => $receive_money,
+                'sender_name'       => auth()->user()->fullname,
+                'sender_email'      => auth()->user()->email,
                 'sender_currency'   => $sender_currency_code,
                 'receiver_currency' => $receiver_currency_code,
+                'receiver_country'  => $receiver_currency->country,
                 'sender_ex_rate'    => $sender_rate,
                 'receiver_ex_rate'  => $reciver_rate,
                 'sender_base_rate'  => floatval($sender_currency_rate),
                 'coupon_id'         => $couponId,
+                'coupon_type'       => $coupon_type,
             ],
 
         ];
@@ -255,7 +275,7 @@ class SendRemittanceController extends Controller
         if($couponId != 0){
             return Response::success(['Send Money with coupon'],[
                 'temporary_data'      => $temporary_data,
-                'matchingCoupon'      => $matchingCoupon,
+                'matchingCoupon'      => $matchingCoupon ?? $matching_with_new_user,
             ],200);
         }
         if($couponId == 0){
@@ -265,77 +285,7 @@ class SendRemittanceController extends Controller
         }
         
     }
-    /**
-    * Method for calculate send remittance
-    */
-    public function sendMoney(Request $request){
-        $validator           = Validator::make($request->all(),[
-            'type'           => 'required',
-            'send_money'     => 'nullable',
-        ]);
-        if($validator->fails()){
-            return Response::error($validator->errors()->all(),[]);
-        }
-        $validated            = $validator->validate();
-        $transaction_type     = TransactionSetting::where('status',true)->where('title','like','%'.$request->type.'%')->first();
-        $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
-
-        if($request->type == PaymentGatewayConst::TRANSACTION_TYPE_BANK || $request->type == PaymentGatewayConst::TRANSACTION_TYPE_MOBILE){
-            $enter_amount         = floatval($request->send_money);
-            $find_percent_charge  = $enter_amount / 100;
-            $fixed_charge         = $transaction_type->fixed_charge;
-            $percent_charge       = $transaction_type->percent_charge;
-            $total_percent_charge = $find_percent_charge * $percent_charge;
-            $total_charge         = $fixed_charge + $total_percent_charge;
-            $payable_amount       = $enter_amount + $total_charge;
-            if ($request->send_money == 0) {
-                return Response::error(['Send Money must be greater than 0.'], [], 400);
-            }
-            if($enter_amount == ""){
-                $enter_amount = 0;
-            }
-            if($enter_amount != 0){
-                $convert_amount = $enter_amount;
-                $receive_money  = $convert_amount * $receiver_currency->rate;
-                $intervals      = $transaction_type->intervals;
-                foreach($intervals as $index => $item){
-                    if($enter_amount >= $item->min_limit && $enter_amount <= $item->max_limit){
-                        $fixed_charge         = $item->fixed;
-                        $percent_charge       = $item->percent;
-                        $total_percent_charge = $find_percent_charge * $percent_charge;
-                        $total_charge         = $fixed_charge + $total_percent_charge;
-                        $convert_amount       = $enter_amount;
-                        $payable_amount       = $enter_amount + $total_charge;
-                        $receive_money        = $convert_amount * $receiver_currency->rate;
-                    }
-                }
-            }
-        }
-
-        $validated['identifier']    = Str::uuid();
-        $data = [
-            'type'               => $validated['type'],
-            'identifier'         => $validated['identifier'],
-            'data'               => [
-                'send_money'     => $enter_amount,
-                'fees'           => $total_charge,
-                'convert_amount' => $convert_amount,
-                'payable_amount' => $payable_amount,
-                'receive_money'  => $receive_money,
-            ],
-
-        ];
-        try {
-            $temporary_data = TemporaryData::create($data);
-        } catch (Exception $e) {
-            return Response::error(['Something went wrong! Please try again.'],[],404);
-        }
-
-        return Response::success(['Send Money'],[
-            'temporary_data'      => $temporary_data
-        ],200);
-
-    }
+    
     /**
      * Method for show send remittance beneficiary
      * @param $identifier
@@ -348,7 +298,7 @@ class SendRemittanceController extends Controller
 
         if($validator->fails()) return Response::error($validator->errors()->all(),[]);
         $temporary_data    = TemporaryData::where('identifier',$request->identifier)->first();
-        $beneficiaries     = Recipient::where('method',$temporary_data->type)->where('user_id',auth()->user()->id)->orderBy('id')->get();
+        $beneficiaries     = Recipient::auth()->where('method',$temporary_data->type)->where('country',$temporary_data->data->receiver_country)->orderByDESC('id')->get();  
 
         return Response::success(['Beneficiary'],[
             'beneficiaries'       => $beneficiaries,
@@ -543,6 +493,7 @@ class SendRemittanceController extends Controller
                 'sender_base_rate'  => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'  => $temporary_data->data->receiver_ex_rate,
                 'coupon_id'         => $temporary_data->data->coupon_id,
+                'coupon_type'       => $temporary_data->data->coupon_type,
                 'first_name'        => $beneficiary->first_name,
                 'middle_name'       => $beneficiary->middle_name ?? '',
                 'last_name'         => $beneficiary->last_name,
@@ -641,6 +592,7 @@ class SendRemittanceController extends Controller
                 'sender_base_rate'    => $temporary_data->data->sender_base_rate,
                 'receiver_ex_rate'    => $temporary_data->data->receiver_ex_rate,
                 'coupon_id'           => $temporary_data->data->coupon_id,
+                'coupon_type'         => $temporary_data->data->coupon_type,
                 'first_name'          => $temporary_data->data->first_name,
                 'middle_name'         => $temporary_data->data->middle_name,
                 'last_name'           => $temporary_data->data->last_name,
@@ -699,7 +651,6 @@ class SendRemittanceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function submitData(Request $request) {
-        
         try{
             $instance = PaymentGatewayHelper::init($request->all())->type(PaymentGatewayConst::TYPESENDREMITTANCE)->gateway()->api()->render();
         }catch(Exception $e) {
@@ -743,8 +694,9 @@ class SendRemittanceController extends Controller
             
             return Response::error([$e->getMessage()],[],500);
         }
-        $share_link   = route('share.link',$instance);
-        $download_link   = route('download.pdf',$instance);
+        $share_link         = route('share.link',$instance);
+        $download_link      = route('download.pdf',$instance);
+
         return Response::success(["Payment successful, please go back your app"],[
             'share-link'   => $share_link,
             'download_link' => $download_link,
@@ -852,6 +804,7 @@ class SendRemittanceController extends Controller
                     'sender_base_rate'          => $data->data->sender_base_rate,
                     'receiver_ex_rate'          => $data->data->receiver_ex_rate,
                     'coupon_id'                 => $data->data->coupon_id,
+                    'coupon_type'               => $data->data->coupon_type,
                     'first_name'                => $data->data->first_name,
                     'middle_name'               => $data->data->middle_name,
                     'last_name'                 => $data->data->last_name,
@@ -896,22 +849,42 @@ class SendRemittanceController extends Controller
                 'callback_ref'                  => $output['callback_ref'] ?? null,
             ]);
             if($data->data->coupon_id != 0){
-                $user   = auth()->user();
-                
-                $user->update([
-                    'coupon_status'     => 1,
-                ]);
-                
-                AppliedCoupon::create([
-                    'user_id'   => $user->id,
-                    'coupon_id'   => $data->data->coupon_id,
-                    'transaction_id'   => $id,
-                ]);
+                if($data->data->coupon_type == GlobalConst::COUPON){
+                    $coupon_id  = $data->data->coupon_id;
+                    $user   = auth()->user();
+                    CouponTransaction::create([
+                        'user_id'   => $user->id,
+                        'coupon_id'   => $coupon_id,
+                        'transaction_id'   => $id,
+                    ]);
+                }else{
+                    $user_coupon_id = $data->data->coupon_id;
+                    $user   = auth()->user();
+                    CouponTransaction::create([
+                        'user_id'           => $user->id,
+                        'user_coupon_id'    => $user_coupon_id,
+                        'transaction_id'    => $id,
+                    ]);
+                }
             }
             if($basic_setting->email_notification == true){
                 Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
-                
             }
+            $notification_message = [
+                'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'time'      => Carbon::now()->diffForHumans(),
+                'image'     => get_image($user->image,'user-profile'),
+            ];
+            AdminNotification::create([
+                'type'      => "Send Remittance",
+                'admin_id'  => 1,
+                'message'   => $notification_message,
+            ]);
+            (new PushNotificationHelper())->prepare([1],[
+                'title' => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'desc'  => "",
+                'user_type' => 'admin',
+            ])->send();
             DB::commit();
         }catch(Exception $e) {
             

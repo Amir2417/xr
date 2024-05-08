@@ -3,18 +3,21 @@
 namespace App\Http\Controllers\Api\V1\User\Auth;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Models\UserAuthorization;
+use App\Models\Admin\NewUserBonus;
 use App\Traits\User\LoggedInUsers;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Traits\User\RegisteredUsers;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Resources\User\UserResource;
 
+use Illuminate\Support\Facades\Hash;
+use App\Models\Admin\AdminNotification;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use App\Providers\Admin\BasicSettingsProvider;
@@ -107,6 +110,20 @@ class RegisterController extends Controller
         } else {
             $message =  ['Registration successful'];
         }
+        $bonus  = NewUserBonus::where('status',true)->first();
+        if($bonus){
+            $this->createCoupon($user,$bonus);
+        }
+        $notification_message = [
+            'title'     => "New User" . "(" . $user->username . ")" . " register successfully.",
+            'time'      => Carbon::now()->diffForHumans(),
+            'image'     => get_image($user->image,'user-profile'),
+        ];
+        AdminNotification::create([
+            'type'      => "New User Register",
+            'admin_id'  => 1,
+            'message'   => $notification_message,
+        ]);
 
         $data = [
             'token' => $token,
