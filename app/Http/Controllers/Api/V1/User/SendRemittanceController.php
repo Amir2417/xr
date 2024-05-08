@@ -4,24 +4,27 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use Exception;
 use App\Models\Recipient;
+use App\Models\UserCoupon;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Admin\Coupon;
 use Illuminate\Http\Request;
 use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
+use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
 use App\Models\Admin\Currency;
+use App\Models\CouponTransaction;
 use App\Models\Admin\MobileMethod;
 use App\Models\Admin\SourceOfFund;
 use Illuminate\Support\Facades\DB;
+
 use App\Models\Admin\BasicSettings;
 use App\Traits\PaymentGateway\Gpay;
-
 use App\Http\Controllers\Controller;
+
 use App\Models\Admin\RemittanceBank;
 use App\Models\Admin\SendingPurpose;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
@@ -78,6 +81,35 @@ class SendRemittanceController extends Controller
                 'receiver'     => $data->receiver,
             ];
         });
+
+        //counpons
+        $coupons    = Coupon::get()->map(function($data){
+            $coupon_transactions    = CouponTransaction::where('coupon_id',$data->id)->count();
+            $remaining = @$data->max_used - @$coupon_transactions;
+            return [
+                'id'                => $data->id,
+                'coupon_type'       => GlobalConst::COUPON,
+                'name'              => $data->name,
+                'price'             => $data->price,
+                'max_limit'         => $data->max_used,
+                'remaining'         => $remaining
+            ];
+        });
+
+        //new user coupon
+        
+        $user_coupon    = UserCoupon::auth()->with(['new_user_bonus'])->first();
+        $coupon_transactions    = CouponTransaction::where('user_coupon_id',$user_coupon->id)->count();
+        $remaining = $user_coupon->new_user_bonus->max_used - @$coupon_transactions;
+        $new_user_coupon = [
+            'id'                => $user_coupon->id,
+            'coupon_type'       => GlobalConst::NEW_USER_BONUS,
+            'name'              => $user_coupon->coupon_name,
+            'price'             => $user_coupon->price,
+            'max_limit'         => $user_coupon->new_user_bonus->max_used,
+            'remaining'         => $remaining
+        ];
+
         $image_paths = [
             'base_url'         => url("/"),
             'path_location'    => files_asset_path_basename("currency-flag"),
@@ -86,11 +118,14 @@ class SendRemittanceController extends Controller
         ];
 
 
+
         return Response::success(['Transaction Type find successfully.'],[
             'sender_currency'    => $sender_currency,
             'receiver_currency'  => $receiver_currency,
             'image_paths'        => $image_paths,
-            'transaction_type'   => $transaction_type
+            'transaction_type'   => $transaction_type,
+            'coupons'            => $coupons,
+            'new_user_coupon'    => $new_user_coupon
         ],200);
     }
     /**
@@ -103,6 +138,7 @@ class SendRemittanceController extends Controller
             'sender_currency'   => 'required',
             'receiver_currency' => 'required',
             'coupon'            => 'nullable',
+            'coupon_type'       => 'nullable',
         ]);
         if($validator->fails()){
             return Response::error($validator->errors()->all(),[]);

@@ -7,8 +7,11 @@
             instanceId: clientInstanceId,
         });
 
+        // navigator.serviceWorker.register('{{ asset('public/service-worker.js') }}')
+        //     .then((registration) => {
+        //     messaging.useServiceWorker(registration)});
 
-        var generatePublisherId = "admin-"+"{{ auth()->user()->id }}";
+        var generatePublisherId = "{{ make_user_id_for_pusher('admin', auth()->user()->id) }}";
         const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
             url: "{{ setRoute('pusher.beams.auth') }}",
         });
@@ -18,13 +21,13 @@
             .then((beamsClient) => beamsClient.getDeviceId())
             .then((response) => beamsClient.setUserId(generatePublisherId, beamsTokenProvider))
             .catch(console.error());
-            
+
     </script>
 @endif
 
 @if ($basic_settings->broadcast_config != null && $basic_settings->broadcast_config->method == "pusher")
 
-    <script src="https://js.pusher.com/7.2/pusher.js"></script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
     // Enable pusher logging - don't include this in production
     // Pusher.logToConsole = true;
@@ -62,5 +65,5 @@
 @endif
 
 <script>
-    
+
 </script>

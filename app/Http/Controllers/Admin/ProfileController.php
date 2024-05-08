@@ -123,4 +123,35 @@ class ProfileController extends Controller
 
         return back()->with(['success' => ["Password updated successfully!"]]);
     }
+    /**
+     * Google 2FA View Page
+    */
+    public function google2FaView()
+    {
+        $admin = auth("admin")->user();
+        $page_title = __("2FA Authentication");
+        $qr_code = generate_google_2fa_auth_qr();
+        return view('admin.sections.profile.2fa.google', compact('page_title', 'admin','qr_code'));
+    }
+
+    /**
+     * Update google 2fa security status
+     */
+    public function google2FAStatusUpdate(Request $request)
+    {
+        $validated = Validator::make($request->all(),[
+            'target'        => "required|numeric",
+        ])->validate();
+
+        $admin = auth()->user();
+        try{
+            $admin->update([
+                'two_factor_status'         => $admin->two_factor_status ? 0 : 1,
+                'two_factor_verified'       => true,
+            ]);
+        }catch(Exception $e) {
+            return back()->with(['error' => [__("server.error.default")]]);
+        }
+        return back()->with(['success' => [__("security.google.2fa.settings.update")]]);
+    }
 }

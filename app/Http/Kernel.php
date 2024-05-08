@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'verified'                  => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'app.mode'                  => \App\Http\Middleware\Admin\AppModeGuard::class,
         'admin.login.guard'         => \App\Http\Middleware\Admin\LoginGuard::class,
+        'admin.google.two.factor'   => \App\Http\Middleware\Admin\GoogleTwoFactor::class,
         'admin.role.guard'          => \App\Http\Middleware\Admin\RoleGuard::class,
         'mail'                      => \App\Http\Middleware\Admin\MailGuard::class,
         'admin.delete.guard'        => \App\Http\Middleware\Admin\AdminDeleteGuard::class,

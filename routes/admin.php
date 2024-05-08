@@ -63,6 +63,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('change-password', 'changePassword')->name('change.password');
         Route::put('change-password', 'updatePassword')->name('change.password.update');
         Route::put('update', 'update')->name('update');
+        //google 2fa
+        Route::get('google/2fa','google2FaView')->name('google.2fa.view');
+        Route::post('google/2fa','google2FAStatusUpdate')->name('google.2fa.status.update');
     });
 
     // Setup Currency Section
@@ -495,7 +498,7 @@ Route::get('pusher/beams-auth', function (Request $request) {
             "secretKey" => $notification_config->primary_key,
         )
     );
-    $publisherUserId = "admin-".$userID;
+    $publisherUserId =  make_user_id_for_pusher("admin", $userID);
     try{
         $beamsToken = $beamsClient->generateToken($publisherUserId);
     }catch(Exception $e) {

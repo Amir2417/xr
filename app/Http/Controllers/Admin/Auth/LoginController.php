@@ -9,6 +9,7 @@ use App\Models\Admin\AdminLoginLogs;
 use App\Models\Admin\AdminNotification;
 use Carbon\Carbon;
 use Exception;
+use App\Http\Helpers\PushNotificationHelper;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
@@ -63,6 +64,9 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        $user->update([
+            'two_factor_verified'   => false,
+        ]);
         $this->createLoginLog($user);
         $this->updateInfo($user);
         return redirect()->intended(route('admin.dashboard'));
@@ -102,7 +106,11 @@ class LoginController extends Controller
                 'admin_id'  => $admin->id,
                 'message'   => $notification_message,
             ]);
-            event(new NotificationEvent($notification_message));
+            (new PushNotificationHelper())->prepare([$admin->id],[
+                'title' => $admin->fullname . "(" . $admin->username . ")" . " logged in.",
+                'desc'  => "",
+                'user_type' => 'admin',
+            ])->send();
         }catch(Exception $e) {
             // return false;
         }

@@ -111,6 +111,7 @@
                 <ul class="header-user-list">
                     <li><a href="{{ setRoute('admin.profile.index') }}">{{ __("Admin Profile") }}</a></li>
                     <li><a href="{{ setRoute('admin.profile.change.password') }}">{{ __("Change Password") }}</a></li>
+                    <li><a href="{{ setRoute('admin.profile.google.2fa.view') }}">{{ __("Google 2FA") }}</a></li>
                 </ul>
             </div>
         </div>

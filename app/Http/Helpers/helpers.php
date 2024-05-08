@@ -1495,17 +1495,17 @@ function generate_google_2fa_auth_qr() {
     $google2FA = new \PragmaRX\Google2FA\Google2FA();
     $secret_key = $google2FA->generateSecretKey();
     $user = auth()->user();
+    $site_url = App::make('url')->to('/');
     if($user->two_factor_secret) {
-        $site_url = App::make('url')->to('/');
         $generate_text = $google2FA->getQRCodeUrl($site_url,$user->username,$user->two_factor_secret);
     }else {
-        $site_url = App::make('url')->to('/');
         $generate_text = $google2FA->getQRCodeUrl($site_url,$user->username,$secret_key);
         $user->update([
             'two_factor_secret' => $secret_key,
         ]);
     }
-    $qr_image = 'https://chart.googleapis.com/chart?cht=qr&chs=350x350&chl='.$generate_text;
+    // $qr_image = 'https://chart.googleapis.com/chart?cht=qr&chs=350x350&chl='.$generate_text;
+    $qr_image = 'https://qrcode.tec-it.com/API/QRCode?data='.$generate_text;
     return $qr_image;
 }
 function google_two_factor_verification_user_template($user) {
@@ -1698,4 +1698,19 @@ function get_coupon_information($id){
         ];
         return $data;
     }
+}
+
+function make_user_id_for_pusher($user_type, $user_id){
+    return remove_special_char(get_full_url_host(), "-") . '-' . $user_type . '-' . $user_id;
+}
+/**
+ * Get Full URL Path
+ */
+function get_full_url_host(){
+    $base_url = url('/');
+    $parse_base_url = parse_url($base_url);
+    $host = $parse_base_url['host'] ?? "";
+    $path = $parse_base_url['path'] ?? "";
+    $full_url_host = $host . '' . $path;
+    return $full_url_host;
 }

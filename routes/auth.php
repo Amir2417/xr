@@ -8,6 +8,7 @@ use App\Http\Controllers\User\Auth\ForgotPasswordController as UserForgotPasswor
 use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
 use App\Http\Controllers\User\Auth\RegisterController as UserRegisterController;
 use App\Http\Controllers\User\AuthorizationController;
+use App\Http\Controllers\Admin\AuthorizationController as AdminAuthorizationController;
 
 // Admin Authentication Route
 Route::middleware(['guest','admin.login.guard'])->prefix('admin')->name('admin.')->group(function(){
@@ -22,6 +23,11 @@ Route::middleware(['guest','admin.login.guard'])->prefix('admin')->name('admin.'
 
     Route::get('password/reset/{token}',[ResetPasswordController::class,"showResetForm"])->name('password.reset');
     Route::post('password/update',[ResetPasswordController::class,'reset'])->name('password.update');
+
+    Route::controller(AdminAuthorizationController::class)->prefix("authorize")->middleware(['auth:admin'])->withoutMiddleware(['admin.login.guard','guest'])->name('authorize.')->group(function(){
+        Route::get('google/2fa','showGoogle2FAForm')->name('google.2fa');
+        Route::post('google/2fa/submit','google2FASubmit')->name('google.2fa.submit');
+    });
 });
 
 Route::name('user.')->group(function(){
