@@ -114,19 +114,33 @@ class StatementController extends Controller
      * 
      */
     public function download($transactions){
-        $sender_currency         = Currency::where('status',true)->where('sender',true)->first();
-        $receiver_currency       = Currency::where('status',true)->where('receiver',true)->first();
         $total_transactions      = $transactions->count();
-        $total_send_amount       = $transactions->sum('request_amount');
-        $total_receive_amount    = $transactions->sum('will_get_amount');
+        $request        = 0;
+        $convert        = 0;
+        $will_get = 0;
+        foreach($transactions as $item){
+            $currency   = Currency::where('code',$item->remittance_data->sender_currency)->first();
+            
+            if($currency->code == 'USD'){
+                $request += $item->request_amount;
+            }else{
+                $convert_amount     = $item->request_amount / $currency->rate;
+                $convert += $convert_amount;
+            }
+            $receiver_currency = Currency::where('code',$item->remittance_data->receiver_currency)->first();
+            
+            $convert_amount     = $item->will_get_amount / $receiver_currency->rate;
+            $will_get += $convert_amount;
+        }
+
+        $total_send_amount       = $request + $convert;
+        $total_receive_amount    = $will_get;
 
         $data   = [
             'total_transactions'   => $total_transactions,
             'total_send_amount'    => $total_send_amount,
             'total_receive_amount' => $total_receive_amount,
             'transaction'          => $transactions,
-            'sender_currency'      => $sender_currency,
-            'receiver_currency'    => $receiver_currency,
         ];
 
         $pdf = PDF::loadView('pdf-templates.statement', $data);

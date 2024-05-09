@@ -346,8 +346,8 @@
                                                                 {{ $item->remittance_data->first_name ?? '' }} {{ $item->remittance_data->middle_name ?? '' }} {{ $item->remittance_data->last_name ?? '' }}
                                                             </td>
                                                             <td>
-                                                                {{ get_amount($item->request_amount) ?? '' }} {{ $sender_currency->code }} <br>
-                                                                {{ get_amount($item->will_get_amount) ?? '' }} {{ $receiver_currency->code }}
+                                                                {{ get_amount($item->request_amount) ?? '' }} {{ $item->remittance_data->sender_currency }} <br>
+                                                                {{ get_amount($item->will_get_amount) ?? '' }} {{ $item->remittance_data->receiver_currency }}
                                                             </td>
                                                             <td>
                                                                 {{ $item->remittance_data->sending_purpose ?? '' }} <br>
@@ -385,8 +385,8 @@
                                                 </tbody>
                                             </table>
                                             <p>Total Search Result : {{ $total_transactions }}</p>
-                                            <p>Total Send Amount : {{ $total_send_amount }} {{ $sender_currency->code }}</p>
-                                            <p>Total Receive Amount : {{ $total_receive_amount }} {{ $receiver_currency->code }}</p>
+                                            <p>Total Send Amount : {{ get_amount($total_send_amount) }} {{ get_default_currency_code() }}</p>
+                                            <p>Total Receive Amount : {{ get_amount($total_receive_amount) }} {{ get_default_currency_code() }}</p>
                                         </div>
                                     </div>
                                 </div>

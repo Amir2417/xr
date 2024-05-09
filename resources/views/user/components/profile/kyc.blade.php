@@ -37,11 +37,23 @@
     @elseif (auth()->user()->kyc_verified == global_const()::REJECTED)
         <div class="unverified text--danger kyc-text d-flex align-items-center justify-content-between mb-4">
             <div class="title text--warning">{{ __("Your KYC information is rejected.") }}</div>
-            <a href="{{ setRoute('user.authorize.kyc') }}" class="btn--base">{{ __("Verify KYC") }}</a>
         </div>
         <div class="rejected">
+            <h6>{{ __("Reject Reason") }}</h6>
             <div class="rejected-reason">{{ auth()->user()->kyc->reject_reason ?? "" }}</div>
         </div>
+        <form action="{{ setRoute('user.authorize.kyc.submit') }}" class="account-form" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row ml-b-20">
+    
+                @include('user.components.generate-kyc-fields',['fields' => $kyc_fields])
+    
+                
+                <div class="col-lg-12 form-group text-center">
+                    <button type="submit" class="btn--base w-100 btn-loading">{{ __("Submit") }}</button>
+                </div>
+            </div>
+        </form>
     @else
     <p>{{ __("Please submit your KYC information with valid data.") }}</p>
     <form action="{{ setRoute('user.authorize.kyc.submit') }}" class="account-form" method="POST" enctype="multipart/form-data">
