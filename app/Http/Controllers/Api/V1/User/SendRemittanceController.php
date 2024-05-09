@@ -98,10 +98,22 @@ class SendRemittanceController extends Controller
                 'remaining'         => $remaining
             ];
         });
+        $image_paths = [
+            'base_url'         => url("/"),
+            'path_location'    => files_asset_path_basename("currency-flag"),
+            'default_image'    => files_asset_path_basename("default"),
 
+        ];
         //new user coupon
         
         $user_coupon    = UserCoupon::auth()->with(['new_user_bonus'])->first();
+        if(!$user_coupon) return Response::success(['Transaction Type find successfully.'],[
+            'sender_currency'    => $sender_currency,
+            'receiver_currency'  => $receiver_currency,
+            'image_paths'        => $image_paths,
+            'transaction_type'   => $transaction_type,
+            'coupons'            => $coupons ?? '',
+        ],200);
         $coupon_transactions    = CouponTransaction::where('user_coupon_id',$user_coupon->id)->count();
         $remaining = $user_coupon->new_user_bonus->max_used - @$coupon_transactions;
         $new_user_coupon = [
@@ -113,12 +125,7 @@ class SendRemittanceController extends Controller
             'remaining'         => $remaining
         ];
 
-        $image_paths = [
-            'base_url'         => url("/"),
-            'path_location'    => files_asset_path_basename("currency-flag"),
-            'default_image'    => files_asset_path_basename("default"),
-
-        ];
+        
 
 
 
