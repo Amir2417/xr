@@ -544,9 +544,11 @@ class RemittanceController extends Controller
     public function downloadPdf($trx_id)
     {
         $transaction             = Transaction::where('trx_id',$trx_id)->first(); 
-
+        $coupon_transaction      = CouponTransaction::with(['coupon','user_coupon'])->where('transaction_id',$transaction->id)->first();
+        
         $data   = [
             'transaction'        => $transaction,
+            'coupon_transaction' => $coupon_transaction
         ];
         
         $pdf = PDF::loadView('pdf-templates.index', $data);

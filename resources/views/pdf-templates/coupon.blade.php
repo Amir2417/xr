@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ProPaid - Money Transfer System with User, Agent and Admin Panel</title>
-    
+    <link rel="stylesheet" href="{{ public_path('public/backend/css/line-awesome.css') }}">
 
     <style>
         body{
@@ -161,7 +160,7 @@
             -webkit-box-pack: justify;
             -ms-flex-pack: justify;
             justify-content: space-between;
-            padding: 15px;
+            padding: 15px 10px;
         }
         .preview-list-user-wrapper {
             display: -webkit-box;
@@ -191,9 +190,6 @@
             -webkit-transition: all 0.5s;
             transition: all 0.5s;
         }
-        .preview-list-user-wrapper .preview-list-user-content {
-            padding-left: 20px;
-        }
         .preview-list-user-wrapper .preview-list-user-content span {
             color: #000248;
             font-weight: 400;
@@ -202,6 +198,7 @@
             text-align: right;
             color: #000248;
             font-weight: 600;
+            font-size: 12px;
         }
         span {
             display: inline-block;
@@ -253,7 +250,6 @@
         }
         .custom-table {
             width: 100%;
-            white-space: nowrap;
         }
         tbody, td, tfoot, th, thead, tr {
             border-color: inherit;
@@ -302,256 +298,278 @@
                 margin: 6.35mm;
             }
         }
+        @page {
+            size: A4;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
-  
-  
-
 
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Start Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<div class="page-wrapper bg-overlay-base bg_img" style="background-image: url(/assets/images/element/banner-bg.jpg)">
+<div class="page-wrapper" style="margin: 50px">
     <div class="main-wrapper">
         <div class="main-body-wrapper">
             <div class="body-wrapper p-0">
                 <div class="row mb-20-none">
                     <div class="col-xl-12 col-lg-12 mb-20">
-                        <div class="pdf-logo">
+                        <div class="pdf-logo" style="padding-top: 30px">
                             <div class="logo-wrapper">
-                                <img src="../assets/images/logo/logo.png" alt="logo">
-                                <span class="number">Remittance Number : 34600957</span>
+                                <img src="{{ get_logo($basic_settings,"dark") }}" alt="logo">
+                                <span class="number">MTCN Number : {{ $transaction->transaction->trx_id }}</span>
                             </div>
                         </div>
                         <div class="custom-card">
                             <div class="card-body">
-                                <div class="row mb-20-none">
-                                    <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
-                                        <div class="preview-list-wrapper">
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                <div class="preview-list-area" style="width: 100%; margin-top: 30px">
+                                    <div class="" style="width:30%; margin-right: 20px; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-file-code"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Send Amount</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span><span class="text--base">40 USD</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span><span class="text--base">{{ get_amount($transaction->transaction->request_amount) }} {{ $transaction->transaction->remittance_data->sender_currency }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-qrcode"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Received Amount</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span><span class="text--base">20 EGP</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span><span class="text--base">{{ get_amount($transaction->transaction->will_get_amount) }} {{ $transaction->transaction->remittance_data->receiver_currency }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-exchange-alt"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Exchange rate</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span>1 USD = 1.00000000 EGP</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>{{ $transaction->transaction->remittance_data->sender_ex_rate }} {{ $transaction->transaction->remittance_data->sender_currency }} = {{ $transaction->transaction->remittance_data->receiver_ex_rate }} {{ $transaction->transaction->remittance_data->receiver_currency }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-network-wired"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Fees & Charges</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span>0.2 USD</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>{{ get_amount($transaction->transaction->fees) }} {{ $transaction->transaction->remittance_data->sender_currency }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
-                                        <div class="preview-list-wrapper">
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                    <div class="" style="width:31%; margin-right: 20px; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-calendar"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Transaction Type</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span><span class="text--base">Bank Transfer</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span><span class="text--base">{{ $transaction->transaction->remittance_data->type }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-money-bill-wave"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
-                                                            <span>Bank Name</span>
+                                                            <span>Country</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span><span class="text--base">Brac Bank</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span><span class="text--base">{{ $transaction->transaction->remittance_data->country }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-gem"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
-                                                            <span>Bank Account Number</span>
+                                                            <span>City & State</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span>2222 0000 7878 4444</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>{{ $transaction->transaction->remittance_data->city }} ({{ $transaction->transaction->remittance_data->state }})</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-power-off"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Request Date</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span>13-11-2023</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>{{ $transaction->transaction->created_at->format("d-m-Y") }}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
+                                                    <div class="preview-list-user-wrapper">
+                                                        <div class="preview-list-user-content">
+                                                            <span>Status</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>
+                                                        @if ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
+                                                            <span>{{ __("Review Payment") }}</span> 
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_PENDING)
+                                                            <span>{{ __("Pending") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
+                                                            <span>{{ __("Confirm Payment") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_HOLD)
+                                                            <span>{{ __("On Hold") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_SETTLED)
+                                                            <span>{{ __("Settled") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_COMPLETE)
+                                                            <span>{{ __("Completed") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_CANCEL)
+                                                            <span>{{ __("Canceled") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_FAILED)
+                                                            <span>{{ __("Failed") }}</span>
+                                                        @elseif ($transaction->transaction->status == global_const()::REMITTANCE_STATUS_REFUND)
+                                                            <span>{{ __("Refunded") }}</span>
+                                                        @else
+                                                            <span>{{ __("Delayed") }}</span>
+                                                        @endif
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
-                                        <div class="preview-list-wrapper">
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                    <div class="" style="width:31%; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-calendar-check"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Sending Purpose</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span><span class="text--base">Salary</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span><span class="text--base">{{ $transaction->transaction->remittance_data->sending_purpose ?? "" }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-tachometer-alt"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Source of Fund</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span><span class="text--base">Company</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span><span class="text--base">{{ $transaction->transaction->remittance_data->source ?? "" }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="lab la-drupal"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Payment Type</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span>Funds</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>{{ $transaction->transaction->remittance_data->currency->name ?? "" }}</span>
                                                 </div>
                                             </div>
-                                            <div class="preview-list-item">
-                                                <div class="preview-list-left">
+                                            <div class="preview-list-item" style="width: 100%">
+                                                <div class="preview-list-left" style="width: 40%; display: inline-block">
                                                     <div class="preview-list-user-wrapper">
-                                                        <div class="preview-list-user-icon">
-                                                            <i class="las la-window-close"></i>
-                                                        </div>
                                                         <div class="preview-list-user-content">
                                                             <span>Payment Date</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="preview-list-right">
-                                                    <span>24-07-2024</span>
+                                                <div class="preview-list-right" style="width: 40%; display: inline-block">
+                                                    <span>{{ $transaction->transaction->created_at->format("d-m-Y") }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-area mt-20">
-                                    <div class="table-wrapper">
-                                        <div class="dashboard-header-wrapper">
-                                            <h4 class="title">Sender</h4>
+                                <div class="preview-list-area" style="width: 100%;">
+                                    <div class="" style="width:48%; margin-right: 20px; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="table-wrapper">
+                                                <div class="dashboard-header-wrapper">
+                                                    <h4 class="title">Sender</h4>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="custom-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Email</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{ $transaction->transaction->remittance_data->sender_name ?? ""}}</td>
+                                                                <td>{{ $transaction->transaction->remittance_data->sender_email ?? "" }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="table-responsive">
-                                            <table class="custom-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Country</th>
-                                                        <th>City</th>
-                                                        <th>Mobile</th>
-                                                        <th>Address</th>
-                                                        <th>Nationality</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Sean Black</td>
-                                                        <td>Ethiopia</td>
-                                                        <td>Melbourne Footscray</td>
-                                                        <td>+61423501764</td>
-                                                        <td>13 merchant street footscray Vic 3012</td>
-                                                        <td>Australian</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                    </div>
+                                    <div class="" style="width:48%; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="table-wrapper">
+                                                <div class="dashboard-header-wrapper">
+                                                    <h4 class="title">Coupon</h4>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="custom-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Price</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{ $transaction->coupon->name ?? $transaction->user_coupon->coupon_name}}</td>
+                                                                <td>{{ get_amount($transaction->coupon->price) ?? get_amount($transaction->user_coupon->price) }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-area mt-20">
+                               
+                                <div class="table-area">
                                     <div class="table-wrapper">
                                         <div class="dashboard-header-wrapper">
                                             <h4 class="title">Receiver</h4>
@@ -563,19 +581,15 @@
                                                         <th>Name</th>
                                                         <th>Country</th>
                                                         <th>City</th>
-                                                        <th>Mobile</th>
                                                         <th>Address</th>
-                                                        <th>Nationality</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Sean Black</td>
-                                                        <td>Ethiopia</td>
-                                                        <td>Melbourne Footscray</td>
-                                                        <td>+61423501764</td>
-                                                        <td>13 merchant street footscray Vic 3012</td>
-                                                        <td>Australian</td>
+                                                        <td weight="100px">{{ $transaction->transaction->remittance_data->first_name . " " . $transaction->transaction->remittance_data->middle_name . " " . $transaction->transaction->remittance_data->last_name }}</td>
+                                                        <td weight="100px">{{ $transaction->transaction->remittance_data->country ?? "" }}</td>
+                                                        <td weight="100px">{{ $transaction->transaction->remittance_data->city ?? "" }}</td>
+                                                        <td weight="100px">{{ $transaction->transaction->remittance_data->address ?? "" }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -593,7 +607,5 @@
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     End Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-
 </body>
 </html>

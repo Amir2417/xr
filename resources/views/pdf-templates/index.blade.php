@@ -516,7 +516,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-area">
+                                @if (empty($coupon_transaction))
+                                <div class="table-area" style="margin-bottom: 15px;">
                                     <div class="table-wrapper">
                                         <div class="dashboard-header-wrapper">
                                             <h4 class="title">Sender</h4>
@@ -531,7 +532,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>{{ $transaction->remittance_data->sender_name ?? ""}}</td>
+                                                        <td>{{ $transaction->remittance_data->sender_name ?? "N/A"}}</td>
                                                         <td>{{ $transaction->remittance_data->sender_email ?? "" }}</td>
                                                     </tr>
                                                 </tbody>
@@ -539,7 +540,62 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-area mt-20">
+                                @else
+                                <div class="preview-list-area" style="width: 100%;">
+                                    <div class="" style="width:48%; margin-right: 20px; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="table-wrapper">
+                                                <div class="dashboard-header-wrapper">
+                                                    <h4 class="title">Sender</h4>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="custom-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Email</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{ $transaction->remittance_data->sender_name ?? ""}}</td>
+                                                                <td>{{ $transaction->remittance_data->sender_email ?? "" }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="" style="width:48%; display: inline-block">
+                                        <div class="preview-list-wrapper" style="border-radius: 10px">
+                                            <div class="table-wrapper">
+                                                <div class="dashboard-header-wrapper">
+                                                    <h4 class="title">Coupon</h4>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="custom-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Price</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{ $coupon_transaction->coupon->name ?? $coupon_transaction->user_coupon->coupon_name}}</td>
+                                                                <td>{{ get_amount($coupon_transaction->coupon->price) ?? get_amount($coupon_transaction->user_coupon->price) }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                
+                                <div class="table-area ">
                                     <div class="table-wrapper">
                                         <div class="dashboard-header-wrapper">
                                             <h4 class="title">Receiver</h4>
