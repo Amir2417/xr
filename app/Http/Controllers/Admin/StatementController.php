@@ -121,7 +121,7 @@ class StatementController extends Controller
         foreach($transactions as $item){
             $currency   = Currency::where('code',$item->remittance_data->sender_currency)->first();
             
-            if($currency->code == 'USD'){
+            if($currency->code == get_default_currency_code()){
                 $request += $item->request_amount;
             }else{
                 $convert_amount     = $item->request_amount / $currency->rate;
