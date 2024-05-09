@@ -33,7 +33,7 @@
             <div class="notification-wrapper">
                 <div class="notification-header">
                     <h6 class="title">{{ __("Notification") }}</h6>
-                    <span class="sub-title"><a href="javascript:void(0)" class="notifications-clear-all-btn @if(count(get_admin_notifications()) == 0) d-none @endif">{{ __("Clear All") }}</a></span>
+                    <span class="sub-title"><a href="{{ setRoute('admin.notification.index') }}">{{ __("View All") }}</a></span>
                 </div>
                 <ul class="notification-list">
                     @forelse (get_admin_notifications() as $item)
