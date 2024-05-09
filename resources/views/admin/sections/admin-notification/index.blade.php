@@ -23,7 +23,7 @@
             'name'  => __("Dashboard"),
             'url'   => setRoute("admin.dashboard"),
         ]
-    ], 'active' => __("Website Subscribers")])
+    ], 'active' => __($page_title)])
 @endsection
 
 @section('content')
