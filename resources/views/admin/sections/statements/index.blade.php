@@ -57,11 +57,11 @@
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 form-group">
                             <label>{{ __("Start Date") }}</label>
-                            <input type="date" class="form--control" name="start_date">
+                            <input type="date" class="form--control" name="start_date" value="{{ old('start_date') }}">
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 form-group">
                             <label>{{ __("End Date") }}</label>
-                            <input type="date" class="form--control" name="end_date">
+                            <input type="date" class="form--control" name="end_date" value="{{ old('end_date') }}">
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 form-group">
                             <label>{{ __("Status") }}</label>
@@ -69,7 +69,8 @@
                                 $status   = request()->get('status');
                             @endphp
                             <select class="form--control select2-basic" name="status">
-                                <option value="{{ global_const()::REMITTANCE_STATUS_ALL }}" selected @if ($status == global_const()::REMITTANCE_STATUS_ALL) selected @endif>{{ __(global_const()::REMITTANCE_STATUS_ALL) }}</option>
+                                <option selected>{{ __("Select Status") }}</option>
+                                <option value="{{ global_const()::REMITTANCE_STATUS_ALL }}" @if ($status == global_const()::REMITTANCE_STATUS_ALL) selected @endif>{{ __(global_const()::REMITTANCE_STATUS_ALL) }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT }}" @if ($status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT) selected @endif>{{ __("Review Payment") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_PENDING }}" @if ($status == global_const()::REMITTANCE_STATUS_PENDING) selected @endif>{{ __("Pending") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT }}" @if ($status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT) selected @endif>{{ __("Confirm Payment") }}</option>

@@ -48,9 +48,10 @@ class StatementController extends Controller
         $startDate = null;
         $endDate = null;
 
-        if ($selectedRange == global_const()::SPECIFIC_DATES) {
+        if ($request->start_date || $request->end_date) {
             $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
             $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+            
         } else {
             switch ($selectedRange) {
                 case global_const()::LAST_ONE_WEEKS:
@@ -80,17 +81,19 @@ class StatementController extends Controller
 
         $status = $request->input('status');
 
+        
         $query = Transaction::query();
 
         if ($startDate && $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }
-
-        if ($status !== global_const()::REMITTANCE_STATUS_ALL) {
-            $query->where('status', $status);
-        }
-
+        
+        // if ($status !== global_const()::REMITTANCE_STATUS_ALL) {
+        //     $query->where('status', $status);
+        // }
+        
         $transactions = $query->get();
+       
 
         if(isset($validated['submit_type']) && $validated['submit_type'] == 'EXPORT') {
             return $this->download($transactions);
