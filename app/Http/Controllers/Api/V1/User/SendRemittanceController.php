@@ -159,9 +159,11 @@ class SendRemittanceController extends Controller
         $matchingCoupon = $coupons->first(function ($coupon) use ($request) {
             return $coupon->name === $request->coupon;
         });
+        if(!$coupons){
 
-        $matching_with_new_user     = UserCoupon::with(['new_user_bonus'])->where('coupon_name',$request->coupon)->first();
-        if(!$matching_with_new_user) return Response::error(['Coupon not found!'],[],404);
+            $matching_with_new_user     = UserCoupon::with(['new_user_bonus'])->where('coupon_name',$request->coupon)->first();
+            if(!$matching_with_new_user) return Response::error(['Coupon not found!'],[],404);
+        }
         $user   = auth()->user();
         $coupon_type = '';
         $couponId = 0;
