@@ -69,7 +69,7 @@
                                 $status   = request()->get('status');
                             @endphp
                             <select class="form--control select2-basic" name="status">
-                                <option selected>{{ __("Select Status") }}</option>
+                                <option selected disabled>{{ __("Select Status") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_ALL }}" @if ($status == global_const()::REMITTANCE_STATUS_ALL) selected @endif>{{ __(global_const()::REMITTANCE_STATUS_ALL) }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT }}" @if ($status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT) selected @endif>{{ __("Review Payment") }}</option>
                                 <option value="{{ global_const()::REMITTANCE_STATUS_PENDING }}" @if ($status == global_const()::REMITTANCE_STATUS_PENDING) selected @endif>{{ __("Pending") }}</option>

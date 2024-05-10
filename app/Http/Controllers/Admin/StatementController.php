@@ -84,16 +84,19 @@ class StatementController extends Controller
         
         $query = Transaction::query();
 
-        if ($startDate && $endDate) {
+        if ($startDate && $endDate && $status == global_const()::REMITTANCE_STATUS_ALL) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
+        }elseif($startDate && $endDate && $status){
+            $query->whereBetween('created_at', [$startDate, $endDate])->where('status',$status);
+        }elseif($startDate && $endDate){
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }elseif ($status == global_const()::REMITTANCE_STATUS_ALL) {
+            $query->get();
+        }else{
+            $query->where('status',$status);
         }
         
-        // if ($status !== global_const()::REMITTANCE_STATUS_ALL) {
-        //     $query->where('status', $status);
-        // }
-        
         $transactions = $query->get();
-       
 
         if(isset($validated['submit_type']) && $validated['submit_type'] == 'EXPORT') {
             return $this->download($transactions);
