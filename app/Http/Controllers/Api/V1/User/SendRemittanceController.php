@@ -52,7 +52,7 @@ class SendRemittanceController extends Controller
 
         $transaction_type  = TransactionSetting::where('status',true)->get();
         if($transaction_type->isEmpty()) {
-            $transaction_type = TransactionSetting::first();
+            $transaction_first = TransactionSetting::first();
         }
         $sender_currency      = Currency::where('status',true)->where('sender',true)->get()->map(function($data){
             return [
@@ -133,7 +133,7 @@ class SendRemittanceController extends Controller
             'sender_currency'    => $sender_currency,
             'receiver_currency'  => $receiver_currency,
             'image_paths'        => $image_paths,
-            'transaction_type'   => $transaction_type,
+            'transaction_type'   => $transaction_type ?? $transaction_first,
             'coupons'            => $coupons,
             'new_user_coupon'    => $new_user_coupon
         ],200);
