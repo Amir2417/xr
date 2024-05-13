@@ -51,9 +51,8 @@ class SendRemittanceController extends Controller
     public function index(Request $request){
 
         $transaction_type  = TransactionSetting::where('status',true)->get();
-        $transaction_first = TransactionSetting::first();
         if($transaction_type->isEmpty()) {
-            return Response::error(['Transaction Type not found!'],[],404);
+            $transaction_first = TransactionSetting::first();
         }
         $sender_currency      = Currency::where('status',true)->where('sender',true)->get()->map(function($data){
             return [
