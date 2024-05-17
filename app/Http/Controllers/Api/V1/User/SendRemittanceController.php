@@ -169,7 +169,7 @@ class SendRemittanceController extends Controller
         $couponId = 0;
         $coupon_bonus = 0;
         if($request->coupon){
-            if($matchingCoupon){
+            if(isset($matchingCoupon)){
                 $transaction    = CouponTransaction::auth()->where('coupon_id',$matchingCoupon->id)->count();
                 if($transaction >= $matchingCoupon->max_used){
                     return Response::error(['Sorry! Your Coupon limit is over.']);
@@ -179,14 +179,19 @@ class SendRemittanceController extends Controller
                     $coupon_bonus   = $matchingCoupon->price;
                 }
             }else{
-                $transaction    = CouponTransaction::auth()->where('user_coupon_id',$matching_with_new_user->id)->count(); 
-                if($transaction >= $matching_with_new_user->new_user_bonus->max_used){
-                    return Response::error(['Sorry! Your Coupon limit is over.']);
+                if(isset($matching_with_new_user)){
+                    $transaction    = CouponTransaction::auth()->where('user_coupon_id',$matching_with_new_user->id)->count();
+                    if($transaction >= $matching_with_new_user->new_user_bonus->max_used){
+                        return Response::error(['Sorry! Your Coupon limit is over.']);
+                    }else{
+                        $coupon_type    = GlobalConst::NEW_USER_BONUS;
+                        $couponId       = $matching_with_new_user->id;
+                        $coupon_bonus   = $matching_with_new_user->price;
+                    }
                 }else{
-                    $coupon_type    = GlobalConst::NEW_USER_BONUS;
-                    $couponId       = $matching_with_new_user->id;
-                    $coupon_bonus   = $matching_with_new_user->price;
-                }
+                    return Response::error(['Coupon not found!'],[],404);
+                } 
+                
             }
         }
         
