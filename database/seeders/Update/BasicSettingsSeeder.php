@@ -16,7 +16,7 @@ class BasicSettingsSeeder extends Seeder
     public function run()
     {
         $data = [
-            'web_version'       => "2.4.2"
+            'web_version'       => "2.5.0"
         ];
         $basicSettings = BasicSettings::first();
         $basicSettings->update($data);

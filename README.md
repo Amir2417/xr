@@ -1,13 +1,14 @@
 <<<<<<<< Update Guide >>>>>>>>>>>
 
 Immediate Older Version: 2.4.1
-Current Version: 2.4.2
+Current Version: 2.5.0
 
 Feature Update:
 1. New User Bonus.
 2. Bank transfer for both automatic and manual.
 3. GDPR Cookie update.
 4. Google 2FA for admin.
+5. Fileholder CDN update.
 
 
 Please User Those Command On Your Terminal To Update Full System
@@ -24,6 +25,9 @@ Please User Those Command On Your Terminal To Update Full System
 4. To Update BankMethod Manual Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\RemittanceBankSeeder
 
-5. To Update BankMethod Automatic Seeder Please Run This Command On Your Terminal
+5. To Update Mobile Method Manual Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\MobileMethodSeeder
+
+6. To Update Mobile Method Manual Seeder Please Run This Command On Your Terminal
+    php artisan db:seed --class=Database\\Seeders\\Admin\\CurrencySeeder
 
