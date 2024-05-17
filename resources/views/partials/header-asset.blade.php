@@ -26,8 +26,8 @@
 <link rel="stylesheet" href="{{ asset('public/frontend/css/style.css')}}">
 <!-- select2-select css link -->
 <link rel="stylesheet" href="{{ asset('public/backend/css/select2.css') }}">
-<!-- file holder css -->
-<link rel="stylesheet" href="https://cdn.appdevs.net/fileholder/v1.0/css/fileholder-style.css" type="text/css">
+<!-- Fileholder CSS CDN -->
+<link rel="stylesheet" href="https://appdevs.cloud/cdn/fileholder/v1.0/css/fileholder-style.css" type="text/css">
 
 @php
     $color = @$basic_settings->base_color ?? '#723eeb';
