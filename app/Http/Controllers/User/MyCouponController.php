@@ -19,9 +19,14 @@ class MyCouponController extends Controller
     public function index(){
         $page_title         = "| My Coupon";
         $bonus              = UserCoupon::with(['new_user_bonus'])->auth()->first();
-        $coupon_transaction = CouponTransaction::auth()->with(['user_coupon'])->whereNot('user_coupon_id',null)->count();
-        $remaining          = $bonus->new_user_bonus->max_used - $coupon_transaction;
-        $coupons            = Coupon::where('status',true)->orderBy('id','desc')->get();
+        if(isset($bonus)){
+            $coupon_transaction = CouponTransaction::auth()->with(['user_coupon'])->whereNot('user_coupon_id',null)->count();
+            $remaining          = $bonus->new_user_bonus->max_used - $coupon_transaction;
+            $coupons            = Coupon::where('status',true)->orderBy('id','desc')->get();
+        }else{
+            $remaining          = '';
+            $coupons            = '';
+        }
         $user               = auth()->user();
         $notifications      = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
 

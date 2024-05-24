@@ -16,7 +16,15 @@ class MyCouponController extends Controller
      */
     public function index(){
         $bonus              = UserCoupon::with(['new_user_bonus'])->auth()->first();
-        if(!$bonus) return Response::error(['Coupon is not available!'],[],404);
+        if(!$bonus) return Response::success(['Your Coupon information'],[
+            'coupon'    => [
+                'id'            => null,
+                'name'          => null,
+                'price'         => null,
+                'max_limit'     => null,
+                'remaining'     => null
+            ]
+        ]);
         $coupon_transaction = CouponTransaction::auth()->with(['user_coupon'])->whereNot('user_coupon_id',null)->count();
         $remaining          = $bonus->new_user_bonus->max_used - $coupon_transaction;
         $coupon             = [
