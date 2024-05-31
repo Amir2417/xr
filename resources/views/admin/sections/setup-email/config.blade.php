@@ -85,7 +85,7 @@
                         ])
                     </div>
                     <div class="col-xl-6 col-lg-6 form-group" id="show_hide_password">
-                        @include('admin.components.form.input-password',[
+                        @include('admin.components.form.input-password-eye',[
                             'label'         => __('Password')."*",
                             'placeholder'   => 'Password' ,
                             'name'          => 'password',
