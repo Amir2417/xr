@@ -33,9 +33,12 @@ class Helper {
 
     public function connection(array $data) {
         $url = new URLHelper();
-        $connection_response = Http::acceptJson()->post($url->getConnection(),$data);
-        if($connection_response->failed()) {
-            $message = $connection_response->collect()->get('data')['message'] ?? "";
+
+        $response = Http::post($url->getValidation('v2'),$data);
+
+        if($response->failed()) {
+            $message = $response->json('message')['error'][0] ?? "";
+            if($message == "") $message = $response->status();
             throw new Exception($message);
         }
     }

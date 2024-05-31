@@ -5,16 +5,18 @@ namespace Project\Installer\Helpers;
 use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Process\Process;
 
 class DBHelper {
 
     public function create(array $data) {
+
         $this->updateEnv([
             'DB_CONNECTION'     => "mysql",
             'DB_HOST'           => $data['host'],
-            'DB_PORT'           =>"3306",
+            'DB_PORT'           => $data['port'],
             'DB_DATABASE'       => $data['db_name'],
             'DB_USERNAME'       => $data['db_user'],
             'DB_PASSWORD'       => $data['db_user_password'],
@@ -35,7 +37,22 @@ class DBHelper {
         }
 
         $env_file = App::environmentFilePath();
-        $env_content = $_ENV;
+
+        $env_file_content_string = File::get($env_file);
+
+        $lines = array_values(array_filter(explode("\n", $env_file_content_string)));
+
+        $env_content = [];
+        foreach($lines as $line) {
+            $line = trim($line);
+            if ($line) {
+                list($key, $value) = explode('=', $line, 2);
+                // Remove any quotes from the value
+                $value = trim($value, '"');
+                // Store the key-value pair in the array
+                $env_content[$key] = $value;
+            }
+        }
 
         $update_array = ["APP_ENV" => App::environment()];
 
@@ -59,19 +76,18 @@ class DBHelper {
         $string_content = "";
         foreach ($update_array as $key => $item) {
             $line = $key . "=" . $item;
-            $string_content .= $line . "\n\r";
+
+            $string_content .= $line . "\r\n\n";
         }
 
-        sleep(2);
-
-        file_put_contents($env_file, $string_content);
+        File::put($env_file, $string_content);
     }
 
     public function setEnvValue($key,$value) {
         if($key == "APP_KEY") {
             return $value;
         }
-        return '"'.$value.'"';
+        return '"' .$value . '"';
     }
 
     public function saveDataInSession($data) {
@@ -91,6 +107,15 @@ class DBHelper {
     }
 
     public function migrate() {
+
+        if(App::environment() != "local") {
+            $this->updateEnv([
+                'APP_ENV'               => "local",
+            ]);
+
+            sleep(2);
+        }
+
         self::execute("php artisan migrate:fresh --seed");
         self::execute("php artisan migrate");
         self::execute("php artisan passport:install");
@@ -167,6 +192,7 @@ class DBHelper {
         $db->updateEnv([
             'PURCHASE_CODE' => $p_code,
             'APP_MODE'      => "live",
+            'APP_DEBUG'     => "false"
         ]);
 
         // $helper->generateAppKey();

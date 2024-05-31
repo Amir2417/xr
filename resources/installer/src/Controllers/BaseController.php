@@ -99,6 +99,7 @@ class BaseController extends Controller {
         $validator = Validator::make($request->all(),[
             'app_name'          => 'required|string|max:150',
             'host'              => 'required|string',
+            'port'              => 'required|string',
             'db_name'           => 'required|string|max:100',
             'db_user'           => 'required|string',
             'db_user_password'  => 'nullable|string',

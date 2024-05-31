@@ -22,22 +22,26 @@
                 @csrf
                 <div class="form-group">
                     <label>Application name</label>
-                    <input type="text" class="form--control" name="app_name" placeholder="Ex : localhost">
+                    <input type="text" class="form--control" name="app_name" placeholder="Ex : {{ env('APP_NAME') }}">
                 </div>
                 <div class="form-group">
-                    {{-- <label>Database Host</label> --}}
-                    <input type="hidden" class="form--control" name="host" placeholder="Ex : localhost" required value="localhost">
+                    <label>Database Host <span class="text--warning">(If you have databse host then you can add otherwise skip this field. Default - localhost)</span></label>
+                    <input type="text" class="form--control" name="host" placeholder="Ex : localhost" required value="localhost">
                 </div>
                 <div class="form-group">
-                    <label>Database Name</label>
+                    <label>Database Port <span class="text--warning">(If your database port is different then you can change otherwise skip this field. Default - 3306)</span></label>
+                    <input type="text" class="form--control" name="port" placeholder="Ex : 3306" required value="3306">
+                </div>
+                <div class="form-group">
+                    <label>Database Name <span class="text--warning">(Don't include white spaces)</span> </label>
                     <input type="text" class="form--control" name="db_name" placeholder="Enter Name..." required>
                 </div>
                 <div class="form-group">
-                    <label>Database Username</label>
+                    <label>Database Username <span class="text--warning">(Don't include white spaces)</span> </label>
                     <input type="text" class="form--control" name="db_user" placeholder="Enter Username..." required>
                 </div>
                 <div class="form-group">
-                    <label>Database Password</label>
+                    <label>Database Password <span class="text--warning">(Don't include hash (#) or white spaces)</span> </label>
                     <input type="password" class="form--control" name="db_user_password" placeholder="Enter Password...">
                 </div>
                 <div class="form-group">

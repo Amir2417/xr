@@ -11,7 +11,7 @@
                     <input type="text" class="form--control" name="username" placeholder="Enter Username..." required>
                 </div>
                 <div class="form-group">
-                    <label>Purchase Code <code><a href="">How To Get Purchase Code?</a></code></label>
+                    <label>Purchase Code <code><a href="https://appdevs.net/blog/how-to-find-your-purchase-code" target="_blank">How To Get Purchase Code?</a></code></label>
                     <input type="text" name="code" class="form--control" placeholder="Enter Code..." required>
                 </div>
                 <div class="form-group">

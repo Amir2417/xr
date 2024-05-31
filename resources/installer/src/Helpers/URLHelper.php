@@ -18,7 +18,17 @@ class URLHelper {
         return "WVVoU01HTklUVFpNZVRsb1kwZHJkVnBYTlRKWldGSjJURzFPZG1KVE9USk5lVGwwV1ZoS2NscFlVWFpaV0ZZd1lVYzVlVXd6VG1oaVIxVTk=";
     }
 
-    public function getValidation() {
+    public function validationV2()
+    {
+        return "WVVoU01HTklUVFpNZVRsb1kwaENhMXBZV25wTWJUVnNaRU01YUdOSGEzWmtha2wyWVZjMWVtUkhSbk5pUjFaNVRESnNkVnB0T0QwPQ==";
+    }
+
+    public function getValidation($version = 'v1') {
+        
+        if($version == "v2") {
+            return $this->convertLayer($this->validationV2());
+        }
+
         return $this->convertLayer($this->validation());
     }
 
