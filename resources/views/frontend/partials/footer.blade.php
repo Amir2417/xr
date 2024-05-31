@@ -64,7 +64,7 @@
                 <div class="row">
                     <div class="col-12 text-center text-lg-left">
                         <div class="copyright-text">
-                            <p>{{ __("Copyright") }} &copy; 2024, {{ __("All Right Reserved") }} <a href="{{ setRoute('index') }}">{{ $basic_settings->site_name }}</a>
+                            <p>{{ __("Copyright") }} &copy; 2024, {{ __("All Rights Reserved") }} <a href="{{ setRoute('index') }}">{{ $basic_settings->site_name }}</a>
                             </p>
                         </div>
                     </div>
