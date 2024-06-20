@@ -82,6 +82,19 @@
 @endsection
 @push('script')
     <script>
+        openModalWhenError("add-cash-pickup","#add-cash-pickup")
+
+        $(".delete-modal-button").click(function(){
+            var oldData     = JSON.parse($(this).parents("tr").attr("data-item"));
+            var actionRoute = "{{ setRoute('admin.cash.pickup.method.delete') }}";
+            var target      = oldData.id;
+            var message     = `{{ __("Are you sure to") }} <strong>{{ __("delete") }}</strong> {{ __("this pickup point?") }}`;
+
+            openDeleteModal(actionRoute,target,message);
+
+        });
+    </script>
+    <script>
         $(document).ready(function(){
             // Switcher
             switcherAjax("{{ setRoute('admin.cash.pickup.method.status.update') }}");

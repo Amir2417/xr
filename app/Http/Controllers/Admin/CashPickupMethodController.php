@@ -37,7 +37,7 @@ class CashPickupMethodController extends Controller
             'country'   => 'required',
             'address'   => 'required'
         ]);
-        if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+        if($validator->fails()) return back()->withErrors($validator)->withInput()->with("modal","add-cash-pickup");
         $validated          = $validator->validate();
         $validated['slug']  = Str::slug($validated['address']);
         if(CashPickup::where('country',$validated['country'])->where('address',$validated['address'])->exists()){
