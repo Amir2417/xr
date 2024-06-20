@@ -80,13 +80,14 @@ class RemittanceBankController extends Controller
         $validated = replace_array_key($validated,"edit_");
         $validated = Arr::except($validated,['target']);
         $validated['slug']   = $slug;
-
-        if(RemittanceBank::where('name',$validated['name'])->where('country',$validated['country'])->exists()){
+        $remittance_bank = RemittanceBank::find($request->target);
+        
+        if(RemittanceBank::whereNot('id',$remittance_bank->id)->where('name',$validated['name'])->where('country',$validated['country'])->exists()){
             throw ValidationException::withMessages([
                 'name'    => 'Remittance Bank already exists',
             ]);
         }
-        $remittance_bank = RemittanceBank::find($request->target);
+        
         
         try{
             $remittance_bank->update($validated);

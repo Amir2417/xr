@@ -45,7 +45,7 @@
                     @forelse ($cash_pickups ?? [] as $key => $item)
                         <tr data-item="{{ $item }}">
                             <td>{{ $item->country ?? ''}}</td>
-                            <td>{{ $item->address ?? ''}}</td>
+                            <td class="text-wrap">{{ $item->address ?? ''}}</td>
                             
                             <td>
                                 @include('admin.components.form.switcher',[
@@ -91,7 +91,6 @@
             var message     = `{{ __("Are you sure to") }} <strong>{{ __("delete") }}</strong> {{ __("this pickup point?") }}`;
 
             openDeleteModal(actionRoute,target,message);
-
         });
     </script>
     <script>

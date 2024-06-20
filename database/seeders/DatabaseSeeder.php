@@ -26,9 +26,10 @@ use Database\Seeders\Admin\PaymentGatewaySeeder;
 use Database\Seeders\Admin\RemittanceBankSeeder;
 use Database\Seeders\Admin\SendingPurposeSeeder;
 use Database\Seeders\Admin\VirtualCardApiSeeder;
+use Database\Seeders\Admin\CashPickupMethodSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
-use Database\Seeders\Admin\BankMethodAutomaticSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
+use Database\Seeders\Admin\BankMethodAutomaticSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -89,7 +90,7 @@ class DatabaseSeeder extends Seeder
         //     SendingPurposeSeeder::class,
         //     SourceOfFundsSeeder::class,
         //     BeneficiarySeeder::class,
-
+        //     CashPickupMethodSeeder::class
         // ]);
     }
 }
