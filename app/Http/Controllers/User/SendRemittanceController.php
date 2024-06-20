@@ -164,7 +164,9 @@ class SendRemittanceController extends Controller
         $currency = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
         $source_of_fund = SourceOfFund::where('id',$validated['source'])->first();
         $sending_purpose  = SendingPurpose::where('id',$validated['sending_purpose'])->first();
+        
         $rate               = $currency->rate / $temporary_data->data->sender_base_rate;
+        
         $data = [
             'type'                    => $temporary_data->type,
             'identifier'              => $temporary_data->identifier,
@@ -195,12 +197,10 @@ class SendRemittanceController extends Controller
                     'id'              => $sending_purpose->id,
                     'name'            => $sending_purpose->name,
                 ],
-                
                 'source'              => [
                     'id'              => $source_of_fund->id,
                     'name'            => $source_of_fund->name,
                 ],
-                
                 'remark'              => $validated['remark'],
                 'currency'            => [
                     'id'              => $currency->id,
@@ -209,8 +209,6 @@ class SendRemittanceController extends Controller
                     'alias'           => $currency->alias,
                     'rate'            => $currency->rate,
                 ],
-
-                
                 'payment_gateway'     => $validated['payment_gateway'],
                 'front_image'         => $temporary_data->data->front_image,
                 'back_image'          => $temporary_data->data->back_image,

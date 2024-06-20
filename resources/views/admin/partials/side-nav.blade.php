@@ -139,6 +139,20 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="sidebar-menu-item sidebar-dropdown">
+                            <a href="javascript:void(0)" class="nav-link">
+                                <i class="menu-icon las la-ellipsis-h"></i>
+                                <span class="menu-title">{{ __("Cash Pickup Methods") }}</span>
+                            </a>
+                            <ul class="sidebar-submenu">
+                                <li class="sidebar-menu-item">
+                                    <a href="{{ setRoute('admin.cash.pickup.method.index') }}" class="nav-link @if($current_url == setRoute('admin.mobile.method.index')) active @endif">
+                                        <i class="menu-icon las la-ellipsis-h"></i>
+                                        <span class="menu-title">{{ __("Manual") }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 @include('admin.components.side-nav.link-group',[

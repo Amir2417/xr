@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\PaymentGatewaysController;
 use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\BankMethodAutomaticController;
+use App\Http\Controllers\Admin\CashPickupMethodController;
 use App\Http\Controllers\Admin\CouponTransactionController;
 use App\Http\Controllers\Admin\NewUserBonusController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
@@ -151,6 +152,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('update','update')->name('update');
         Route::delete('delete','delete')->name('delete');
         Route::put('status/update','statusUpdate')->name('status.update');
+    });
+
+    // cashpickup
+    Route::controller(CashPickupMethodController::class)->prefix('cash-pickup')->name('cash.pickup.method.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::post('store','store')->name('store');
     });
 
     //Send Remittance
