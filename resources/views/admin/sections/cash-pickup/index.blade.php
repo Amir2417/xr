@@ -35,7 +35,8 @@
             <table class="custom-table">
                 <thead>
                     <tr>
-                        <th>{{ __("Name") }}</th>
+                        <th>{{ __("Country") }}</th>
+                        <th>{{ __("Address") }}</th>
                         <th>{{ __("Status") }}</th>
                         <th></th>
                     </tr>
@@ -43,6 +44,7 @@
                 <tbody>
                     @forelse ($cash_pickups ?? [] as $key => $item)
                         <tr data-item="{{ $item }}">
+                            <td>{{ $item->country ?? ''}}</td>
                             <td>{{ $item->address ?? ''}}</td>
                             
                             <td>
@@ -65,7 +67,7 @@
                             </td>
                         </tr>
                     @empty
-                        @include('admin.components.alerts.empty',['colspan' => 3])
+                        @include('admin.components.alerts.empty',['colspan' => 4])
                     @endforelse
                 </tbody>
             </table>
