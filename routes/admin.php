@@ -158,6 +158,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::controller(CashPickupMethodController::class)->prefix('cash-pickup')->name('cash.pickup.method.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('delete','delete')->name('delete');
+        Route::put('status/update','statusUpdate')->name('status.update');
     });
 
     //Send Remittance

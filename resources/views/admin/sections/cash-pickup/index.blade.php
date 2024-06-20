@@ -59,10 +59,10 @@
                             
                             <td>
                                 @include('admin.components.link.edit-default',[
-                                    'href'          => setRoute('admin.bank.method.automatic.edit',$item->slug),
-                                    'class'         => "edit-modal-button",
-                                    'permission'    => "admin.bank.method.automatic.update",
-                                ])
+                                        'class'         => "edit-modal-button",
+                                        'permission'    => "admin.cash.pickip.method.update",
+                                    ])
+                                <button class="btn btn--base btn--danger delete-modal-button" ><i class="las la-trash-alt"></i></button>
                                
                             </td>
                         </tr>
@@ -84,7 +84,7 @@
     <script>
         $(document).ready(function(){
             // Switcher
-            switcherAjax("{{ setRoute('admin.bank.method.automatic.status.update') }}");
+            switcherAjax("{{ setRoute('admin.cash.pickup.method.status.update') }}");
         })
     </script>
 @endpush
