@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Constants\GlobalConst;
 use Exception;
 use App\Models\Recipient;
 use Illuminate\Http\Request;
@@ -396,13 +397,13 @@ class RecipientController extends Controller
                 $validated['front_image'] = $this->imageValidate($request,"front_image",null);
                 $validated['back_image'] = $this->imageValidate($request,"back_image",null);  
             }
-            if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->exists()){
+            if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('pickup_point',$validated['pickup_point'])->exists()){
                 throw ValidationException::withMessages([
                     'name'  => "Recipient already exists!",
-                ]);
+                ]);                         
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Mobile Money";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_CASHPICKUP;
             try{
                 Recipient::create($validated);
             }catch(Exception $e){

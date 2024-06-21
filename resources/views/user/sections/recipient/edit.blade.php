@@ -109,41 +109,41 @@
                                     ])
                                 </div>
                                 @if ($recipient->method == global_const()::BENEFICIARY_METHOD_BANK_TRANSAFER)
-                                <div class="form-group transaction-type">
-                                    <label>{{ __("Transaction Type") }} <span>*</span></label>
-                                    <select class="form--control trx-type-select select2-basic" name="method">
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}"   @if("Bank Transfer" == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
-                                        
-                                    </select>
-                                </div>
-                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_BANK }}-view" @if("Bank Transfer" == $recipient->method) style="display: block;" @else style="display: none;" @endif>
-                                    <div class="row">
-                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>{{ __("Bank Name") }}*</label>
-                                            <select class="form--control select2-basic bank-list" name="bank_name">
-                                                
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            @include('admin.components.form.input',[
-                                                'label'           => __('IBAN Number').'*',
-                                                'type'            => 'text',
-                                                'name'            => 'iban_number',
-                                                'value'           => old('iban_number',$recipient->iban_number),
-                                                'placeholder'     => __("Enter IBAN Number")."..."
-                                            ])
+                                    <div class="form-group transaction-type">
+                                        <label>{{ __("Transaction Type") }} <span>*</span></label>
+                                        <select class="form--control trx-type-select select2-basic" name="method">
+                                            <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}"   @if(global_const()::BENEFICIARY_METHOD_BANK_TRANSAFER == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_BANK }}</option>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_BANK }}-view" @if(global_const()::BENEFICIARY_METHOD_BANK_TRANSAFER == $recipient->method) style="display: block;" @else style="display: none;" @endif>
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6 col-md-6 form-group">
+                                                <label>{{ __("Bank Name") }}*</label>
+                                                <select class="form--control select2-basic bank-list" name="bank_name">
+                                                    
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 form-group">
+                                                @include('admin.components.form.input',[
+                                                    'label'           => __('IBAN Number').'*',
+                                                    'type'            => 'text',
+                                                    'name'            => 'iban_number',
+                                                    'value'           => old('iban_number',$recipient->iban_number),
+                                                    'placeholder'     => __("Enter IBAN Number")."..."
+                                                ])
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                @else
+                                @elseif ($recipient->method == global_const()::TRANSACTION_TYPE_MOBILE)
                                 <div class="form-group transaction-type">
                                     <label>{{ __("Transaction Type") }} <span>*</span></label>
                                     <select class="form--control trx-type-select select2-basic" name="method">
                                         
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}" @if("Mobile Money" == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}" @if(global_const()::TRANSACTION_TYPE_MOBILE == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
                                     </select>
                                 </div>
-                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" @if("Mobile Money" == $recipient->method) style="display: block;" @else style="display: none;" @endif >
+                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" @if(global_const()::TRANSACTION_TYPE_MOBILE == $recipient->method) style="display: block;" @else style="display: none;" @endif >
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                             <label>{{ __("Mobile Method") }}<span>*</span></label>
