@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\RemittanceBank;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\CashPickup;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -143,6 +144,21 @@ class DashboardController extends Controller
             return Response::error($validator->errors()->all());
         }
         $country = MobileMethod::where('country',$request->country)->where('status',true)->get();
+        return Response::success(['Data fetch successfully'],['country' => $country],200);
+    }
+    /**
+     * Method for get mobile method 
+     * @param string
+     * @param Illuminate\Http\Request $request
+     */
+    public function getPickupPoint(Request $request){
+        $validator   = Validator::make($request->all(),[
+            'country' => 'required',
+        ]);
+        if($validator->fails()){
+            return Response::error($validator->errors()->all());
+        }
+        $country = CashPickup::where('country',$request->country)->where('status',true)->get();
         return Response::success(['Data fetch successfully'],['country' => $country],200);
     }
     

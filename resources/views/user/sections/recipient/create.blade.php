@@ -116,6 +116,7 @@
                                     <select class="form--control trx-type-select select2-basic" name="method">
                                         <option value="{{ global_const()::RECIPIENT_METHOD_BANK }}">{{ __(global_const()::TRANSACTION_TYPE_BANK) }}</option>
                                         <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}">{{ __(global_const()::TRANSACTION_TYPE_MOBILE) }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_CASH }}">{{ __(global_const()::TRANSACTION_TYPE_CASHPICKUP) }}</option>
                                     </select>
                                 </div>
                                 <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" style="display: none;">
@@ -131,6 +132,17 @@
                                             <input type="number" class="form--control" name="account_number"
                                                 placeholder="{{ __("Enter Number") }}...">
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_CASH }}-view" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 form-group">
+                                            <label>{{ __("Pickup Point") }}<span>*</span></label>
+                                            <select class="form--control select2-basic pickup-list" name="pickup_point">
+                                                <option selected disabled>{{ __("Select Pickup Points") }}</option>
+                                            </select>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_BANK }}-view" style="display: block;">
@@ -228,8 +240,10 @@
         var transactionType = $("select[name=method] :selected").val();
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        }else{
+        }else if(transactionType == 'Mobile'){
             getMobileList(country,transactionType);
+        }else{
+            getCashPickupPoint(country,transactionType);
         }      
     });
     $("select[name=method]").change(function(){
@@ -238,10 +252,13 @@
        
         $(".bank-list").html('');
         $(".mobile-list").html('');
+        $(".pickup-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        }else{
+        }else if(transactionType == 'Mobile'){
             getMobileList(country,transactionType);
+        }else{
+            getCashPickupPoint(country,transactionType);
         }
     });
     function getBankList(country,transactionType){
@@ -272,6 +289,22 @@
             }
             $.each(response.data.country,function(index,item){
                 $(".mobile-list").append('<option value="' + item.name + '" ' + ' >' + item.name + '</option>');
+            });
+            
+        });
+    }
+    function getCashPickupPoint(country,transactionType){
+        var pickupURL = "{{ setRoute('user.get.pickup.points') }}";
+        
+        $(".pickup-list").html('');
+        $.post(pickupURL,{country:country,_token:"{{ csrf_token() }}"},function(response){
+            if(response.data.country == null || response.data.country == ''){
+                $('.pickup-list').html('<option value="" disabled>No Pickup Points Aviliable</option>');
+            }else{
+                $('.pickup-list').html('<option value="" disabled>Select Pickup Points</option>');
+            }
+            $.each(response.data.country,function(index,item){
+                $(".pickup-list").append('<option value="' + item.address + '" ' + ' >' + item.address + '</option>');
             });
             
         });

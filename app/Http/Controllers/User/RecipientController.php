@@ -288,7 +288,7 @@ class RecipientController extends Controller
     }
     public function recipientDataStore(Request $request){
         
-        if($request->method == global_const()::RECIPIENT_METHOD_BANK ){
+        if($request->method == global_const()::RECIPIENT_METHOD_BANK){
            
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
@@ -326,11 +326,10 @@ class RecipientController extends Controller
             try{
                 Recipient::create($validated);
             }catch(Exception $e){
-
                 return back()->with(['error' => ['Something went wrong! Please try again.']]);
             }
             return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Created Successfully.']]);
-        }else{
+        }elseif($request->method == global_const()::RECIPIENT_METHOD_MOBILE){
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -371,7 +370,47 @@ class RecipientController extends Controller
                 return back()->with(['error' => ['Something went wrong! Please try again.']]);
             }
             return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Created Successfully.']]);
-        }   
+        }else{
+            $validator      = Validator::make($request->all(),[
+                'first_name'      => 'required|string',
+                'middle_name'     => 'nullable|string',
+                'last_name'       => 'required|string',
+                'email'           => 'nullable|email',
+                'country'         => 'required|string',
+                'city'            => 'nullable|string',
+                'state'           => 'nullable|string',
+                'zip_code'        => 'nullable|string',
+                'phone'           => 'nullable|string',
+                'method'          => 'required|string',
+                'pickup_point'    => 'required|string',
+                'address'         => 'nullable|string',
+                'document_type'   => 'nullable|string',
+                'front_image'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
+                'back_image'      => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
+            ]);
+            if($validator->fails()){
+                return back()->withErrors($validator)->withInput($request->all());
+            }
+            $validated   = $validator->validate();
+            if($request->hasFile('front_image') || $request->hasFile('back_image')){
+                $validated['front_image'] = $this->imageValidate($request,"front_image",null);
+                $validated['back_image'] = $this->imageValidate($request,"back_image",null);  
+            }
+            if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->exists()){
+                throw ValidationException::withMessages([
+                    'name'  => "Recipient already exists!",
+                ]);
+            }
+            $validated['user_id'] = auth()->user()->id;
+            $validated['method'] = "Mobile Money";
+            try{
+                Recipient::create($validated);
+            }catch(Exception $e){
+
+                return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            }
+            return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Created Successfully.']]);
+        }  
     }
     
     public function edit($id){

@@ -19,7 +19,7 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::post('logout','logout')->name('logout');
         Route::post('get/bank/name','getBankName')->name('get.bank.name');
         Route::post('get-mobile-method','getMobileMethod')->name('get.mobile.method');
-        
+        Route::post('get-pickup-point','getPickupPoint')->name('get.pickup.points');        
     });
 
     //send-remittance

@@ -27,6 +27,7 @@ class GlobalConst {
 
     const TRANSACTION_TYPE_BANK                 = "Bank Transfer";
     const TRANSACTION_TYPE_MOBILE               = "Mobile Money";
+    const TRANSACTION_TYPE_CASHPICKUP               = "Cash Pickup";
 
     //beneficiary
     
