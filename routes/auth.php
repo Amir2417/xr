@@ -10,6 +10,11 @@ use App\Http\Controllers\User\Auth\RegisterController as UserRegisterController;
 use App\Http\Controllers\User\AuthorizationController;
 use App\Http\Controllers\Admin\AuthorizationController as AdminAuthorizationController;
 
+use App\Http\Controllers\Agent\Auth\ForgotPasswordController as AgentAuthForgotPasswordController;
+use App\Http\Controllers\Agent\Auth\LoginController as AgentAuthLoginController;
+use App\Http\Controllers\Agent\Auth\RegisterController as AuthRegisterController;
+use App\Http\Controllers\Agent\AuthorizationController as AgentAuthorizationController;
+
 // Admin Authentication Route
 Route::middleware(['guest','admin.login.guard'])->prefix('admin')->name('admin.')->group(function(){
     Route::get('/',function(){
@@ -56,5 +61,45 @@ Route::name('user.')->group(function(){
 
         Route::get('kyc','showKycFrom')->name('kyc');
         Route::post('kyc/submit','kycSubmit')->name('kyc.submit');
+    });
+});
+
+Route::prefix('agent')->name('agent.')->group(function(){
+    Route::get('/',function(){
+        return redirect()->route('agent.login');
+    });
+    Route::get('login',[AgentAuthLoginController::class,"showLoginForm"])->name('login');
+    Route::post('login',[AgentAuthLoginController::class,"login"])->name('login.submit');
+
+    //register
+    Route::get('register',[AuthRegisterController::class,"showRegistrationForm"])->name('register')->middleware(['agent.registration.permission']);
+    Route::post('register',[AuthRegisterController::class,"register"])->name('register.submit')->middleware(['agent.registration.permission']);
+    Route::post('send/verify-code',[AuthRegisterController::class,"sendVerifyCode"])->name('send.code')->middleware(['agent.registration.permission']);
+    Route::get('email/verify/{token}',[AgentAuthorizationController::class,"showSmsFromRegister"])->name('email.verify')->middleware(['agent.registration.permission']);
+    Route::post('verify/code/{token}',[AuthRegisterController::class,"verifyCode"])->name('verify.code')->middleware(['agent.registration.permission']);
+    Route::get('resend/code',[AuthRegisterController::class,"resendCode"])->name('resend.code')->middleware(['agent.registration.permission']);
+    Route::get('register/kyc',[AuthRegisterController::class,"registerKyc"])->name('register.kyc')->middleware(['agent.registration.permission']);
+
+     // recovery password by email
+     Route::controller(AgentAuthForgotPasswordController::class)->prefix("password")->name("password.")->group(function(){
+        Route::get('forgot','showForgotForm')->name('forgot');
+        Route::post('forgot/send/code','sendCode')->name('forgot.send.code');
+        Route::get('forgot/code/verify/form/{token}','showVerifyForm')->name('forgot.code.verify.form');
+        Route::post('forgot/verify/{token}','verifyCode')->name('forgot.verify.code');
+        Route::get('forgot/resend/code/{token}','resendCode')->name('forgot.resend.code');
+        Route::get('forgot/reset/form/{token}','showResetForm')->name('forgot.reset.form');
+        Route::post('forgot/reset/{token}','resetPassword')->name('reset');
+
+    });
+
+    Route::controller(AgentAuthorizationController::class)->prefix("authorize")->name('authorize.')->middleware("auth:agent")->group(function(){
+        Route::get('mail/{token}','showMailFrom')->name('mail');
+        Route::post('mail/verify/{token}','mailVerify')->name('mail.verify');
+        Route::get('resend/code','resendCode')->name('resend.code');
+        Route::get('kyc','showKycFrom')->name('kyc');
+        Route::post('kyc/submit','kycSubmit')->name('kyc.submit');
+        Route::get('google/2fa','showGoogle2FAForm')->name('google.2fa');
+        Route::post('google/2fa/submit','google2FASubmit')->name('google.2fa.submit');
+
     });
 });
