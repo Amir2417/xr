@@ -128,24 +128,26 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->bank_name ?? $item->mobile_name }}</span>
+                            <span>{{ $item->bank_name ?? ($item->mobile_name ?? $item->pickup_point) }}</span>
                         </div>
                     </div>
-                    <div class="preview-list-item">
-                        <div class="preview-list-left">
-                            <div class="preview-list-user-wrapper">
-                                <div class="preview-list-user-icon">
-                                    <i class="las la-user-circle"></i>
-                                </div>
-                                <div class="preview-list-user-content">
-                                    <span>{{ __("Account Number") }}</span>
+                    @if ($item->method == global_const()::TRANSACTION_TYPE_BANK || $item->method == global_const()::TRANSACTION_TYPE_MOBILE)
+                        <div class="preview-list-item">
+                            <div class="preview-list-left">
+                                <div class="preview-list-user-wrapper">
+                                    <div class="preview-list-user-icon">
+                                        <i class="las la-user-circle"></i>
+                                    </div>
+                                    <div class="preview-list-user-content">
+                                        <span>{{ __("Account Number") }}</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="preview-list-right">
+                                <span>{{ $item->iban_number ?? $item->account_number }}</span>
+                            </div>
                         </div>
-                        <div class="preview-list-right">
-                            <span>{{ $item->iban_number ?? $item->account_number }}</span>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
             <!-- Modal -->

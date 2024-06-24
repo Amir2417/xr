@@ -32,8 +32,8 @@ class GlobalConst {
     //beneficiary
     
     const RECIPIENT_METHOD_BANK            = "Bank";
-    const RECIPIENT_METHOD_CASH            = "Cash";
     const RECIPIENT_METHOD_MOBILE          = "Mobile";
+    const RECIPIENT_METHOD_CASH            = "Cash";
 
     const BENEFICIARY_METHOD_BANK_TRANSAFER            = "Bank Transfer";
     const BENEFICIARY_METHOD_CASH_PICK_UP            = "Cash Pic Up";

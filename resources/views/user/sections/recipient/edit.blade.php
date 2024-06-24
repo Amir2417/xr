@@ -136,31 +136,48 @@
                                         </div>
                                     </div>
                                 @elseif ($recipient->method == global_const()::TRANSACTION_TYPE_MOBILE)
+                                    <div class="form-group transaction-type">
+                                        <label>{{ __("Transaction Type") }} <span>*</span></label>
+                                        <select class="form--control trx-type-select select2-basic" name="method">
+                                            
+                                            <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}" @if(global_const()::TRANSACTION_TYPE_MOBILE == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" @if(global_const()::TRANSACTION_TYPE_MOBILE == $recipient->method) style="display: block;" @else style="display: none;" @endif >
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6 col-md-6 form-group">
+                                                <label>{{ __("Mobile Method") }}<span>*</span></label>
+                                                <select class="form--control select2-basic" name="mobile_name">
+                                                    <option selected disabled value="">{{ __("Select Method") }}</option>
+                                                    @foreach ($mobile_methods as $item)
+                                                        <option value="{{ $item->name }}" @if($item->name == $recipient->mobile_name) selected @endif>{{ $item->name }} </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 form-group">
+                                                <label>{{ __("Account Number") }}<span>*</span></label>
+                                                <input type="number" class="form--control" name="account_number" value="{{ $recipient->account_number }}" placeholder="{{ __("Enter Number") }}...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
                                 <div class="form-group transaction-type">
                                     <label>{{ __("Transaction Type") }} <span>*</span></label>
                                     <select class="form--control trx-type-select select2-basic" name="method">
                                         
-                                        <option value="{{ global_const()::RECIPIENT_METHOD_MOBILE }}" @if(global_const()::TRANSACTION_TYPE_MOBILE == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_MOBILE }}</option>
+                                        <option value="{{ global_const()::RECIPIENT_METHOD_CASH }}" @if(global_const()::TRANSACTION_TYPE_CASHPICKUP == $recipient->method) selected @endif>{{ global_const()::TRANSACTION_TYPE_CASHPICKUP }}</option>
                                     </select>
                                 </div>
-                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" @if(global_const()::TRANSACTION_TYPE_MOBILE == $recipient->method) style="display: block;" @else style="display: none;" @endif >
+                                <div class="trx-inputs {{ global_const()::RECIPIENT_METHOD_CASH }}-view" @if(global_const()::TRANSACTION_TYPE_CASHPICKUP == $recipient->method) style="display: block;" @else style="display: none;" @endif >
                                     <div class="row">
-                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>{{ __("Mobile Method") }}<span>*</span></label>
-                                            <select class="form--control select2-basic" name="mobile_name">
-                                                <option selected disabled value="">{{ __("Select Method") }}</option>
-                                                @foreach ($mobile_methods as $item)
-                                                    <option value="{{ $item->name }}" @if($item->name == $recipient->mobile_name) selected @endif>{{ $item->name }} </option>
-                                                @endforeach
+                                        <div class="col-xl-12 col-lg-12 col-md-12 form-group">
+                                            <label>{{ __("Pickup Point") }}<span>*</span></label>
+                                            <select class="form--control select2-basic pickup-list" name="pickup_point">
+                                                
                                             </select>
-                                        </div>
-                                        <div class="col-xl-6 col-lg-6 col-md-6 form-group">
-                                            <label>{{ __("Account Number") }}<span>*</span></label>
-                                            <input type="number" class="form--control" name="account_number" value="{{ $recipient->account_number }}" placeholder="{{ __("Enter Number") }}...">
                                         </div>
                                     </div>
                                 </div>
-                                
                                 @endif
                                 
                                 <div class="col-xl-12 col-lg-12 form-group">
@@ -249,16 +266,22 @@
         var transactionType = $("select[name=method] :selected").val();
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        } 
+        }else if(transactionType == 'Mobile'){
+            getMobileList(country,transactionType);
+        }else{
+            getCashPickupPoint(country,transactionType);
+        }   
     });
     $("select[name=country]").change(function(){
         var country = $(this).val();
         var transactionType = $("select[name=method] :selected").val();
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        }else{
+        }else if(transactionType == 'Mobile'){
             getMobileList(country,transactionType);
-        }      
+        }else{
+            getCashPickupPoint(country,transactionType);
+        }       
     });
     $("select[name=method]").change(function(){
         var country = $("select[name=country] :selected").val();
@@ -267,9 +290,11 @@
         $(".bank-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
-        }else{
+        }else if(transactionType == 'Mobile'){
             getMobileList(country,transactionType);
-        }
+        }else{
+            getCashPickupPoint(country,transactionType);
+        }  
     });
     function getBankList(country,transactionType){
         var bankListUrl = "{{ route('user.recipient.bank.list') }}";
@@ -303,6 +328,24 @@
             }
         }).fail(function(response){
             var errorText = response.responseJSON;
+        });
+    }
+    function getCashPickupPoint(country,transactionType){
+        var pickupURL = "{{ setRoute('user.get.pickup.points') }}";
+        
+        $(".pickup-list").html('');
+        $.post(pickupURL,{country:country,_token:"{{ csrf_token() }}"},function(response){
+            if(response.data.country == null || response.data.country == ''){
+                $('.pickup-list').html('<option value="" disabled>No Pickup Points Aviliable</option>');
+            }else{
+                $('.pickup-list').html('<option value="" disabled>Select Pickup Points</option>');
+            }
+            $.each(response.data.country,function(index,item){
+                var pickupPoint   = "{{ $recipient->pickup_point }}";
+                var selectedAttribute = (pickupPoint === item.address) ? 'selected' : ''; 
+                $(".pickup-list").append('<option value="' + item.address + '" ' + selectedAttribute + ' >' + item.address + '</option>');
+            });
+            
         });
     }
     
