@@ -23,5 +23,10 @@ class BasicSettings extends Model
         'email_notification'          => 'boolean',
         'email_verification'          => 'boolean',
     ];
+    public function scopeSitename($query, $pageTitle)
+    {
+        $pageTitle = empty($pageTitle) ? '' : ' - ' . $pageTitle;
+        return $this->site_name . $pageTitle;
+    }
 
 }

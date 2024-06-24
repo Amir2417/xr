@@ -1705,3 +1705,86 @@ function get_full_url_host(){
     $full_url_host = $host . '' . $path;
     return $full_url_host;
 }
+
+
+function selectedLang(){
+    $default_language = Language::where('status',GlobalConst::ACTIVE)->first();
+    $default_language_code = $default_language->code ?? LanguageConst::NOT_REMOVABLE;
+    return session()->get('local')?? $default_language_code;
+}
+
+function get_logo_agent($basic_settings, $type = null){
+    $logo = "";
+    if ($type == 'white') {
+        if (!$basic_settings->site_logo) {
+            $logo = files_asset_path('default');
+        } else {
+            $logo = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_logo;
+        }
+    }
+
+    if ($type == 'dark') {
+        if (!$basic_settings->site_logo_dark) {
+            $logo = files_asset_path('default');
+        } else {
+            $logo = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_logo_dark;
+        }
+    }
+
+    if ($type == null) {
+        if (!$basic_settings->agent_site_logo) {
+            if (!$basic_settings->agent_site_logo_dark) {
+                $logo = files_asset_path('default');
+            } else {
+                $logo = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_logo_dark;
+            }
+        } else {
+            $logo = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_logo;
+        }
+    }
+
+    return $logo;
+}
+
+function get_fav_agent($basic_settings, $type = null){
+    $fav = "";
+    if ($type == 'white') {
+        if (!$basic_settings->agent_site_fav) {
+            $fav = files_asset_path('default');
+        } else {
+            $fav = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_fav;
+        }
+    }
+
+    if ($type == 'dark') {
+        if (!$basic_settings->agent_site_fav_dark) {
+            $fav = files_asset_path('default');
+        } else {
+            $fav = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_fav_dark;
+        }
+    }
+
+    if ($type == null) {
+        if (!$basic_settings->agent_site_fav) {
+            if (!$basic_settings->agent_site_fav_dark) {
+                $fav = files_asset_path('default');
+            } else {
+                $fav = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_fav_dark;
+            }
+        } else {
+            $fav = files_asset_path('image-assets') . "/" . $basic_settings->agent_site_fav;
+        }
+    }
+
+    return $fav;
+}
+function selectedLangDir(){
+    if(session()->get('local')){
+    $default_language = Language::where('code',session()->get('local'))->first();
+    $default_language_dir = $default_language->dir ?? LanguageConst::NOT_REMOVABLE;
+    }else{
+        $default_language = Language::where('status',GlobalConst::ACTIVE)->first();
+        $default_language_dir = $default_language->dir ?? LanguageConst::NOT_REMOVABLE;
+    }
+    return $default_language_dir;
+}
