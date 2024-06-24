@@ -21,6 +21,10 @@ class BasicSettingsSeeder extends Seeder
             'secondary_color'   => "#ea5455",
             'otp_exp_seconds'   => "3600",
             'timezone'          => "Asia/Dhaka",
+            'agent_site_name'           => "XRemitPro Agent",
+            'agent_site_title'          => "Transfer Your Remittance At Secure and Fastest",
+            'agent_base_color'          => "#723eeb",
+            'agent_otp_exp_seconds'     => "3600",
             'user_registration'  => 1,
             'agree_policy'      => 1,
             'broadcast_config'  => [

@@ -30,8 +30,9 @@ class WebSettingsController extends Controller
             'basic_settings',
         ));
     }
-
-
+    /**
+     * Method for update basic settings information
+     */
     public function basicSettingsUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -60,7 +61,26 @@ class WebSettingsController extends Controller
 
         return back()->with(['success' => ['Basic settings updated successfully!']]);
     }
+    public function basicSettingsUpdateAgent(Request $request){
+        $validator = Validator::make($request->all(), [
+            'agent_base_color'        => 'required|string',
+            'agent_site_name'         => 'required|string',
+            'agent_site_title'        => 'required|string',
+            'agent_otp_exp_seconds'   => 'required|string',
+        ]);
+        $validated = $validator->validate();
 
+        $basic_settings = BasicSettings::first();
+        if (!$basic_settings) return back()->with(['error' => [__("Basic settings not found!")]]);
+
+        try {
+            $basic_settings->update($validated);
+        } catch (Exception $e) {
+            return back()->with(['error' => [__("Something went wrong! Please try again.")]]);
+        }
+
+        return back()->with(['success' => [__("Basic settings updated successfully!")]]);
+    }
     public function basicSettingsActivationUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [

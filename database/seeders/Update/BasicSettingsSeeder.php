@@ -16,6 +16,10 @@ class BasicSettingsSeeder extends Seeder
     public function run()
     {
         $data = [
+            'agent_site_name'           => "XRemitPro Agent",
+            'agent_site_title'          => "Transfer Your Remittance At Secure and Fastest",
+            'agent_base_color'          => "#723eeb",
+            'agent_otp_exp_seconds'     => "3600",
             'agent_kyc_verification'    => true,
             'agent_email_verification'  => true,
             'agent_registration'        => true,

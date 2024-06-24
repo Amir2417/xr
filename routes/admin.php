@@ -291,6 +291,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('basic-settings','basicSettings')->name('basic.settings');
         Route::put('basic-settings/update','basicSettingsUpdate')->name('basic.settings.update');
         Route::put('basic-settings/activation/update','basicSettingsActivationUpdate')->name('basic.settings.activation.update');
+        Route::put('basic-settings/update/agent','basicSettingsUpdateAgent')->name('basic.settings.update.agent');
         Route::get('image-assets','imageAssets')->name('image.assets');
         Route::put('image-assets/update','imageAssetsUpdate')->name('image.assets.update');
         Route::get('setup-seo','setupSeo')->name('setup.seo');

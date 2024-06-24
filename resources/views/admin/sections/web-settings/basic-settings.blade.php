@@ -20,7 +20,7 @@
 @section('content')
     <div class="custom-card">
         <div class="card-header">
-            <h6 class="title">{{ __("Basic Settings") }}</h6>
+            <h6 class="title">{{ __("Basic Settings (System & User)") }}</h6>
         </div>
         <div class="card-body">
             <form class="card-form" method="POST" action="{{ setRoute('admin.web.settings.basic.settings.update') }}">
@@ -88,9 +88,64 @@
             </form>
         </div>
     </div>
+    <div class="custom-card">
+        <div class="card-header">
+            <h6 class="title">{{ __("Basic Settings (Agent)") }}</h6>
+        </div>
+        <div class="card-body">
+            <form class="card-form" method="POST" action="{{ setRoute('admin.web.settings.basic.settings.update.agent') }}">
+                @csrf
+                @method("PUT")
+                <div class="row">
+                    <div class="col-xl-3 col-lg-3 form-group">
+                        <label>{{ __("Site Base Color") }}*</label>
+                        <div class="picker">
+                            <input type="color" value="{{ old('agent_base_color',$basic_settings->agent_base_color) }}" class="color color-picker">
+                            <input type="text" autocomplete="off" spellcheck="false" class="color-input" value="{{ old('agent_base_color',$basic_settings->agent_base_color) }}" name="agent_base_color">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __( "Site Name"),
+                            'type'          => "text",
+                            'class'         => "form--control",
+                            'placeholder'   =>  __("Write Here.."),
+                            'name'          => "agent_site_name",
+                            'value'         => old('agent_site_name',$basic_settings->agent_site_name),
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __( "Site Title"),
+                            'type'          => "text",
+                            'class'         => "form--control",
+                            'placeholder'   =>  __("Write Here.."),
+                            'name'          => "agent_site_title",
+                            'value'         => old('agent_site_title',$basic_settings->agent_site_title),
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 form-group">
+                        <label>{{ __("OTP Expiration") }}*</label>
+                        <div class="input-group">
+                            <input type="text" class="form--control number-input" value="{{ old('agent_otp_exp_seconds',$basic_settings->agent_otp_exp_seconds) }}" name="agent_otp_exp_seconds">
+                            <span class="input-group-text">{{ __("seconds") }}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xl-12 col-lg-12">
+                    @include('admin.components.button.form-btn',[
+                        'class'         => "w-100 btn-loading",
+                        'text'          => __("update"),
+                        'permission'    => "admin.web.settings.basic.settings.update",
+                    ])
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="custom-card mt-15">
         <div class="card-header">
-            <h6 class="title">{{ __("Activation Settings") }}</h6>
+            <h6 class="title">{{ __("Activation Settings (System & User)") }}</h6>
         </div>
         <div class="card-body">
             <div class="custom-inner-card mt-10 mb-10">
@@ -172,6 +227,90 @@
                                 'name'          => 'kyc_verification',
                                 'value'         => old('kyc_verification',$basic_settings->kyc_verification),
                                 'options'       => [__('Activated') => 1,__('Deactivated') => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="custom-card mt-15">
+        <div class="card-header">
+            <h6 class="title">{{ __("Activation Settings (Agent)") }}</h6>
+        </div>
+        <div class="card-body">
+            <div class="custom-inner-card mt-10 mb-10">
+                <div class="card-inner-body">
+                    <div class="row mb-10-none">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __("Agent Registration"),
+                                'name'          => 'agent_registration',
+                                'value'         => old('agent_registration',$basic_settings->agent_registration),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __( "Secure Password"),
+                                'name'          => 'agent_secure_password',
+                                'value'         => old('agent_secure_password',$basic_settings->agent_secure_password),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __( "Agree Policy"),
+                                'name'          => 'agent_agree_policy',
+                                'value'         => old('agent_agree_policy',$basic_settings->agent_agree_policy),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __("email Verification"),
+                                'name'          => 'agent_email_verification',
+                                'value'         => old('agent_email_verification',$basic_settings->agent_email_verification),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __("Email Notification"),
+                                'name'          => 'agent_email_notification',
+                                'value'         => old('agent_email_notification',$basic_settings->agent_email_notification),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __( "Push Notification"),
+                                'name'          => 'agent_push_notification',
+                                'value'         => old('agent_push_notification',$basic_settings->agent_push_notification),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
+                                'onload'        => true,
+                                'permission'    => "admin.web.settings.basic.settings.activation.update",
+                            ])
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                            @include('admin.components.form.switcher',[
+                                'label'         => __( "KYC Verification"),
+                                'name'          => 'agent_kyc_verification',
+                                'value'         => old('agent_kyc_verification',$basic_settings->agent_kyc_verification),
+                               'options'       => [__("Activated") => 1, __("Deactivated") => 0],
                                 'onload'        => true,
                                 'permission'    => "admin.web.settings.basic.settings.activation.update",
                             ])

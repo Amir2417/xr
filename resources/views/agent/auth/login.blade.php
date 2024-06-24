@@ -20,30 +20,30 @@
                         <div class="form-input-fild">
                             <div class="row mb-10-none">
                                 <div class="form-group col-lg-12 mb-10">
-                                    <label>Email Address</label>
+                                    <label>{{ __("Email Address") }}</label>
                                     <input type="email" class="form--control" placeholder="Enter Email Address">
                                 </div>
                                 <div class="form-group show_hide_password col-lg-12 mb-10">
-                                    <label>Password</label>
+                                    <label>{{ __("Password") }}</label>
                                     <input type="password" class="form--control" placeholder="Enter Password..">
                                     <a href="javascript:void(0)" class="show-pass icon field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                             <div class="forgot-item text-end pt-2">
-                                <label><a href="#" class="text--base">Forgot Password?</a></label>
+                                <label><a href="#" class="text--base">{{ __("Forgot Password?") }}</a></label>
                             </div>
                             <div class="account-btn">
-                                <button type="button" class="btn--base w-100">Login Now</button>
+                                <button type="button" class="btn--base w-100">{{ __("Login Now") }}</button>
                             </div>
                             <div class="footer-text">
                                 <p class="d-block text-center mt-3 create-acc">
-                                    &mdash; Don’t Have An Account?
-                                    <a href="agent-signup.html" class="text--base">Register Now</a>
+                                    &mdash; {{ __("Don’t Have An Account?") }}
+                                    <a href="agent-signup.html" class="text--base">{{ __("Register Now") }}</a>
                                     &mdash;
                                 </p>
                                 <p class="d-block text-center mt-3 create-acc">
-                                    &mdash; Back To
-                                    <a href="{{ setRoute('index') }}" class="text--base">Home</a>
+                                    &mdash; {{ __("Back To") }}
+                                    <a href="{{ setRoute('index') }}" class="text--base">{{ __("Home") }}</a>
                                     &mdash;
                                 </p>
                             </div>
