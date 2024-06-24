@@ -147,11 +147,8 @@
                                         <div class="row">
                                             <div class="col-xl-6 col-lg-6 col-md-6 form-group">
                                                 <label>{{ __("Mobile Method") }}<span>*</span></label>
-                                                <select class="form--control select2-basic" name="mobile_name">
-                                                    <option selected disabled value="">{{ __("Select Method") }}</option>
-                                                    @foreach ($mobile_methods as $item)
-                                                        <option value="{{ $item->name }}" @if($item->name == $recipient->mobile_name) selected @endif>{{ $item->name }} </option>
-                                                    @endforeach
+                                                <select class="form--control select2-basic mobile-list" name="mobile_name">
+                                                    
                                                 </select>
                                             </div>
                                             <div class="col-xl-6 col-lg-6 col-md-6 form-group">
@@ -288,6 +285,8 @@
         var transactionType = $(this).val();
         
         $(".bank-list").html('');
+        $(".mobile-list").html('');
+        $(".pickup-list").html('');
         if(transactionType == 'Bank'){
             getBankList(country,transactionType);
         }else if(transactionType == 'Mobile'){
@@ -316,18 +315,20 @@
     }
     function getMobileList(country,transactionType){
         var getMobileMethod = "{{ setRoute('user.get.mobile.method') }}";
-        
+
+        $(".mobile-list").html('');
         $.post(getMobileMethod,{country:country,_token:"{{ csrf_token() }}"},function(response){
-            var option = '';
-            if(response.data.country.length > 0){
-                $.each(response.data.country,function(index,item){
-                    option += `<option value="${item.name}">${item.name}</option>`
-                });
-                $("select[name=mobile_name]").html(option);
-                $("select[name=mobile_name]").select2();
+            if(response.data.country == null || response.data.country == ''){
+                $('.mobile-list').html('<option value="" disabled>No Mobile Method Aviliable</option>');
+            }else{
+                $('.mobile-list').html('<option value="" disabled>Select Mobile Method</option>');
             }
-        }).fail(function(response){
-            var errorText = response.responseJSON;
+            $.each(response.data.country,function(index,item){
+                var mobile_name   = "{{ $recipient->mobile_name }}";
+                var selectedAttribute = (mobile_name === item.name) ? 'selected' : ''; 
+                $(".mobile-list").append('<option value="' + item.name + '" ' + selectedAttribute + '>' + item.name + '</option>');
+            });
+            
         });
     }
     function getCashPickupPoint(country,transactionType){
