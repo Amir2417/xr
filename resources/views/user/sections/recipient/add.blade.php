@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @else
+                                @elseif ($temporary_data->type == global_const()::TRANSACTION_TYPE_MOBILE)
                                 <div class="form-group transaction-type">
                                     <label>{{ __("Transaction Type") }} <span>*</span></label>
                                     <select class="form--control trx-type-select select2-basic" name="method">
@@ -151,7 +151,26 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+                                @else
+                                    <div class="form-group transaction-type">
+                                        <label>{{ __("Transaction Type") }} <span>*</span></label>
+                                        <select class="form--control trx-type-select select2-basic" name="method">
+                                            
+                                            <option value="{{ global_const()::RECIPIENT_METHOD_CASH }}">{{ global_const()::TRANSACTION_TYPE_CASHPICKUP }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="trx-inputs">
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 form-group">
+                                                <label>{{ __("Pickup Point") }}<span>*</span></label>
+                                                <select class="form--control select2-basic" name="pickup_point">
+                                                    @foreach ($pickup_points ?? [] as $item)
+                                                        <option value="{{ $item->address }}">{{ $item->address }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>                                
                                 @endif
                                 <div class="col-xl-12 col-lg-12 form-group">
                                     @include('admin.components.form.textarea',[
@@ -203,41 +222,5 @@
 
 @push('script')
 
-<script>
-    $(document).ready(function () {
-        var country = $("select[name=country] :selected").val();
-        var transactionType = $("select[name=method] :selected").val();
-        if(transactionType == 'Bank'){
-            getBankList(country,transactionType);
-        } 
-    });
-    
-    $("select[name=method]").change(function(){
-        var country = $("select[name=country] :selected").val();
-        var transactionType = $(this).val();
-       
-        $(".bank-list").html('');
-        if(transactionType == 'Bank'){
-            getBankList(country,transactionType);
-        }
-    });
-    function getBankList(country,transactionType){
-        var bankListUrl = "{{ route('user.recipient.bank.list') }}";
-            $(".bank-list").html('');
-            $.post(bankListUrl,{country:country,_token:"{{ csrf_token() }}"},function(response){
-
-                if(response.data.bank_list == null || response.data.bank_list == ''){
-                    $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
-                }else{
-                    $('.bank-list').html('<option value="" disabled>Select Bank</option>');
-                }
-                
-                $.each(response.data.bank_list, function (key, value) {
-                    $(".bank-list").append('<option value="' + value.name + '" ' + ' >' + value.name + '</option>');
-                });
-            });
-    }
-    
-</script>
     
 @endpush

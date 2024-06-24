@@ -58,6 +58,7 @@ class RecipientController extends Controller
         $notifications        = UserNotification::where('user_id',$user->id)->latest()->take(10)->get();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->where('country',$temporary_data->data->receiver_country)->first();
         $mobile_methods       = MobileMethod::where('country',$receiver_currency->country)->where('status',true)->get();
+        $pickup_points        = CashPickup::where('country',$receiver_currency->country)->where('status',true)->get();
         
 
         return view('user.sections.recipient.add',compact(
@@ -68,11 +69,14 @@ class RecipientController extends Controller
             'receiver_currency',
             'user_country',
             'temporary_data',
-            'mobile_methods'
+            'mobile_methods',
+            'pickup_points'
         ));
     }
-   
-    
+    /**
+     * Method for store recipient with the identifier
+     * @param $identifier
+     */    
     public function store(Request $request,$identifier){
         $temporary_data       = TemporaryData::where('identifier',$identifier)->first();
         if($request->method == global_const()::RECIPIENT_METHOD_BANK ){
@@ -109,15 +113,14 @@ class RecipientController extends Controller
                 ]);
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Bank Transfer";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_BANK;
             try{
                 Recipient::create($validated);
             }catch(Exception $e){
                 return back()->with(['error' => ['Something went wrong! Please try again.']]);
             }
             return redirect()->route('user.recipient.index',$temporary_data->identifier);
-        }
-        else{
+        }elseif($request->method == global_const()::RECIPIENT_METHOD_MOBILE){
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -150,7 +153,46 @@ class RecipientController extends Controller
                 ]);
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Mobile Money";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_MOBILE;
+            try{
+                Recipient::create($validated);
+            }catch(Exception $e){
+                return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            }
+            return redirect()->route('user.recipient.index',$temporary_data->identifier);
+        }else{
+            $validator      = Validator::make($request->all(),[
+                'first_name'      => 'required|string',
+                'middle_name'     => 'nullable|string',
+                'last_name'       => 'required|string',
+                'email'           => 'nullable|email',
+                'country'         => 'required|string',
+                'city'            => 'nullable|string',
+                'state'           => 'nullable|string',
+                'zip_code'        => 'nullable|string',
+                'phone'           => 'nullable|string',
+                'method'          => 'required|string',
+                'pickup_point'    => 'required|string',
+                'address'         => 'nullable|string',
+                'document_type'   => 'nullable|string',
+                'front_image'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
+                'back_image'      => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
+            ]);
+            if($validator->fails()){
+                return back()->withErrors($validator)->withInput($request->all());
+            }
+            $validated   = $validator->validate();
+            if($request->hasFile('front_image') || $request->hasFile('back_image')){
+                $validated['front_image'] = $this->imageValidate($request,"front_image",null);
+                $validated['back_image'] = $this->imageValidate($request,"back_image",null);  
+            }
+            if(Recipient::where('user_id',auth()->user()->id)->where('email',$validated['email'])->where('method',$validated['method'])->where('pickup_point',$validated['pickup_point'])->exists()){
+                throw ValidationException::withMessages([
+                    'name'  => "Recipient already exists!",
+                ]);
+            }
+            $validated['user_id'] = auth()->user()->id;
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_CASHPICKUP;
             try{
                 Recipient::create($validated);
             }catch(Exception $e){
@@ -159,8 +201,10 @@ class RecipientController extends Controller
             return redirect()->route('user.recipient.index',$temporary_data->identifier);
         }   
     }
-    
-    
+    /**
+     * Method for send recipient information for send remittance
+     * @param $identifier
+     */    
     public function send(Request $request,$identifier){
         $recipient = Recipient::where('id',$request->id)->first();
 
@@ -184,15 +228,15 @@ class RecipientController extends Controller
                 'first_name'        => $recipient->first_name,
                 'middle_name'       => $recipient->middle_name ?? '',
                 'last_name'         => $recipient->last_name,
-                'email'             => $recipient->email ?? '',
+                'email'             => $recipient->email ?? 'N/A',
                 'country'           => $recipient->country,
-                'city'              => $recipient->city ?? '',
-                'state'             => $recipient->state ?? '',
-                'zip_code'          => $recipient->zip_code ?? '',
-                'phone'             => $recipient->phone ?? '',
-                'method_name'       => $recipient->bank_name ?? $recipient->mobile_name,
-                'account_number'    => $recipient->iban_number ?? $recipient->account_number,
-                'address'           => $recipient->address ?? '',
+                'city'              => $recipient->city ?? 'N/A',
+                'state'             => $recipient->state ?? 'N/A',
+                'zip_code'          => $recipient->zip_code ?? 'N/A',
+                'phone'             => $recipient->phone ?? 'N/A',
+                'method_name'       => $recipient->bank_name ?? ($recipient->mobile_name ?? $recipient->pickup_point),
+                'account_number'    => $recipient->iban_number ?? ($recipient->account_number ?? 'N/A'),
+                'address'           => $recipient->address ?? 'N/A',
                 'document_type'     => $recipient->document_type ?? '',
                 'front_image'       => $recipient->front_image ?? '',
                 'back_image'        => $recipient->back_image ?? '',
@@ -288,6 +332,10 @@ class RecipientController extends Controller
 
         return Response::success(['Data fetch successfully'],['bank_list' => $bank_list],200);
     }
+    /**
+     * Method for store recipient information
+     * @return view
+     */
     public function recipientDataStore(Request $request){
         
         if($request->method == global_const()::RECIPIENT_METHOD_BANK){
@@ -324,7 +372,7 @@ class RecipientController extends Controller
                 ]);
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Bank Transfer";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_BANK;
             try{
                 Recipient::create($validated);
             }catch(Exception $e){
@@ -364,7 +412,7 @@ class RecipientController extends Controller
                 ]);
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Mobile Money";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_MOBILE;
             try{
                 Recipient::create($validated);
             }catch(Exception $e){
@@ -414,7 +462,11 @@ class RecipientController extends Controller
             return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Created Successfully.']]);
         }  
     }
-    
+    /**
+     * Method for show the edit page for recipient
+     * @param $id
+     * @param Illuminate\Http\Request $request
+     */
     public function edit($id){
         $page_title           = "| Edit Recipient";
         $recipient            = Recipient::where('id',$id)->first();
@@ -438,9 +490,12 @@ class RecipientController extends Controller
             'pickup_points'
         ));
     }
-    
+    /**
+     * Method for update recipient information
+     * @param $id
+     * @param Illuminate\Http\Request $request
+     */
     public function update(Request $request,$id){
-
         $recipient    = Recipient::where('id',$id)->first();
         if($request->method == global_const()::RECIPIENT_METHOD_BANK ){
 
@@ -476,7 +531,7 @@ class RecipientController extends Controller
                 ]);
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Bank Transfer";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_BANK;
             try{
                 $recipient->update($validated);
             }catch(Exception $e){
@@ -517,7 +572,7 @@ class RecipientController extends Controller
                 ]);
             }
             $validated['user_id'] = auth()->user()->id;
-            $validated['method'] = "Mobile Money";
+            $validated['method'] = GlobalConst::TRANSACTION_TYPE_MOBILE;
         
             try{
                 $recipient->update($validated);
@@ -569,9 +624,12 @@ class RecipientController extends Controller
             return redirect()->route('user.recipient.show')->with(['success' => ['Recipient Updated Successfully.']]);
         }
     }
-    
+    /**
+     * Method for delete recipient information
+     * @param $id
+     * @param Illuminate\Http\Request $request
+     */
     public function delete($id){
-
         $recipient    = Recipient::where('id',$id)->first();
         try{
             $recipient->delete();
@@ -580,7 +638,9 @@ class RecipientController extends Controller
         }
         return back()->with(['success' => ['Recipient Deleted Successfully.']]);
     }
-    
+    /**
+     * Method for validate image 
+     */
     public function imageValidate($request,$input_name,$old_image = null) {
         if($request->hasFile($input_name)) {
             $image_validated = Validator::make($request->only($input_name),[

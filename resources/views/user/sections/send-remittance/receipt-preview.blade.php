@@ -27,7 +27,6 @@
                                     <div class="summary-item">
                                         <h4 class="title">{{ __("Remittance Summary") }}</h4>
                                     </div>
-                                    
                                     <input type="hidden" name="identifier" value="{{ $temporary_data->identifier }}">
                                     <div class="preview-list-item">
                                         <div class="preview-list-left">
@@ -269,6 +268,23 @@
                                         <span class="text--success">{{ $temporary_data->type ?? "N/A" }}</span>
                                     </div>
                                 </div>
+                                @if ($temporary_data->type == global_const()::TRANSACTION_TYPE_CASHPICKUP)
+                                <div class="preview-list-item">
+                                    <div class="preview-list-left">
+                                        <div class="preview-list-user-wrapper">
+                                            <div class="preview-list-user-icon">
+                                                <i class="las la-university"></i>
+                                            </div>
+                                            <div class="preview-list-user-content">
+                                                <span>{{ __("Pickup Point") }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="preview-list-right">
+                                        <span>{{ $temporary_data->data->method_name ?? "" }}</span>
+                                    </div>
+                                </div>
+                                @else
                                 <div class="preview-list-item">
                                     <div class="preview-list-left">
                                         <div class="preview-list-user-wrapper">
@@ -296,9 +312,10 @@
                                         </div>
                                     </div>
                                     <div class="preview-list-right">
-                                        <span class="text--warning">{{ $temporary_data->data->account_number ?? "" }}</span>
+                                        <span class="text--warning">{{ $temporary_data->data->account_number ?? "N/A" }}</span>
                                     </div>
                                 </div>
+                                @endif
                                 <div class="preview-list-item">
                                     <div class="preview-list-left">
                                         <div class="preview-list-user-wrapper">
