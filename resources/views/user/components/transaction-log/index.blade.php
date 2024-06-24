@@ -77,36 +77,55 @@
                         <span>{{ $item->remittance_data->type ?? 'N/A' }}</span>
                     </div>
                 </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-university"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>{{ __("Method Name") }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>{{ $item->remittance_data->method_name ?? 'N/A'}}</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-user-alt"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>{{ __("Account Number") }}</span>
+                @if ($item->remittance_data->type == global_const()::TRANSACTION_TYPE_CASHPICKUP)
+                    <div class="preview-list-item">
+                        <div class="preview-list-left">
+                            <div class="preview-list-user-wrapper">
+                                <div class="preview-list-user-icon">
+                                    <i class="las la-university"></i>
+                                </div>
+                                <div class="preview-list-user-content">
+                                    <span>{{ __("Pickup Point") }}</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="preview-list-right">
+                            <span>{{ $item->remittance_data->method_name ?? 'N/A'}}</span>
+                        </div>
                     </div>
-                    <div class="preview-list-right">
-                        <span>{{ $item->remittance_data->account_number ?? 'N/A'}}</span>
+                @else
+                    <div class="preview-list-item">
+                        <div class="preview-list-left">
+                            <div class="preview-list-user-wrapper">
+                                <div class="preview-list-user-icon">
+                                    <i class="las la-university"></i>
+                                </div>
+                                <div class="preview-list-user-content">
+                                    <span>{{ __("Method Name") }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preview-list-right">
+                            <span>{{ $item->remittance_data->method_name ?? 'N/A'}}</span>
+                        </div>
                     </div>
-                </div>
+                    <div class="preview-list-item">
+                        <div class="preview-list-left">
+                            <div class="preview-list-user-wrapper">
+                                <div class="preview-list-user-icon">
+                                    <i class="las la-user-alt"></i>
+                                </div>
+                                <div class="preview-list-user-content">
+                                    <span>{{ __("Account Number") }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preview-list-right">
+                            <span>{{ $item->remittance_data->account_number ?? 'N/A'}}</span>
+                        </div>
+                    </div>
+                @endif
+                
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">
