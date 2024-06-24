@@ -44,10 +44,18 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'agent' => [
+            'driver' => 'session',
+            'provider' => 'agents',
+        ],
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+        'agent_api' => [
+            'driver' => 'passport',
+            'provider' => 'agents',
+        ]
     ],
 
     /*
@@ -75,6 +83,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin\Admin::class,
+        ],
+        'agents' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Agent::class,
         ],
 
     ],
@@ -106,6 +118,11 @@ return [
             'table' => 'admin_password_resets',
             'expire' => 60,
             'throttle' => 60,
+        ],
+        'agents' => [
+            'provider' => 'agents',
+            'table' => 'agent_password_resets',
+            'expire' => 60,
         ],
     ],
 
