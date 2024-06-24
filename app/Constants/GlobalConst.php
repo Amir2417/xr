@@ -71,4 +71,5 @@ class GlobalConst {
     const NEW_USER_BONUS                         = "new-user-bonus";
     const COUPON                                 = "coupon";
 
+
 }

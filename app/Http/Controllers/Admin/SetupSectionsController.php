@@ -78,11 +78,11 @@ class SetupSectionsController extends Controller
                 'view'        => "appDownloadView",
                 'update'      => "appDownloadUpdate",
             ],
-            'footer'          => [
+            'footer'           => [
                 'view'         => "footerView",
                 'update'       => "footerUpdate",    
             ],
-            'subscribe'          => [
+            'subscribe'        => [
                 'view'         => "subscribeView",
                 'update'       => "subscribeUpdate",    
             ],
@@ -90,13 +90,21 @@ class SetupSectionsController extends Controller
                 'view'         => "contactView",
                 'update'       => "contactUpdate",    
             ],
-            'login'          => [
+            'login'            => [
                 'view'         => "loginView",
                 'update'       => "loginUpdate",    
             ],
-            'register'          => [
+            'register'         => [
                 'view'         => "registerView",
                 'update'       => "registerUpdate",    
+            ],
+            'agent-login'      => [
+                'view'         => "agentLoginView",
+                'update'       => "agentLoginUpdate",    
+            ],
+            'agent-register'   => [
+                'view'         => "agentRegisterView",
+                'update'       => "agentRegisterUpdate",    
             ],
         ];
 
@@ -1400,6 +1408,102 @@ class SetupSectionsController extends Controller
             $data['image']= $this->imageValidate($request,"image",$section->value->image ?? null);
         }
 
+        $data['language']     = $this->contentValidate($request,$basic_field_name);
+        $update_data['key']   = $slug;
+        $update_data['value'] = $data;
+        try{
+            SiteSections::updateOrCreate(['key' => $slug],$update_data);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return back()->with( ['success' => ['Section updated successfully!']]);
+
+    }
+    /**
+     * Method for show register section page
+     * @param string $slug
+     * @param \Illuminate\Http\Request  $request
+     */
+    public function agentLoginView($slug){
+        $page_title   = "Agent Login Section";
+        $section_slug = Str::slug(SiteSectionConst::AGENT_LOGIN_SECTION);
+        $data         = SiteSections::getData($section_slug)->first();
+        $languages    = $this->languages;
+
+        return view('admin.sections.setup-sections.agent-login-section',compact(
+            'page_title',
+            'data',
+            'languages',
+            'slug'
+        ));
+    }
+    /**
+     * Method for update register section information
+     * @param string
+     * @param \Illuminate\\Http\Request $request
+     */
+    public function agentLoginUpdate(Request $request,$slug){
+        $basic_field_name = [
+            'heading'     => 'required|string|max:100',
+            'sub_heading'     => 'required|string',
+        ];
+
+        $slug             = Str::slug(SiteSectionConst::AGENT_LOGIN_SECTION);
+        $section          = SiteSections::where("key",$slug)->first();
+
+        if($section      != null){
+            $data         = json_decode(json_encode($section->value),true);
+        }else{
+            $data         = [];
+        }
+        $data['language']     = $this->contentValidate($request,$basic_field_name);
+        $update_data['key']   = $slug;
+        $update_data['value'] = $data;
+        try{
+            SiteSections::updateOrCreate(['key' => $slug],$update_data);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return back()->with( ['success' => ['Section updated successfully!']]);
+
+    }
+    /**
+     * Method for show register section page
+     * @param string $slug
+     * @param \Illuminate\Http\Request  $request
+     */
+    public function agentRegisterView($slug){
+        $page_title   = "Agent Register Section";
+        $section_slug = Str::slug(SiteSectionConst::AGENT_REGISTER_SECTION);
+        $data         = SiteSections::getData($section_slug)->first();
+        $languages    = $this->languages;
+
+        return view('admin.sections.setup-sections.agent-register-section',compact(
+            'page_title',
+            'data',
+            'languages',
+            'slug'
+        ));
+    }
+    /**
+     * Method for update register section information
+     * @param string
+     * @param \Illuminate\\Http\Request $request
+     */
+    public function agentRegisterUpdate(Request $request,$slug){
+        $basic_field_name = [
+            'heading'     => 'required|string|max:100',
+            'sub_heading' => 'required|string',
+        ];
+
+        $slug             = Str::slug(SiteSectionConst::AGENT_REGISTER_SECTION);
+        $section          = SiteSections::where("key",$slug)->first();
+
+        if($section      != null){
+            $data         = json_decode(json_encode($section->value),true);
+        }else{
+            $data         = [];
+        }
         $data['language']     = $this->contentValidate($request,$basic_field_name);
         $update_data['key']   = $slug;
         $update_data['value'] = $data;

@@ -24,4 +24,6 @@ class SiteSectionConst{
     const INTRO_SECTION         = "Intro Section";
     const LOGIN_SECTION         = "Login Section";
     const REGISTER_SECTION      = "Register Section";
+    const AGENT_LOGIN_SECTION           = "Agent Login Section";
+    const AGENT_REGISTER_SECTION        = "Agent Register Section";
 }

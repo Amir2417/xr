@@ -151,10 +151,14 @@ class WebSettingsController extends Controller
     public function imageAssetsUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'site_logo'         => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
-            'site_logo_dark'    => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
-            'site_fav'          => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
-            'site_fav_dark'     => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'site_logo'                     => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'site_logo_dark'                => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'site_fav'                      => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'site_fav_dark'                 => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'agent_site_logo'               => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'agent_site_logo_dark'          => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'agent_site_fav'                => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
+            'agent_site_fav_dark'           => 'nullable|image|mimes:png,jpeg,jpg,webp,svg',
         ]);
         $validated = $validator->validate();
 
@@ -165,25 +169,31 @@ class WebSettingsController extends Controller
 
         $images = [];
         foreach ($validated as $input_name => $item) {
+            $input_value = explode('/',$basic_settings->$input_name);
+            if(isset($input_value) && isset($input_value[0]) && $input_value[0] ==  'seeder'){
+                $oldImage = null;
+            }else{
+                $oldImage = $basic_settings->$input_name;
+            }
             if ($request->hasFile($input_name)) {
                 $image = get_files_from_fileholder($request, $input_name);
-                $upload_image = upload_files_from_path_dynamic($image, 'image-assets', $basic_settings->$input_name);
+                $upload_image = upload_files_from_path_dynamic($image, 'image-assets',$oldImage);
                 $images[$input_name] = $upload_image;
             }
         }
 
         if (count($images) == 0) {
-            return back()->with(['warning' => ['No changes to update.']]);
+            return back()->with(['warning' => [__("No changes to update.")]]);
         }
 
         // update images to database
         try {
             $basic_settings->update($images);
         } catch (Exception $e) {
-            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            return back()->with(['error' => [__("Something went wrong! Please try again.")]]);
         }
 
-        return back()->with(['success' => ['Image assets updated successfully!.']]);
+        return back()->with(['success' => [__("Image assets updated successfully!.")]]);
     }
 
     /**

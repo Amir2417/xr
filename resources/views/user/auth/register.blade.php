@@ -49,9 +49,11 @@
                         <div class="form-group">
                             <div class="custom-check-group">
                                 <input type="checkbox" name="agree" id="level-1">
-                                @foreach ($useful_link ?? [] as $item)
-                                <label for="level-1">{{ __("I have agreed with") }} <a href="{{ setRoute('link',$item->slug)}}">{{ __("Terms Of Use & Privacy Policy") }}</a></label>
-                                @endforeach
+                                @php
+                                    $data = App\Models\Admin\UsefulLink::where('type',global_const()::USEFUL_LINK_PRIVACY_POLICY)->first();
+                                @endphp
+                               
+                                <label for="level-1">{{ __("I have agreed with") }} <a href="{{ setRoute('link',$data->slug)}}">{{ __("Terms Of Use & Privacy Policy") }}</a></label>
                             </div>
                         </div>
                         <button type="submit" class="btn--base w-100 text-center mt-2">{{ __("Register") }}</button>

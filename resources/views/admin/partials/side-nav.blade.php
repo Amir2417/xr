@@ -379,6 +379,8 @@
                             setRoute('admin.setup.sections.section','contact'),
                             setRoute('admin.setup.sections.section','login'),
                             setRoute('admin.setup.sections.section','register'),
+                            setRoute('admin.setup.sections.section','agent-login'),
+                            setRoute('admin.setup.sections.section','agent-register'),
                         ];
                     @endphp
 
@@ -450,6 +452,14 @@
                                 <a href="{{ setRoute('admin.setup.sections.section','register') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','register')) active @endif">
                                     <i class="menu-icon las la-ellipsis-h"></i>
                                     <span class="menu-title">{{__("Register Section")}}</span>
+                                </a>
+                                <a href="{{ setRoute('admin.setup.sections.section','agent-login') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','agent-login')) active @endif">
+                                    <i class="menu-icon las la-ellipsis-h"></i>
+                                    <span class="menu-title">{{__("Agent Login Section")}}</span>
+                                </a>
+                                <a href="{{ setRoute('admin.setup.sections.section','agent-register') }}" class="nav-link @if ($current_url == setRoute('admin.setup.sections.section','agent-register')) active @endif">
+                                    <i class="menu-icon las la-ellipsis-h"></i>
+                                    <span class="menu-title">{{__("Agent Register Section")}}</span>
                                 </a>
                             </li>
                         </ul>
