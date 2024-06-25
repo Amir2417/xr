@@ -121,8 +121,6 @@ class LoginController extends Controller
         $user->update([
             'two_factor_verified'   => false,
         ]);
-        $user->createQr();
-        $this->refreshUserWallets($user);
         $this->createLoginLog($user);
         return redirect()->intended(route('agent.dashboard'));
     }

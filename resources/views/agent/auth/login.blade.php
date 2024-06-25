@@ -14,7 +14,8 @@
         <div class="row justify-content-center">
             <div class="col-lg-7 col-md-10">
                 <div class="agent-login-form">
-                    <form>
+                    <form class="account-form" action="{{ setRoute('agent.login.submit') }}" method="POST">
+                        @csrf
                         <div class="agent-logo-icon">
                             <img src="{{ get_logo_agent($basic_settings) }}" alt="logo">
                         </div>
@@ -26,11 +27,11 @@
                             <div class="row mb-10-none">
                                 <div class="form-group col-lg-12 mb-10">
                                     <label>{{ __("Email Address") }}</label>
-                                    <input type="email" class="form--control" placeholder="{{ __("Enter Email Address") }}">
+                                    <input type="email" name="credentials" class="form--control" placeholder="{{ __("Enter Email Address") }}">
                                 </div>
                                 <div class="form-group show_hide_password col-lg-12 mb-10">
                                     <label>{{ __("Password") }}</label>
-                                    <input type="password" class="form--control" placeholder="{{ __("Enter Password") }}..">
+                                    <input type="password" name="password" class="form--control" placeholder="{{ __("Enter Password") }}..">
                                     <a href="javascript:void(0)" class="show-pass icon field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                                 </div>
                             </div>
@@ -38,7 +39,7 @@
                                 <label><a href="{{ setRoute('agent.password.forgot') }}" class="text--base">{{ __("Forgot Password?") }}</a></label>
                             </div>
                             <div class="account-btn">
-                                <button type="button" class="btn--base w-100">{{ __("Login Now") }}</button>
+                                <button type="submit" class="btn--base w-100">{{ __("Login Now") }}</button>
                             </div>
                             <div class="footer-text">
                                 <p class="d-block text-center mt-3 create-acc">

@@ -6,12 +6,17 @@ use Illuminate\Support\Facades\Route;
 use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\Agent\DashboardController;
-
-
+use App\Http\Controllers\Agent\ProfileController;
 
 Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(DashboardController::class)->group(function(){
         Route::get('dashboard','index')->name('dashboard');
+        Route::post('logout','logout')->name('logout');
+    });
+    //agent profile 
+    Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::put('update','update')->name('update')->middleware('app.mode');
     });
 });
 

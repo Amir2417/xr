@@ -13,9 +13,9 @@
             <div class="sidebar-menu-wrapper">
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
-                        <a href="agent-dashboard.html">
+                        <a href="{{ setRoute('agent.dashboard') }}">
                             <i class="menu-icon las la-palette"></i>
-                            <span class="menu-title">Dashboard</span>
+                            <span class="menu-title">{{ __("Dashboard") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
@@ -79,7 +79,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="index.html">
+                        <a href="javascript:void(0)" class="logout-btn">
                             <i class="menu-icon las la-sign-out-alt"></i>
                             <span class="menu-title">Logout</span>
                         </a>
@@ -87,7 +87,7 @@
                 </ul>
             </div>
         </div>
-        <div class="sidebar-doc-box bg_img" data-background="assets/images/element/side-bg.webp">
+        <div class="sidebar-doc-box bg_img" data-background="{{ asset('public/frontend') }}/images/element/side-bg.webp">
             <div class="sidebar-doc-icon">
                 <i class="fas fa-question-circle"></i>
             </div>
@@ -103,7 +103,7 @@
 </div>
 
 @push('script')
-    <script>
-        
-    </script>
+<script>
+    
+</script>
 @endpush

@@ -11,7 +11,7 @@
         <div class="right">
             <form class="header-search-wrapper">
                 <div class="position-relative">
-                    <input class="form--control" type="text" placeholder="Ex: Transactions"
+                    <input class="form--control" type="text" placeholder="{{ __('Ex: Transactions') }}"
                         aria-label="Search">
                     <span class="las la-search"></span>
                 </div>
@@ -27,7 +27,7 @@
                     <ul class="notification-list">
                         <li>
                             <div class="thumb">
-                                <img src="assets/images/client/client-1.jpg" alt="user">
+                                <img src="" alt="user">
                             </div>
                             <div class="content">
                                 <div class="title-area">
@@ -38,38 +38,13 @@
                                     meeting</span>
                             </div>
                         </li>
-                        <li>
-                            <div class="thumb">
-                                <img src="assets/images/client/client-2.jpg" alt="user">
-                            </div>
-                            <div class="content">
-                                <div class="title-area">
-                                    <h5 class="title">Send Remittance</h5>
-                                    <span class="time">Thu 3.30PM</span>
-                                </div>
-                                <span class="sub-title">Hi, How are you? What about our next
-                                    meeting</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumb">
-                                <img src="assets/images/client/client-3.jpg" alt="user">
-                            </div>
-                            <div class="content">
-                                <div class="title-area">
-                                    <h6 class="title">Send Remittance</h6>
-                                    <span class="time">Thu 3.30PM</span>
-                                </div>
-                                <span class="sub-title">Hi, How are you? What about our next
-                                    meeting</span>
-                            </div>
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
             <div class="header-user-wrapper">
                 <div class="header-user-thumb">
-                    <a href="agent-profile.html"><img src="{{ auth()->user()->agentImage }}"
+                    <a href="{{ setRoute('agent.profile.index') }}"><img src="{{ auth()->user()->agentImage }}"
                             alt="client"></a>
                 </div>
             </div>
