@@ -53,7 +53,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 @include('partials.footer-asset')
-@include('admin.partials.notify')
 
 <script>
     $(document).ready(function() {

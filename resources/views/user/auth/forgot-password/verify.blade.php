@@ -79,7 +79,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 @include('partials.footer-asset')
-@include('admin.partials.notify')
 
 <script>
     var resendTime = "{{ $resend_time ?? 0 }}";

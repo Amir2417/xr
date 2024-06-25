@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\SetupKycController;
 use App\Http\Controllers\Admin\UserCareController;
 use App\Http\Controllers\Admin\AdminCareController;
-use App\Http\Controllers\Admin\AdminNotificationController;
+use App\Http\Controllers\Admin\AgentCareController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StatementController;
 use App\Http\Controllers\Admin\SubscribeController;
@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\TrxSettingsController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\BroadcastingController;
 use App\Http\Controllers\Admin\MobileMethodController;
+use App\Http\Controllers\Admin\NewUserBonusController;
 use App\Http\Controllers\Admin\SourceOfFundController;
 use App\Http\Controllers\Admin\RemittanceLogController;
 use App\Http\Controllers\Admin\SetupSectionsController;
@@ -39,13 +40,13 @@ use App\Http\Controllers\Admin\CountrySectionController;
 use App\Http\Controllers\Admin\RemittanceBankController;
 use App\Http\Controllers\Admin\SendingPurposeController;
 use App\Http\Controllers\Admin\PaymentGatewaysController;
-use App\Http\Controllers\Admin\PushNotificationController;
-use App\Http\Controllers\Admin\AppOnboardScreensController;
-use App\Http\Controllers\Admin\BankMethodAutomaticController;
 use App\Http\Controllers\Admin\CashPickupMethodController;
+use App\Http\Controllers\Admin\PushNotificationController;
+use App\Http\Controllers\Admin\AdminNotificationController;
+use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\CouponTransactionController;
-use App\Http\Controllers\Admin\NewUserBonusController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
+use App\Http\Controllers\Admin\BankMethodAutomaticController;
 use App\Http\Controllers\Admin\PaymentGatewayCurrencyController;
 use App\Http\Controllers\Admin\ReceivingMethodCategoryController;
 
@@ -249,6 +250,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('kyc/reject/{username}','kycReject')->name('kyc.reject');
         Route::post('search','search')->name('search');
     });
+    // Agent Care Section
+    Route::controller(AgentCareController::class)->prefix('agents')->name('agents.')->group(function () {
+        Route::get('index', 'index')->name('index');
+        Route::get('active', 'active')->name('active');
+        Route::get('banned', 'banned')->name('banned');
+        Route::get('email/unverified', 'emailUnverified')->name('email.unverified');
+        Route::get('kyc/unverified', 'KycUnverified')->name('kyc.unverified');
+        Route::get('kyc/details/{username}', 'kycDetails')->name('kyc.details');
+        Route::get('email-agents', 'emailAllUsers')->name('email.agents');
+        Route::post('email-agents/send', 'sendMailUsers')->name('email.agents.send')->middleware("mail");
+        Route::get('details/{username}', 'userDetails')->name('details');
+        Route::post('details/update/{username}', 'userDetailsUpdate')->name('details.update');
+        Route::get('login/logs/{username}', 'loginLogs')->name('login.logs');
+        Route::get('mail/logs/{username}', 'mailLogs')->name('mail.logs');
+        Route::post('send/mail/{username}', 'sendMail')->name('send.mail')->middleware("mail");
+        Route::post('login-as-member/{username?}','loginAsMember')->name('login.as.member');
+        Route::post('kyc/approve/{username}','kycApprove')->name('kyc.approve');
+        Route::post('kyc/reject/{username}','kycReject')->name('kyc.reject');
+        Route::post('search','search')->name('search');
+        Route::post('wallet/balance/update/{username}','walletBalanceUpdate')->name('wallet.balance.update');
+    });
+
     Route::controller(UsefulLinkController::class)->prefix('useful-links')->name('useful.links.')->group(function (){
         Route::get('index','index')->name('index');
         Route::post("store","store")->name("store");

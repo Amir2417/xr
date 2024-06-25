@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rules\Password;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\User\Auth\PasswordResetEmail;
@@ -162,13 +162,12 @@ class ForgotPasswordController extends Controller
         if($basic_settings->agent_secure_password) {
             $passowrd_rule = ["required",Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised(),"confirmed"];
         }
-
+       
         $request->merge(['token' => $token]);
         $validated = Validator::make($request->all(),[
             'token'         => "required|string|exists:agent_password_resets,token",
             'password'      => $passowrd_rule,
         ])->validate();
-
         $password_reset = AgentPasswordReset::where("token",$token)->first();
         if(!$password_reset) {
             throw ValidationException::withMessages([

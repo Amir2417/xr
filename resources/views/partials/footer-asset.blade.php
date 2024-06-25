@@ -54,3 +54,4 @@
 
 <!-- main -->
 <script src="{{ asset('public/frontend/js/main.js')}}"></script>
+@include('admin.partials.notify')
