@@ -128,30 +128,32 @@
         <div class="col-xl-6 col-lg-6 mb-20">
             <div class="custom-card mt-10">
                 <div class="dashboard-header-wrapper">
-                    <h4 class="title">Change Password</h4>
+                    <h4 class="title">{{ __("Change Password") }}</h4>
                 </div>
                 <div class="card-body">
-                    <form class="card-form">
+                    <form class="card-form" action="{{ setRoute('agent.profile.password.update') }}" method="POST">
+                        @csrf
+                        @method("PUT")
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 form-group show_hide_password">
-                                <label>Current Password<span>*</span></label>
-                                <input type="password" class="form--control" placeholder="Enter Password...">
+                                <label>{{ __("Current Password") }}<span>*</span></label>
+                                <input type="password" class="form--control" name="current_password" placeholder="{{ __('Enter Password') }}...">
                                 <a href="javascript:void(0)" class="show-pass field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 form-group show_hide_password-2">
-                                <label>New Password<span>*</span></label>
-                                <input type="password" class="form--control" placeholder="Enter Password...">
+                                <label>{{ __("New Password") }}<span>*</span></label>
+                                <input type="password" class="form--control" name="password" placeholder="{{ __('Enter Password') }}...">
                                 <a href="javascript:void(0)" class="show-pass field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group show_hide_password-3">
-                                <label>Confirm Password<span>*</span></label>
-                                <input type="password" class="form--control" placeholder="Enter Password...">
+                                <label>{{ __("Confirm Password") }}<span>*</span></label>
+                                <input type="password" class="form--control" name="password_confirmation" placeholder="{{ __('Enter Password') }}...">
                                 <a href="javascript:void(0)" class="show-pass field-icon"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>
                         </div>
                         <div class="col-xl-12 col-lg-12">
-                            <button type="submit" class="btn--base w-100">Change</button>
+                            <button type="submit" class="btn--base w-100">{{ __("Change") }}</button>
                         </div>
                     </form>
                 </div>

@@ -17,6 +17,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function(){
         Route::get('/','index')->name('index');
         Route::put('update','update')->name('update')->middleware('app.mode');
+        Route::put('password-update','passwordUpdate')->name('password.update')->middleware('app.mode');
     });
 });
 
