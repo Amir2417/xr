@@ -1806,3 +1806,33 @@ function selectedLangDir(){
     }
     return $default_language_dir;
 }
+
+function remove_speacial_char($string) {
+    return preg_replace("/[^A-Za-z0-9]/","",$string);
+}
+
+function userGuard() {
+    if(auth()->guard('web')->check()){
+        $user = auth()->guard('web')->user();
+        $userType = 'USER';
+        $guard = "web";
+    } else if(auth()->guard('api')->check()){
+        $user = auth()->guard('api')->user();
+        $userType = 'USER';
+        $guard = "api";
+    }else if(auth()->guard('agent')->check()){
+        $user = auth()->guard('agent')->user();
+        $userType = 'AGENT';
+        $guard = "agent";
+    }else if(auth()->guard('agent_api')->check()){
+        $user = auth()->guard('agent_api')->user();
+        $userType = 'AGENT';
+        $guard = "agent_api";
+    }
+
+    return [
+        'user'=>$user,
+        'type'=> $userType,
+        'guard'=>$guard
+    ];
+}

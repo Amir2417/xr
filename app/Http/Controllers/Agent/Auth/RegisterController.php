@@ -217,17 +217,10 @@ class RegisterController extends Controller
             $kyc_validated = Validator::make($request->all(),$validation_rules)->validate();
             $get_values = $this->registerPlaceValueWithFields($user_kyc_fields,$kyc_validated);
         }
-        try{
-            $validated['phone_code'] = get_country_phone_code($validated['country']);
-        }catch(Exception $e) {
-            return $this->breakAuthentication($e->getMessage());
-        }
-
+        
         $validated['mobile']        = remove_speacial_char($validated['phone']);
-        $validated['mobile_code']   = remove_speacial_char($validated['phone_code']);
-        $complete_phone             = $validated['mobile_code'] . $validated['mobile'];
 
-        if(Agent::where('full_mobile',$complete_phone)->exists()) {
+        if(Agent::where('full_mobile',$validated['mobile'])->exists()) {
             throw ValidationException::withMessages([
                 'phone'     => __('Phone number is already exists'),
             ]);
@@ -238,8 +231,8 @@ class RegisterController extends Controller
             $userName = $userName.'-'.rand(123,456);
         }
 
-        $validated['full_mobile']       = $complete_phone;
-        $validated = Arr::except($validated,['agree','phone_code','phone']);
+        $validated['full_mobile']       = $validated['mobile'];
+        $validated = Arr::except($validated,['phone']);
         $validated['email_verified']    = true;
         $validated['sms_verified']      = ($basic_settings->sms_verification == true) ? false : true;
         $validated['kyc_verified']      = ($basic_settings->agent_kyc_verification == true) ? false : true;
@@ -298,7 +291,7 @@ class RegisterController extends Controller
         $basic_settings = $this->basic_settings;
         $passowrd_rule = "required|string|min:6|confirmed";
         if($basic_settings->agent_secure_password) {
-            $passowrd_rule = ["required","confirmed",Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()];
+            $passowrd_rule = ["required","confirmed",Password::min(6)->letters()];
         }
         if($basic_settings->agent_agree_policy){
             $agree = 'required';
@@ -309,12 +302,11 @@ class RegisterController extends Controller
         return Validator::make($data,[
             'firstname'     => 'required|string|max:60',
             'lastname'      => 'required|string|max:60',
-            'store_name' => 'required|string|max:100',
+            'store_name'    => 'required|string|max:100',
             'email'         => 'required|string|email|max:150|unique:agents,email',
             'password'      => $passowrd_rule,
             'country'       => 'required|string|max:150',
             'city'          => 'required|string|max:150',
-            'phone_code'    => 'required|string|max:10',
             'phone'         => 'required|string|max:20',
             'zip_code'      => 'required|string|max:8',
             'agree'         =>  $agree,
@@ -343,8 +335,6 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        $user->createQr();
-        $this->createUserWallets($user);
         return redirect()->intended(route('agent.dashboard'));
     }
 }

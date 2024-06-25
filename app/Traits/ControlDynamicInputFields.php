@@ -52,7 +52,31 @@ trait ControlDynamicInputFields {
         $this->removeUserKycFiles();
         return $fields_with_value;
     }
+    public function registerPlaceValueWithFields($kyc_fields,$form_data) {
+        $fields_with_value = [];
+        foreach($kyc_fields ?? [] as $key => $item) {
+            if($item->type == "text" || $item->type == "textarea") {
+                $vlaue = $form_data[$item->name] ?? "";
+            }elseif($item->type == "file") {
+                $form_file = $form_data[$item->name] ?? "";
+                if(is_file($form_file)) {
+                    $get_file_link = upload_file($form_file,"junk-files");
+                    $upload_file = upload_files_from_path_dynamic([$get_file_link['dev_path']],"kyc-files");
+                    delete_file($get_file_link['dev_path']);
+                    $vlaue = $upload_file;
+                }
+            }elseif($item->type == "select") {
+                $vlaue = $form_data[$item->name] ?? "";
+            }
 
+            if(isset($form_data[$item->name])) {
+                $fields_with_value[$key] = json_decode(json_encode($item),true);
+                $fields_with_value[$key]['value'] = $vlaue;
+            }
+        }
+        // $this->removeUserKycFiles();
+        return $fields_with_value;
+    }
     public function generatedFieldsFilesDelete($kyc_fields_with_value) {
 
         $files_link = [];

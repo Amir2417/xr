@@ -1,4 +1,3 @@
-
 <nav class="navbar-wrapper">
     <div class="dashboard-title-part">
         <div class="left">
@@ -10,36 +9,68 @@
             @yield('breadcrumb')
         </div>
         <div class="right">
-            <div class="header-push-wrapper">
-                <button class="push-icon">
+            <form class="header-search-wrapper">
+                <div class="position-relative">
+                    <input class="form--control" type="text" placeholder="Ex: Transactions"
+                        aria-label="Search">
+                    <span class="las la-search"></span>
+                </div>
+            </form>
+            <div class="header-notification-wrapper">
+                <button class="notification-icon">
                     <i class="las la-bell"></i>
                 </button>
-                <div class="push-wrapper">
-                    <div class="push-header">
-                        <h5 class="title">{{ __("Notification") }}</h5>
+                <div class="notification-wrapper">
+                    <div class="notification-header">
+                        <h5 class="title">Notification</h5>
                     </div>
-                    <ul class="push-list">
-                        @foreach (get_user_notifications() ?? [] as $item)
+                    <ul class="notification-list">
                         <li>
                             <div class="thumb">
-                                <img src="{{ auth()->user()->agentImage }}" alt="user" />
+                                <img src="assets/images/client/client-1.jpg" alt="user">
                             </div>
                             <div class="content">
                                 <div class="title-area">
-                                    <h5 class="title">{{ $item->message->title }}</h5>
-                                    <span class="time">{{ $item->created_at->diffForHumans() }}</span>
+                                    <h5 class="title">Send Remittance</h5>
+                                    <span class="time">Thu 3.30PM</span>
                                 </div>
-                                <span class="sub-title">{{ $item->message->message ?? "" }}</span>
+                                <span class="sub-title">Hi, How are you? What about our next
+                                    meeting</span>
                             </div>
                         </li>
-                        @endforeach
+                        <li>
+                            <div class="thumb">
+                                <img src="assets/images/client/client-2.jpg" alt="user">
+                            </div>
+                            <div class="content">
+                                <div class="title-area">
+                                    <h5 class="title">Send Remittance</h5>
+                                    <span class="time">Thu 3.30PM</span>
+                                </div>
+                                <span class="sub-title">Hi, How are you? What about our next
+                                    meeting</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="thumb">
+                                <img src="assets/images/client/client-3.jpg" alt="user">
+                            </div>
+                            <div class="content">
+                                <div class="title-area">
+                                    <h6 class="title">Send Remittance</h6>
+                                    <span class="time">Thu 3.30PM</span>
+                                </div>
+                                <span class="sub-title">Hi, How are you? What about our next
+                                    meeting</span>
+                            </div>
+                        </li>
                     </ul>
-
                 </div>
             </div>
             <div class="header-user-wrapper">
                 <div class="header-user-thumb">
-                    <a href="{{ setRoute('agent.profile.index') }}"><img src="{{ auth()->user()->agentImage }}" alt="client" /></a>
+                    <a href="agent-profile.html"><img src="{{ auth()->user()->agentImage }}"
+                            alt="client"></a>
                 </div>
             </div>
         </div>
