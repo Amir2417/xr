@@ -14,71 +14,15 @@ class SetupKycSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            'slug'          => "user",
-            'user_type'     => "USER",
-            'status'        => true,
-            'fields'        => [
-                [
-                    "type" => "select",
-                    "label" => "ID Type",
-                    "name" => "id_type",
-                    "required" => true,
-                    "validation" => [
-                        "max" => 0,
-                        "min" => 0,
-                        "mimes" => [
-                        ],
-                        "options" => [
-                            "NID",
-                            " Driving License",
-                            " Passport"
-                        ],
-                        "required" => true
-                    ]
-                ],
-                [
-                    "type" => "file",
-                    "label" => "Back",
-                    "name" => "back",
-                    "required" => true,
-                    "validation" => [
-                        "max" => "2",
-                        "mimes" => [
-                        "jpg",
-                        "png",
-                        "webp",
-                        "jpeg"
-                        ],
-                        "min" => 0,
-                        "options" => [
-                        ],
-                        "required" => true
-                    ]
-                ],
-                [
-                    "type" => "file",
-                    "label" => "Front",
-                    "name" => "front",
-                    "required" => true,
-                    "validation" => [
-                        "max" => "2",
-                        "mimes" => [
-                        "jpg",
-                        "png",
-                        "webp",
-                        "jpeg"
-                        ],
-                        "min" => 0,
-                        "options" => [
-                        ],
-                        "required" => true
-                    ]
-                ]
-            ],
-            'last_edit_by'  => 1,
-        ];
-
-        SetupKyc::updateOrCreate($data);
+        $setup_kycs = array(
+            array('id' => '1','slug' => 'user','user_type' => 'USER','fields' => '[{"type":"file","label":"Id Back Part","name":"id_back_part","required":true,"validation":{"max":"10","mimes":["jpg","png","svg","webp"],"min":0,"options":[],"required":true}},{"type":"file","label":"Id Front Part","name":"id_front_part","required":true,"validation":{"max":"10","mimes":["jpg","png","svg","webp"],"min":0,"options":[],"required":true}}]','status' => '1','last_edit_by' => '1','created_at' => '2023-02-20 05:21:32','updated_at' => '2023-03-20 04:05:57'),
+            array('id' => '3','slug' => 'agent','user_type' => 'AGENT','fields' => '[{"type":"file","label":"Id Back Part","name":"id_back_part","required":true,"validation":{"max":"10","mimes":["jpg","png","svg","webp"],"min":0,"options":[],"required":true}},{"type":"file","label":"Id Front Part","name":"id_front_part","required":true,"validation":{"max":"10","mimes":["jpg","png","svg","webp"],"min":0,"options":[],"required":true}}]','status' => '1','last_edit_by' => '1','created_at' => '2024-03-01 15:30:15','updated_at' => '2024-03-01 15:30:15')
+        );
+        foreach($setup_kycs as $item){
+            $data       = SetupKyc::where('slug',$item['slug'])->first();
+            if($data == null){
+                SetupKyc::insert($item);
+            }
+        }
     }
 }

@@ -75,7 +75,7 @@ Route::prefix('agent')->name('agent.')->group(function(){
     Route::get('register',[AuthRegisterController::class,"showRegistrationForm"])->name('register')->middleware(['agent.registration.permission']);
     Route::post('register',[AuthRegisterController::class,"register"])->name('register.submit')->middleware(['agent.registration.permission']);
     Route::post('send/verify-code',[AuthRegisterController::class,"sendVerifyCode"])->name('send.code')->middleware(['agent.registration.permission']);
-    Route::get('email/verify/{token}',[AgentAuthorizationController::class,"showSmsFromRegister"])->name('email.verify')->middleware(['agent.registration.permission']);
+    Route::get('email/verify/{token}',[AgentAuthorizationController::class,"showEmailFromRegister"])->name('email.verify')->middleware(['agent.registration.permission']);
     Route::post('verify/code/{token}',[AuthRegisterController::class,"verifyCode"])->name('verify.code')->middleware(['agent.registration.permission']);
     Route::get('resend/code',[AuthRegisterController::class,"resendCode"])->name('resend.code')->middleware(['agent.registration.permission']);
     Route::get('register/kyc',[AuthRegisterController::class,"registerKyc"])->name('register.kyc')->middleware(['agent.registration.permission']);

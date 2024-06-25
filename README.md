@@ -22,4 +22,7 @@ Please User Those Command On Your Terminal To Update Full System
 4. To Update Cash Pickup Method Seeder Please Run This Command On Your Terminal
     php artisan db:seed --class=Database\\Seeders\\Admin\\CashPickupMethodSeeder
 
+5. To Update Setup KYC Seeder Please Run This Command On Your Terminal
+    php artisan db:seed --class=Database\\Seeders\\Admin\\SetupKycSeeder
+
 

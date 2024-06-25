@@ -66,6 +66,7 @@ class RegisterController extends Controller
     //========================before registration======================================
 
     public function sendVerifyCode(Request $request){
+       
         $basic_settings = $this->basic_settings;
         if($basic_settings->agent_agree_policy){
             $agree = 'required';
@@ -88,7 +89,7 @@ class RegisterController extends Controller
         if( $exist) return back()->with(['error' => [__('Agent already  exists, please try with another email')]]);
         $code = generate_random_code();
         $data = [
-            'agent_id'       =>  0,
+            'agent_id'      =>  0,
             'email'         => $validated['email'],
             'code'          => $code,
             'token'         => generate_unique_string("agent_authorizations","token",200),
@@ -113,6 +114,7 @@ class RegisterController extends Controller
         return redirect()->route('agent.email.verify',$data['token'])->with(['success' => [__('Verification code sended to your email address.')]]);
     }
     public function verifyCode(Request $request,$token){
+       
         $request->merge(['token' => $token]);
         $request->validate([
             'token'     => "required|string|exists:agent_authorizations,token",
@@ -123,6 +125,7 @@ class RegisterController extends Controller
         $code = implode("",$code);
         $otp_exp_sec = BasicSettingsProvider::get()->agent_otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
         $auth_column = AgentAuthorization::where("token",$request->token)->where("code",$code)->first();
+       
         if(!$auth_column){
             return back()->with(['error' => [__('The verification code does not match')]]);
         }
@@ -135,7 +138,6 @@ class RegisterController extends Controller
         }catch(Exception $e) {
             return redirect()->route('agent.register')->with(['error' => [__("Something went wrong! Please try again.")]]);
         }
-
         return redirect()->route("agent.register.kyc")->with(['success' => [__('Otp successfully verified')]]);
     }
     public function resendCode(Request $request){
@@ -176,10 +178,12 @@ class RegisterController extends Controller
     }
     public function registerKyc(Request $request){
         $basic_settings   = $this->basic_settings;
+       
         $email =   session()->get('register_email');
         if($email == null){
             return redirect()->route('agent.register');
         }
+        dd("tets");
         $kyc_fields =[];
         if($basic_settings->agent_kyc_verification == true){
             $user_kyc = SetupKyc::agentKyc()->first();

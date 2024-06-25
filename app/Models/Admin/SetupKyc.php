@@ -22,4 +22,7 @@ class SetupKyc extends Model
     public function scopeActive($query) {
         $query->where("status",true);
     }
+    public function scopeAgentKyc($query) {
+        return $query->where("user_type","AGENT")->active();
+    }
 }

@@ -29,9 +29,10 @@ class AuthorizationController extends Controller
         $page_title = __("Mail Authorization");
         return view('agent.auth.authorize.verify-mail',compact("page_title","token"));
     }
-    public function showSmsFromRegister($token)
-    {
-
+    /**
+     * Method for show email verify page
+     */
+    public function showEmailFromRegister($token){
         $data = AgentAuthorization::where('token',$token)->first();
         $page_title = __('email Verification');
         return view('agent.auth.authorize.verify-email',compact("page_title","token","data"));
