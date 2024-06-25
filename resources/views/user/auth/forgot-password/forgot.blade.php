@@ -24,7 +24,7 @@
     <div class="account-area">
         <div class="account-wrapper change-form">
             <div class="account-logo">
-                <a class="site-logo" href="{{ setRoute('index')}}"><img src="{{ get_logo($basic_settings,"dark")}}" alt="logo"></a>
+                <img src="{{ get_logo_agent($basic_settings) }}" alt="logo">
             </div>
             <h5 class="title">{{ __("Forgot Password?") }}</h5>
             <p>{{ __("Enter your email and we'll send you a otp to reset your password.") }}</p>

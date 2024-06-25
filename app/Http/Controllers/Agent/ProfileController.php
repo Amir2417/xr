@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -98,5 +99,21 @@ class ProfileController extends Controller
         }
 
         return back()->with(['success' => ['Password successfully updated!']]);
+    }
+    /**
+     * Method for delete user account
+     * @param string $id
+     * @param \Illuminate\Http\Request $request
+     */
+    public function delete(Request $request,$id){
+        $user = auth()->user();
+        try{
+            $user->status = 0;
+            $user->save();
+            Auth::logout();
+            return redirect()->route('agent.login')->with(['success' => ['Your account deleted successfully!']]);
+        }catch(Exception $e) {
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
     }
 }

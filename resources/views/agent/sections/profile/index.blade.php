@@ -161,8 +161,43 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4 class="title">{{ __("Are you sure to delete your account?") }}</h4>
+          <p>{{ __("If you do not think you will use") }} <span class="text--base">{{ $basic_settings->site_name }}</span> {{ __("again and like your account deleted. Keep in mind you will not be able to reactivate your account or retrieve any of the content or information you have added. If you would still like your account deleted, click “Confirm”.?") }}</p>
+          
+        </div>
+        <div class="modal-footer justify-content-between border-0">
+            <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">{{ __("Close") }}</button>
+            <form action="{{ setRoute('agent.profile.delete',auth()->user()->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn--base">{{ __("Confirm") }}</button>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
 @endsection
 @push('script')
+<script>
+    $(document).ready(function() {
+        $("#show_hide_password a").on('click', function(event) {
+            event.preventDefault();
+            if($('#show_hide_password input').attr("type") == "text"){
+                $('#show_hide_password input').attr('type', 'password');
+                $('#show_hide_password i').addClass( "fa-eye-slash" );
+                $('#show_hide_password i').removeClass( "fa-eye" );
+            }else if($('#show_hide_password input').attr("type") == "password"){
+                $('#show_hide_password input').attr('type', 'text');
+                $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                $('#show_hide_password i').addClass( "fa-eye" );
+            }
+        });
+    });
+</script>
     <script>
         getAllCountries("{{ setRoute('global.countries') }}",$(".country-select"));
             $(document).ready(function(){
@@ -180,4 +215,5 @@
                 }, 400);
             });
     </script>
+    
 @endpush
