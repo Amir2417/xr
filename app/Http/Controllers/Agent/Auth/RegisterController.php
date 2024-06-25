@@ -183,7 +183,6 @@ class RegisterController extends Controller
         if($email == null){
             return redirect()->route('agent.register');
         }
-        dd("tets");
         $kyc_fields =[];
         if($basic_settings->agent_kyc_verification == true){
             $user_kyc = SetupKyc::agentKyc()->first();

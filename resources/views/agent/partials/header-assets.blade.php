@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="{{ asset('public/frontend/css/nice-select.css') }}">
 <!-- country-select -->
 <link rel="stylesheet" href="{{ asset('public/frontend/css/countrySelect.css') }}">
+<!-- select2-select css link -->
+<link rel="stylesheet" href="{{ asset('public/backend/css/select2.css') }}">
 <!-- main style css link -->
 <link rel="stylesheet" href="{{ asset('public/frontend/css/style.css') }}">
 <!-- Fileholder CSS CDN -->

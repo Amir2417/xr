@@ -12,6 +12,8 @@
 <script src="{{ asset('public/frontend/js/aos.js') }}"></script>
 <!-- country select -->
 <script src="{{ asset('public/frontend/js/countrySelect.js') }}"></script>
+<!-- Select 2 JS -->
+<script src="{{ asset('public/backend/js/select2.js') }}"></script>
 <!-- nice select -->
 <script src="{{ asset('public/frontend/js/jquery.nice-select.js') }}"></script>
 

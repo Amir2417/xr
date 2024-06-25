@@ -356,4 +356,16 @@ class SiteController extends Controller{
             return Response::error(['Coupon not found!']);
         }  
     }
+    /**
+     * Method for get city name
+     */
+    public function getCity(Request $request){
+        $validator          = Validator::make($request->all(),[
+            'countryName'   => 'required'
+        ]);
+        if($validator->fails()) return Response::error($validator->errors()->all());
+        $validated      = $validator->validate();
+        $get_cities     = get_city($validated['countryName']);
+        return Response::success(['Coupon Applied Successfully'],['city' => $get_cities],200);
+    }
 }

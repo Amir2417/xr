@@ -93,7 +93,25 @@ function get_specific_country($name){
     }
 
    
-    return null;
+}
+function get_city($name){
+   
+    $cities = json_decode(file_get_contents(resource_path('world/cities.json')), true);
+
+    $cityItem = [];
+    foreach ($cities as $city) {
+        if (strtolower($city['country_name']) === strtolower($name)) {
+            
+            $cityData = [
+                'id'                    => $city['id'],
+                'name'                  => $city['name'],
+            ];
+            array_push($cityItem,$cityData);
+        }
+    }
+    return $cityItem;
+
+   
 }
 
 function get_country_phone_code($country) {
