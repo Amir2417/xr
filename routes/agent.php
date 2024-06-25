@@ -7,6 +7,7 @@ use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\Agent\DashboardController;
 use App\Http\Controllers\Agent\ProfileController;
+use App\Http\Controllers\Agent\SendRemittanceController;
 
 Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(DashboardController::class)->group(function(){
@@ -19,6 +20,10 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::put('update','update')->name('update')->middleware('app.mode');
         Route::put('password-update','passwordUpdate')->name('password.update')->middleware('app.mode');
         Route::post('delete-account/{id}','delete')->name('delete')->middleware('app.mode');
+    });
+    //send remittance
+    Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+        Route::get('/','index')->name('index');
     });
 });
 

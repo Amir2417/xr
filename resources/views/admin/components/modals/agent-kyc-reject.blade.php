@@ -19,7 +19,6 @@
                                             'value'     => old("reason"),
                                         ])
                                 </div>
-
                                 <div class="col-xl-12 col-lg-12 form-group d-flex align-items-center justify-content-between mt-4">
                                     <button type="button" class="btn btn--danger modal-close">{{ __("Cancel") }}</button>
                                     <button type="submit" class="btn btn--base">{{ __("Submit") }}</button>

@@ -21,67 +21,67 @@
                     <li class="sidebar-menu-item">
                         <a href="send-remittance.html">
                             <i class="menu-icon las la-fax"></i>
-                            <span class="menu-title">Send Remittance</span>
+                            <span class="menu-title">{{ __("Send Remittance") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="money-in.html">
                             <i class="menu-icon las la-cloud-upload-alt"></i>
-                            <span class="menu-title">Money In</span>
+                            <span class="menu-title">{{ __("Money In") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="money-out.html">
                             <i class="menu-icon las la-plus-square"></i>
-                            <span class="menu-title">Money Out</span>
+                            <span class="menu-title">{{ __("Money Out") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="my-sender.html">
                             <i class="menu-icon las la-share-square"></i>
-                            <span class="menu-title">My Sender</span>
+                            <span class="menu-title">{{ __("My Sender") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="my-recipient.html">
                             <i class="menu-icon las la-user-plus"></i>
-                            <span class="menu-title">My Recipient</span>
+                            <span class="menu-title">{{ __("My Recipient") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="profit-log.html">
                             <i class="menu-icon las la-wallet"></i>
-                            <span class="menu-title">Profit Log</span>
+                            <span class="menu-title">{{ __("Profit Log") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="transaction.html">
                             <i class="menu-icon las la-history"></i>
-                            <span class="menu-title">Transactions</span>
+                            <span class="menu-title">{{ __("Transactions") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="statements.html">
                             <i class="menu-icon las la-file-alt"></i>
-                            <span class="menu-title">Statement</span>
+                            <span class="menu-title">{{ __("Statement") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="agent-kyc.html">
                             <i class="menu-icon las la-user-shield"></i>
-                            <span class="menu-title">KYC</span>
+                            <span class="menu-title">{{ __("KYC") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="agent-2fa.html">
                             <i class="menu-icon las la-lock"></i>
-                            <span class="menu-title">2FA Security</span>
+                            <span class="menu-title">{{ __("2FA Security") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
                         <a href="javascript:void(0)" class="logout-btn">
                             <i class="menu-icon las la-sign-out-alt"></i>
-                            <span class="menu-title">Logout</span>
+                            <span class="menu-title">{{ __("Logout") }}</span>
                         </a>
                     </li>
                 </ul>
@@ -92,10 +92,10 @@
                 <i class="fas fa-question-circle"></i>
             </div>
             <div class="sidebar-doc-content">
-                <h4 class="title">Need Help?</h4>
-                <p>How can we help you</p>
+                <h4 class="title">{{ __("Need Help?") }}</h4>
+                <p>{{ __("How can we help you") }}</p>
                 <div class="sidebar-doc-btn">
-                    <a href="support-tickets.html" class="btn--base w-100">Get Support</a>
+                    <a href="support-tickets.html" class="btn--base w-100">{{ __("Get Support") }}</a>
                 </div>
             </div>
         </div>
