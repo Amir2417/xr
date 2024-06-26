@@ -13,7 +13,7 @@
 <div class="body-wrapper">
     <div class="my-sender-area">
         <div class="add-recipient-btn text-end pb-3">
-            <a href="add-recipient.html" class="btn--base">+ Add New Recipient </a>
+            <a href="{{ setRoute('agent.recipient.add') }}" class="btn--base">+ {{ __("Add New Recipient") }} </a>
          </div>
          <div class="dashboard-list-item-wrapper">
             <div class="dashboard-list-item receive d-flex justify-content-between">

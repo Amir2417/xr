@@ -30,6 +30,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //recipient 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::get('add','add')->name('add');
     });
     //google 2fa
     Route::controller(SecurityController::class)->name('security')->name('security.')->group(function(){
