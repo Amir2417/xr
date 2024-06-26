@@ -29,7 +29,9 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //google 2fa
     Route::controller(SecurityController::class)->name('security')->name('security.')->group(function(){
         Route::get('google-2fa','google2FA')->name('google.2fa');
-        Route::post('google-2fa-status-update','google2FAStatusUpdate')->name('google.2fa.status.update');
+        Route::post('google-2fa-status-update','google2FAStatusUpdate')->name('google.2fa.status.update')->middleware('app.mode');
+        Route::get('kyc','kyc')->name('kyc.index');
+        Route::post('kyc-submit','kycSubmit')->name('kyc.submit');
     });
 });
 

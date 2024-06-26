@@ -106,4 +106,5 @@ $.magnificPopup.open({
 }
 
 </script>
+@include('admin.partials.notify')
 

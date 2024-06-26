@@ -67,7 +67,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="agent-kyc.html">
+                        <a href="{{ setRoute('agent.security.kyc.index') }}">
                             <i class="menu-icon las la-user-shield"></i>
                             <span class="menu-title">{{ __("KYC") }}</span>
                         </a>
