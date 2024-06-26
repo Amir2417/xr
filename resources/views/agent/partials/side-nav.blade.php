@@ -43,7 +43,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="my-recipient.html">
+                        <a href="{{ setRoute('agent.recipient.index') }}">
                             <i class="menu-icon las la-user-plus"></i>
                             <span class="menu-title">{{ __("My Recipient") }}</span>
                         </a>

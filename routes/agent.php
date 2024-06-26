@@ -7,6 +7,7 @@ use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\Agent\DashboardController;
 use App\Http\Controllers\Agent\ProfileController;
+use App\Http\Controllers\Agent\RecipientController;
 use App\Http\Controllers\Agent\SecurityController;
 use App\Http\Controllers\Agent\SendRemittanceController;
 
@@ -24,6 +25,10 @@ Route::prefix("agent")->name("agent.")->group(function(){
     });
     //send remittance
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //recipient 
+    Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('/','index')->name('index');
     });
     //google 2fa
