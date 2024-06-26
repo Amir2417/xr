@@ -19,7 +19,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="send-remittance.html">
+                        <a href="{{ setRoute('agent.send.remittance.index') }}">
                             <i class="menu-icon las la-fax"></i>
                             <span class="menu-title">{{ __("Send Remittance") }}</span>
                         </a>

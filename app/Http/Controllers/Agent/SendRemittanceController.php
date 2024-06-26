@@ -12,6 +12,10 @@ class SendRemittanceController extends Controller
      * @return view
      */
     public function index(){
-        
+        $page_title         = "Send Remittance";
+
+        return view('agent.sections.send-remittance.index',compact(
+            'page_title'
+        ));
     }
 }
