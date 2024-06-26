@@ -11,7 +11,8 @@
 
 @section('content')
 <div class="body-wrapper">
-    <form action="" method="post">
+    <form action="{{ setRoute('agent.recipient.store') }}" method="post">
+        @csrf
         <div class="agent-recipient-area">
             <div class="select-recipient-type">
                 <h3 class="title">{{ __($page_title) }}</h3>
@@ -120,6 +121,7 @@
             showHidePaymentSection(element);
         });
 
+
         function showHidePaymentSection(element) {
             $(".recipient-single-item").hide();
             $("#"+$(element).val()+"-view").show();
@@ -130,17 +132,20 @@
         var transactionType     = $(this).val();
         var cashPickup          = "{{ global_const()::RECIPIENT_METHOD_CASH }}";
         var bankTransfer        = "{{ global_const()::RECIPIENT_METHOD_BANK }}";
-
+        var country             = $("select[name=country]").val();
         if(transactionType == cashPickup){
             $('.bank-field').addClass('d-none');
             $('.mobile-field').addClass('d-none');
             $('.cash-pickup-field').removeClass('d-none');
+            getPickupPointsList(transactionType,country);
         }else if(transactionType == bankTransfer){
+            getBankList(transactionType,country);
             $('.bank-field').removeClass('d-none');
         }else{
             $('.bank-field').addClass('d-none');
             $('.cash-pickup-field').addClass('d-none');
             $('.mobile-field').removeClass('d-none');
+            getMobileMethodList(transactionType,country);
         }
     });
 
@@ -153,6 +158,10 @@
 
         if(transactionType == bankTransfer){
             getBankList(transactionType,country);
+        }else if(transactionType == cashPickup){
+            getPickupPointsList(transactionType,country);
+        }else{
+            getMobileMethodList(transactionType,country);
         }
 
     });
@@ -163,12 +172,44 @@
         $('.bank-list').html('');
         $.post(bankListURL,{country:country,_token:"{{ csrf_token() }}"},function(response){
             if(response.data.bank_list == null || response.data.bank_list == ''){
-                    $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
+                $('.bank-list').html('<option value="" disabled>No Bank Aviliable</option>');
             }else{
                 $('.bank-list').html('<option value="" disabled>Select Bank</option>');
             }
             $.each(response.data.bank_list,function(key,value){
                 $('.bank-list').append('<option value="'+ value.name + '"' + '>' + value.name + '</option>');
+            });
+        });
+    }
+
+    //function for get pickup points list
+    function getPickupPointsList(transactionType,country){
+        var pickupPointURL  = "{{ setRoute('agent.recipient.get.pickup.point.list') }}";
+        $('.pickup-point').html('');
+        $.post(pickupPointURL,{country:country,_token:"{{ csrf_token() }}"},function(response){
+            if(response.data.pickup_points == null || response.data.pickup_points == ''){
+                $('.pickup-point').html(`<option disabled>Pickup Points not available</option>`);
+            }else{
+                $('.pickup-point').html(`<option disabled>Select Pickup Point</option>`);
+            }
+            $.each(response.data.pickup_points,function(key,item){
+                $('.pickup-point').append(`<option value="${item.address}">${item.address}</option>`);
+            });
+        });
+    }
+
+    //function for get mobile money list
+    function getMobileMethodList(transactionType,country){
+        var mobileMoneyListURL  = "{{ setRoute('agent.recipient.get.mobile.method.list') }}";
+        $('.mobile-list').html('');
+        $.post(mobileMoneyListURL,{country:country,_token:"{{ csrf_token() }}"},function(response){
+            if(response.data.mobile_methods == null || response.data.mobile_methods == ''){
+                $('.mobile-list').html(`<option disabled>Mobile Method not available</option>`);
+            }else{
+                $('.mobile-list').html(`<option disabled>Select Mobile Method</option>`);
+            }
+            $.each(response.data.mobile_methods,function(key,value){
+                $('.mobile-list').append(`<option value="${value.name}">${value.name}</option>`);
             });
         });
     }
