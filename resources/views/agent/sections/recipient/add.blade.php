@@ -76,7 +76,17 @@
                     </select>
                 </div>
             </div>   
-            <div class="col-lg-6 col-md-6 mb-20">
+            <div class="col-lg-6 col-md-6 mb-20 mobile-field">
+                <div id="{{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" class="cash-pickup-recipient recipient-single-item">
+                    <label>Mobile Method <span>*</span></label>
+                    <select class="form--control nice-select">                         
+                        <option value="">Los Angeles</option>
+                        <option value="1">New York</option>
+                        <option value="2">Chicago</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 mb-20 cash-pickup-field">
                 <div id="{{ global_const()::RECIPIENT_METHOD_CASH }}-view" class="cash-pickup-recipient recipient-single-item">
                     <label>Pickup Point <span>*</span></label>
                     <select class="form--control nice-select">                         
@@ -164,10 +174,17 @@
         var transactionType     = $(this).val();
         var cashPickup          = "{{ global_const()::RECIPIENT_METHOD_CASH }}";
         var bankTransfer        = "{{ global_const()::RECIPIENT_METHOD_BANK }}";
+
         if(transactionType == cashPickup){
             $('.bank-field').addClass('d-none');
+            $('.mobile-field').addClass('d-none');
+            $('.cash-pickup-field').removeClass('d-none');
         }else if(transactionType == bankTransfer){
             $('.bank-field').removeClass('d-none');
+        }else{
+            $('.bank-field').addClass('d-none');
+            $('.cash-pickup-field').addClass('d-none');
+            $('.mobile-field').removeClass('d-none');
         }
     })
 </script>
