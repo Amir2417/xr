@@ -73,7 +73,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="agent-2fa.html">
+                        <a href="{{ setRoute('agent.security.google.2fa') }}">
                             <i class="menu-icon las la-lock"></i>
                             <span class="menu-title">{{ __("2FA Security") }}</span>
                         </a>
@@ -104,6 +104,13 @@
 
 @push('script')
 <script>
-    
+    $(".logout-btn").click(function(){
+        
+        var actionRoute =  "{{ setRoute('agent.logout') }}";
+        var target      = 1;
+        var message     = `{{ __("Are you sure to") }} <strong>{{ __("Logout") }}</strong>?`;
+
+        openAlertModal(actionRoute,target,message,"{{ __('Logout') }}","POST");
+    });
 </script>
 @endpush

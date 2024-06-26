@@ -40,7 +40,6 @@
         End Dashboard
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     @include('partials.footer-asset')
-    @include('admin.partials.notify')
     @stack('script')
     <script>
         $(".logout-btn").click(function(){

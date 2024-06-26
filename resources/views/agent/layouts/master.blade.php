@@ -40,58 +40,8 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     
     @include('agent.partials.footer-assets')
-    @include('admin.partials.notify')
     @stack('script')
-    <script>
-        $(".logout-btn").click(function(){
-            console.log("test");
-        var actionRoute =  "{{ setRoute('agent.logout') }}";
-        var target      = 1;
-        var message     = `{{ __("Are you sure to") }} <strong>{{ __("Logout") }}</strong>?`;
-
-        openAlertModal(actionRoute,target,message,"{{ __('Logout') }}","POST");
-
-       
-        /**
- * Function for open delete modal with method DELETE
- * @param {string} URL
- * @param {string} target
- * @param {string} message
- * @returns
- */
-function openAlertModal(URL,target,message,actionBtnText = "{{ __('Remove') }}",method = "DELETE"){
-  if(URL == "" || target == "") {
-      return false;
-  }
-
-  if(message == "") {
-      message = "Are you sure to delete ?";
-  }
-  var method = `<input type="hidden" name="_method" value="${method}">`;
-  openModalByContent(
-      {
-          content: `<div class="card modal-alert border-0">
-                      <div class="card-body">
-                          <form method="POST" action="${URL}">
-                              <input type="hidden" name="_token" value="${laravelCsrf()}">
-                              ${method}
-                              <div class="head mb-3">
-                                  ${message}
-                                  <input type="hidden" name="target" value="${target}">
-                              </div>
-                              <div class="foot d-flex align-items-center justify-content-between">
-                                  <button type="button" class="modal-close btn--base btn-for-modal">{{ __("Close") }}</button>
-                                  <button type="submit" class="alert-submit-btn btn--base bg-danger btn-loading btn-for-modal">${actionBtnText}</button>
-                              </div>
-                          </form>
-                      </div>
-                  </div>`,
-      },
-
-  );
-}
-    });
-    </script>
+ 
     
 </body>
 
