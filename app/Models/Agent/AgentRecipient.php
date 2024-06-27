@@ -14,6 +14,7 @@ class AgentRecipient extends Model
     protected $casts        = [
         'id'                => 'integer',
         'agent_id'          => 'integer',
+        'slug'              => 'string',
         'first_name'        => 'string',
         'last_name'         => 'string',
         'email'             => 'string',

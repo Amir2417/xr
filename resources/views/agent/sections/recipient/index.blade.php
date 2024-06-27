@@ -30,8 +30,8 @@
                         </div>
                     </div>
                     <div class="dashboard-list-button">
-                        <a href="{{ setRoute('agent.recipient.edit',$item->id) }}" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
-                        <button type="button" class="btn delete-recipient delate-recipient-agent" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $item->id }}"><i class="las la-trash-alt"></i></button>
+                        <a href="{{ setRoute('agent.recipient.edit',$item->slug) }}" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
+                        <button type="button" class="btn delete-recipient delate-recipient-agent" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $item->slug }}"><i class="las la-trash-alt"></i></button>
                     </div>
                 </div>
                 <div class="preview-list-wrapper">
@@ -181,7 +181,7 @@
                 </div>
             </div>
             <!-- Modal -->
-            <div class="modal fade" id="deleteModal-{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="deleteModal-{{ $item->slug }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -189,7 +189,7 @@
                     </div>
                     <div class="modal-footer justify-content-between border-0">
                         <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">{{ __("Close") }}</button>
-                        <form action="{{ setRoute('agent.recipient.delete',$item->id) }}" method="POST">
+                        <form action="{{ setRoute('agent.recipient.delete',$item->slug) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn--base">{{ __("Confirm") }}</button>
                         </form>

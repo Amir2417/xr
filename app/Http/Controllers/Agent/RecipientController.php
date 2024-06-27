@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Agent;
 
 use Exception;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
@@ -159,6 +160,7 @@ class RecipientController extends Controller
             if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
             $validated          = $validator->validate();
 
+            $validated['slug']      = Str::uuid();
             $validated['method']    = GlobalConst::TRANSACTION_TYPE_BANK;
             if(AgentRecipient::auth()->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->where('iban_number',$validated['iban_number'])->exists()){
                 throw ValidationException::withMessages([
@@ -205,6 +207,7 @@ class RecipientController extends Controller
             if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
             $validated          = $validator->validate();
 
+            $validated['slug']      = Str::uuid();
             $validated['method']    = GlobalConst::TRANSACTION_TYPE_MOBILE;
             if(AgentRecipient::auth()->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->where('account_number',$validated['account_number'])->exists()){
                 throw ValidationException::withMessages([
@@ -250,6 +253,7 @@ class RecipientController extends Controller
             if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
             $validated          = $validator->validate();
 
+            $validated['slug']      = Str::uuid();
             $validated['method']    = GlobalConst::TRANSACTION_TYPE_CASHPICKUP;
             if(AgentRecipient::auth()->where('method',$validated['method'])->where('pickup_point',$validated['pickup_point'])->exists()){
                 throw ValidationException::withMessages([
@@ -273,17 +277,120 @@ class RecipientController extends Controller
     }
     /**
      * Method for edit specific recipient information
-     * @param $id
+     * @param $slug
      */
-    public function edit($id){
-        
+    public function edit($slug){
+        $page_title             = "Edit Recipient";
+        $recipient              = AgentRecipient::auth()->where('slug',$slug)->first();
+        if(!$recipient) return back()->with(['error' => ['Sorry! Data is not found.']]);
+
+        return view('agent.sections.recipient.edit',compact(
+            'page_title',
+            'recipient'
+        ));
+    }
+    /**
+     * Method for update recipient information
+     * @param $slug
+     * @param Illuminate\Http\Request $request
+     */
+    public function update(Request $request,$slug){
+        $recipient              = AgentRecipient::auth()->where('slug',$slug)->first();
+        if(!$recipient) return back()->with(['error' => ['Sorry! Data is not found.']]);
+        if($request->method == GlobalConst::TRANSACTION_TYPE_BANK){
+            $validator          = Validator::make($request->all(),[
+                'method'        => 'required|string',
+                'country'       => 'required|string',
+                'email'         => 'required|string',
+                'phone'         => 'required|string',
+                'first_name'    => 'required|string',
+                'last_name'     => 'required|string',
+                'address'       => 'required|string',
+                'state'         => 'required|string',
+                'city'          => 'required|string',
+                'zip_code'      => 'required|string',
+                'bank_name'     => 'required|string',
+                'iban_number'   => 'required|string',
+            ]);
+            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+            $validated          = $validator->validate();
+
+            if(AgentRecipient::auth()->whereNot('slug',$slug)->where('bank_name',$validated['bank_name'])->where('iban_number',$validated['iban_number'])->exists()){
+                throw ValidationException::withMessages([
+                    'name'      => __("Recipient already exists.")
+                ]);
+            }
+            try{
+                $recipient->update($validated);
+            }catch(Exception $e){
+                return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            }
+            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
+        }else if($request->method == GlobalConst::TRANSACTION_TYPE_MOBILE){
+            $validator          = Validator::make($request->all(),[
+                'method'        => 'required|string',
+                'country'       => 'required|string',
+                'email'         => 'required|string',
+                'phone'         => 'required|string',
+                'first_name'    => 'required|string',
+                'last_name'     => 'required|string',
+                'address'       => 'required|string',
+                'state'         => 'required|string',
+                'city'          => 'required|string',
+                'zip_code'      => 'required|string',
+                'mobile_name'   => 'required|string',
+                'account_number'=> 'required|string',
+            ]);
+            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+            $validated          = $validator->validate();
+
+            if(AgentRecipient::auth()->whereNot('slug',$slug)->where('mobile_name',$validated['mobile_name'])->where('account_number',$validated['account_number'])->exists()){
+                throw ValidationException::withMessages([
+                    'name'      => __("Recipient already exists.")
+                ]);
+            }
+            try{
+                $recipient->update($validated);
+            }catch(Exception $e){
+                return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            }
+            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
+        }else{
+            $validator          = Validator::make($request->all(),[
+                'method'        => 'required|string',
+                'country'       => 'required|string',
+                'email'         => 'required|string',
+                'phone'         => 'required|string',
+                'first_name'    => 'required|string',
+                'last_name'     => 'required|string',
+                'address'       => 'required|string',
+                'state'         => 'required|string',
+                'city'          => 'required|string',
+                'zip_code'      => 'required|string',
+                'pickup_point'  => 'required|string',
+            ]);
+            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+            $validated          = $validator->validate();
+
+            if(AgentRecipient::auth()->whereNot('slug',$slug)->where('country',$validated['country'])->where('pickup_point',$validated['pickup_point'])->exists()){
+                throw ValidationException::withMessages([
+                    'name'      => __("Recipient already exists.")
+                ]);
+            }
+            try{
+                $recipient->update($validated);
+            }catch(Exception $e){
+                return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            }
+            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
+        }
     }
     /**
      * Method for delete agent recipient 
-     * @param $id
+     * @param $slug
      */
-    public function delete($id){
-        $recipient      = AgentRecipient::where('id',$id)->first();
+    public function delete($slug){
+        $recipient      = AgentRecipient::auth()->where('slug',$slug)->first();
         if(!$recipient) return back()->with(['error' => ['Sorry! Recipient not found.']]);
 
         try{

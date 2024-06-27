@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('agent_recipients', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('agent_id')->nullable();
+            $table->string('slug')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->nullable();
