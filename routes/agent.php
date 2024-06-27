@@ -36,6 +36,8 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::post('get-pickup-point-list','getPickupPointList')->name('get.pickup.point.list');
         Route::post('get-mobile-method-list','getMobileMethodList')->name('get.mobile.method.list');
         Route::post('store','store')->name('store');
+        Route::get('edit/{id}','edit')->name('edit');
+        Route::post('delete/{id}','delete')->name('delete');
     });
     //google 2fa
     Route::controller(SecurityController::class)->name('security')->name('security.')->group(function(){

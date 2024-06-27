@@ -96,10 +96,6 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::post('search', 'search')->name('search');
     });
     
-    
-
-    
-
     Route::controller(ProfileController::class)->prefix("profile")->name("profile.")->group(function(){
         Route::get('/','index')->name('index');
         Route::put('password/update','passwordUpdate')->name('password.update')->middleware('app.mode');

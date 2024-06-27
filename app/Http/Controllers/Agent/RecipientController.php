@@ -25,7 +25,7 @@ class RecipientController extends Controller
      */
     public function index(){
         $page_title         = "My Recipient";
-        $recipients         = AgentRecipient::auth()->orderBy('id','desc')->get();
+        $recipients         = AgentRecipient::auth()->orderBy('id','desc')->paginate(15);
 
         return view('agent.sections.recipient.index',compact(
             'page_title',
@@ -270,5 +270,27 @@ class RecipientController extends Controller
             }
             return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient created successfully.']]);
         }
+    }
+    /**
+     * Method for edit specific recipient information
+     * @param $id
+     */
+    public function edit($id){
+        
+    }
+    /**
+     * Method for delete agent recipient 
+     * @param $id
+     */
+    public function delete($id){
+        $recipient      = AgentRecipient::where('id',$id)->first();
+        if(!$recipient) return back()->with(['error' => ['Sorry! Recipient not found.']]);
+
+        try{
+            $recipient->delete();
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return back()->with(['success' => ['Recipient deleted successfully.']]);
     }
 }

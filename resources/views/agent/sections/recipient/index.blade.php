@@ -15,7 +15,7 @@
         <div class="add-recipient-btn text-end pb-3">
             <a href="{{ setRoute('agent.recipient.create') }}" class="btn--base">+ {{ __("Add New Recipient") }} </a>
         </div>
-        @foreach ($recipients ?? [] as $item)
+        @forelse ($recipients ?? [] as $item)
             <div class="dashboard-list-item-wrapper">
                 <div class="dashboard-list-item receive d-flex justify-content-between">
                     <div class="dashboard-list-left">
@@ -30,8 +30,8 @@
                         </div>
                     </div>
                     <div class="dashboard-list-button">
-                        <a href="add-recipient.html" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
-                        <button type="button" class="btn delete-recipient delate-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="las la-trash-alt"></i></button>
+                        <a href="{{ setRoute('agent.recipient.edit',$item->id) }}" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
+                        <button type="button" class="btn delete-recipient delate-recipient-agent" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $item->id }}"><i class="las la-trash-alt"></i></button>
                     </div>
                 </div>
                 <div class="preview-list-wrapper">
@@ -180,7 +180,29 @@
                     @endif
                 </div>
             </div>
-        @endforeach
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal-{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    <h4 class="title">{{ __("Are you sure to delete this Recipient?") }}</h4>  
+                    </div>
+                    <div class="modal-footer justify-content-between border-0">
+                        <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <form action="{{ setRoute('agent.recipient.delete',$item->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn--base">{{ __("Confirm") }}</button>
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+        @empty
+        <div class="alert alert-primary text-center">
+            {{ __("No Recipient Found!") }}
+        </div>
+        @endforelse
     </div>
+    {{ get_paginate($recipients) }}
 </div>
 @endsection
