@@ -10,6 +10,7 @@ use App\Http\Controllers\Agent\ProfileController;
 use App\Http\Controllers\Agent\RecipientController;
 use App\Http\Controllers\Agent\SecurityController;
 use App\Http\Controllers\Agent\SendRemittanceController;
+use App\Http\Controllers\Agent\SupportTicketController;
 
 Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(DashboardController::class)->group(function(){
@@ -46,6 +47,11 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::post('google-2fa-status-update','google2FAStatusUpdate')->name('google.2fa.status.update')->middleware('app.mode');
         Route::get('kyc','kyc')->name('kyc.index');
         Route::post('kyc-submit','kycSubmit')->name('kyc.submit');
+    });
+
+    //support ticket
+    Route::controller(SupportTicketController::class)->prefix('support-ticket')->name('support.ticket.')->group(function(){
+        Route::get('/','index')->name('index');
     });
 });
 
