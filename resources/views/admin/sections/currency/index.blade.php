@@ -79,7 +79,6 @@
                 if(currencyType == "CRYPTO") {
                     keyPressCurrencyView($(this));
                     readOnly = false;
-                    console.log(readOnly);
                 }
 
                 selectedValue.parents("form").find("input[name=name],input[name=currency_name]").val(currencyName).prop("readonly",readOnly);

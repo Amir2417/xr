@@ -8328,3 +8328,82 @@ input[type=number] {
     margin-left: 90px;
   }
 }
+/* new Code */
+.recipient-add-title{
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 600px) {
+  .recipient-add-title{
+    display: block;
+ }
+}
+.register-user-checkbox{
+  display: flex;
+  align-items: center;
+}
+@media only screen and (max-width: 600px) {
+  .register-user-checkbox{
+    margin-top: 15px;
+    flex-direction: row-reverse;
+    justify-content: start;
+  }
+}
+@media only screen and (max-width: 430px) {
+  .register-user-checkbox{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: start !important;
+    
+  }
+}
+.register-checkbox{
+  display: flex;
+  align-items: center;
+}
+.register-user-checkbox input{
+  width: 15px;
+  height: 15px;
+
+}
+.register-user-checkbox label{
+  margin-bottom: 0px;
+  margin-left: 5px;
+}
+.recipient-add-title .search-email{
+  width: 200px;
+  height: 20px;
+  border: 1px solid rgba(57, 57, 57, 0.2) ;
+  border-radius: 5px;
+  height: 35px;
+}
+.recipient-add-title .search-email::placeholder{
+  color: #9c9c9c;
+}
+@media only screen and (max-width: 600px) {
+  .recipient-add-title .search-email{
+    margin-left: 10px;
+    margin-right: 0px;
+ }
+}
+@media only screen and (max-width: 430px) {
+  .recipient-add-title .search-email{
+    margin-left: 0px;
+    width: 100%;
+    margin-top: 10px;
+ }
+}
+
+.register-user-search-box .search-emai{
+  position: relative;
+}
+.register-user-search-box .user-not-found-sms{
+  position: absolute;
+  padding-top: 3px;
+  color: #d90707a6;
+}
+.register-user-search-box .valid-user{
+  position: absolute;
+  padding-top: 3px;
+  color: #008000;
+}

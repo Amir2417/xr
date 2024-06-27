@@ -30,7 +30,8 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //recipient 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('/','index')->name('index');
-        Route::get('add','add')->name('add');
+        Route::get('create','create')->name('create');
+        Route::post('get-user-data','getUserData')->name('get.user.data');
         Route::post('get-bank-list','getBankList')->name('get.bank.list');
         Route::post('get-pickup-point-list','getPickupPointList')->name('get.pickup.point.list');
         Route::post('get-mobile-method-list','getMobileMethodList')->name('get.mobile.method.list');
