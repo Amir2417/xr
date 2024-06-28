@@ -335,6 +335,7 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
+        $this->createUserWallets($user);
         return redirect()->intended(route('agent.dashboard'));
     }
 }

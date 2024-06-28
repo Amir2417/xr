@@ -2,34 +2,52 @@
 
 namespace App\Traits\Agent;
 
-use App\Models\Admin\Currency;
-use App\Models\AgentLoginLog;
-use App\Models\AgentWallet;
 use Exception;
 use Jenssegers\Agent\Agent;
+use App\Models\AgentLoginLog;
+use App\Models\Admin\Currency;
+use App\Models\Agent\AgentWallet;
 
 trait LoggedInUsers {
 
     protected function refreshUserWallets($user) {
-        $user_wallets = $user->wallet->pluck("currency_id")->toArray();
-        $currencies = Currency::active()->roleHasOne()->pluck("id")->toArray();
-        $new_currencies = array_diff($currencies,$user_wallets);
-        $new_wallets = [];
-        foreach($new_currencies as $item) {
-            $new_wallets[] = [
-                'agent_id'       => $user->id,
-                'currency_id'   => $item,
+        if(isset($user->wallet)){
+            $user_wallet = $user->wallet;
+            $currencies = Currency::default();
+            
+            $new_wallets = [
+                'agent_id'      => $user->id,
+                'currency_id'   => $user_wallet->currency_id,
+                'balance'       => $user_wallet->balance,
+                'status'        => $user_wallet->status,
+                'created_at'    => now(),
+            ];
+    
+            try{
+                $user_wallet->update($new_wallets);
+            }catch(Exception $e) {
+                throw new Exception($e->getMessage());
+            }
+        }else{
+            $currencies = Currency::default();       
+            $wallets= [
+                'agent_id'      => $user->id,
+                'currency_id'   => $currencies->id,
                 'balance'       => 0,
                 'status'        => true,
                 'created_at'    => now(),
             ];
+        
+            try{
+                AgentWallet::insert($wallets);
+            }catch(Exception $e) {
+                // handle error
+                $this->guard()->logout();
+                $user->delete();
+                return $this->breakAuthentication("Failed to create wallet! Please try again");
+            }
         }
-
-        try{
-            AgentWallet::insert($new_wallets);
-        }catch(Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        
     }
 
     protected function createLoginLog($user) {

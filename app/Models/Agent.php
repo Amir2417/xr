@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Constants\GlobalConst;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use App\Models\Agent\AgentWallet;
 use App\Traits\Agent\UserPartials;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
 class Agent extends Authenticatable
 {
     use UserPartials,HasApiTokens, HasFactory, Notifiable;
@@ -48,6 +50,10 @@ class Agent extends Authenticatable
         'created_at'           => 'datetime',
         'updated_at'           => 'datetime',
     ];
+
+    public function wallet(){
+        return $this->hasOne(AgentWallet::class,'agent_id');
+    }
 
     public function scopeSmsUnverified($query)
     {
