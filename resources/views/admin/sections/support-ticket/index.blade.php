@@ -31,6 +31,7 @@
                             <th>{{ __("Ticket ID") }}</th>
                             <th>{{ __("User") }} ({{ __("username") }})</th>
                             <th>{{ __("Subject") }}</th>
+                            <th>{{ __("User Type") }}</th>
                             <th>{{ __("Name") }}</th>
                             <th>{{ __("Email") }}</th>
                             <th>{{ __("Message") }}</th>
@@ -44,7 +45,7 @@
                             <tr>
                                 <td>#{{ $item->token }}</td>
                                 <td>
-                                    {{ $item->user->username }}
+                                    {{ $item->creator->username }}
                                 </td>
                                 <td>
                                     @if ($item->status == support_ticket_const()::DEFAULT)
@@ -82,5 +83,54 @@
 @endsection
 
 @push('script')
-    
+<script>
+    // pie-chart
+$(function() {
+  $('#chart6').easyPieChart({
+      size: 80,
+      barColor: '#f05050',
+      scaleColor: false,
+      lineWidth: 5,
+      trackColor: '#f050505a',
+      lineCap: 'circle',
+      animate: 3000
+  });
+});
+
+$(function() {
+  $('#chart7').easyPieChart({
+      size: 80,
+      barColor: '#10c469',
+      scaleColor: false,
+      lineWidth: 5,
+      trackColor: '#10c4695a',
+      lineCap: 'circle',
+      animate: 3000
+  });
+});
+
+$(function() {
+  $('#chart8').easyPieChart({
+      size: 80,
+      barColor: '#ffbd4a',
+      scaleColor: false,
+      lineWidth: 5,
+      trackColor: '#ffbd4a5a',
+      lineCap: 'circle',
+      animate: 3000
+  });
+});
+
+$(function() {
+  $('#chart9').easyPieChart({
+      size: 80,
+      barColor: '#ff8acc',
+      scaleColor: false,
+      lineWidth: 5,
+      trackColor: '#ff8acc5a',
+      lineCap: 'circle',
+      animate: 3000
+  });
+});
+</script>
 @endpush

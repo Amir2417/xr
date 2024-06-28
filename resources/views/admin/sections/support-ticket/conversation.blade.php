@@ -22,9 +22,9 @@
         <div class="support-card-wrapper">
             <div class="card-header">
                 <div class="card-header-user-area">
-                    <img class="avatar" src="{{ get_image($support_ticket->user->image,"user-profile") }}" alt="client">
+                    <img class="avatar" src="{{ get_image($support_ticket->creator->image,$support_ticket->imagePath) }}" alt="client">
                     <div class="card-header-user-content">
-                        <h6 class="title">{{ $support_ticket->user->fullname }}</h6>
+                        <h6 class="title">{{ $support_ticket->creator->fullname }}</h6>
                         <span class="sub-title">{{ __("Ticket ID") }} : <span class="text--danger">#{{ $support_ticket->token }}</span></span>
                     </div>
                 </div>
