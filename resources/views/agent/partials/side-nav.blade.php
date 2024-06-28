@@ -37,7 +37,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="my-sender.html">
+                        <a href="{{ setRoute('agent.my.sender.index') }}">
                             <i class="menu-icon las la-share-square"></i>
                             <span class="menu-title">{{ __("My Sender") }}</span>
                         </a>

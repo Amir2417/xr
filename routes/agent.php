@@ -8,10 +8,13 @@ use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\Agent\DashboardController;
 use App\Http\Controllers\Agent\MoneyInController;
 use App\Http\Controllers\Agent\MoneyOutController;
+use App\Http\Controllers\Agent\MySenderController;
 use App\Http\Controllers\Agent\ProfileController;
+use App\Http\Controllers\Agent\ProfitLogController;
 use App\Http\Controllers\Agent\RecipientController;
 use App\Http\Controllers\Agent\SecurityController;
 use App\Http\Controllers\Agent\SendRemittanceController;
+use App\Http\Controllers\Agent\StatementController;
 use App\Http\Controllers\Agent\SupportTicketController;
 
 Route::prefix("agent")->name("agent.")->group(function(){
@@ -36,6 +39,17 @@ Route::prefix("agent")->name("agent.")->group(function(){
     });
     //money out
     Route::controller(MoneyOutController::class)->prefix('money-out')->name('money.out.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //mysender
+    Route::controller(MySenderController::class)->prefix('my-sender')->name('my.sender.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //profit log
+    Route::controller(ProfitLogController::class)->prefix('profit-log')->name('profit.log.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    Route::controller(StatementController::class)->prefix('statement')->name('statement.')->group(function(){
         Route::get('/','index')->name('index');
     });
     //recipient 
