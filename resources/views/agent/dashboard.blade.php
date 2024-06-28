@@ -22,10 +22,10 @@
                             <div class="d-flex justify-content-between">
                                 <div class="">
                                     <div class="top-content">
-                                        <h3>Current Balance</h3>
+                                        <h3>{{ __("Current Balance") }}</h3>
                                     </div>
                                     <div class="user-count">
-                                        <span class="text-uppercase"> 20 USD</span>
+                                        <span class="text-uppercase"> {{ get_amount($agent_wallet->balance,get_default_currency_code()) }}</span>
                                     </div>
                                 </div>
                                 <div class="icon">

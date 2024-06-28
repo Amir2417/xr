@@ -11,35 +11,18 @@ use App\Models\Agent\AgentWallet;
 trait LoggedInUsers {
 
     protected function refreshUserWallets($user) {
-        if(isset($user->wallet)){
-            $user_wallet = $user->wallet;
-            $currencies = Currency::default();
+        if($user->wallet->count() == 0){
             
-            $new_wallets = [
+            $currency = Currency::default();       
+            $wallet= [
                 'agent_id'      => $user->id,
-                'currency_id'   => $user_wallet->currency_id,
-                'balance'       => $user_wallet->balance,
-                'status'        => $user_wallet->status,
-                'created_at'    => now(),
-            ];
-    
-            try{
-                $user_wallet->update($new_wallets);
-            }catch(Exception $e) {
-                throw new Exception($e->getMessage());
-            }
-        }else{
-            $currencies = Currency::default();       
-            $wallets= [
-                'agent_id'      => $user->id,
-                'currency_id'   => $currencies->id,
+                'currency_id'   => $currency->id,
                 'balance'       => 0,
                 'status'        => true,
-                'created_at'    => now(),
             ];
         
             try{
-                AgentWallet::insert($wallets);
+                AgentWallet::create($wallet);
             }catch(Exception $e) {
                 // handle error
                 $this->guard()->logout();

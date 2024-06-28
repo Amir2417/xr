@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\Agent\DashboardController;
+use App\Http\Controllers\Agent\MoneyInController;
 use App\Http\Controllers\Agent\ProfileController;
 use App\Http\Controllers\Agent\RecipientController;
 use App\Http\Controllers\Agent\SecurityController;
@@ -26,6 +27,10 @@ Route::prefix("agent")->name("agent.")->group(function(){
     });
     //send remittance
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //moneyin
+    Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
         Route::get('/','index')->name('index');
     });
     //recipient 

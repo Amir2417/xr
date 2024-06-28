@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="money-in.html">
+                        <a href="{{ setRoute('agent.moneyin.index') }}">
                             <i class="menu-icon las la-cloud-upload-alt"></i>
                             <span class="menu-title">{{ __("Money In") }}</span>
                         </a>
