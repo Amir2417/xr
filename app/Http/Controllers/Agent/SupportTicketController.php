@@ -103,7 +103,7 @@ class SupportTicketController extends Controller
      */
     public function conversation($encrypt_id)
     {
-        $page_title        = " | Conversation";
+        $page_title        = "Conversation";
         $support_ticket_id = decrypt($encrypt_id);
         $support_ticket    = SupportTicket::findOrFail($support_ticket_id);
         
@@ -151,4 +151,5 @@ class SupportTicketController extends Controller
             return Response::error($error,null,500);
         }
     }
+
 }
