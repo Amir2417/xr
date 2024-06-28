@@ -30,6 +30,7 @@ use Database\Seeders\Admin\CashPickupMethodSeeder;
 use Database\Seeders\Admin\AppOnboardScreensSeeder;
 use Database\Seeders\Admin\TransactionSettingSeeder;
 use Database\Seeders\Admin\BankMethodAutomaticSeeder;
+use Database\Seeders\Agent\AgentSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -90,7 +91,8 @@ class DatabaseSeeder extends Seeder
         //     SendingPurposeSeeder::class,
         //     SourceOfFundsSeeder::class,
         //     BeneficiarySeeder::class,
-        //     CashPickupMethodSeeder::class
+        //     CashPickupMethodSeeder::class,
+        //     AgentSeeder::class
         // ]);
     }
 }

@@ -122,6 +122,7 @@ class LoginController extends Controller
             'two_factor_verified'   => false,
         ]);
         $this->createLoginLog($user);
+        $this->refreshUserWallets($user);
         return redirect()->intended(route('agent.dashboard'));
     }
 }

@@ -10,7 +10,27 @@ use Jenssegers\Agent\Agent;
 
 trait LoggedInUsers {
 
+    protected function refreshUserWallets($user) {
+        $user_wallets = $user->wallet->pluck("currency_id")->toArray();
+        $currencies = Currency::active()->roleHasOne()->pluck("id")->toArray();
+        $new_currencies = array_diff($currencies,$user_wallets);
+        $new_wallets = [];
+        foreach($new_currencies as $item) {
+            $new_wallets[] = [
+                'agent_id'       => $user->id,
+                'currency_id'   => $item,
+                'balance'       => 0,
+                'status'        => true,
+                'created_at'    => now(),
+            ];
+        }
 
+        try{
+            AgentWallet::insert($new_wallets);
+        }catch(Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 
     protected function createLoginLog($user) {
         $client_ip = request()->ip() ?? false;
