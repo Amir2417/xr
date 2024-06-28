@@ -7,6 +7,7 @@ use App\Providers\Admin\BasicSettingsProvider;
 use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\Agent\DashboardController;
 use App\Http\Controllers\Agent\MoneyInController;
+use App\Http\Controllers\Agent\MoneyOutController;
 use App\Http\Controllers\Agent\ProfileController;
 use App\Http\Controllers\Agent\RecipientController;
 use App\Http\Controllers\Agent\SecurityController;
@@ -31,6 +32,10 @@ Route::prefix("agent")->name("agent.")->group(function(){
     });
     //moneyin
     Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //money out
+    Route::controller(MoneyOutController::class)->prefix('money-out')->name('money.out.')->group(function(){
         Route::get('/','index')->name('index');
     });
     //recipient 

@@ -31,7 +31,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="money-out.html">
+                        <a href="{{ setRoute('agent.money.out.index') }}">
                             <i class="menu-icon las la-plus-square"></i>
                             <span class="menu-title">{{ __("Money Out") }}</span>
                         </a>
