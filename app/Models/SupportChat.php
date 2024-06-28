@@ -47,6 +47,8 @@ class SupportChat extends Model
             }
         }else if($this->sender_type == "USER"){
             return $this->supportTicket->creator->userImage;
+        }else if($this->sender_type == "AGENT"){
+            return $this->supportTicket->creator->agentImage;
         }
         return files_asset_path("default");
     }

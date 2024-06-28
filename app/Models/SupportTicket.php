@@ -17,7 +17,7 @@ class SupportTicket extends Model
         'attachments'
     ];
 
-    protected $appends = ['stringStatus'];
+    protected $appends = ['type','stringStatus','imagePath'];
 
     protected $casts = [
         'user_id'         => 'integer',
@@ -54,6 +54,10 @@ class SupportTicket extends Model
     public function scopeAuthTickets($query) {
         $foreign_key = $this->authSolution()->foreign;
         return $query->where($foreign_key,auth()->user()->id);
+    }
+
+    public function scopeAuthTicketsAgent($query) {
+        $query->where("agent_id",auth()->user()->id);
     }
 
     public function user() {
@@ -95,6 +99,24 @@ class SupportTicket extends Model
 
     public function scopeNotSolved($query,$token) {
         $query->where('token',$token)->where('status','!=',SupportTicketConst::SOLVED);
+    }
+
+    public function getTypeAttribute() {
+        if($this->user_id != null) {
+            return "USER";
+        }else if($this->agent_id != null) {
+            return "AGENT";
+        }
+
+    }
+
+    public function getImagePathAttribute() {
+        if($this->user_id != null) {
+            return "user-profile";
+        }else if($this->agent_id != null) {
+            return "agent-profile";
+        }
+
     }
 
     public function getStringStatusAttribute() {

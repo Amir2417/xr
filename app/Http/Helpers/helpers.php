@@ -473,6 +473,9 @@ function files_path($slug)
         'user-profile'      => [
             'path'              => 'frontend/user',
         ],
+        'agent-profile'      => [
+            'path'              => 'frontend/agent',
+        ],
         'language-file'     => [
             'path'          => 'backend/files/language',
         ],

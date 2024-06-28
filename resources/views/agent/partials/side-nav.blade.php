@@ -95,7 +95,7 @@
                 <h4 class="title">{{ __("Need Help?") }}</h4>
                 <p>{{ __("How can we help you") }}</p>
                 <div class="sidebar-doc-btn">
-                    <a href="{{ setRoute('agent.support.tickets.index') }}" class="btn--base w-100">{{ __("Get Support") }}</a>
+                    <a href="{{ setRoute('agent.support.ticket.index') }}" class="btn--base w-100">{{ __("Get Support") }}</a>
                 </div>
             </div>
         </div>

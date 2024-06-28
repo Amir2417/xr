@@ -55,7 +55,7 @@ class ProfileController extends Controller
 
         if($request->hasFile("image")) {
             $image = upload_file($validated['image'],'user-profile',auth()->user()->image);
-            $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'user-profile');
+            $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'agent-profile');
             delete_file($image['dev_path']);
             $validated['image']     = $upload_image;
         }

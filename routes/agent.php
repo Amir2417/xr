@@ -52,6 +52,10 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //support ticket
     Route::controller(SupportTicketController::class)->prefix('support-ticket')->name('support.ticket.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::get('create','create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('conversation/{encrypt_id}','conversation')->name('conversation');
+        Route::post('message/send','messageSend')->name('message.send');
     });
 });
 
