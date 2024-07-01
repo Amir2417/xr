@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Agent\MySender;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class MySenderController extends Controller
 {
@@ -44,7 +45,7 @@ class MySenderController extends Controller
         $validator  = Validator::make($request->all(),[
             'first_name'        =>'required',
             'last_name'         =>'required',
-            'email'             =>'required_if:register_user,true|email',
+            'email'             =>'required_if:register_user,true',
             'country'           =>'required_if:register_user,false',
             'country_name'      =>'required_if:register_user,true',
             'city'              =>'required',
@@ -66,6 +67,13 @@ class MySenderController extends Controller
             $validated['front_part'] = $this->imageValidate($request,"front_part",null);
             $validated['back_part'] = $this->imageValidate($request,"back_part",null);  
         }
+
+        if(MySender::auth()->where('email',$validated['email'])->where('first_name',$validated['first_name'])->where('last_name',$validated['last_name'])->exists()){
+            throw ValidationException::withMessages([
+                'name'  => "Sender already exists!",
+            ]);
+        }
+
         try{
             MySender::create($validated);
         }catch(Exception $e){
@@ -73,6 +81,23 @@ class MySenderController extends Controller
         }
         return redirect()->route('agent.my.sender.index')->with(['success' => ['My Sender Created Successfully.']]);
 
+    }
+    /**
+     * Method for delete sender information
+     * @param $slug
+     * @param Illuminate\Http\Request $request
+     */
+    public function delete($slug,Request $request){
+        $my_sender = MySender::auth()->where('slug',$slug)->first();
+        if(!$my_sender){
+            return back()->with(['error' => ['Sorry! Data not found.']]);
+        }
+        try{
+            $my_sender->delete();
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return back()->with(['success' => ['My Sender Information Deleted Successfully.']]);
     }
     /**
      * Method for validate image 

@@ -48,6 +48,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::get('/','index')->name('index');
         Route::get('create','create')->name('create');
         Route::post('store','store')->name('store');
+        Route::post('delete/{slug}','delete')->name('delete');
     });
     //recipient 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){

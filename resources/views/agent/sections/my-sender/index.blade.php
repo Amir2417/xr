@@ -20,6 +20,9 @@
             <div class="dashboard-list-item receive d-flex justify-content-between">
                 <div class="dashboard-list-left">
                     <div class="dashboard-list-user-wrapper">
+                        <div class="dashboard-list-user-icon">
+                            <i class="las la-arrow-up"></i>
+                        </div>
                         <div class="dashboard-list-user-content">
                             <h5 class="title">{{ @$item->first_name }} {{ @$item->last_name }}</h5>
                         </div>
@@ -27,7 +30,7 @@
                 </div>
                 <div class="dashboard-list-button">
                     <a href="add-sender.html" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
-                    <button type="button" class="btn delete-recipient delate-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="las la-trash-alt"></i></button>
+                    <button type="button" class="btn delete-recipient delate-recipient-agent" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $item->slug }}"><i class="las la-trash-alt"></i></button>
                 </div>
             </div>
             <div class="preview-list-wrapper">
@@ -91,6 +94,23 @@
                         <span>{{ @$item->email ?? 'N/A' }}</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal-{{ $item->slug }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                <h4 class="title">{{ __("Are you sure to delete this Sender?") }}</h4>  
+                </div>
+                <div class="modal-footer justify-content-between border-0">
+                    <button type="button" class="btn--base bg-danger" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                    <form action="{{ setRoute('agent.my.sender.delete',$item->slug) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn--base">{{ __("Confirm") }}</button>
+                    </form>
+                </div>
+            </div>
             </div>
         </div>
         @empty
