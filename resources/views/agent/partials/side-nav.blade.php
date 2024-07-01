@@ -49,19 +49,19 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="profit-log.html">
+                        <a href="{{ setRoute('agent.profit.logs.index') }}">
                             <i class="menu-icon las la-wallet"></i>
                             <span class="menu-title">{{ __("Profit Log") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="transaction.html">
+                        <a href="{{ setRoute('agent.transaction.logs.index') }}">
                             <i class="menu-icon las la-history"></i>
                             <span class="menu-title">{{ __("Transactions") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="statements.html">
+                        <a href="{{ setRoute('agent.statements.index') }}">
                             <i class="menu-icon las la-file-alt"></i>
                             <span class="menu-title">{{ __("Statement") }}</span>
                         </a>

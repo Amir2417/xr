@@ -16,6 +16,7 @@ use App\Http\Controllers\Agent\SecurityController;
 use App\Http\Controllers\Agent\SendRemittanceController;
 use App\Http\Controllers\Agent\StatementController;
 use App\Http\Controllers\Agent\SupportTicketController;
+use App\Http\Controllers\Agent\TransactionLogController;
 
 Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(DashboardController::class)->group(function(){
@@ -45,13 +46,6 @@ Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(MySenderController::class)->prefix('my-sender')->name('my.sender.')->group(function(){
         Route::get('/','index')->name('index');
     });
-    //profit log
-    Route::controller(ProfitLogController::class)->prefix('profit-log')->name('profit.log.')->group(function(){
-        Route::get('/','index')->name('index');
-    });
-    Route::controller(StatementController::class)->prefix('statement')->name('statement.')->group(function(){
-        Route::get('/','index')->name('index');
-    });
     //recipient 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('/','index')->name('index');
@@ -64,6 +58,18 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::get('edit/{slug}','edit')->name('edit');
         Route::post('update/{slug}','update')->name('update');
         Route::post('delete/{slug}','delete')->name('delete');
+    });
+    //profit log
+    Route::controller(ProfitLogController::class)->prefix('profit-log')->name('profit.logs.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //transaction logs
+    Route::controller(TransactionLogController::class)->prefix('transaction-logs')->name('transaction.logs.')->group(function(){
+        Route::get('/','index')->name('index');
+    });
+    //statements
+    Route::controller(StatementController::class)->prefix('statement')->name('statements.')->group(function(){
+        Route::get('/','index')->name('index');
     });
     //google 2fa
     Route::controller(SecurityController::class)->name('security')->name('security.')->group(function(){
