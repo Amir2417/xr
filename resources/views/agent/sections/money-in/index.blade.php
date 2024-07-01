@@ -15,43 +15,58 @@
         <div class="row mb-20-none">
             <div class="col-lg-7 col-md-6 mb-20">
                 <div class="dashboard-header-wrapper">
-                    <h3 class="title">Money In</h3>
+                    <h3 class="title">{{ __($page_title) }}</h3>
                 </div>
-                <div class="money-in-card">
-                    <div class="money-in-area">
-                        <div class="card-logo">
-                            <img src="{{ get_logo_agent($basic_settings) }}" alt="img">
-                        </div>
-                        <div class="row mb-20-none">
-                            <div class="col-lg-12 mb-20">
-                                <label>Email Address</label>
-                                <input type="email" class="form--control" placeholder="Enter Email">
+                <form action="{{ setRoute('agent.moneyin.submit') }}" method="POST">
+                    @csrf
+                    <div class="money-in-card">
+                        <div class="money-in-area">
+                            <div class="card-logo">
+                                <img src="{{ get_logo_agent($basic_settings) }}" alt="img">
                             </div>
-                            <div class="col-lg-12 amount-input mb-20">
-                                <label>Amount</label>
-                                <input type="number" class="form--control" placeholder="0.00">
-                                <div class="curreny">
-                                    <p>USD</p>
+                            <div class="row mb-20-none">
+                                <div class="col-xl-12 col-lg-12 form-group">
+                                    <label>{{ __("Payment Gateway") }} <span>*</span></label>
+                                    <select class="form--control select2-basic" name="payment_gateway">
+                                        
+                                        @foreach ($payment_gateway as $item)
+                                        <option 
+                                                value="{{ $item->id  }}"
+                                                data-currency="{{ $item->currency_code }}"
+                                                data-rate="{{ $item->rate }}"
+                                        >{{ $item->name ?? '' }} @if ($item->gateway->isManual())
+                                            (Manual)
+                                        @endif</option>
+                                        @endforeach
+                                        
+                                    </select>
+                                </div>
+                                <div class="col-lg-12 amount-input mb-20">
+                                    <label>{{ __("Amount") }}</label>
+                                    <input type="number" name="amount" class="form--control amount number-input" placeholder="{{ __("Enter amount") }}">
+                                    <div class="curreny">
+                                        <p>{{ __(get_default_currency_code()) }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 form-group">
+                                    <div class="note-area">
+                                        <code class="d-block text--base limit">{{ __("Limit") }} : {{ get_amount(@$transaction_settings->min_limit) }} - {{ get_amount(@$transaction_settings->max_limit) }} {{ get_default_currency_code() }}</code>
+                                        <code class="d-block text--base charge"></code>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xl-12 col-lg-12 form-group">
-                                <div class="note-area">
-                                    <code class="d-block text--base">Limit : 10.00 - 100000 USD</code>
-                                    <code class="d-block text--base">Charge : 2.00 USD</code>
-                                </div>
+                            
+                            <div class="money-in-btn pt-5">
+                                <button type="submit" class="btn--base w-100">{{ __("Send") }}</a>
                             </div>
-                        </div>
-                        
-                        <div class="money-in-btn pt-5">
-                            <a href="preview-page.html" type="button" class="btn--base w-100">Send</a>
                         </div>
                     </div>
-                </div>
+                </form>                
             </div>
             <div class="col-lg-5 col-md-6 mb-20">
                 <div class="custom-card">
                     <div class="dashboard-header-wrapper">
-                        <h3 class="title">Summary</h3>
+                        <h3 class="title">{{ __("Summary") }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="preview-list-wrapper">
@@ -62,12 +77,27 @@
                                             <i class="las la-receipt"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Enter Amount</span>
+                                            <span>{{ __("Enter Amount") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--base">100 USD</span>
+                                    <span class="text--base enter-amount"></span>
+                                </div>
+                            </div>
+                            <div class="preview-list-item">
+                                <div class="preview-list-left">
+                                    <div class="preview-list-user-wrapper">
+                                        <div class="preview-list-user-icon">
+                                            <i class="las la-exchange-alt"></i>
+                                        </div>
+                                        <div class="preview-list-user-content">
+                                            <span>{{ __("Exchange Rate") }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="preview-list-right">
+                                    <span class="text--base exchange-rate"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -77,12 +107,12 @@
                                             <i class="las la-battery-half"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Total Fees & Charges</span>
+                                            <span>{{ __("Total Fees & Charges") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--warning">2.00 USD</span>
+                                    <span class="text--warning total-charge"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -92,12 +122,12 @@
                                             <i class="lab la-get-pocket"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Receive Amount</span>
+                                            <span>{{ __("Receive Amount") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--danger">100</span>
+                                    <span class="text--danger receive-amount"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -107,12 +137,12 @@
                                             <i class="las la-money-check-alt"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span><b>Total Payable</b></span>
+                                            <span><b>{{ __("Total Payable") }}</b></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--info"><b>102.00 USD</b></span>
+                                    <span class="text--info total-payable"><b></b></span>
                                 </div>
                             </div>
                         </div>
@@ -421,3 +451,33 @@
     </div>
 </div>
 @endsection
+@push('script')
+    <script>
+        
+        $(".amount").keyup(function(){
+            var amount                  = $(this).val();
+            var paymentGatewayRate      = $("select[name=payment_gateway] :selected").attr("data-rate");
+            var paymentGatewayCurrency  = $("select[name=payment_gateway] :selected").attr("data-currency");
+            feesAndChargesCalculation(amount,paymentGatewayRate,paymentGatewayCurrency);
+        });
+
+        //fees and charges calculation
+        function feesAndChargesCalculation(amount,paymentGatewayRate,paymentGatewayCurrency){
+            var currency        = "{{ get_default_currency_code() }}";
+            var rate            = "{{ get_default_currency_rate() }}";
+            var fixedCharge     = "{{ $transaction_settings->fixed_charge }}";
+            var percentCharge   = ("{{ $transaction_settings->percent_charge }}"/ 100) * amount;
+            var totalCharge     = (parseFloat(fixedCharge) + parseFloat(percentCharge));
+            var totalAmount     = parseFloat(amount) + parseFloat(totalCharge);
+            var payableAmount   =  parseFloat(totalAmount) * paymentGatewayRate;
+            var receiveAmount   = parseFloat(amount) * paymentGatewayRate;
+
+            $('.charge').html(`<code class="d-block text--base charge">Charge : ${totalCharge.toFixed(2)} ${currency}</code>`);
+            $('.enter-amount').text(amount + ' ' + currency);
+            $('.exchange-rate').text(parseFloat(rate).toFixed(2) + ' ' + currency + ' ' + '=' + ' ' + parseFloat(paymentGatewayRate).toFixed(2) + ' ' + paymentGatewayCurrency);
+            $('.total-charge').text(totalCharge.toFixed(2) + ' ' + currency);
+            $('.receive-amount').text(receiveAmount.toFixed(2) + ' ' + paymentGatewayCurrency);
+            $('.total-payable').text(payableAmount.toFixed(2) + ' ' + paymentGatewayCurrency);          
+        }
+    </script>
+@endpush

@@ -191,7 +191,7 @@ class BeneficiaryController extends Controller
             return Response::success(['Recipient Stored'],[
                 'beneficiary'       => $beneficiary,
             ],200);
-        }if($request->method == global_const()::BENEFICIARY_METHOD_CASH_PICK_UP){
+        }if($request->method == global_const()::TRANSACTION_TYPE_CASHPICKUP){
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -245,7 +245,7 @@ class BeneficiaryController extends Controller
                 'beneficiary'       => $beneficiary,
             ],200);
         }
-        if($request->method == global_const()::BENEFICIARY_METHOD_MOBILE_MONEY){
+        if($request->method == global_const()::TRANSACTION_TYPE_MOBILE){
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',
@@ -368,7 +368,7 @@ class BeneficiaryController extends Controller
             return Response::success(['Recipient Data Updated Successfully.'],[
                 'beneficiary'       => $beneficiary,
             ],200);;
-        }if($request->method == global_const()::BENEFICIARY_METHOD_CASH_PICK_UP){
+        }if($request->method == global_const()::TRANSACTION_TYPE_CASHPICKUP){
             $validator      = Validator::make($request->all(),[
                 'id'              => 'required|integer',
                 'first_name'      => 'required|string',
@@ -424,7 +424,7 @@ class BeneficiaryController extends Controller
                 'beneficiary'       => $beneficiary,
             ],200);;
         }
-        if($request->method == global_const()::BENEFICIARY_METHOD_MOBILE_MONEY){
+        if($request->method == global_const()::TRANSACTION_TYPE_MOBILE){
             $validator      = Validator::make($request->all(),[
                 'id'              => 'required|integer',
                 'first_name'      => 'required|string',

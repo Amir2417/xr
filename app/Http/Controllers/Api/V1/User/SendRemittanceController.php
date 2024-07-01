@@ -423,7 +423,7 @@ class SendRemittanceController extends Controller
                 'beneficiary'       => $beneficiary,
                 'temporary_data'      => $temporary_data
             ],200);
-        }if($request->method == global_const()::BENEFICIARY_METHOD_MOBILE_MONEY){
+        }if($request->method == global_const()::TRANSACTION_TYPE_MOBILE){
             $validator      = Validator::make($request->all(),[
                 'first_name'      => 'required|string',
                 'middle_name'     => 'nullable|string',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Constants\GlobalConst;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -26,7 +27,13 @@ class SendRemittanceController extends Controller
      */
     public function index(){
         $page_title                 = "| Send Remittance";
-        $transaction_settings       = TransactionSetting::where('status',true)->get();
+        $transaction_settings       = TransactionSetting::where('status',true)
+                                        ->whereIn('slug', [
+                                            GlobalConst::BANK_TRANSFER,
+                                            GlobalConst::MOBILE_MONEY,
+                                            GlobalConst::CASH_PICKUP
+                                        ])->get();
+
         $sender_currency            = Currency::where('status',true)->where('sender',true)->get();
         $receiver_currency          = Currency::where('status',true)->where('receiver',true)->get();
         $sender_currency_first      = Currency::where('status',true)->where('sender',true)->first();

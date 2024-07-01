@@ -38,6 +38,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //moneyin
     Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::post('submit','submit')->name('submit');
     });
     //money out
     Route::controller(MoneyOutController::class)->prefix('money-out')->name('money.out.')->group(function(){

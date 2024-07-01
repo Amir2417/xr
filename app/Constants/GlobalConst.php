@@ -36,9 +36,6 @@ class GlobalConst {
     const RECIPIENT_METHOD_MOBILE          = "Mobile";
     const RECIPIENT_METHOD_CASH            = "Cash";
 
-    const BENEFICIARY_METHOD_BANK_TRANSAFER            = "Bank Transfer";
-    const BENEFICIARY_METHOD_CASH_PICK_UP            = "Cash Pic Up";
-    const BENEFICIARY_METHOD_MOBILE_MONEY          = "Mobile Money";
 
     //Remittance log Status
 
@@ -71,5 +68,10 @@ class GlobalConst {
     const NEW_USER_BONUS                         = "new-user-bonus";
     const COUPON                                 = "coupon";
 
+    const BANK_TRANSFER                          = "bank-transfer";
+    const MOBILE_MONEY                           = "mobile_money";
+    const CASH_PICKUP                            = "cash-pickup";
+    const MONEY_IN                               = "money-in";
+    const MONEY_OUT                              = "money-out";
 
 }

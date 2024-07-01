@@ -150,7 +150,7 @@ class RecipientController extends Controller
         
         $validated['agent_id']      = auth()->user()->id;
 
-        if($request->method == GlobalConst::RECIPIENT_METHOD_BANK){
+        if($request->method      == GlobalConst::RECIPIENT_METHOD_BANK){
             $validated['method']        = GlobalConst::TRANSACTION_TYPE_BANK;
         }elseif($request->method == GlobalConst::RECIPIENT_METHOD_MOBILE){
             $validated['method']        = GlobalConst::TRANSACTION_TYPE_MOBILE;
