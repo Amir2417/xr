@@ -23,7 +23,9 @@ class MySender extends Model
         'state'             => 'string',
         'zip_code'          => 'string',
         'phone'             => 'string',
-        'address'           => 'string',
+        'id_type'           => 'string',
+        'front_part'        => 'string',
+        'back_part'         => 'string',
         'created_at'        => 'date:Y-m-d',
         'updated_at'        => 'date:Y-m-d',
     ];

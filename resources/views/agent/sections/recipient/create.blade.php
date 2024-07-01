@@ -189,7 +189,7 @@
 
     //function for get user data
     function getUserData(search,selectedValue){
-        var getUserDataURL      = "{{ setRoute('agent.recipient.get.user.data') }}";
+        var getUserDataURL      = "{{ setRoute('agent.get.user.data') }}";
         $.post(getUserDataURL,{search:search,_token:"{{ csrf_token() }}"},function(response){
             if(response.data.user_data == null || response.data.user_data == ''){
                 $('.exist').html(`<label class="user-not-found-sms">User does not exist!</label>`);

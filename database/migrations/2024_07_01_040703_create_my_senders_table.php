@@ -25,7 +25,9 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('phone')->nullable();
-            $table->text('address')->nullable();
+            $table->string('id_type')->nullable();
+            $table->string('front_part')->nullable();
+            $table->string('back_part')->nullable();
            
             $table->timestamps();
 

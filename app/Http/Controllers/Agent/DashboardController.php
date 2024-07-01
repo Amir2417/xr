@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Helpers\Response;
 use App\Models\Agent\AgentWallet;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
 {
@@ -29,5 +32,19 @@ class DashboardController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('agent.login')->with(['success' => [__('Logout Successfully!')]]);
+    }
+    /**
+     * Method for get user data
+     * @param Illuminate\Http\Request $request
+     */
+    public function getUserData(Request $request){
+        $validator          = Validator::make($request->all(),[
+            'search'        => 'required'
+        ]);
+        if($validator->fails()) return Response::error($validator->errors()->all());
+        $validated          = $validator->validate();
+        $user_data          = User::where('email',$validated['search'])->first();
+        
+        return Response::success(['User data get successfully.'],['user_data' => $user_data],200);
     }
 }

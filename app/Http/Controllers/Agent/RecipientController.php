@@ -46,20 +46,7 @@ class RecipientController extends Controller
             'receiver_country'
         ));
     }
-    /**
-     * Method for get user data
-     * @param Illuminate\Http\Request $request
-     */
-    public function getUserData(Request $request){
-        $validator          = Validator::make($request->all(),[
-            'search'        => 'required'
-        ]);
-        if($validator->fails()) return Response::error($validator->errors()->all());
-        $validated          = $validator->validate();
-        $user_data          = User::where('email',$validated['search'])->first();
-        
-        return Response::success(['User data get successfully.'],['user_data' => $user_data],200);
-    }
+    
     /**
      * Method for get bank list
      * @param Illuminate\Http\Request $request

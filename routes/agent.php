@@ -22,6 +22,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(DashboardController::class)->group(function(){
         Route::get('dashboard','index')->name('dashboard');
         Route::post('logout','logout')->name('logout');
+        Route::post('get-user-data','getUserData')->name('get.user.data');
     });
     //agent profile 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function(){
@@ -45,12 +46,13 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //mysender
     Route::controller(MySenderController::class)->prefix('my-sender')->name('my.sender.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::get('create','create')->name('create');
+        Route::post('store','store')->name('store');
     });
     //recipient 
     Route::controller(RecipientController::class)->prefix('recipient')->name('recipient.')->group(function(){
         Route::get('/','index')->name('index');
         Route::get('create','create')->name('create');
-        Route::post('get-user-data','getUserData')->name('get.user.data');
         Route::post('get-bank-list','getBankList')->name('get.bank.list');
         Route::post('get-pickup-point-list','getPickupPointList')->name('get.pickup.point.list');
         Route::post('get-mobile-method-list','getMobileMethodList')->name('get.mobile.method.list');

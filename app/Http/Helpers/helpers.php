@@ -482,6 +482,9 @@ function files_path($slug)
         'site-section'         => [
             'path'          => 'frontend/images/site-section',
         ],
+        'my-sender'         => [
+            'path'          => 'frontend/images/my-sender',
+        ],
         'support-attachment'    => [
             'path'          => 'frontend/images/support-ticket/attachment',
         ],

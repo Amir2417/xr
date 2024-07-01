@@ -13,17 +13,15 @@
 <div class="body-wrapper">
     <div class="my-sender-area">
         <div class="add-recipient-btn text-end pb-3">
-            <a href="add-sender.html" class="btn--base">+ Add New Sender </a>
-         </div>
-         <div class="dashboard-list-item-wrapper">
+            <a href="{{ setRoute('agent.my.sender.create') }}" class="btn--base">+ {{ __("Add New Sender") }} </a>
+        </div>
+        @forelse ($my_senders ?? [] as $item)
+        <div class="dashboard-list-item-wrapper">
             <div class="dashboard-list-item receive d-flex justify-content-between">
                 <div class="dashboard-list-left">
                     <div class="dashboard-list-user-wrapper">
-                        <div class="dashboard-list-user-profile">
-                            <img src="assets/images/client/client-1.jpg">
-                        </div>
                         <div class="dashboard-list-user-content">
-                            <h5 class="title">Alin Alva</h5>
+                            <h5 class="title">{{ @$item->first_name }} {{ @$item->last_name }}</h5>
                         </div>
                     </div>
                 </div>
@@ -40,12 +38,12 @@
                                 <i class="las la-user"></i>
                             </div>
                             <div class="preview-list-user-content">
-                                <span>Name</span>
+                                <span>{{ __("Name") }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>Alin Alva</span>
+                        <span>{{ @$item->first_name }} {{ @$item->last_name }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">
@@ -55,12 +53,12 @@
                                 <i class="las la-globe"></i>
                             </div>
                             <div class="preview-list-user-content">
-                                <span>Country</span>
+                                <span>{{ __("Country") }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>USA</span>
+                        <span>{{ @$item->country }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">
@@ -70,12 +68,12 @@
                                 <i class="lab la-centercode"></i>
                             </div>
                             <div class="preview-list-user-content">
-                                <span>Zip Code</span>
+                                <span>{{ __("Zip Code") }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span class="text--danger">96884</span>
+                        <span class="text--danger">{{ @$item->zip_code }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">
@@ -85,176 +83,22 @@
                                 <i class="las la-envelope"></i>
                             </div>
                             <div class="preview-list-user-content">
-                                <span>Email</span>
+                                <span>{{ __("Email") }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>demo@email.com</span>
+                        <span>{{ @$item->email ?? 'N/A' }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="dashboard-list-item-wrapper">
-            <div class="dashboard-list-item receive d-flex justify-content-between">
-                <div class="dashboard-list-left">
-                    <div class="dashboard-list-user-wrapper">
-                        <div class="dashboard-list-user-profile">
-                            <img src="assets/images/client/client-2.jpg">
-                        </div>
-                        <div class="dashboard-list-user-content">
-                            <h5 class="title">David Summer</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard-list-button">
-                    <a href="add-sender.html" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
-                 <button type="button" class="btn delete-recipient delate-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="las la-trash-alt"></i></button>
-                </div>
-            </div>
-            <div class="preview-list-wrapper">
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-user"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Name</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>Alin Alva</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-globe"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Country</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>USA</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="lab la-centercode"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Zip Code</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span class="text--danger">96884</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-envelope"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Email</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>demo@email.com</span>
-                    </div>
-                </div>
-            </div>
+        @empty
+        <div class="alert alert-primary text-center">
+            {{ __("My Sender Not Found!") }}
         </div>
-        <div class="dashboard-list-item-wrapper">
-            <div class="dashboard-list-item receive d-flex justify-content-between">
-                <div class="dashboard-list-left">
-                    <div class="dashboard-list-user-wrapper">
-                        <div class="dashboard-list-user-profile">
-                            <img src="assets/images/client/client-3.jpg">
-                        </div>
-                        <div class="dashboard-list-user-content">
-                            <h5 class="title">Silpa Sikrim</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard-list-button">
-                    <a href="add-sender.html" class="btn  edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
-                 <button type="button" class="btn delete-recipient delate-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="las la-trash-alt"></i></button>
-                </div>
-            </div>
-            <div class="preview-list-wrapper">
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-user"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Name</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>Alin Alva</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-globe"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Country</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>USA</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="lab la-centercode"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Zip Code</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span class="text--danger">96884</span>
-                    </div>
-                </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-envelope"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>Email</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span>demo@email.com</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforelse
     </div>
+    {{ get_paginate($my_senders) }}
 </div>
 @endsection
