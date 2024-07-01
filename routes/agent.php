@@ -48,6 +48,8 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::get('/','index')->name('index');
         Route::get('create','create')->name('create');
         Route::post('store','store')->name('store');
+        Route::get('edit/{slug}','edit')->name('edit');
+        Route::post('update/{slug}','update')->name('update');
         Route::post('delete/{slug}','delete')->name('delete');
     });
     //recipient 

@@ -57,7 +57,7 @@ class MySenderController extends Controller
             'back_part'         =>'nullable|image|mimes:png,jpg,webp,jpeg,svg',
         ]);
         if($validator->fails()){
-            return back()->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput($request->all());
         }
         $validated              = $validator->validated();
         $validated['slug']      = Str::uuid();
@@ -81,6 +81,67 @@ class MySenderController extends Controller
         }
         return redirect()->route('agent.my.sender.index')->with(['success' => ['My Sender Created Successfully.']]);
 
+    }
+    /**
+     * Method for edit my sender information
+     * @param $slug
+     */
+    public function edit($slug){
+        $page_title     = 'Edit Sender';
+        $my_sender      = MySender::auth()->where('slug',$slug)->first();
+        if(!$my_sender){
+            return back()->with(['error' => ['Sorry! Data not found.']]);
+        }
+        return view('agent.sections.my-sender.edit',compact(
+            'page_title',
+           'my_sender'
+        ));
+    }
+    /**
+     * Method for update my sender information
+     * @param $slug
+     * @param Illuminate\Http\Request $request
+     */
+    public function update(Request $request,$slug){
+        $my_sender          = MySender::auth()->where('slug',$slug)->first();
+        if(!$my_sender){
+            return back()->with(['error' => ['Sorry! Data not found.']]);
+        }
+        $validator          = Validator::make($request->all(),[
+            'first_name'    => 'required',
+            'last_name'     => 'required',
+            'email'         => 'nullable',
+            'phone'         => 'required',
+            'country'       => 'required',
+            'state'         => 'required',
+            'city'          => 'required',
+            'zip_code'      => 'required',
+            'id_type'       => 'nullable',
+            'front_part'    => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
+            'back_part'     => 'nullable|image|mimes:png,jpg,webp,jpeg,svg',
+        ]);
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput($request->all());
+        }
+        $validated              = $validator->validate();
+        $validated['agent_id']  = auth()->user()->id;
+        if($request->hasFile('front_part') || $request->hasFile('back_part')){
+            $validated['front_part'] = $this->imageValidate($request,"front_part",null);
+            $validated['back_part'] = $this->imageValidate($request,"back_part",null);  
+        }
+
+        if(MySender::auth()->whereNot('id',$my_sender->id)->where('email',$validated['email'])->where('first_name',$validated['first_name'])->where('last_name',$validated['last_name'])->exists()){
+            throw ValidationException::withMessages([
+                'name'  => "Sender already exists!",
+            ]);
+        }
+        
+        try{
+            $my_sender->update($validated);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return redirect()->route('agent.my.sender.index')->with(['success' => ['My Sender Information Updated Successfully.']]);
     }
     /**
      * Method for delete sender information

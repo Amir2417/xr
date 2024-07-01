@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="dashboard-list-button">
-                    <a href="add-sender.html" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
+                    <a href="{{ setRoute('agent.my.sender.edit',$item->slug) }}" class="btn edit-modal-button recipient-btn"><i class="las la-pencil-alt"></i></a>
                     <button type="button" class="btn delete-recipient delate-recipient-agent" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $item->slug }}"><i class="las la-trash-alt"></i></button>
                 </div>
             </div>
