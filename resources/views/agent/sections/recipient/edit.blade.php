@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="row mb-20-none pt-20">          
-                <div class="col-lg-6 col-md-6 mb-20 registered-user-country">
+                <div class="col-lg-6 col-md-6 mb-20">
                     <label>{{ __("Country") }} <span>*</span></label>
                     <input type="text" name="country" class="form--control country" placeholder="{{ __("Enter Country") }}" value="{{ old('country',$recipient->country) }}">
                 </div>            

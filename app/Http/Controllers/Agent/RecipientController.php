@@ -17,6 +17,7 @@ use App\Models\Agent\AgentRecipient;
 use App\Models\Admin\BankMethodAutomatic;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use PhpParser\Node\Stmt\Switch_;
 
 class RecipientController extends Controller
 {
@@ -119,147 +120,79 @@ class RecipientController extends Controller
      * Method for store agent recipient information
      * @param Illuminate\Http\Request $request
      */
-    public function store(Request $request){
+    public function store(Request $request){  
+        
+        $validator          = Validator::make($request->all(),[
+            'method'        => 'required|string',
+            'country'       => 'required_if:register_user,false',
+            'country_name'  => 'required_if:register_user,true',
+            'email'         => 'required|string',
+            'phone'         => 'required|string',
+            'first_name'    => 'required|string',
+            'last_name'     => 'required|string',
+            'address'       => 'required|string',
+            'state'         => 'required|string',
+            'city'          => 'required|string',
+            'zip_code'      => 'required|string',
+            'bank_name'     => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_BANK.'|string',
+            'iban_number'   => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_BANK,
+            'mobile_name'   => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_MOBILE.'|string',
+            'account_number'=> 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_MOBILE,
+            'pickup_point'  => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_CASH.'|string',
+        ]);
+        if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+        $validated          = $validator->validate();
+        
+        $validated['slug']      = Str::uuid();
+        $this->checkRecipientExistsOrNot($validated);
+
+        $validated['country']   = $validated['country_name'] ?? $validated['country'];
+        
+        $validated['agent_id']      = auth()->user()->id;
+
         if($request->method == GlobalConst::RECIPIENT_METHOD_BANK){
-            if(isset($request->register_user)){
-                $country        = "nullable";
-                $country_name   = "required";
-
-            }else{
-                $country        = "required";
-                $country_name   = "nullable";
-            }
-            $validator          = Validator::make($request->all(),[
-                'method'        => 'required|string',
-                'country'       => $country,
-                'country_name'  => $country_name,
-                'email'         => 'required|string',
-                'phone'         => 'required|string',
-                'first_name'    => 'required|string',
-                'last_name'     => 'required|string',
-                'address'       => 'required|string',
-                'state'         => 'required|string',
-                'city'          => 'required|string',
-                'zip_code'      => 'required|string',
-                'bank_name'     => 'required|string',
-                'iban_number'   => 'required|string'
-            ]);
-            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
-            $validated          = $validator->validate();
-
-            $validated['slug']      = Str::uuid();
-            $validated['method']    = GlobalConst::TRANSACTION_TYPE_BANK;
-            if(AgentRecipient::auth()->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->where('iban_number',$validated['iban_number'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'  => __("Recipient already exists")
-                ]);
-            }
-            if(isset($request->register_user)){
-                $validated['country']   = $validated['country_name'];
-            }else{
-                $validated['country']   = $validated['country'];
-            }
-            $validated['agent_id']      = auth()->user()->id;
             $validated['method']        = GlobalConst::TRANSACTION_TYPE_BANK;
-            try{
-                AgentRecipient::create($validated);
-            }catch(Exception $e){
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient created successfully.']]);
         }elseif($request->method == GlobalConst::RECIPIENT_METHOD_MOBILE){
-            if(isset($request->register_user)){
-                $country        = "nullable";
-                $country_name   = "required";
-
-            }else{
-                $country        = "required";
-                $country_name   = "nullable";
-            }
-            $validator          = Validator::make($request->all(),[
-                'method'        => 'required|string',
-                'country'       => $country,
-                'country_name'  => $country_name,
-                'email'         => 'required|string',
-                'phone'         => 'required|string',
-                'first_name'    => 'required|string',
-                'last_name'     => 'required|string',
-                'address'       => 'required|string',
-                'state'         => 'required|string',
-                'city'          => 'required|string',
-                'zip_code'      => 'required|string',
-                'mobile_name'   => 'required|string',
-                'account_number'=> 'required|string'
-            ]);
-            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
-            $validated          = $validator->validate();
-
-            $validated['slug']      = Str::uuid();
-            $validated['method']    = GlobalConst::TRANSACTION_TYPE_MOBILE;
-            if(AgentRecipient::auth()->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->where('account_number',$validated['account_number'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'  => __("Recipient already exists")
-                ]);
-            }
-            if(isset($request->register_user)){
-                $validated['country']   = $validated['country_name'];
-            }else{
-                $validated['country']   = $validated['country'];
-            }
-            $validated['agent_id']      = auth()->user()->id;
             $validated['method']        = GlobalConst::TRANSACTION_TYPE_MOBILE;
-            try{
-                AgentRecipient::create($validated);
-            }catch(Exception $e){
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient created successfully.']]);
         }else{
-            if(isset($request->register_user)){
-                $country        = "nullable";
-                $country_name   = "required";
-
-            }else{
-                $country        = "required";
-                $country_name   = "nullable";
-            }
-            $validator          = Validator::make($request->all(),[
-                'method'        => 'required|string',
-                'country'       => $country,
-                'country_name'  => $country_name,
-                'email'         => 'required|string',
-                'phone'         => 'required|string',
-                'first_name'    => 'required|string',
-                'last_name'     => 'required|string',
-                'address'       => 'required|string',
-                'state'         => 'required|string',
-                'city'          => 'required|string',
-                'zip_code'      => 'required|string',
-                'pickup_point'  => 'required|string',
-            ]);
-            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
-            $validated          = $validator->validate();
-
-            $validated['slug']      = Str::uuid();
-            $validated['method']    = GlobalConst::TRANSACTION_TYPE_CASHPICKUP;
-            if(AgentRecipient::auth()->where('method',$validated['method'])->where('pickup_point',$validated['pickup_point'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'  => __("Recipient already exists")
-                ]);
-            }
-            if(isset($request->register_user)){
-                $validated['country']   = $validated['country_name'];
-            }else{
-                $validated['country']   = $validated['country'];
-            }
-            $validated['agent_id']      = auth()->user()->id;
             $validated['method']        = GlobalConst::TRANSACTION_TYPE_CASHPICKUP;
-            try{
-                AgentRecipient::create($validated);
-            }catch(Exception $e){
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient created successfully.']]);
+        }
+        
+        try{
+            AgentRecipient::create($validated);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient created successfully.']]);
+        
+    }
+    /**
+     * Function for check recipient user is exists or not
+     * @param $method
+     */
+    function checkRecipientExistsOrNot($validated){
+        switch($validated['method']){
+            case GlobalConst::TRANSACTION_TYPE_BANK:
+                if(AgentRecipient::auth()->where('method',$validated['method'])->where('bank_name',$validated['bank_name'])->where('iban_number',$validated['iban_number'])->exists()){
+                    throw ValidationException::withMessages([
+                        'name'  => __("Recipient already exists")
+                    ]);
+                }
+                break;
+            case GlobalConst::TRANSACTION_TYPE_MOBILE:
+                if(AgentRecipient::auth()->where('method',$validated['method'])->where('mobile_name',$validated['mobile_name'])->where('account_number',$validated['account_number'])->exists()){
+                    throw ValidationException::withMessages([
+                        'name'  => __("Recipient already exists")
+                    ]);
+                }
+                break;
+            case GlobalConst::TRANSACTION_TYPE_CASHPICKUP:
+                if(AgentRecipient::auth()->where('method',$validated['method'])->where('pickup_point',$validated['pickup_point'])->exists()){
+                    throw ValidationException::withMessages([
+                        'name'  => __("Recipient already exists")
+                    ]);
+                }
+                break;
         }
     }
     /**
@@ -284,92 +217,64 @@ class RecipientController extends Controller
     public function update(Request $request,$slug){
         $recipient              = AgentRecipient::auth()->where('slug',$slug)->first();
         if(!$recipient) return back()->with(['error' => ['Sorry! Data is not found.']]);
-        if($request->method == GlobalConst::TRANSACTION_TYPE_BANK){
-            $validator          = Validator::make($request->all(),[
-                'method'        => 'required|string',
-                'country'       => 'required|string',
-                'email'         => 'required|string',
-                'phone'         => 'required|string',
-                'first_name'    => 'required|string',
-                'last_name'     => 'required|string',
-                'address'       => 'required|string',
-                'state'         => 'required|string',
-                'city'          => 'required|string',
-                'zip_code'      => 'required|string',
-                'bank_name'     => 'required|string',
-                'iban_number'   => 'required|string',
-            ]);
-            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
-            $validated          = $validator->validate();
+        
+        $validator          = Validator::make($request->all(),[
+            'method'        => 'required|string',
+            'country'       => 'required|string',
+            'email'         => 'required|string',
+            'phone'         => 'required|string',
+            'first_name'    => 'required|string',
+            'last_name'     => 'required|string',
+            'address'       => 'required|string',
+            'state'         => 'required|string',
+            'city'          => 'required|string',
+            'zip_code'      => 'required|string',
+            'bank_name'     => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_BANK.'|string',
+            'iban_number'   => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_BANK,
+            'mobile_name'   => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_MOBILE.'|string',
+            'account_number'=> 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_MOBILE,
+            'pickup_point'  => 'required_if:method,'.GlobalConst::RECIPIENT_METHOD_CASH.'|string',
+        ]);
+        if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+        $validated          = $validator->validate();
 
-            if(AgentRecipient::auth()->whereNot('slug',$slug)->where('bank_name',$validated['bank_name'])->where('iban_number',$validated['iban_number'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'      => __("Recipient already exists.")
-                ]);
-            }
-            try{
-                $recipient->update($validated);
-            }catch(Exception $e){
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
-        }else if($request->method == GlobalConst::TRANSACTION_TYPE_MOBILE){
-            $validator          = Validator::make($request->all(),[
-                'method'        => 'required|string',
-                'country'       => 'required|string',
-                'email'         => 'required|string',
-                'phone'         => 'required|string',
-                'first_name'    => 'required|string',
-                'last_name'     => 'required|string',
-                'address'       => 'required|string',
-                'state'         => 'required|string',
-                'city'          => 'required|string',
-                'zip_code'      => 'required|string',
-                'mobile_name'   => 'required|string',
-                'account_number'=> 'required|string',
-            ]);
-            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
-            $validated          = $validator->validate();
+        $this->checkRecipientExistsOrNotForUpdate($validated,$slug);
+        try{
+            $recipient->update($validated);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
+        
+    }
 
-            if(AgentRecipient::auth()->whereNot('slug',$slug)->where('mobile_name',$validated['mobile_name'])->where('account_number',$validated['account_number'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'      => __("Recipient already exists.")
-                ]);
-            }
-            try{
-                $recipient->update($validated);
-            }catch(Exception $e){
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
-        }else{
-            $validator          = Validator::make($request->all(),[
-                'method'        => 'required|string',
-                'country'       => 'required|string',
-                'email'         => 'required|string',
-                'phone'         => 'required|string',
-                'first_name'    => 'required|string',
-                'last_name'     => 'required|string',
-                'address'       => 'required|string',
-                'state'         => 'required|string',
-                'city'          => 'required|string',
-                'zip_code'      => 'required|string',
-                'pickup_point'  => 'required|string',
-            ]);
-            if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
-            $validated          = $validator->validate();
-
-            if(AgentRecipient::auth()->whereNot('slug',$slug)->where('country',$validated['country'])->where('pickup_point',$validated['pickup_point'])->exists()){
-                throw ValidationException::withMessages([
-                    'name'      => __("Recipient already exists.")
-                ]);
-            }
-            try{
-                $recipient->update($validated);
-            }catch(Exception $e){
-                return back()->with(['error' => ['Something went wrong! Please try again.']]);
-            }
-            return redirect()->route('agent.recipient.index')->with(['success' => ['Recipient data updated successfully.']]);
+    /**
+     * Function for check recipient user is exists or not
+     * @param $method
+     */
+    function checkRecipientExistsOrNotForUpdate($validated,$slug){
+        switch($validated['method']){
+            case GlobalConst::TRANSACTION_TYPE_BANK:
+                if(AgentRecipient::auth()->whereNot('slug',$slug)->where('bank_name',$validated['bank_name'])->where('iban_number',$validated['iban_number'])->exists()){
+                    throw ValidationException::withMessages([
+                        'name'      => __("Recipient already exists.")
+                    ]);
+                }
+                break;
+            case GlobalConst::TRANSACTION_TYPE_MOBILE:
+                if(AgentRecipient::auth()->whereNot('slug',$slug)->where('mobile_name',$validated['mobile_name'])->where('account_number',$validated['account_number'])->exists()){
+                    throw ValidationException::withMessages([
+                        'name'      => __("Recipient already exists.")
+                    ]);
+                }
+                break;
+            case GlobalConst::TRANSACTION_TYPE_CASHPICKUP:
+                if(AgentRecipient::auth()->whereNot('slug',$slug)->where('country',$validated['country'])->where('pickup_point',$validated['pickup_point'])->exists()){
+                    throw ValidationException::withMessages([
+                        'name'      => __("Recipient already exists.")
+                    ]);
+                }
+                break;
         }
     }
     /**

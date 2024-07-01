@@ -97,11 +97,11 @@
                 <div class="col-lg-12 col-md-12 mb-20 bank-field">
                     <div id="{{ global_const()::RECIPIENT_METHOD_BANK }}-view" class="add-bank-recipient recipient-single-item">
                         <label>{{ __("IBAN Number") }} <span>*</span></label>
-                        <input type="text" name="iban_number" class="form--control" placeholder="{{ __("Enter Account Number") }}">
+                    <input type="text" name="iban_number" class="form--control" placeholder="{{ __("Enter Account Number") }}">
                     </div>
                 </div>   
                 <div class="col-lg-6 col-md-6 mb-20 mobile-field">
-                    <div id="{{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" class="cash-pickup-recipient recipient-single-item">
+                    <div id="{{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" class="recipient-single-item">
                         <label>{{ __("Mobile Method") }} <span>*</span></label>
                         <select class="form--control select2-basic mobile-list" name="mobile_name">   
     
@@ -109,13 +109,13 @@
                     </div>
                 </div>
                 <div class="col-lg-12 col-md-12 mb-20 mobile-field">
-                    <div id="{{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" class="cash-pickup-recipient recipient-single-item">
+                    <div id="{{ global_const()::RECIPIENT_METHOD_MOBILE }}-view" class="recipient-single-item">
                         <label>{{ __("Account Number") }} <span>*</span></label>
                         <input type="text" name="account_number" class="form--control" placeholder="{{ __("Enter Account Number") }}">
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 mb-20 cash-pickup-field">
-                    <div id="{{ global_const()::RECIPIENT_METHOD_CASH }}-view" class="cash-pickup-recipient recipient-single-item">
+                    <div id="{{ global_const()::RECIPIENT_METHOD_CASH }}-view" class="recipient-single-item">
                         <label>{{ __("Pickup Point") }} <span>*</span></label>
                         <select class="form--control select2-basic pickup-point" name="pickup_point"> 
     
