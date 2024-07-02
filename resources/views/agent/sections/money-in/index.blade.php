@@ -470,13 +470,12 @@
             var totalCharge     = (parseFloat(fixedCharge) + parseFloat(percentCharge));
             var totalAmount     = parseFloat(amount) + parseFloat(totalCharge);
             var payableAmount   =  parseFloat(totalAmount) * paymentGatewayRate;
-            var receiveAmount   = parseFloat(amount) * paymentGatewayRate;
 
             $('.charge').html(`<code class="d-block text--base charge">Charge : ${totalCharge.toFixed(2)} ${currency}</code>`);
             $('.enter-amount').text(amount + ' ' + currency);
             $('.exchange-rate').text(parseFloat(rate).toFixed(2) + ' ' + currency + ' ' + '=' + ' ' + parseFloat(paymentGatewayRate).toFixed(2) + ' ' + paymentGatewayCurrency);
             $('.total-charge').text(totalCharge.toFixed(2) + ' ' + currency);
-            $('.receive-amount').text(receiveAmount.toFixed(2) + ' ' + paymentGatewayCurrency);
+            $('.receive-amount').text(amount + ' ' + currency);
             $('.total-payable').text(payableAmount.toFixed(2) + ' ' + paymentGatewayCurrency);          
         }
     </script>

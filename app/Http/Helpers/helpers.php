@@ -1462,6 +1462,10 @@ function get_auth_guard() {
         return "admin";
     }else if(auth()->guard("api")->check()) {
         return "api";
+    }else if(auth()->guard("agent")->check()) {
+        return "agent";
+    }else if(auth()->guard("agent_api")->check()) {
+        return "agent_api";
     }else{
         return "";
     }

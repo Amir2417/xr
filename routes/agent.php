@@ -40,6 +40,30 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
         Route::get('preview/{identifier}','preview')->name('preview');
+        Route::post('confirm}','confirm')->name('confirm');
+
+
+        //paypal
+        Route::match('get','success/response/{gateway}','success')->name('payment.success');
+        Route::get('success/{gateway}','successPagadito')->name('payment.success.pagadito')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
+        Route::match('post',"cancel/response/{gateway}",'cancel')->name('payment.cancel');
+        Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth','verification.guard','user.google.two.factor','kyc.verification.guard']);
+
+        // POST Route For Unauthenticated Request
+        Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
+        Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
+
+        //redirect with Btn Pay
+        Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('payment.btn.pay')->withoutMiddleware(['auth','verification.guard','user.google.two.factor']);
+
+        //manual
+        Route::get('manual/{token}','showManualForm')->name('manual.form');
+        Route::post('manual/submit/{token}','manualSubmit')->name('manual.submit');
+
+        Route::prefix('payment')->name('payment.')->group(function() {
+            Route::get('crypto/address/{trx_id}','cryptoPaymentAddress')->name('crypto.address');
+            Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
+        });
     });
     //money out
     Route::controller(MoneyOutController::class)->prefix('money-out')->name('money.out.')->group(function(){

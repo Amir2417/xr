@@ -135,4 +135,21 @@ class PaymentGatewayConst {
             ],
         ];
     }
+    //for moneyin
+    public static function registerRedirectionForMoneyIn() {
+        return [
+            'agent'       => [
+                'return_url'    => 'agent.moneyin.payment.success',
+                'cancel_url'    => 'agent.moneyin.payment.cancel',
+                'callback_url'  => 'agent.moneyin.payment.callback',
+                'btn_pay'       => 'agent.moneyin.payment.btn.pay',
+            ],
+            'api'       => [
+                'return_url'    => 'api.agent.moneyin.payment.success',
+                'cancel_url'    => 'api.agent.moneyin.payment.cancel',
+                'callback_url'  => 'agent.moneyin.payment.callback',
+                'btn_pay'       => 'api.agent.moneyin.payment.btn.pay',
+            ],
+        ];
+    }
 }
