@@ -50,8 +50,8 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth','verification.guard','user.google.two.factor','kyc.verification.guard']);
 
         // POST Route For Unauthenticated Request
-        Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
-        Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
+        Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['web','auth:agent','verification.guard.agent','agent.google.two.factor']);
+        Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['web','auth:agent','verification.guard.agent','agent.google.two.factor']);
 
         //redirect with Btn Pay
         Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('payment.btn.pay')->withoutMiddleware(['auth','verification.guard','user.google.two.factor']);

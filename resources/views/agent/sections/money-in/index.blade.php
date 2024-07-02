@@ -453,7 +453,13 @@
 @endsection
 @push('script')
     <script>
-        
+        $("select[name=payment_gateway]").on('change',function(){
+            var amount                  = $(this).val();
+            var paymentGatewayRate      = $("select[name=payment_gateway] :selected").attr("data-rate");
+            var paymentGatewayCurrency  = $("select[name=payment_gateway] :selected").attr("data-currency");
+            feesAndChargesCalculation(amount,paymentGatewayRate,paymentGatewayCurrency);
+        });
+
         $(".amount").keyup(function(){
             var amount                  = $(this).val();
             var paymentGatewayRate      = $("select[name=payment_gateway] :selected").attr("data-rate");

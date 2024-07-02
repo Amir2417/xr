@@ -35,10 +35,19 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use App\Models\Admin\PaymentGateway as PaymentGatewayModel;
 use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
+use App\Notifications\Agent\MoneyInNotification;
+use App\Traits\Agent\MoneyIn\CoinGate as MoneyInCoinGate;
+use App\Traits\Agent\MoneyIn\Flutterwave as MoneyInFlutterwave;
+use App\Traits\Agent\MoneyIn\PagaditoTrait as MoneyInPagaditoTrait;
 use App\Traits\Agent\MoneyIn\Paypal as MoneyInPaypal;
+use App\Traits\Agent\MoneyIn\Razorpay as MoneyInRazorpay;
+use App\Traits\Agent\MoneyIn\SslCommerz as MoneyInSslCommerz;
+use App\Traits\Agent\MoneyIn\Stripe as MoneyInStripe;
+use App\Traits\Agent\MoneyIn\Tatum as MoneyInTatum;
 
 class MoneyIn{
-    use MoneyInPaypal;
+    use MoneyInPaypal,MoneyInStripe,MoneyInFlutterwave,MoneyInSslCommerz,MoneyInRazorpay,MoneyInPagaditoTrait,MoneyInCoinGate,MoneyInTatum;
 
     protected $request_data;
     protected $output;
@@ -390,31 +399,35 @@ class MoneyIn{
         }
         
         $inserted_id = $this->$record_handler($output,$status);
-     
+        $this->agentprofits($user,$inserted_id,$output['form_data']['identifier']);
+
         $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
-        UserNotification::create([
-            'user_id'  => $user->id,
-            'message'  => "Your Remittance  (Payable amount: ".get_amount($output['amount']->total_amount)." ". $data->data->sender_currency .",
-            Get Amount: ".get_amount($output['amount']->will_get)." ". $data->data->receiver_currency .") Successfully Sended.", 
+
+        AgentNotification::create([
+            'agent_id'          => $user->id,
+            'message'  => "Money In  (Payable amount: ".get_amount($output['amount']->total_amount)." ". $data->data->payment_gateway->currency .",
+            Get Amount: ".get_amount($output['amount']->will_get)." ". $data->data->base_currency->currency .") Successfully Received.", 
         ]);
+        
         $trx_id     = Transaction::where('id',$inserted_id)->first();
         
-        if( $basic_setting->email_notification == true){
-            Notification::route("mail",$user->email)->notify(new paypalNotification($user,$output,$trx_id->trx_id));
+        if( $basic_setting->agent_email_notification == true){
+            Notification::route("mail",$user->email)->notify(new MoneyInNotification($user,$output,$trx_id->trx_id));
         }
 
         $notification_message = [
-            'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
+            'title'     => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
             'time'      => Carbon::now()->diffForHumans(),
-            'image'     => get_image($user->image,'user-profile'),
+            'image'     => get_image($user->image,'agent-profile'),
         ];
+
         AdminNotification::create([
-            'type'      => "Send Remittance",
+            'type'      => "Money In",
             'admin_id'  => 1,
             'message'   => $notification_message,
         ]);
         (new PushNotificationHelper())->prepare([1],[
-            'title' => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
+            'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
             'desc'  => "",
             'user_type' => 'admin',
         ])->send();
@@ -493,6 +506,26 @@ class MoneyIn{
         $agent_wallet->update([
             'balance'   => $balance
         ]);
+    }
+    //agent profits
+    function agentprofits($user,$transaction_id,$temp_data){
+        $data  = TemporaryData::where('identifier',$temp_data)->first();
+       
+        DB::beginTransaction();
+        try{
+            DB::table('agent_profits')->insert([
+                'agent_id'              => $user->id,
+                'transaction_id'        => $transaction_id,
+                'fixed_commissions'     => $data->data->agent_profit->fixed_commission,
+                'percent_commissions'   => $data->data->agent_profit->percent_commission,
+                'total_commissions'     => $data->data->agent_profit->total_commission,
+                'created_at'            => now()
+            ]);
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+            throw new Exception(__("Something went wrong! Please try again."));
+        }
     }
 
 

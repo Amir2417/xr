@@ -119,3 +119,4 @@ Route::controller(SendRemittanceController::class)->prefix("api-send-remittance"
     Route::post('sslcommerz/fail','sllCommerzFails')->name('ssl.fail');
     Route::post('sslcommerz/cancel','sllCommerzCancel')->name('ssl.cancel');    
 });
+

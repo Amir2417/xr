@@ -396,7 +396,7 @@ class RemittanceController extends Controller
             Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
         }catch(Exception $e) {
             
-            return redirect()->route('frontend.index');
+            return redirect()->route('index');
         }
         return $this->success($request, $gateway);
     }
@@ -408,7 +408,7 @@ class RemittanceController extends Controller
             Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
         }catch(Exception $e) {
             
-            return redirect()->route('frontend.index');
+            return redirect()->route('index');
         }
         return $this->cancel($request, $gateway);
     }
