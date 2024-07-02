@@ -9,8 +9,9 @@ class PaymentGatewayConst {
     const ADDMONEY              = "Add Money";
     const REMITTANCE_MONEY      = "Remittance Gateway";
     const MONEYOUT              = "Money Out";
+    const MONEYIN               = "Money In";   
     const ACTIVE                =  true;
-    const CRYPTO                    = "CRYPTO";
+    const CRYPTO                = "CRYPTO";
 
     const ASSET_TYPE_WALLET         = "WALLET";
 
@@ -57,6 +58,9 @@ class PaymentGatewayConst {
 
     const ENV_SANDBOX       = "SANDBOX";
     const ENV_PRODUCTION    = "PRODUCTION";
+
+
+    
 
     public static function add_money_slug() {
         return Str::slug(self::ADDMONEY);
