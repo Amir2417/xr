@@ -154,7 +154,7 @@
     <div class="dashboard-list-area mt-60">
         <div class="log-type d-flex justify-content-between align-items-center mb-40">
             <div class="dashboard-header-wrapper">
-                <h4 class="title">Money In Log</h4>
+                <h4 class="title">{{ __("Money In Log") }}</h4>
             </div>
             
         </div>
@@ -165,10 +165,15 @@
 @endsection
 @push('script')
     <script>
+        
         $("select[name=payment_gateway]").on('change',function(){
-            var amount                  = $(this).val();
+            var amount                  = $('.amount').val();
             var paymentGatewayRate      = $("select[name=payment_gateway] :selected").attr("data-rate");
             var paymentGatewayCurrency  = $("select[name=payment_gateway] :selected").attr("data-currency");
+            if(amount == '' || amount == null){
+                amount = 0;
+                $('.amount').val(amount);
+            }
             feesAndChargesCalculation(amount,paymentGatewayRate,paymentGatewayCurrency);
         });
 

@@ -141,7 +141,7 @@ class MoneyInController extends Controller
      * @param $identifier
      */
     public function preview($identifier){
-    $page_title         = "Transactions Conformation";
+        $page_title         = "Transactions Confirmation";
         $temporary_data     = TemporaryData::where('identifier',$identifier)->first();
         if(!$temporary_data) return back()->with(['error' => ['Sorry! Data not found.']]);
 

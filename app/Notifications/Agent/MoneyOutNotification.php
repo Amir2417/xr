@@ -2,20 +2,19 @@
 
 namespace App\Notifications\Agent;
 
-use App\Constants\GlobalConst;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use App\Constants\GlobalConst;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class MoneyInNotification extends Notification
+class MoneyOutNotification extends Notification
 {
     use Queueable;
     public $user;
     public $data;
     public $trx_id;
-
     /**
      * Create a new notification instance.
      *
@@ -52,14 +51,15 @@ class MoneyInNotification extends Notification
         $trx_id     = $this->trx_id;
         $date       = Carbon::now();
         $dateTime   = $date->format('Y-m-d h:i:s A');
-        $status     = 'Confirm';
+        $status     = "Pending";
 
         return (new MailMessage)
                     ->greeting("Hello ".$user->fullname." !")
                     ->subject("Money In")
                     ->line("Details Of Money In:")
                     ->line("Transaction Id: " .$trx_id)
-                    ->line("Received Amount: " . $data->data->receive_amount . ' ' . $data->data->base_currency->currency)
+                    ->line("Request Amount: " . $data->data->amount . ' ' .$data->data->base_currency->currency)
+                    ->line("Payabale Amount: " . $data->data->payable_amount . '' .$data->data->payment_gateway->currency)
                     ->line("Status: ". $status)
                     ->line("Date And Time: " .$dateTime)
                     ->line('Thank you for using our application!');

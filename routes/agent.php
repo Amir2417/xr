@@ -68,6 +68,9 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //money out
     Route::controller(MoneyOutController::class)->prefix('money-out')->name('money.out.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::post('submit','submit')->name('submit');
+        Route::get('preview/{identifier}','preview')->name('preview');
+        Route::post('confirm/{identifier}','confirm')->name('confirm');
     });
     //mysender
     Route::controller(MySenderController::class)->prefix('my-sender')->name('my.sender.')->group(function(){

@@ -91,9 +91,9 @@ class PaymentGatewaySeeder extends Seeder
 
             array('payment_gateway_id' => '10002','name' => 'Pagadito USD','alias' => 'remittance-gateway-pagadito-usd-automatic','currency_code' => 'USD','currency_symbol' => '$','image' => 'seeder/pagadito.webp','min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '2.00000000','fixed_charge' => '1.00000000','rate' => '1','created_at' => '2024-01-08 04:11:48','updated_at' => '2024-01-08 04:12:21'),
         
-            array('payment_gateway_id' => '20001','name' => 'ADOut USD','alias' => 'money-out-adout-usd-manual','currency_code' => 'USD','currency_symbol' => '$','image' => NULL,'min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '1.00000000','fixed_charge' => '2.00000000','rate' => '45218.00000000','created_at' => '2024-01-02 05:02:39','updated_at' => '2024-01-02 10:15:33'),
+            array('payment_gateway_id' => '20001','name' => 'ADOut USD','alias' => 'money-out-adout-usd-manual','currency_code' => 'USD','currency_symbol' => '$','image' => NULL,'min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '1.00000000','fixed_charge' => '2.00000000','rate' => '1.00000000','created_at' => '2024-01-02 05:02:39','updated_at' => '2024-01-02 10:15:33'),
             
-            array('payment_gateway_id' => '20002','name' => 'ADFund USD','alias' => 'money-out-adfund-usd-manual','currency_code' => 'USD','currency_symbol' => '$','image' => NULL,'min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '2.00000000','fixed_charge' => '2.00000000','rate' => '45218.00000000','created_at' => '2024-01-02 10:02:31','updated_at' => '2024-01-02 10:02:31'),
+            array('payment_gateway_id' => '20002','name' => 'ADFund USD','alias' => 'money-out-adfund-usd-manual','currency_code' => 'USD','currency_symbol' => '$','image' => NULL,'min_limit' => '1.00000000','max_limit' => '1000.00000000','percent_charge' => '2.00000000','fixed_charge' => '2.00000000','rate' => '1.00000000','created_at' => '2024-01-02 10:02:31','updated_at' => '2024-01-02 10:02:31'),
             
         );
         PaymentGatewayCurrency::upsert($payment_gateway_currencies,['alias'],[]);

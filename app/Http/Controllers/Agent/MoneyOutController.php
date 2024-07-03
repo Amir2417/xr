@@ -2,15 +2,30 @@
 
 namespace App\Http\Controllers\Agent;
 
-use App\Constants\GlobalConst;
+use Exception;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\TemporaryData;
+use App\Constants\GlobalConst;
+use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use App\Constants\PaymentGatewayConst;
-use App\Models\Admin\PaymentGatewayCurrency;
+use App\Models\Admin\AdminNotification;
 use App\Models\Admin\TransactionSetting;
+use App\Traits\ControlDynamicInputFields;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Admin\PaymentGatewayCurrency;
+use Illuminate\Support\Facades\Notification;
+use App\Http\Helpers\PushNotificationHelper;
+use App\Notifications\Agent\MoneyOutNotification;
 
 class MoneyOutController extends Controller
 {
+    use ControlDynamicInputFields;
     /**
      * Method for view money out index page
      * @return view
@@ -28,5 +43,215 @@ class MoneyOutController extends Controller
             'payment_gateway',
             'transaction_settings'
         ));
+    }
+    /**
+     * Method for submit money out information
+     * @param Illuminate\Http\Request $request
+     */
+    public function submit(Request $request){
+        $validator              = Validator::make($request->all(),[
+            'amount'            => 'required|numeric',
+            'payment_gateway'   => 'required'
+        ]);
+        if($validator->fails()) return back()->withErrors($validator)->withInput($request->all());
+        $validated                  = $validator->validate();
+        $amount                     = $validated['amount'];
+        $agent_wallet               = AgentWallet::auth()->first();
+        if($amount > $agent_wallet->balance) return back()->with(['error' => ['Sorry! Insufficient Balance.']]);
+        $transaction_settings       = TransactionSetting::where('slug',GlobalConst::MONEY_IN)->where('status',true)->first();
+        if(!$transaction_settings){
+            return back()->with(['error' => ['Transaction settings not found']]);
+        }
+        if($amount < $transaction_settings->min_limit || $amount > $transaction_settings->max_limit){
+            return back()->with(['error' => ['Please follow the transaction limit. ']]);
+        }
+        //
+        $payment_gateway_currency   = PaymentGatewayCurrency::where('id',$validated['payment_gateway'])->first();
+        if(!$payment_gateway_currency){
+            return back()->with(['error' => ['Payment gateway not found']]);
+        }
+        $payment_gateway_rate       = $payment_gateway_currency->rate;
+        $payment_gateway_code       = $payment_gateway_currency->currency_code;
+        $fixed_charge               = $transaction_settings->fixed_charge;
+        $percent_charge             = ($transaction_settings->percent_charge * $amount) / 100;
+        $total_charge               = $fixed_charge + $percent_charge;
+        $total_amount               = $amount + $total_charge;
+        $payable_amount             = $total_amount * $payment_gateway_rate;
+
+        //agent profit calculation
+        if($transaction_settings->agent_profit == true){
+            
+            $agent_fixed_commissions         = $transaction_settings->agent_fixed_commissions;
+            $agent_percent_commissions      = ($transaction_settings->agent_percent_commissions * $amount) / 100;
+            $total_commissions               = $agent_fixed_commissions + $agent_percent_commissions; 
+        }
+
+        $data                       = [
+            'type'                  => PaymentGatewayConst::MONEYOUT,
+            'identifier'            => Str::uuid(),
+            'data'                  => [
+                'base_currency'     => [
+                    'currency'      => get_default_currency_code(),
+                    'rate'          => get_default_currency_rate()
+                ],
+                'payment_gateway'   => [
+                    'id'            => $payment_gateway_currency->id,
+                    'alias'         => $payment_gateway_currency->alias,
+                    'rate'          => $payment_gateway_rate,
+                    'currency'      => $payment_gateway_code,
+                    'name'          => $payment_gateway_currency->name
+                ],
+                'agent_profit'      => [
+                    'fixed_commission'      => floatval($agent_fixed_commissions) ?? 0,
+                    'percent_commission'    => floatval($agent_percent_commissions) ?? 0,
+                    'total_commission'      => floatval($total_commissions) ?? 0,
+                ],
+                'amount'            => floatval($amount),
+                'fixed_charge'      => floatval($fixed_charge),
+                'percent_charge'    => floatval($percent_charge),
+                'total_charge'      => floatval($total_charge),
+                'total_amount'      => floatval($total_amount),
+                'payable_amount'    => floatval($payable_amount),
+                'exchange_rate'     => floatval($payment_gateway_rate)
+            ]                 
+        ];
+        try{
+           $temporary_data = TemporaryData::create($data);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return redirect()->route('agent.money.out.preview',$temporary_data->identifier); 
+    }
+    /**
+     * Method for view money out preview page
+     * @param $identifier
+     */
+    public function preview($identifier){
+        $page_title         = "Transactions Confirmation";
+        $temporary_data     = TemporaryData::where('identifier',$identifier)->first();
+        if(!$temporary_data) return back()->with(['error' => ['Sorry! Data not found.']]);
+
+        if(!$temporary_data || $temporary_data->data == null || !isset($temporary_data->data->payment_gateway->id)) return redirect()->route('agent.money.out.index')->with(['error' => ['Invalid request']]);
+        $gateway_currency = PaymentGatewayCurrency::find($temporary_data->data->payment_gateway->id);
+        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('agent.money.out.index')->with(['error' => ['Selected gateway is invalid']]);
+        $gateway = $gateway_currency->gateway;
+        if(!$gateway->input_fields || !is_array($gateway->input_fields)) return redirect()->route('agent.money.out.index')->with(['error' => ['This payment gateway is under constructions. Please try with another payment gateway']]);
+        
+        return view('agent.sections.money-out.preview',compact(
+            'page_title',
+            'temporary_data',
+            'gateway'
+        ));
+    }
+    /**
+     * Method for confirm money out request
+     * @param $identifier
+     * @param Illuminate\Http\Request $request
+     */
+    public function confirm(Request $request,$identifier){
+        $request->merge(['identifier' => $identifier]);
+        $tempDataValidate = Validator::make($request->all(),[
+            'identifier'        => "required|string|exists:temporary_datas",
+        ])->validate();
+
+        $temp_data = TemporaryData::search($tempDataValidate['identifier'])->first();
+        if(!$temp_data || $temp_data->data == null || !isset($temp_data->data->payment_gateway->id)) return redirect()->route('agent.money.out.index')->with(['error' => ['Invalid request']]);
+        $gateway_currency = PaymentGatewayCurrency::find($temp_data->data->payment_gateway->id);
+        
+        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('agent.money.out.index')->with(['error' => ['Selected gateway is invalid']]);
+
+        $gateway = $gateway_currency->gateway;
+        $dy_validation_rules                        = $this->generateValidationRules($gateway->input_fields);
+        $validated                                  = Validator::make($request->all(),$dy_validation_rules)->validate();
+        $get_values                                 = $this->placeValueWithFields($gateway->input_fields,$validated);
+        $trx_id                                     = generateTrxString("transactions","trx_id","MO",8);
+        $agent_wallet                               = AgentWallet::auth()->first();
+        try{
+            $this->insertRecord($trx_id,$temp_data,$agent_wallet,$get_values);
+        }catch(Exception $e){
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        return redirect()->route('agent.money.out.index')->with(['success' => ['Money out request successfully sent to admin.']]);
+        
+    }
+    /**
+     * function for insert record
+     * @param $trx_id,$temp_data,$agent_wallet,$get_values
+     */
+    function insertRecord($trx_id,$temp_data,$agent_wallet,$get_values){
+        
+        DB::beginTransaction();
+        try{
+            DB::table('transactions')->insert([
+                'agent_id'                          => auth()->user()->id,
+                'agent_wallet_id'                   => $agent_wallet->id,
+                'payment_gateway_currency_id'       => $temp_data->data->payment_gateway->id,
+                'type'                              => PaymentGatewayConst::MONEYOUT,
+                'remittance_data'                   => json_encode([
+                    'data'                          => $temp_data->data,
+                ]),
+                'trx_id'                            => $trx_id,
+                'request_amount'                    => $temp_data->data->amount,
+                'exchange_rate'                     => $temp_data->data->exchange_rate,
+                'payable'                           => $temp_data->data->payable_amount,
+                'fees'                              => $temp_data->data->total_charge,
+                'remark'                            => "Money Out Successfull.",
+                'details'                           => json_encode(['gateway_input_values' => $get_values]),
+                'status'                            => GlobalConst::REMITTANCE_STATUS_PENDING,
+                'attribute'                         => PaymentGatewayConst::SEND,
+                'created_at'                        => now(),
+            ]);
+            $this->updateWalletBalance($agent_wallet,$temp_data->data->total_amount);
+            $this->insertNotificationData($trx_id,$temp_data);
+
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+    /**
+     * Function for update wallet balance
+     * @param $agent_wallet,$amount
+     */
+    function updateWalletBalance($agent_wallet,$amount) {
+        $balance        = $agent_wallet->balance - $amount;
+        $agent_wallet->update([
+            'balance'       => $balance,
+        ]);
+    }
+    /**
+     * Function for insert notification data
+     * @param $data
+     */
+    function insertNotificationData($trx_id,$data){
+        $basic_setting      = BasicSettings::first();
+        $user               = auth()->user();
+        if( $basic_setting->agent_email_notification == true){
+            Notification::route("mail",$user->email)->notify(new MoneyOutNotification($user,$data,$trx_id));
+        }
+        //agent notification
+        AgentNotification::create([
+            'agent_id'          => $user->id,
+            'message'           => "Money Out Request (Payable amount: ".get_amount($data->data->payable_amount)." ". $data->data->payment_gateway->currency .") Successfully Send.", 
+        ]);
+        // for admin notification
+        $notification_message = [
+            'title'     => "Money Out from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+            'time'      => Carbon::now()->diffForHumans(),
+            'image'     => get_image($user->image,'agent-profile'),
+        ];
+        AdminNotification::create([
+            'type'      => "Money In",
+            'admin_id'  => 1,
+            'message'   => $notification_message,
+        ]);
+        (new PushNotificationHelper())->prepare([1],[
+            'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+            'desc'  => "",
+            'user_type' => 'admin',
+        ])->send();
+
+        DB::table("temporary_datas")->where("identifier",$data->identifier)->delete();
     }
 }

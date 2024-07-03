@@ -50,6 +50,7 @@
                                         <li><img src="{{ get_image($item->image,'payment-gateways') }}" alt="Image"></li>
                                     </ul>
                                 </td>
+                                
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->currencies->first()->currency_code }}</td>
                                 <td>{{ $item->currencies->first()->currency_symbol }}</td>
