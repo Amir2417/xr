@@ -65,8 +65,8 @@
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">
                                                                 <input type="hidden" name="receiver_currency" class="receiver_currency" value="120">
-                                                                <img src="assets/images/flag/au.svg" alt="">
-                                                                <span class="custom-currency">AUD</span>
+                                                                <img src="{{ get_image(@$receiver_currency_first->flag,'currency-flag') }}" alt="">
+                                                                <span class="custom-currency">{{ @$receiver_currency_first->code }}</span>
                                                             </div>
                                                         </div>
                                                         <div class="custom-select-wrapper">
@@ -78,38 +78,16 @@
                                                             </div>
                                                             <div class="custom-select-list-wrapper">
                                                                 <ul class="custom-select-list">
-                                                                                                                                                                                                              <li class="custom-option active">
-                                                                        <img src="assets/images/flag/au.svg" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">Nigerian naira</span>
-                                                                        <span class="custom-currency">NGN</span>
-                                                                    </li>
-                                                                                                                                                                                                              <li class="custom-option">
-                                                                            <img src="assets/images/flag/eth.webp" alt="flag" class="custom-flag">
-                                                                            <span class="custom-country">Kenyan shilling</span>
-                                                                            <span class="custom-currency">KES</span>
-                                                                    </li>
-                                                                                                                                                                                                              <li class="custom-option">
-                                                                        <img src="assets/images/flag/br.svg" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">Central African CFA franc</span>
-                                                                         <span class="custom-currency">XAF</span>
-                                                                    </li>
-                                                                                                                                                                                                              <li class="custom-option">
-                                                                         <img src="assets/images/flag/tn.svg">
-                                                                        <span class="custom-country">West African CFA franc</span>
-                                                                        <span class="custom-currency">XOF</span>
-                                                                    </li>
-                                                                                                                                                                                                              <li class="custom-option">
-                                                                        <img src="assets/images/flag/cn.svg">
-                                                                        <span class="custom-country">Indian rupee</span>
-                                                                        <span class="custom-currency">INR</span>
-                                                                    </li>
-                                                                                                                                                                                                              <li class="custom-option">
-                                                                        <img src="assets/images/flag/flags.png" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">Pakistani rupee</span>
-                                                                        <span class="custom-currency">PKR</span>
-
-
-                                                                                                                                                                                                              </li>                                                                                                               
+                                                                    @foreach ($receiver_currency as $item)
+                                                                        <li class="custom-option
+                                                                            @if($item->code == $receiver_currency_first->code)
+                                                                            active
+                                                                            @endif" data-item='{{ json_encode($item) }}'>
+                                                                            <img src="{{ get_image($item->flag,'currency-flag') }}" alt="flag" class="custom-flag">
+                                                                            <span class="custom-country">{{ $item->name }}</span>
+                                                                            <span class="custom-currency">{{ $item->code }}</span>
+                                                                        </li>
+                                                                    @endforeach
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -129,7 +107,7 @@
                                                     @endforeach
                                                 </select>
                                                 <div class="add-sender">
-                                                    <a href="add-sender.html" class="btn"><i class="las la-plus"></i> Add Sender</a>
+                                                    <a href="{{ setRoute('agent.my.sender.create') }}" class="btn"><i class="las la-plus"></i> {{ __("Add Sender") }}</a>
                                                 </div>
                                             </div>
                                             
@@ -146,7 +124,7 @@
                                                     @endforeach
                                                 </select>
                                                 <div class="add-sender">
-                                                    <a href="add-recipient.html" class="btn"><i class="las la-plus"></i> Add Recipient</a>
+                                                    <a href="{{ setRoute('agent.recipient.create') }}" class="btn"><i class="las la-plus"></i> {{ __("Add Recipient") }}</a>
                                                 </div>
                                             </div>
                                             
@@ -154,19 +132,20 @@
                                     </div>
                                     <div class="form-group transaction-type mb-20">             
                                         <div class="transaction-title">
-                                            <label>Receiving Method</label>
+                                            <label>{{ __("Receiving Method") }}</label>
                                         </div>
                                         <div class="transaction-type-select">
-                                            <select class="nice-select trx-type-select" name="type">
-                                                    
-                                                    <option class="custom-option">Bank Transfer</option>
-                                                    <option class="custom-option">Mobile Money</option>
-                                                    <option class="custom-option">Cash Pic Up</option>
+                                            <select class="nice-select trx-type-select" name="type"> 
+                                                @forelse ($transaction_settings as $item)
+                                                    <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ __($item->title ?? '')}}</option>
+                                                @empty
+                                                    <option>{{ __("No data found") }}</option>
+                                                @endforelse
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <a href="#" type="button" class="btn--base w-100">Send</a>
+                                        <button type="submit" class="btn--base w-100">{{ __("Send") }}</a>
                                     </div>
                                 </div>
                             </form>
@@ -562,3 +541,22 @@
     </div>
 </div>
 @endsection
+@push('script')
+<script>
+    $(".ad-select .custom-select-search").keyup(function(){
+        var searchText = $(this).val().toLowerCase();
+        var itemList =  $(this).parents(".ad-select").find(".custom-option");
+        $.each(itemList,function(index,item){
+            var text = $(item).find(".custom-currency").text().toLowerCase();
+            var country = $(item).find(".custom-country").text().toLowerCase();
+            var match = text.match(searchText);
+            var countryMatch = country.match(searchText);
+            if(match == null && countryMatch == null) {
+                $(item).addClass("d-none");
+            }else {
+                $(item).removeClass("d-none");
+            }
+        });
+    });
+</script>
+@endpush
