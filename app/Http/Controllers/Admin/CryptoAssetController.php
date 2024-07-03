@@ -46,6 +46,7 @@ class CryptoAssetController extends Controller
 
     public function generateWallet(Request $request, $alias) {
         $gateway = PaymentGateway::where('alias', $alias)->firstOrFail();
+        
         if($this->isTatum($gateway)) {
             try{
                 $this->getTatumAssets($gateway);

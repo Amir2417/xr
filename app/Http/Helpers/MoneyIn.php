@@ -3,39 +3,25 @@ namespace App\Http\Helpers;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\User;
+use App\Models\Agent;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
-use App\Models\AppliedCoupon;
 use App\Models\TemporaryData;
-use App\Constants\GlobalConst;
 use App\Models\Admin\Currency;
-use App\Models\UserNotification;
-use App\Models\CouponTransaction;
+use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
 use Illuminate\Support\Facades\DB;
 use App\Models\Admin\BasicSettings;
-use App\Traits\PaymentGateway\Gpay;
-use App\Traits\PaymentGateway\QRPay;
-use App\Traits\PaymentGateway\Tatum;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\PaymentGateway\Paypal;
-use App\Traits\PaymentGateway\Stripe;
 use Illuminate\Support\Facades\Route;
 use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\AdminNotification;
-use App\Traits\PaymentGateway\CoinGate;
-use App\Traits\PaymentGateway\Razorpay;
-use App\Notifications\paypalNotification;
-use App\Traits\PaymentGateway\SslCommerz;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\PaymentGateway\Flutterwave;
 use App\Models\Admin\PaymentGatewayCurrency;
-use App\Traits\PaymentGateway\PagaditoTrait;
+use App\Http\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use App\Models\Admin\PaymentGateway as PaymentGatewayModel;
-use App\Models\Agent\AgentWallet;
-use App\Models\AgentNotification;
 use App\Notifications\Agent\MoneyInNotification;
 use App\Traits\Agent\MoneyIn\CoinGate as MoneyInCoinGate;
 use App\Traits\Agent\MoneyIn\Flutterwave as MoneyInFlutterwave;
@@ -244,7 +230,7 @@ class MoneyIn{
         $tempData = $this->request_data;
         
         if(empty($tempData) || empty($tempData['type'])) throw new Exception('Transaction failed. Record didn\'t saved properly. Please try again.');
-
+        
         if($this->requestIsApiUser()) {
             $creator_table = $tempData['data']->creator_table ?? null;
             $creator_id = $tempData['data']->creator_id ?? null;
@@ -410,9 +396,9 @@ class MoneyIn{
         ]);
         
         $trx_id     = Transaction::where('id',$inserted_id)->first();
-        
+        $data       = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
         if( $basic_setting->agent_email_notification == true){
-            Notification::route("mail",$user->email)->notify(new MoneyInNotification($user,$output,$trx_id->trx_id));
+            Notification::route("mail",$user->email)->notify(new MoneyInNotification($user,$data,$trx_id->trx_id));
         }
 
         $notification_message = [
@@ -448,9 +434,7 @@ class MoneyIn{
         return $this->output['trx_id'] ?? "";
         
     }
-
-    
-
+    //save information
     public function insertRecordAgent($output, $status) {
         $data  = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
         
@@ -499,7 +483,6 @@ class MoneyIn{
         $this->output['trx_id'] = $trx_id;
         return $id;
     }
-
     //update wallet balance
     function updateWalletBalance($amount,$agent_wallet){
         $balance    = $agent_wallet->balance + $amount;
@@ -527,8 +510,7 @@ class MoneyIn{
             throw new Exception(__("Something went wrong! Please try again."));
         }
     }
-
-
+    //remove temp data
     public function removeTempData($output) {
         try{
             $id = $output['tempData']['id'];
@@ -537,7 +519,7 @@ class MoneyIn{
             // handle error
         }
     }
-
+    // for api
     public function api() {
         $output = $this->output;
         if(!$output) throw new Exception("Something went wrong! Gateway render failed. Please call gateway() method before calling api() method");
@@ -641,8 +623,7 @@ class MoneyIn{
                 $this->currency_input_name  => $transaction->remittance_data->user_record,
             ];
 
-            // $user_wallet = $transaction->creator_wallet;
-            // $this->predefined_user_wallet = $user_wallet;
+            
             $this->predefined_guard = $transaction->user->modelGuardName();
             $this->predefined_user = $transaction->user;
 
@@ -668,10 +649,7 @@ class MoneyIn{
                         $this->currency_input_name  => $tempData->data->user_record,
                     ];
 
-                    // $get_wallet_model = PaymentGatewayConst::registerWallet()[$tempData->data->creator_guard];
-                    // $user_wallet = $get_wallet_model::find($tempData->data->wallet_id);
-                    // $this->predefined_user_wallet = $user_wallet;
-                    $user    = User::where('id',$tempData->data->creator_id)->first();
+                    $user    = Agent::where('id',$tempData->data->creator_id)->first();
                     $this->predefined_guard = $user->modelGuardName(); // need to update
                     $this->predefined_user = $user;
 

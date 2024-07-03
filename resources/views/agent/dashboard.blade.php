@@ -41,10 +41,10 @@
                             <div class="d-flex justify-content-between">
                                 <div class="">
                                     <div class="top-content">
-                                        <h3>Profit Balance </h3>
+                                        <h3>{{ __('Profit Balance') }} </h3>
                                     </div>
                                     <div class="user-count">
-                                        <span class="text-uppercase"> 16 USD</span>
+                                        <span class="text-uppercase"> {{ get_amount(@$profit_balance,get_default_currency_code()) }}</span>
                                     </div>
                                 </div>
                                 <div class="icon">

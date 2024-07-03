@@ -19,6 +19,8 @@ class Transaction extends Model
         'id'                          => 'integer',
         'admin_id'                    => 'integer',
         'user_id'                     => 'integer',
+        'agent_id'                    => 'integer',
+        'agent_wallet_id'             => 'integer',
         'payment_gateway_currency_id' => 'integer',
         'type'                        => "string",
         'remittance_data'             => 'object',
@@ -40,6 +42,14 @@ class Transaction extends Model
 
     public function scopeAuth($q){
         return $q->where('user_id',auth()->user()->id);
+    }
+
+    public function scopeAgentAuth($q){
+       return $q->where('agent_id',auth()->user()->id); 
+    }
+    
+    public function agent(){
+        return $this->belongsTo(Agent::class,'agent_id');
     }
 
     public function coupon_transaction(){

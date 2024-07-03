@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Models\Agent\AgentWallet;
 use App\Http\Controllers\Controller;
+use App\Models\Agent\AgentProfit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,10 +19,12 @@ class DashboardController extends Controller
     public function index(){
         $page_title     = "Dashboard";
         $agent_wallet   = AgentWallet::auth()->first();
-
+        $profit_balance = AgentProfit::auth()->sum('total_commissions');
+        
         return view('agent.dashboard',compact(
             'page_title',
-            'agent_wallet'
+            'agent_wallet',
+            'profit_balance'
         ));
     }
     /**

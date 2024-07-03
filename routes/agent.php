@@ -45,9 +45,9 @@ Route::prefix("agent")->name("agent.")->group(function(){
 
         //paypal
         Route::match('get','success/response/{gateway}','success')->name('payment.success');
-        Route::get('success/{gateway}','successPagadito')->name('payment.success.pagadito')->withoutMiddleware(['auth','verification.guard','kyc.verification.guard','user.google.two.factor']);
+        Route::get('success/{gateway}','successPagadito')->name('payment.success.pagadito')->withoutMiddleware(['web','auth:agent','verification.guard.agent','agent.google.two.factor']);
         Route::match('post',"cancel/response/{gateway}",'cancel')->name('payment.cancel');
-        Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth','verification.guard','user.google.two.factor','kyc.verification.guard']);
+        Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth:agent','verification.guard.agent','agent.google.two.factor']);
 
         // POST Route For Unauthenticated Request
         Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['web','auth:agent','verification.guard.agent','agent.google.two.factor']);

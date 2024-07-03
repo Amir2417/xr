@@ -172,7 +172,7 @@ trait Stripe {
     public function stripeSuccess($output) {
         $output['capture']      = $output['tempData']['data']->response ?? "";
         // need to insert new transaction in database
-        $status = global_const()::REMITTANCE_STATUS_PENDING;
+        $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
         try{
             $transaction_response = $this->createTransaction($output,$status);
         }catch(Exception $e) {

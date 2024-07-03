@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agent;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -10,18 +11,27 @@ use App\Models\TemporaryData;
 use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
 use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
 use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\AdminNotification;
+use App\Models\Admin\CryptoTransaction;
 use App\Models\Admin\TransactionSetting;
+use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Helpers\PushNotificationHelper;
 use App\Models\Admin\PaymentGatewayCurrency;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Helpers\MoneyIn as MoneyInHelper;
+use App\Notifications\Agent\MoneyInNotification;
 
 class MoneyInController extends Controller
 {
+    use ControlDynamicInputFields;
     /**
      * Method for show money in index page
      * @return view
@@ -36,10 +46,15 @@ class MoneyInController extends Controller
                                         ->where('slug',GlobalConst::MONEY_IN)
                                         ->first();
 
+        $transactions               = Transaction::agentAuth()->with(['agent','currency'])
+                                        ->where('type',PaymentGatewayConst::MONEYIN)
+                                        ->orderBy('id','desc')->latest()->take(3)->get();
+        
         return view('agent.sections.money-in.index',compact(
             'page_title',
             'payment_gateway',
-            'transaction_settings'
+            'transaction_settings',
+            'transactions'
         ));
     }
     /**
@@ -196,6 +211,7 @@ class MoneyInController extends Controller
     public function successPagadito(Request $request, $gateway){
         $token = MoneyInHelper::getToken($request->all(),$gateway);
         $temp_data = TemporaryData::where("identifier",$token)->first();
+       
         if($temp_data->data->creator_guard == 'agent'){
             Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
             try{
@@ -363,7 +379,7 @@ class MoneyInController extends Controller
         if(!$gateway->input_fields || !is_array($gateway->input_fields)) return redirect()->route('user.send.remittance.index')->with(['error' => ['This payment gateway is under constructions. Please try with another payment gateway']]);
         $amount = $tempData->data->amount;
 
-        $page_title = "- Payment Instructions";
+        $page_title = "Payment Instructions";
         
 
         return view('agent.sections.money-in.manual.payment_confirmation',compact(
@@ -373,9 +389,12 @@ class MoneyInController extends Controller
             "amount"
         ));
     }
-
+    /**
+     * Method for submit data in manual format
+     * @param $token
+     * @param Illuminate\Http\Request $request
+     */
     public function manualSubmit(Request $request,$token) {
-       
         $basic_setting = BasicSettings::first();
         $user          = auth()->user();
         $request->merge(['identifier' => $token]);
@@ -384,12 +403,12 @@ class MoneyInController extends Controller
         ])->validate();
 
         $tempData = TemporaryData::search($tempDataValidate['identifier'])->first();
-        if(!$tempData || $tempData->data == null || !isset($tempData->data->gateway_currency_id)) return redirect()->route('user.send.remittance.index')->with(['error' => ['Invalid request']]);
+        if(!$tempData || $tempData->data == null || !isset($tempData->data->gateway_currency_id)) return redirect()->route('agent.moneyin.index')->with(['error' => ['Invalid request']]);
         $gateway_currency = PaymentGatewayCurrency::find($tempData->data->gateway_currency_id);
-        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('user.send.remittance.index')->with(['error' => ['Selected gateway is invalid']]);
+        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('agent.moneyin.index')->with(['error' => ['Selected gateway is invalid']]);
         $gateway = $gateway_currency->gateway;
         $amount = $tempData->data->amount ?? null;
-        if(!$amount) return redirect()->route('user.send.remittance.index')->with(['error' => ['Transaction Failed. Failed to save information. Please try again']]);
+        if(!$amount) return redirect()->route('agent.moneyin.index')->with(['error' => ['Transaction Failed. Failed to save information. Please try again']]);
         
         $this->file_store_location  = "transaction";
         $dy_validation_rules        = $this->generateValidationRules($gateway->input_fields);
@@ -399,114 +418,144 @@ class MoneyInController extends Controller
        
         
         $data   = TemporaryData::where('identifier',$tempData->data->form_data)->first();
-       
+        
+        $agent_wallet       = AgentWallet::auth()->first();
         $trx_id = generateTrxString("transactions","trx_id","SR",8);
         
         // Make Transaction
         DB::beginTransaction();
         try{
             $id = DB::table("transactions")->insertGetId([
-                'user_id'                       => auth()->user()->id,
+                'agent_id'                      => auth()->user()->id,
+                'agent_wallet_id'               => $agent_wallet->id,
                 'payment_gateway_currency_id'   => $gateway_currency->id,
-                'type'                          => PaymentGatewayConst::TYPESENDREMITTANCE,
+                'type'                          => PaymentGatewayConst::MONEYIN,
                 'remittance_data'               => json_encode([
                     'type'                      => $data->type,
-                    'sender_name'               => $data->data->sender_name,
-                    'sender_email'              => $data->data->sender_email,
-                    'sender_currency'           => $data->data->sender_currency,
-                    'receiver_currency'         => $data->data->receiver_currency,
-                    'sender_ex_rate'            => $data->data->sender_ex_rate,
-                    'sender_base_rate'          => $data->data->sender_base_rate,
-                    'receiver_ex_rate'          => $data->data->receiver_ex_rate,
-                    'coupon_id'                 => $data->data->coupon_id,
-                    'coupon_type'               => $data->data->coupon_type,
-                    'first_name'                => $data->data->first_name,
-                    'middle_name'               => $data->data->middle_name,
-                    'last_name'                 => $data->data->last_name,
-                    'email'                     => $data->data->email,
-                    'country'                   => $data->data->country,
-                    'city'                      => $data->data->city,
-                    'state'                     => $data->data->state,
-                    'zip_code'                  => $data->data->zip_code,
-                    'phone'                     => $data->data->phone,
-                    'method_name'               => $data->data->method_name,
-                    'account_number'            => $data->data->account_number,
-                    'address'                   => $data->data->address,
-                    'document_type'             => $data->data->document_type,
-                    'front_image'               => $data->data->front_image,
-                    'back_image'                => $data->data->back_image,
-                    
-                    'sending_purpose'           => $data->data->sending_purpose->name,
-                    'source'                    => $data->data->source->name,
-                    'currency'                  => [
-                        'name'                  => $data->data->currency->name,
-                        'code'                  => $data->data->currency->code,
-                        'rate'                  => $data->data->currency->rate,
-                    ],
-                    'send_money'                => $data->data->send_money,
-                    'fees'                      => $data->data->fees,
-                    'convert_amount'            => $data->data->convert_amount,
-                    'payable_amount'            => $data->data->payable_amount,
-                    'remark'                    => $data->data->remark,
+                    'data'                      => $data->data,
                 ]),
                 'trx_id'                        => $trx_id,
-                'request_amount'                => $data->data->send_money,
-                'exchange_rate'                 => $data->data->currency->rate,
+                'request_amount'                => $data->data->amount,
+                'exchange_rate'                 => $data->data->exchange_rate,
                 'payable'                       => $data->data->payable_amount,
-                'fees'                          => $data->data->fees,
-                'convert_amount'                => $data->data->convert_amount,
-                'will_get_amount'               => $data->data->receive_money,
+                'fees'                          => $data->data->total_charge,
+                'will_get_amount'               => $data->data->receive_amount,
                 'remark'                        => 'Manual',
-                'details'                       => "COMPLETED",
+                'details'                       => "MoneyIn Successfull",
                 'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
-                'attribute'                     => PaymentGatewayConst::SEND,
+                'attribute'                     => PaymentGatewayConst::RECEIVED,
                 'created_at'                    => now(),
                 'callback_ref'                  => $output['callback_ref'] ?? null,
             ]);
-            if($data->data->coupon_id != 0){
-                if($data->data->coupon_type == GlobalConst::COUPON){
-                    $coupon_id  = $data->data->coupon_id;
-                    $user   = auth()->user();
-                    CouponTransaction::create([
-                        'user_id'   => $user->id,
-                        'coupon_id'   => $coupon_id,
-                        'transaction_id'   => $id,
-                    ]);
-                }else{
-                    $user_coupon_id = $data->data->coupon_id;
-                    $user   = auth()->user();
-                    CouponTransaction::create([
-                        'user_id'           => $user->id,
-                        'user_coupon_id'    => $user_coupon_id,
-                        'transaction_id'    => $id,
-                    ]);
-                }
+            
+            if( $basic_setting->agent_email_notification == true){
+                Notification::route("mail",$user->email)->notify(new MoneyInNotification($user,$data,$trx_id));
             }
-            if( $basic_setting->email_notification == true){
-                Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
-            }
+            //agent notification
+            AgentNotification::create([
+                'agent_id'          => $user->id,
+                'message'  => "Money In  (Payable amount: ".get_amount($data->data->payable_amount)." ". $data->data->payment_gateway->currency .",
+                Get Amount: ".get_amount($data->data->receive_amount)." ". $data->data->base_currency->currency .") Successfully Received.", 
+            ]);
+            // for admin notification
             $notification_message = [
-                'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'title'     => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
                 'time'      => Carbon::now()->diffForHumans(),
-                'image'     => get_image($user->image,'user-profile'),
+                'image'     => get_image($user->image,'agent-profile'),
             ];
             AdminNotification::create([
-                'type'      => "Send Remittance",
+                'type'      => "Money In",
                 'admin_id'  => 1,
                 'message'   => $notification_message,
             ]);
             (new PushNotificationHelper())->prepare([1],[
-                'title' => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
                 'desc'  => "",
                 'user_type' => 'admin',
             ])->send();
+
             DB::table("temporary_datas")->where("identifier",$token)->delete();
             DB::commit();
         }catch(Exception $e) {
             DB::rollBack();
-            return redirect()->route('user.send.remittance.manual.form',$token)->with(['error' => ['Something went wrong! Please try again']]);
+            return redirect()->route('agent.moneyin.manual.form',$token)->with(['error' => ['Something went wrong! Please try again']]);
         }
-        return redirect()->route("user.payment.confirmation",$trx_id)->with(['success' => ['Successfully send remittance']]);
+        return redirect()->route("agent.moneyin.index")->with(['success' => ['Successfully MoneyIn']]);
+    }
+    public function cryptoPaymentAddress(Request $request, $trx_id) {
+
+        $page_title = "Crypto Payment Address";
+        $transaction = Transaction::where('trx_id', $trx_id)->firstOrFail();
+        
+
+        if($transaction->currency->gateway->isCrypto() && $transaction->details?->payment_info?->receiver_address ?? false) {
+            return view('agent.sections.money-in.payment.crypto.address', compact(
+                'transaction',
+                'page_title',
+            ));
+        }
+
+        return abort(404);
     }
 
+    public function cryptoPaymentConfirm(Request $request, $trx_id) 
+    {
+        $transaction = Transaction::where('trx_id',$trx_id)->where('status', global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->firstOrFail();
+
+
+        $dy_input_fields = $transaction->details->payment_info->requirements ?? [];
+        $validation_rules = $this->generateValidationRules($dy_input_fields);
+
+        $validated = [];
+        if(count($validation_rules) > 0) {
+            $validated = Validator::make($request->all(), $validation_rules)->validate();
+        }
+
+        if(!isset($validated['txn_hash'])) return back()->with(['error' => ['Transaction hash is required for verify']]);
+
+        $receiver_address = $transaction->details->payment_info->receiver_address ?? "";
+
+        // check hash is valid or not
+        $crypto_transaction = CryptoTransaction::where('txn_hash', $validated['txn_hash'])
+                                                ->where('receiver_address', $receiver_address)
+                                                ->where('asset',$transaction->currency->currency_code)
+                                                ->where(function($query) {
+                                                    return $query->where('transaction_type',"Native")
+                                                                ->orWhere('transaction_type', "native");
+                                                })
+                                                ->where('status',PaymentGatewayConst::NOT_USED)
+                                                ->first();
+                                                
+        if(!$crypto_transaction) return back()->with(['error' => ['Transaction hash is not valid! Please input a valid hash']]);
+
+        if($crypto_transaction->amount >= $transaction->total_payable == false) {
+            if(!$crypto_transaction) return back()->with(['error' => ['Insufficient amount added. Please contact with system administrator']]);
+        }
+
+        DB::beginTransaction();
+        try{
+
+            // update crypto transaction as used
+            DB::table($crypto_transaction->getTable())->where('id', $crypto_transaction->id)->update([
+                'status'        => PaymentGatewayConst::USED,
+            ]);
+
+            // update transaction status
+            $transaction_details = json_decode(json_encode($transaction->details), true);
+            $transaction_details['payment_info']['txn_hash'] = $validated['txn_hash'];
+
+            DB::table($transaction->getTable())->where('id', $transaction->id)->update([
+                'details'       => json_encode($transaction_details),
+                'status'        => global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT,
+            ]);
+
+            DB::commit();
+
+        }catch(Exception $e) {
+            DB::rollback();
+            return back()->with(['error' => ['Something went wrong! Please try again']]);
+        }
+
+        return back()->with(['success' => ['Payment Confirmation Success!']]);
+    }
 }

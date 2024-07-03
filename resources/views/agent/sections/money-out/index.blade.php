@@ -15,7 +15,7 @@
         <div class="row mb-20-none">
             <div class="col-lg-7 col-md-6 mb-20">
                 <div class="dashboard-header-wrapper">
-                    <h3 class="title">Money Out</h3>
+                    <h3 class="title">{{ $page_title }}</h3>
                 </div>
                 <form class="card-form">
                     <div class="row">
@@ -25,19 +25,21 @@
                             </div>
                         </div>
                         <div class="col-lg-12 amount-input mb-20">
-                            <label>Amount</label>
-                            <input type="number" class="form--control" placeholder="0.00">
+                            <label>{{ __("Amount") }}</label>
+                            <input type="number" name="amount" class="form--control" placeholder="0.00">
                             <div class="curreny">
-                                <p>USD</p>
+                                <p>{{ get_default_currency_code() }}</p>
                             </div>
                         </div>
                         <div class="col-xl-12 col-lg-12 mb-20">
-                            <label>Payment Gateway<span>*</span></label>
-                            <select class="nice-select">
-                                <option value="0">Select Gateway</option>
-                                <option value="1">Paypal</option>
-                                <option value="2">Bank</option>
-                                <option value="3">Skrill</option>
+                            <label>{{ __("Payment Gateway") }}<span>*</span></label>
+                            <select class="nice-select" name="payment_gateway">
+                                <option selected disabled>{{ __("Select Gateway") }}</option>
+                                @foreach ($payment_gateway as $item)
+                                    <option value="{{ $item->id  }}"
+                                        data-currency="{{ $item->currency_code }}"
+                                        data-rate="{{ $item->rate }}">{{ $item->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">

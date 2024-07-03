@@ -21,4 +21,8 @@ class AgentProfit extends Model
         'created_at'        => 'date:Y-m-d',
         'updated_at'        => 'date:Y-m-d',
     ];
+
+    public function scopeAuth($q){
+        return $q->where('agent_id',auth()->user()->id);
+    }
 }

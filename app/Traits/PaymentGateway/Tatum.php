@@ -253,9 +253,9 @@ trait Tatum {
     public function getTatumAssets($gateway)
     {
         $credentials = $this->setTatumCredentials($gateway);
-
+        
         $result['wallets'] = $this->getTatumWallets($gateway, $credentials['request_credentials']);
-
+        
         return $gateway->cryptoAssets->where('type', PaymentGatewayConst::ASSET_TYPE_WALLET);
     }
 
@@ -267,20 +267,22 @@ trait Tatum {
         $new_coins = array_diff($gateway_supported_coins, $crypto_assets);
 
         $generate_wallets = [];
-
+        
         foreach($new_coins as $coin) {
             if($this->tatumRegisteredChains($coin)['status'] != true) continue;
 
             try{
                 $blockchain_wallet = $this->generateWalletFromTatum($coin);
                 $crypto_asset = $this->insertRecord($blockchain_wallet, $gateway);
+                
             }catch(Exception $e) {
+                
                 throw new Exception($e->getMessage());
             }
 
             $generate_wallets[$coin] = $blockchain_wallet;
         }
-
+       
         return $generate_wallets;
 
     }
@@ -292,6 +294,7 @@ trait Tatum {
      */
     public function insertRecord($blockchain_wallet_info, $gateway)
     {
+       
         $credentials            = $blockchain_wallet_info['credentials'];
         $coin_info              = $blockchain_wallet_info['coin_info'];
         $credentials['id']      = uniqid() . time();
@@ -299,7 +302,7 @@ trait Tatum {
             'balance'       => 0,
         ];
         $credentials['status']  = true; // project active address
-
+        
         // Insert record to database
         DB::beginTransaction();
         try{
@@ -313,9 +316,9 @@ trait Tatum {
             ]);
 
             $crypto_asset = CryptoAsset::find($inserted_id);
-
             // add subscription on address
             $subscription = $this->tatumSubscriptionForAccountTransaction($crypto_asset,$credentials['address']);
+            
             $credentials['subscribe_id']    = $subscription->id;
             
             $crypto_asset->update([
@@ -708,7 +711,7 @@ trait Tatum {
             $query_param['testnetType'] = $testnet;
             $endpoint = $endpoint . "?" . http_build_query($query_param);
         }
-
+       
         $response = Http::withHeaders([
             'Content-Type'  => 'application/json',
             'x-api-key'     => $this->request_credentials->token,
@@ -722,7 +725,7 @@ trait Tatum {
         ])->throw(function(Response $response, RequestException $exception) {
             throw new Exception($exception->getMessage());
         })->object();
-
+        
         return $response;
     }
 

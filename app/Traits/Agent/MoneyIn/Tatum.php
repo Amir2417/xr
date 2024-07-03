@@ -34,7 +34,7 @@ trait Tatum {
         $crypto_active_wallet = collect($crypto_asset->credentials->credentials ?? [])->where('status', true)->first();
         if(!$crypto_asset || !$crypto_active_wallet) throw new Exception("Gateway is not available right now! Please contact with system administration");
       
-        if($output['type'] == PaymentGatewayConst::TYPESENDREMITTANCE) {
+        if($output['type'] == PaymentGatewayConst::MONEYIN) {
             try{
                 $trx_id = $this->createTatumAddMoneyTransaction($output, $crypto_active_wallet);
             }catch(Exception $e) {
@@ -49,13 +49,13 @@ trait Tatum {
                     'address_info'      => [
                         'coin'          => $crypto_asset->coin,
                         'address'       => $crypto_active_wallet->address,
-                        'input_fields'  => $this->tatumUserTransactionRequirements(PaymentGatewayConst::TYPESENDREMITTANCE),
+                        'input_fields'  => $this->tatumUserTransactionRequirements(PaymentGatewayConst::MONEYIN),
                         5
                     ],
                 ];
             }
 
-            return redirect()->route('user.send.remittance.payment.crypto.address', $trx_id);
+            return redirect()->route('agent.moneyin.payment.crypto.address', $trx_id);
         }
 
         throw new Exception("No Action Executed!");
@@ -127,10 +127,10 @@ trait Tatum {
                         'currency'          => $output['currency']->currency_code,
                         'receiver_address'  => $crypto_active_wallet->address,
                         'receiver_qr_image' => $qr_image,
-                        'requirements'      => $this->tatumUserTransactionRequirements(PaymentGatewayConst::TYPESENDREMITTANCE),
+                        'requirements'      => $this->tatumUserTransactionRequirements(PaymentGatewayConst::MONEYIN),
                     ]
                 ]),
-                'status'                        => global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT,
+                'status'                        => global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT,
                 'created_at'                    => now(),
             ]);
 
@@ -145,7 +145,7 @@ trait Tatum {
 
     public function tatumUserTransactionRequirements($trx_type = null) {
         $requirements = [
-            PaymentGatewayConst::TYPESENDREMITTANCE => [
+            PaymentGatewayConst::MONEYIN => [
                 [
                     'type'          => 'text',
                     'label'         =>  "Txn Hash",

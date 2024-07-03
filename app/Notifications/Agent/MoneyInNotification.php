@@ -59,7 +59,7 @@ class MoneyInNotification extends Notification
                     ->subject("Money In")
                     ->line("Details Of Money In:")
                     ->line("Transaction Id: " .$trx_id)
-                    ->line("Received Amount: " . $data['amount']->will_get)
+                    ->line("Received Amount: " . $data->data->receive_amount)
                     ->line("Status: ". $status)
                     ->line("Date And Time: " .$dateTime)
                     ->line('Thank you for using our application!');

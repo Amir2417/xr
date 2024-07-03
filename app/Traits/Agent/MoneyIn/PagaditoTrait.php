@@ -54,7 +54,7 @@ trait PagaditoTrait {
             'base_url'     => $base_url,
             'mode'          => $mode,
         ];
-
+        
         $this->pagadito_gateway_credentials = $credentials;
 
         return $credentials;
@@ -84,7 +84,7 @@ trait PagaditoTrait {
         }
         if ($Pagadito->connect()) {
             
-            $Pagadito->add_detail(1,"Please Pay For  Transfer Money", $output['amount']->total_amount);
+            $Pagadito->add_detail(1,"Please Pay For Transfer Money", $output['amount']->total_amount);
             
             $Pagadito->set_custom_param("param1", "Valor de param1");
             $Pagadito->set_custom_param("param2", "Valor de param2");
@@ -112,7 +112,7 @@ trait PagaditoTrait {
                     $this->output['redirect_url']           = $getUrls->value;
                     return $this->get();
                 }
-
+                
                 return redirect($getUrls->value);
 
             }
@@ -181,7 +181,7 @@ trait PagaditoTrait {
             'creator_guard'         => get_auth_guard(),
             'user_record'           => $output['form_data']['identifier'],
         ];
-
+        
         // $this->deletePreTemp($output['form_data']['identifier']);
         return TemporaryData::create([
             'type'          => PaymentGatewayConst::PAGADITO,
@@ -194,8 +194,8 @@ trait PagaditoTrait {
     public function pagaditoSuccess($output = null) {
 
         $output['capture']              = $output['tempData']['data']->response ?? "";
-        $output['record_handler']       = 'insertRecordWeb';
-        $status = global_const()::REMITTANCE_STATUS_PENDING;
+        $output['record_handler']       = 'insertRecordAgent';
+        $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
         // need to insert new transaction in database
         try{
             $transaction_response = $this->createTransaction($output,$status);
