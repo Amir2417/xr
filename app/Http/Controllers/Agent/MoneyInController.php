@@ -48,7 +48,7 @@ class MoneyInController extends Controller
 
         $transactions               = Transaction::agentAuth()->with(['agent','currency'])
                                         ->where('type',PaymentGatewayConst::MONEYIN)
-                                        ->orderBy('id','desc')->latest()->take(3)->get();
+                                        ->latest()->take(3)->get();
         
         return view('agent.sections.money-in.index',compact(
             'page_title',
@@ -93,10 +93,15 @@ class MoneyInController extends Controller
 
         //agent profit calculation
         if($transaction_settings->agent_profit == true){
-            
-            $agent_fixed_commissions         = $transaction_settings->agent_fixed_commissions;
+            $agent_profit_status            = $transaction_settings->agent_profit;
+            $agent_fixed_commissions        = $transaction_settings->agent_fixed_commissions;
             $agent_percent_commissions      = ($transaction_settings->agent_percent_commissions * $amount) / 100;
-            $total_commissions               = $agent_fixed_commissions + $agent_percent_commissions; 
+            $total_commissions              = $agent_fixed_commissions + $agent_percent_commissions; 
+        }else{
+            $agent_profit_status            = false;
+            $agent_fixed_commissions        = 0;
+            $agent_percent_commissions      = 0;
+            $total_commissions              = 0; 
         }
 
         $data                       = [
@@ -115,6 +120,7 @@ class MoneyInController extends Controller
                     'name'          => $payment_gateway_currency->name
                 ],
                 'agent_profit'      => [
+                    'agent_profit_status'   => $agent_profit_status ?? false,
                     'fixed_commission'      => floatval($agent_fixed_commissions) ?? 0,
                     'percent_commission'    => floatval($agent_percent_commissions) ?? 0,
                     'total_commission'      => floatval($total_commissions) ?? 0,

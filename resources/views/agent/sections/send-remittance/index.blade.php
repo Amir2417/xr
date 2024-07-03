@@ -16,7 +16,7 @@
             <div class="col-xl-7 col-lg-7 mb-20">
                 <div class="custom-card mt-10">
                     <div class="dashboard-header-wrapper">
-                        <h4 class="title">Send Remittance</h4>
+                        <h4 class="title">{{ $page_title }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -26,69 +26,13 @@
                                         <p>Exchange Rate</p>
                                         <h3 class="title exchange_rate">1 USD = 1.52  AUD</h3>
                                     </div>
-                                    <div class="col-12 pb-20">
+                                    <div class="col-12">
                                         <div class="row">
-                                            <h3 class="fs-6">You send exactly</h3>
-                                            <div class="col-12 from-cruncy">
-                                                <div class="input-group">
-                                                    <input id="send_money" type="text" class="form--control w-100 number-input" name="send_money" value="100">
-                                                    
-                                                    <div class="ad-select">
-                                                        <div class="custom-select">
-                                                            <div class="custom-select-inner">
-                                                                <input type="hidden" name="sender_currency" class="sender_currency">
-                                                                <img src="assets/images/flag/us.svg" alt="img">
-                                                                <span class="custom-currency">USD</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="custom-select-wrapper">
-                                                            <div class="custom-select-search-box">
-                                                                <div class="custom-select-search-wrapper">
-                                                                    <button type="submit" class="search-btn"><i class="las la-search"></i></button>
-                                                                    <input type="text" class="form--control custom-select-search" placeholder="Search currency...">
-                                                                </div>
-                                                            </div>
-                                                            <div class="custom-select-list-wrapper">
-                                                                <ul class="custom-select-list">
-                                                                    <li class="custom-option active">
-                                                                        <img src="assets/images/flag/us.svg" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">United States dollar<span>
-                                                                        <span class="custom-currency">USD</span>
-                                                                    </li>
-                                                                    <li class="custom-option">
-                                                                        <img src="assets/images/flag/cn.svg" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">Canadian dollar</span>
-                                                                        <span class="custom-currency">CAD</span>
-                                                                    </li>
-                                                                    <li class="custom-option">
-                                                                        <img src="assets/images/flag/gm.svg" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">British pound</span>
-                                                                        <span class="custom-currency">GBP</span>
-                                                                    </li>
-                                                                    <li class="custom-option">
-                                                                        <img src="assets/images/flag/eth.webp" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">Euro</span>
-                                                                        <span class="custom-currency">EUR</span>
-                                                                    </li>
-                                                                    <li class="custom-option">
-                                                                        <img src="assets/images/flag/btc.jpg" alt="flag" class="custom-flag">
-                                                                        <span class="custom-country">Japanese yen</span>
-                                                                        <span class="custom-currency">JPY</span>
-                                                                    </li>
-                                                                    <li class="custom-option">
-                                                                            <img src="assets/images/flag/gm.svg" alt="flag" class="custom-flag">
-                                                                            <span class="custom-country">Won</span>
-                                                                            <span class="custom-currency">KRW</span>
-                                                                    </li>
-                                                                    <li class="custom-option">
-                                                                        <img src="assets/images/flag/gm.svg">
-                                                                        <span class="custom-country">Swedish krona</span>
-                                                                        <span class="custom-currency">SEK</span>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <div class="col-lg-12 amount-input mb-20">
+                                                <label>{{ __("You send exactly") }}</label>
+                                                <input type="number" name="amount" class="form--control amount" placeholder="0.00">
+                                                <div class="curreny">
+                                                    <p>{{ get_default_currency_code() }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -113,11 +57,10 @@
                                     </div>
                                     <div class="col-12 mb-4 pt-20">
                                         <div class="row">
-                                            <h3 class="fs-6">Recipient gets</h3>
+                                            <label>Recipient gets</label>
                                             <div class="col-12 from-cruncy">
                                                 <div class="input-group">
                                                     <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money" value="120">
-                                                    
                                                     <div class="ad-select">
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">
@@ -177,12 +120,13 @@
                                     </div>
                                     <div class="form-footer-content mt-10-none mb-20">
                                         <div class="sender-input">
-                                            <label>Sender</label>
+                                            <label>{{ __("Sender") }}</label>
                                             <div class="input-fild">
-                                                <select class="nice-select trx-type-select" name="type">
-                                                    <option class="custom-option">David Huk</option>
-                                                    <option class="custom-option">Biden Abet</option>
-                                                    <option class="custom-option">Nita</option>
+                                                <select class="nice-select trx-type-select" name="sender">
+                                                    <option selected disabled>{{ __("Select Sender") }}</option>
+                                                    @foreach ($senders ?? [] as $item)
+                                                        <option class="custom-option" value="{{ $item->id }}">{{ $item->fullname }}</option>
+                                                    @endforeach
                                                 </select>
                                                 <div class="add-sender">
                                                     <a href="add-sender.html" class="btn"><i class="las la-plus"></i> Add Sender</a>
@@ -193,12 +137,13 @@
                                     </div>
                                     <div class="form-footer-content mt-10-none mb-20">
                                         <div class="sender-input">
-                                            <label>Recipient</label>
+                                            <label>{{ __("Recipient") }}</label>
                                             <div class="input-fild">
-                                                <select class="nice-select trx-type-select" name="type">
-                                                    <option class="custom-option">David Huk</option>
-                                                    <option class="custom-option">Biden Abet</option>
-                                                    <option class="custom-option">Nita</option>
+                                                <select class="nice-select trx-type-select" name="recipient">
+                                                    <option class="custom-option" selected disabled>{{ __("Select Recipient") }}</option>
+                                                    @foreach ($recipients ?? [] as $item)
+                                                        <option class="custom-option" value="{{ $item->id }}">{{ $item->fullname }}</option>
+                                                    @endforeach
                                                 </select>
                                                 <div class="add-sender">
                                                     <a href="add-recipient.html" class="btn"><i class="las la-plus"></i> Add Recipient</a>

@@ -9,8 +9,10 @@
                             <i class="las la-arrow-up"></i>
                         </div>
                         <div class="dashboard-list-user-content">
-                            @if ($item->type == payment_gateway_const()::MONEYIN)
+                            @if (@$item->type == payment_gateway_const()::MONEYIN)
                                 <h4 class="title">{{ __('Money In using') }} {{ @$item->currency->name }}</h4>
+                            @elseif (@$item->type == payment_gateway_const()::MONEYOUT)
+                                <h4 class="title">{{ __('Money Out using') }} {{ @$item->currency->name }}</h4>
                             @endif
                             <span class="sub-title text--danger">{{ @$item->attribute }} 
                                 <span class="badge badge--warning ms-2">
@@ -138,21 +140,24 @@
                         <span>{{ get_amount(@$item->remittance_data->data->total_charge,@$item->remittance_data->data->base_currency->currency) }}</span>
                     </div>
                 </div>
-                <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-money-check-alt"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>{{ __("Will Get Amount") }}</span>
+                @if (@$item->type == payment_gateway_const()::MONEYIN)
+                    <div class="preview-list-item">
+                        <div class="preview-list-left">
+                            <div class="preview-list-user-wrapper">
+                                <div class="preview-list-user-icon">
+                                    <i class="las la-money-check-alt"></i>
+                                </div>
+                                <div class="preview-list-user-content">
+                                    <span>{{ __("Will Get Amount") }}</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="preview-list-right">
+                            <span>{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->currency) }}</span>
+                        </div>
                     </div>
-                    <div class="preview-list-right">
-                        <span>{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->currency) }}</span>
-                    </div>
-                </div>
+                @endif
+                
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">

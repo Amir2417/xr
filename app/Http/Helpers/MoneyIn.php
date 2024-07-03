@@ -385,10 +385,11 @@ class MoneyIn{
         }
         
         $inserted_id = $this->$record_handler($output,$status);
-        $this->agentprofits($user,$inserted_id,$output['form_data']['identifier']);
-
         $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
-
+        if($data->data->agent_profit->agent_profit_status == true){
+            $this->agentprofits($user,$inserted_id,$output['form_data']['identifier']);
+        }
+        
         AgentNotification::create([
             'agent_id'          => $user->id,
             'message'  => "Money In  (Payable amount: ".get_amount($output['amount']->total_amount)." ". $data->data->payment_gateway->currency .",

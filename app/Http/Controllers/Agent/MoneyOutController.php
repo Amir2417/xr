@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Helpers\PushNotificationHelper;
+use App\Models\Transaction;
 use App\Notifications\Agent\MoneyOutNotification;
 
 class MoneyOutController extends Controller
@@ -36,12 +37,17 @@ class MoneyOutController extends Controller
             $gateway->where('slug', PaymentGatewayConst::money_out_slug());
             $gateway->where('status', 1);
         })->get();
-        $transaction_settings   = TransactionSetting::where('slug',GlobalConst::MONEY_OUT)->first();
+        $transaction_settings   = TransactionSetting::where('slug',GlobalConst::MONEY_OUT)->where('status',true)->first();
+        $transactions           = Transaction::agentAuth()
+                                    ->with(['agent','currency'])
+                                    ->where('type',PaymentGatewayConst::MONEYOUT)
+                                    ->latest()->take(2)->get();
 
         return view('agent.sections.money-out.index',compact(
             'page_title',
             'payment_gateway',
-            'transaction_settings'
+            'transaction_settings',
+            'transactions'
         ));
     }
     /**
@@ -58,7 +64,7 @@ class MoneyOutController extends Controller
         $amount                     = $validated['amount'];
         $agent_wallet               = AgentWallet::auth()->first();
         if($amount > $agent_wallet->balance) return back()->with(['error' => ['Sorry! Insufficient Balance.']]);
-        $transaction_settings       = TransactionSetting::where('slug',GlobalConst::MONEY_IN)->where('status',true)->first();
+        $transaction_settings       = TransactionSetting::where('slug',GlobalConst::MONEY_OUT)->where('status',true)->first();
         if(!$transaction_settings){
             return back()->with(['error' => ['Transaction settings not found']]);
         }
@@ -77,13 +83,18 @@ class MoneyOutController extends Controller
         $total_charge               = $fixed_charge + $percent_charge;
         $total_amount               = $amount + $total_charge;
         $payable_amount             = $total_amount * $payment_gateway_rate;
-
+        
         //agent profit calculation
         if($transaction_settings->agent_profit == true){
-            
-            $agent_fixed_commissions         = $transaction_settings->agent_fixed_commissions;
+            $agent_profit_status            = $transaction_settings->agent_profit;
+            $agent_fixed_commissions        = $transaction_settings->agent_fixed_commissions;
             $agent_percent_commissions      = ($transaction_settings->agent_percent_commissions * $amount) / 100;
-            $total_commissions               = $agent_fixed_commissions + $agent_percent_commissions; 
+            $total_commissions              = $agent_fixed_commissions + $agent_percent_commissions; 
+        }else{
+            $agent_profit_status            = false;
+            $agent_fixed_commissions        = 0;
+            $agent_percent_commissions      = 0;
+            $total_commissions              = 0; 
         }
 
         $data                       = [
@@ -102,6 +113,7 @@ class MoneyOutController extends Controller
                     'name'          => $payment_gateway_currency->name
                 ],
                 'agent_profit'      => [
+                    'agent_profit_status'   => $agent_profit_status ?? false,
                     'fixed_commission'      => floatval($agent_fixed_commissions) ?? 0,
                     'percent_commission'    => floatval($agent_percent_commissions) ?? 0,
                     'total_commission'      => floatval($total_commissions) ?? 0,
@@ -167,7 +179,11 @@ class MoneyOutController extends Controller
         $trx_id                                     = generateTrxString("transactions","trx_id","MO",8);
         $agent_wallet                               = AgentWallet::auth()->first();
         try{
-            $this->insertRecord($trx_id,$temp_data,$agent_wallet,$get_values);
+            $insert_record_id = $this->insertRecord($trx_id,$temp_data,$agent_wallet,$get_values);
+            
+            if($temp_data->data->agent_profit->agent_profit_status == true){
+                $this->agentprofits($insert_record_id,$temp_data);
+            }
         }catch(Exception $e){
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
@@ -182,7 +198,7 @@ class MoneyOutController extends Controller
         
         DB::beginTransaction();
         try{
-            DB::table('transactions')->insert([
+            $id = DB::table('transactions')->insertGetId([
                 'agent_id'                          => auth()->user()->id,
                 'agent_wallet_id'                   => $agent_wallet->id,
                 'payment_gateway_currency_id'       => $temp_data->data->payment_gateway->id,
@@ -209,6 +225,7 @@ class MoneyOutController extends Controller
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+        return $id;
     }
     /**
      * Function for update wallet balance
@@ -253,5 +270,27 @@ class MoneyOutController extends Controller
         ])->send();
 
         DB::table("temporary_datas")->where("identifier",$data->identifier)->delete();
+    }
+    /**
+     * function for save agent profits
+     * @param $transaction_id,$data
+     */
+    function agentprofits($transaction_id,$data){
+        $user           = auth()->user();
+        DB::beginTransaction();
+        try{
+            DB::table('agent_profits')->insert([
+                'agent_id'              => $user->id,
+                'transaction_id'        => $transaction_id,
+                'fixed_commissions'     => $data->data->agent_profit->fixed_commission,
+                'percent_commissions'   => $data->data->agent_profit->percent_commission,
+                'total_commissions'     => $data->data->agent_profit->total_commission,
+                'created_at'            => now()
+            ]);
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+            throw new Exception(__("Something went wrong! Please try again."));
+        }
     }
 }
