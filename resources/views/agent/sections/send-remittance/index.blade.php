@@ -20,7 +20,8 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <form>       
+                            <form action="{{ setRoute('agent.send.remittance.submit') }}" method="POST">
+                                @csrf       
                                 <div class="banner-form">
                                     <div class="top mb-20">
                                         <p>{{ __("Exchange Rate") }}</p>
@@ -135,7 +136,7 @@
                                         <div class="transaction-type-select">
                                             <select class="nice-select trx-type-select" name="transaction_type"> 
                                                 @forelse ($transaction_settings as $item)
-                                                    <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ __($item->title ?? '')}}</option>
+                                                    <option class="custom-option" value="{{ $item->id }}" data-item='{{ json_encode($item) }}'>{{ __($item->title ?? '')}}</option>
                                                 @empty
                                                     <option>{{ __("No data found") }}</option>
                                                 @endforelse

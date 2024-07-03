@@ -36,4 +36,11 @@ class SendRemittanceController extends Controller
             'receiver_currency_first'
         ));
     }
+    /**
+     * Method for send remittance submit information
+     * @param Illuminate\Http\Request $request 
+     */
+    public function submit(Request $request){
+        return back()->with(['error' => ['Under mentainance mood']]);
+    }
 }

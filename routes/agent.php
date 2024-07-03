@@ -34,6 +34,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //send remittance
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::post('submit','submit')->name('submit');
     });
     //moneyin
     Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
