@@ -18,7 +18,7 @@ class MoneyOutController extends Controller
     public function index(){
         $page_title             = "Money Out";
         $payment_gateway        = PaymentGatewayCurrency::whereHas('gateway', function ($gateway) {
-            $gateway->where('type', PaymentGatewayConst::MANUAL);
+            $gateway->where('slug', PaymentGatewayConst::money_out_slug());
             $gateway->where('status', 1);
         })->get();
         $transaction_settings   = TransactionSetting::where('slug',GlobalConst::MONEY_OUT)->first();

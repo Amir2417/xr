@@ -548,6 +548,12 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="sidebar-menu-item @if ($current_url == setRoute('admin.payment.gateway.view',['money-out','manual'])) active @endif">
+                        <a href="{{ setRoute('admin.payment.gateway.view',['money-out','manual']) }}">
+                            <i class="menu-icon las la-print"></i>
+                            <span class="menu-title">{{ __("Money Out") }}</span>
+                        </a>
+                    </li>
                 @endif
 
                 {{-- Notifications --}}

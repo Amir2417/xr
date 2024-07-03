@@ -43,11 +43,17 @@ class PaymentGatewaysController extends Controller
                     'automatic' => 'automaticRemittanceView',
                     'manual'    => 'manualRemittanceView',
                 ],
+                'money-out'     => [
+                    'manual'    => 'manualMoneyOutView',
+                ],
             ],
             'edit'  => [
                 'remittance-gateway' => [
                     'automatic' => 'automaticRemittanceEdit',
                     'manual'    => 'manualRemittanceEdit',
+                ],
+                'money-out'     => [
+                    'manual'    => 'manualMoneyOutEdit',
                 ],
             ],
             'update'    => [
@@ -55,16 +61,25 @@ class PaymentGatewaysController extends Controller
                     'automatic' => 'automaticRemittanceUpdate',
                     'manual'    => 'manualRemittanceUpdate',
                 ],
+                'money-out'     => [
+                    'manual'    => 'manualMoneyOutUpdate',
+                ],
             ],
             'store'     => [
                 'remittance-gateway' => [
                     'automatic' => 'automaticRemittanceStore',
                     'manual'    => 'manualRemittanceStore',
                 ],
+                'money-out'     => [
+                    'manual'    => 'manualMoneyOutStore',
+                ],
             ],
             'create'    => [
                 'remittance-gateway'   => [
                     'manual'    => 'manualRemittanceCreate',
+                ],
+                'money-out'     => [
+                    'manual'    => 'manualMoneyOutCreate',
                 ],
             ],
         ];
@@ -118,7 +133,258 @@ class PaymentGatewaysController extends Controller
             'payment_gateways',
         ));
     }
+    /**
+     * Display Money Out Manual Gateways
+     * @return view
+     */
+    public function manualMoneyOutView() {
+        $page_title = "Money Out";
+        $payment_gateways = PaymentGateway::moneyOut()->manual()->get();
+        return view('admin.sections.payment-gateways.money-out.manual.index',compact(
+            'page_title',
+            'payment_gateways',
+        ));
+    }
+    /**
+     * Function for Create Add New Manual Payment Gateway Page for Money Out
+     * @return view
+     */
+    public function manualMoneyOutCreate() {
+        $page_title = "Money Out Add";
+        return view('admin.sections.payment-gateways.money-out.manual.create',compact(
+            'page_title',
+        ));
+    }
+    /**
+     * Function for Store New Manual Payment Gateway for Money Out
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function manualMoneyOutStore(Request $request) {
 
+        $gateway_name = $request->gateway_name;
+        $validator = Validator::make($request->all(),[
+            'gateway_name'          => ['required','string','max:60',Rule::unique('payment_gateways','alias')->where(function($query) use ($gateway_name) {
+                $alias = Str::slug($gateway_name);
+                $query->where('slug',PaymentGatewayConst::money_out_slug())->where('type',PaymentGatewayConst::MANUAL)->where('alias',$alias);
+            })],
+            'desc'                  => 'nullable|string|max:10000',
+            'label'                 => 'nullable|array',
+            'label.*'               => 'nullable|string|max:50',
+            'input_type'            => 'nullable|array',
+            'input_type.*'          => 'nullable|string|max:20',
+            'min_char'              => 'nullable|array',
+            'min_char.*'            => 'nullable|numeric',
+            'max_char'              => 'nullable|array',
+            'max_char.*'            => 'nullable|numeric',
+            'field_necessity'       => 'nullable|array',
+            'field_necessity.*'     => 'nullable|string|max:20',
+            'file_extensions'       => 'nullable|array',
+            'file_extensions.*'     => 'nullable|string|max:255',
+            'file_max_size'         => 'nullable|array',
+            'file_max_size.*'       => 'nullable|numeric',
+            'image'                 => 'nullable|image|mimes:jpg,png,svg,jpeg,webp',
+            'currency_code'         => 'required|string|max:10',
+        ]);
+
+        $validator->after(function ($validator) use ($gateway_name) {
+            // Search Gateway is unique or not
+            if(PaymentGateway::moneyOut()->manual()->gateway(Str::slug($gateway_name))->exists()) {
+                $validator->errors()->add(
+                    'gateway_name', 'The gateway name has already been taken.'
+                );
+            }
+        });
+
+        $validated = $validator->validate();
+
+        $validated['alias']                 = Str::slug($validated['gateway_name']);
+        $validated['name']                  = $validated['gateway_name'];
+        $validated['slug']                  = Str::slug(PaymentGatewayConst::MONEYOUT);
+        $validated['title']                 = $validated['name'] . " " . "Gateway";
+        $validated['type']                  = PaymentGatewayConst::MANUAL;
+        $validated['last_edit_by']          = Auth::user()->id;
+        $validated['supported_currencies']  = [$validated['currency_code']];
+
+        $last_record_of_max_code = PaymentGateway::max('code') ?? 100;
+        $validated['code']  = set_payment_gateway_code($last_record_of_max_code);
+
+        $validated['input_fields']      = decorate_input_fields($validated);
+
+        $validated = Arr::except($validated,['gateway_name','label','input_type','min_char','max_char','field_necessity','file_extensions','file_max_size','currency_code']);
+
+        // validation payment gateway currencies
+        $currency_validator = Validator::make($request->all(),[
+            'min_limit'         => 'nullable|numeric',
+            'max_limit'         => 'nullable|numeric',
+            'fixed_charge'      => 'nullable|numeric',
+            'percent_charge'    => 'nullable|numeric',
+            'rate'              => 'required|numeric',
+            'currency_code'     => 'required|string|max:10',
+            'currency_symbol'   => 'nullable|string|max:10',
+
+        ]);
+
+        $currency_validated = $currency_validator->validate();
+        $currency_validated['name'] = $validated['name'] . " " . $currency_validated['currency_code'];
+        $currency_validated['alias'] = PaymentGatewayConst::money_out_slug() . "-" . Str::slug($currency_validated['name'] . " " . PaymentGatewayConst::MANUAL);
+
+        // upload image if have
+        if($request->hasFile('image')) {
+            try{
+                $image = get_files_from_fileholder($request,'image');
+                $upload_image = upload_files_from_path_dynamic($image,'payment-gateways');
+                $validated['image'] = $upload_image;
+            }catch(Exception $e) {
+                return back()->with(['error' => ['Image upload failed! Please try again.']]);
+            }
+        }
+
+        // Insert new manual payment gateway
+        try{
+            $validated['input_fields']  = json_encode($validated['input_fields']);
+            $validated['supported_currencies'] = json_encode($validated['supported_currencies']);
+            $payment_gateway_id = PaymentGateway::insertGetId($validated);
+            $currency_validated['payment_gateway_id'] = $payment_gateway_id;
+        }catch(Exception $e) {
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+
+        // insert gateway currency
+        try{
+            PaymentGatewayCurrency::create($currency_validated);
+        }catch(Exception $e) {
+            // if fails delete the payment gateway that added lastly
+            PaymentGateway::find($payment_gateway_id)->delete();
+            // Delete payment gateway image
+            $image_link = $validated['image'] ?? null;
+            if($image_link) {
+                $image_link = get_files_path('payment-gateways') . "/" . $validated['image'];
+                delete_file($image_link);
+            }
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+
+        return redirect()->route('admin.payment.gateway.view',['money-out','manual'])->with(['success' => ['Payment gateway added successfully!']]);
+    }
+    /**
+     * Display The Edit Page of Money Out Manual Gateway
+     * @return view
+     */
+    public function manualMoneyOutEdit($alias) {
+        $page_title = "Money Out Edit";
+        $payment_gateway = PaymentGateway::moneyOut()->manual()->gateway($alias)->firstOrFail();
+        return view('admin.sections.payment-gateways.money-out.manual.edit',compact(
+            'page_title',
+            'payment_gateway',
+        ));
+    }
+    /**
+     * Function for Update Manual Money Out Payment Gateway Information Based On Alias
+     * @param  \Illuminate\Http\Request  $request
+     * @param string $alias
+     */
+    public function manualMoneyOutUpdate(Request $request,$alias) {
+        // Find gateway is available or not
+        $gateway = PaymentGateway::moneyOut()->manual()->gateway($alias)->first();
+        if(!$gateway) {
+            return back()->with(['error' => ['Oops! Payment gateway not found!']]);
+        }
+        // Validate Data
+        $gateway_name = $request->gateway_name;
+        $validator = Validator::make($request->all(),[
+            'gateway_name'          => ['required','string','max:60',Rule::unique('payment_gateways','alias')->where(function($query) use ($gateway_name, $gateway) {
+                $alias = Str::slug($gateway_name);
+                $query->whereNot('id',$gateway->id)->where('slug',PaymentGatewayConst::money_out_slug())->where('type',PaymentGatewayConst::MANUAL)->where('alias',$alias);
+            })],
+            'desc'                  => 'nullable|string|max:10000',
+            'label'                 => 'nullable|array',
+            'label.*'               => 'nullable|string|max:50',
+            'input_type'            => 'nullable|array',
+            'input_type.*'          => 'nullable|string|max:20',
+            'min_char'              => 'nullable|array',
+            'min_char.*'            => 'nullable|numeric',
+            'max_char'              => 'nullable|array',
+            'max_char.*'            => 'nullable|numeric',
+            'field_necessity'       => 'nullable|array',
+            'field_necessity.*'     => 'nullable|string|max:20',
+            'file_extensions'       => 'nullable|array',
+            'file_extensions.*'     => 'nullable|string|max:255',
+            'file_max_size'         => 'nullable|array',
+            'file_max_size.*'       => 'nullable|numeric',
+            'image'                 => 'nullable|image|mimes:jpg,png,svg,jpeg,webp',
+            'currency_code'         => 'required|string|max:10',
+        ]);
+
+        $validator->after(function ($validator) use ($gateway_name,$gateway) {
+            // Search Gateway is unique or not
+            if(PaymentGateway::whereNot(function($query) use ($gateway) {
+                $query->where('id',$gateway->id);
+            })->where(function($query) use ($gateway_name){
+                $alias = Str::slug($gateway_name);
+                $query->where('slug',PaymentGatewayConst::money_out_slug())
+                ->where('type',PaymentGatewayConst::MANUAL)
+                ->where('alias',$alias);
+            })->exists()) {
+                $validator->errors()->add(
+                    'gateway_name', 'The gateway name has already been taken.'
+                );
+            }
+        });
+
+        $validated = $validator->validate();
+
+        $validated['alias']                 = Str::slug($validated['gateway_name']);
+        $validated['name']                  = $validated['gateway_name'];
+        $validated['title']                 = $validated['name'] . " " . "Gateway";
+        $validated['last_edit_by']          = Auth::user()->id;
+        $validated['supported_currencies']  = [$validated['currency_code']];
+
+        $validated['input_fields']          = decorate_input_fields($validated);
+        $validated = Arr::except($validated,['gateway_name','label','input_type','min_char','max_char','field_necessity','file_extensions','file_max_size']);
+
+        // validation payment gateway currencies
+        $currency_validator = Validator::make($request->all(),[
+            'min_limit'         => 'nullable|numeric',
+            'max_limit'         => 'nullable|numeric',
+            'fixed_charge'      => 'nullable|numeric',
+            'percent_charge'    => 'nullable|numeric',
+            'rate'              => 'required|numeric',
+            'currency_code'     => 'required|string|max:10',
+            'currency_symbol'   => 'nullable|string|max:10',
+
+        ]);
+
+        $currency_validated = $currency_validator->validate();
+        $currency_validated['name'] = $validated['name'] . " " . $currency_validated['currency_code'];
+        $currency_validated['alias'] = PaymentGatewayConst::money_out_slug() . "-" . Str::slug($currency_validated['name'] . " " . PaymentGatewayConst::MANUAL);
+
+        // upload image if have
+        if($request->hasFile('image')) {
+            try{
+                $image = get_files_from_fileholder($request,'image');
+                $upload_image = upload_files_from_path_dynamic($image,'payment-gateways',$gateway->image);
+                $validated['image'] = $upload_image;
+            }catch(Exception $e) {
+                return back()->with(['error' => ['Image upload failed! Please try again.']]);
+            }
+        }
+
+        // Update Payment Gateway Information
+        try{
+            $gateway->update($validated);
+        }catch(Exception $e) {
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+
+        // Update Gateway Currency Information
+        try{
+            $gateway->currencies->first()->update($currency_validated);
+        }catch(Exception $e) {
+            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+
+        return redirect()->route('admin.payment.gateway.view',['money-out','manual'])->with(['success' => ['Payment gateway updated successfully!']]);
+    }
 
     /**
      * Distribute The Specific Function Based on slug and type for View
