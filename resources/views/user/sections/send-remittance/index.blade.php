@@ -465,8 +465,8 @@
             let fixedCharge             = selectedType.fixed_charge;
             let percentCharge           = selectedType.percent_charge;
             let totalPercentCharge      = parseFloat(findPercentCharge) * parseFloat(percentCharge);
-            let totalCharge   = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
-            var totalChargeAmount  = totalCharge * senderCurrencyRate;
+            let totalCharge             = parseFloat(fixedCharge) + parseFloat(totalPercentCharge);
+            var totalChargeAmount       = totalCharge * senderCurrencyRate;
 
             let payableAmount = parseFloat(enterAmount) + parseFloat(totalChargeAmount);
             if(enterAmount == "") enterAmount = 0;

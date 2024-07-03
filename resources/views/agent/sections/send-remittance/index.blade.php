@@ -23,8 +23,8 @@
                             <form>       
                                 <div class="banner-form">
                                     <div class="top mb-20">
-                                        <p>Exchange Rate</p>
-                                        <h3 class="title exchange_rate">1 USD = 1.52  AUD</h3>
+                                        <p>{{ __("Exchange Rate") }}</p>
+                                        <h3 class="title exchange-rate"></h3>
                                     </div>
                                     <div class="col-12">
                                         <div class="row">
@@ -39,32 +39,30 @@
                                     </div>
                                     <div class="exchange-charge d-flex justify-content-between">
                                         <div class="left-side">
-                                        <p><i class="las la-dot-circle"></i> Fees &amp; Charges</p>
+                                        <p><i class="las la-dot-circle"></i> {{ __("Fees & Charges") }}</p>
                                         </div>
                                         <div class="right-side">
-                                            <input type="hidden" name="fees" id="charge">
-                                            <p id="fees">- 3.00 USD</p>
+                                            <p id="fees"></p>
                                         </div>
                                     </div>
                                     <div class="exchange-charge d-flex justify-content-between">
                                         <div class="left-side">
-                                            <p><i class="las la-dot-circle"></i> Amount will convert</p>
+                                            <p><i class="las la-dot-circle"></i> {{ __("Amount will convert") }}</p>
                                         </div>
                                         <div class="right-side">
-                                            <input type="hidden" name="convert_amount" id="convert--amount">
-                                            <p id="convert-amount">97.00 US</p>
+                                            <p class="convert-amount"></p>
                                         </div>
                                     </div>
                                     <div class="col-12 mb-4 pt-20">
                                         <div class="row">
-                                            <label>Recipient gets</label>
+                                            <label>{{ __("Recipient gets") }}</label>
                                             <div class="col-12 from-cruncy">
                                                 <div class="input-group">
-                                                    <input id="receive_money" type="text" class="form--control w-100 number-input" name="receive_money" value="120">
+                                                    <input id="receive-money" type="text" class="form--control w-100 number-input" name="receive_money" readonly>
                                                     <div class="ad-select">
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">
-                                                                <input type="hidden" name="receiver_currency" class="receiver_currency" value="120">
+                                                                <input type="hidden" name="receiver_currency" class="receiver_currency">
                                                                 <img src="{{ get_image(@$receiver_currency_first->flag,'currency-flag') }}" alt="">
                                                                 <span class="custom-currency">{{ @$receiver_currency_first->code }}</span>
                                                             </div>
@@ -135,7 +133,7 @@
                                             <label>{{ __("Receiving Method") }}</label>
                                         </div>
                                         <div class="transaction-type-select">
-                                            <select class="nice-select trx-type-select" name="type"> 
+                                            <select class="nice-select trx-type-select" name="transaction_type"> 
                                                 @forelse ($transaction_settings as $item)
                                                     <option class="custom-option" value="{{ $item->title }}" data-item='{{ json_encode($item) }}'>{{ __($item->title ?? '')}}</option>
                                                 @empty
@@ -156,7 +154,7 @@
             <div class="col-xl-5 col-lg-5 mb-20">
                 <div class="custom-card mt-10">
                     <div class="dashboard-header-wrapper">
-                        <h4 class="title">Summary</h4>
+                        <h4 class="title">{{ __("Summary") }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="preview-list-wrapper">
@@ -167,12 +165,12 @@
                                             <i class="las la-receipt"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Sending Amount</span>
+                                            <span>{{ __("Sending Amount") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--base">100 USD</span>
+                                    <span class="text--base sending-amount"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -182,12 +180,12 @@
                                             <i class="las la-exchange-alt"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Exchange Rate</span>
+                                            <span>{{ __("Exchange Rate") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span>1 USD = 462.88 NGN</span>
+                                    <span class="exchange-rate"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -197,12 +195,12 @@
                                             <i class="las la-battery-half"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Total Fees & Charges</span>
+                                            <span>{{ __("Total Fees & Charges") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--warning">3.00 USD</span>
+                                    <span class="text--warning total-charge"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -212,12 +210,12 @@
                                             <i class="lab la-get-pocket"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>Amount We’ll Convert</span>
+                                            <span>{{ __("Amount We’ll Convert") }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--danger">0.57 USD</span>
+                                    <span class="text--danger convert-amount"></span>
                                 </div>
                             </div>
                             <div class="preview-list-item">
@@ -227,12 +225,12 @@
                                             <i class="las la-money-check-alt"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span><b>Will Get Amount</b></span>
+                                            <span><b>{{ __("Will Get Amount") }}</b></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-list-right">
-                                    <span class="text--info"><b>44899.36 NGN</b></span>
+                                    <span class="text--info receive-amount"><b></b></span>
                                 </div>
                             </div>
                         </div>
@@ -244,7 +242,7 @@
     <div class="dashboard-list-area mt-60">
         <div class="log-type d-flex justify-content-between align-items-center mb-40">
             <div class="dashboard-header-wrapper">
-                <h4 class="title">Send Remittance Log</h4>
+                <h4 class="title">{{ __("Send Remittance Log") }}</h4>
             </div>
             <div class="view-more-log">
                 <a href="transaction.html" type="button" class="btn--base">View More</a>
@@ -558,5 +556,82 @@
             }
         });
     });
+</script>
+<script>
+    $(document).ready(function () {
+        $(".amount").val(100);
+        var amount              = $('.amount').val();
+        var transactionType     = JSON.parse($("select[name=transaction_type] :selected").attr('data-item'));
+        run(amount,JSON.parse(selectedActiveItem("input[name=receiver_currency]")),transactionType);
+    });
+
+    $(".amount").keyup(function(){
+        var amount              = $(this).val(); 
+        var transactionType     = JSON.parse($("select[name=transaction_type] :selected").attr('data-item'));
+        run(amount,JSON.parse(selectedActiveItem("input[name=receiver_currency]")),transactionType);
+    });
+
+    $(document).on("click",".custom-option",function() {
+        
+        var transactionType     = JSON.parse($("select[name=transaction_type] :selected").attr('data-item'));
+        var amount              = $('.amount').val();
+        if(amount == '' || amount == null){
+            amount  = 0;
+        }
+        run(amount,JSON.parse(selectedActiveItem("input[name=receiver_currency]")),transactionType);
+    });
+    // get receiver currency data
+    function selectedActiveItem(input) {
+        var adSelect        = $(input).parents(".ad-select");
+        var selectedItem    = adSelect.find(".custom-option.active");
+
+        if(selectedItem.length > 0) {
+            return selectedItem.attr("data-item");
+        }
+        return false;
+    }
+
+    // for run function
+    function run(amount,receiver,transactionType){
+        var baseRate            = "{{ get_default_currency_rate() }}";
+        var baseCurrency        = "{{ get_default_currency_code() }}";
+        var fixedCharge         = transactionType.fixed_charge;
+        var percentCharge       = (parseFloat(transactionType.percent_charge) * parseFloat(amount)) / 100;
+        var totalCharge         = parseFloat(fixedCharge) + parseFloat(percentCharge);
+        var exchangeRate        = receiver.rate;
+        var convertAmount       = amount - totalCharge;
+        var receiveAmount       = convertAmount * exchangeRate;
+
+        if(amount != 0){
+            var intervals       = transactionType.intervals;
+            $.each(intervals,function(index,item){
+                if(parseFloat(amount) >= item.min_limit  && parseFloat(amount) <= item.max_limit) {
+                    fixedCharge     = item.fixed;
+                    percentCharge   = (parseFloat(item.percent) * parseFloat(amount)) / 100;
+                    totalCharge     = parseFloat(fixedCharge) + parseFloat(percentCharge);
+                    convertAmount   = amount - totalCharge;
+                    payableAmount   = parseFloat(amount) + parseFloat(totalCharge);
+                    receiveAmount   = convertAmount * exchangeRate;
+                }
+            });
+            $("#fees").text("-" + parseFloat(totalCharge) + " " + baseCurrency);
+            $(".convert-amount").text(parseFloat(convertAmount.toFixed(2)) + " " + baseCurrency);
+            $(".exchange-rate").text(parseFloat(baseRate) + " " + baseCurrency + " " + "=" + " " + parseFloat(exchangeRate) + " " + receiver.code);
+            $("#receive-money").val(parseFloat(receiveAmount.toFixed(2)));
+            $('.sending-amount').text(amount + " " + baseCurrency);
+            $('.total-charge').text(totalCharge + " " + baseCurrency);
+            $(".receive-amount").text(parseFloat(receiveAmount.toFixed(2)) + " " + receiver.code);
+        }else{
+            $("#fees").text("");
+            $(".convert-amount").text("");
+            $(".exchange-rate").text("");
+            $("#receive-money").val("");
+            $('.sending-amount').text("");
+            $('.total-charge').text("");
+            $(".receive-amount").text("");
+        }
+
+    }
+
 </script>
 @endpush

@@ -8047,7 +8047,7 @@ input[type=number] {
 
 .amount-input input {
   position: relative;
-  padding-right: 60px;
+  padding-right: 65px;
 }
 .amount-input .curreny {
   position: absolute;
@@ -8056,7 +8056,7 @@ input[type=number] {
   color: #ffffff;
   padding: 11px 16px;
   border-radius: 0px 10px 10px 0px;
-  right: 0px;
+  right: 12px;
 }
 
 .card-logo {
