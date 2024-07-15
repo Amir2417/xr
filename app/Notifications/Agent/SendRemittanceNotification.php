@@ -2,23 +2,29 @@
 
 namespace App\Notifications\Agent;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class SendRemittanceNotification extends Notification
 {
     use Queueable;
+    public $user;
+    public $data;
+    public $trx_id;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user,$data,$trx_id)
     {
-        //
+        $this->user     = $user;
+        $this->data     = $data;
+        $this->trx_id   = $trx_id;
     }
 
     /**
@@ -40,10 +46,24 @@ class SendRemittanceNotification extends Notification
      */
     public function toMail($notifiable)
     {
+        $user       = $this->user;
+        $data       = $this->data;
+        $trx_id     = $this->trx_id;
+        $date       = Carbon::now();
+        $dateTime   = $date->format('Y-m-d h:i:s A');
+        $status     = "Pending";
+      
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                ->greeting("Hello ".$user->fullname." !")
+                ->subject("Send Remittance")
+                ->line("Details Of Send Remittance:")
+                ->line("Transaction Id: " .$trx_id)
+                ->line("Request Amount: " . $data['amount'] . ' ' .$data['base_currency']['code'])
+                ->line("Fees: " . $data['total_charge'] . '' .$data['base_currency']['code'])
+                ->line("Receive Amount: " . $data['receive_amount'] . '' .$data['receiver_currency']['code'])
+                ->line("Status: ". $status)
+                ->line("Date And Time: " .$dateTime)
+                ->line('Thank you for using our application!');
     }
 
     /**

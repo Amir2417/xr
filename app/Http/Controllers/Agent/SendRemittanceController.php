@@ -3,19 +3,26 @@
 namespace App\Http\Controllers\Agent;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\TemporaryData;
 use App\Constants\GlobalConst;
 use App\Models\Admin\Currency;
 use App\Models\Agent\MySender;
 use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use App\Models\Agent\AgentRecipient;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\AdminNotification;
 use App\Models\Admin\TransactionSetting;
-use App\Models\TemporaryData;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Http\Helpers\PushNotificationHelper;
+use App\Notifications\Agent\SendRemittanceNotification;
 
 class SendRemittanceController extends Controller
 {
@@ -142,6 +149,10 @@ class SendRemittanceController extends Controller
         
         try{
             $insert_record_id         = $this->insertRecord($data,$agent_wallet);
+          
+            if($transaction_settings->agent_profit == true){
+                $this->agentprofits($insert_record_id,$data);
+            }
         }catch(Exception $e){
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
         }
@@ -154,30 +165,35 @@ class SendRemittanceController extends Controller
         $trx_id = generateTrxString("transactions","trx_id","SR",8);
         DB::beginTransaction();
         try{
-            $id                     = DB::table('transactions')->insertGetId([
-                'agent_id'          => auth()->user()->id,
-                'agent_wallet_id'   => $agent_wallet->id,
-                'type'              => PaymentGatewayConst::TYPESENDREMITTANCE,
-                'remittance_data'   => json_encode($data),
-                'trx_id'            => $trx_id,
-                'request_amount'                => $data->amount,
-                'exchange_rate'                 => $data->exchange_rate,
-                'payable'                       => $data->amount,
-                'fees'                          => $data->total_charge,
-                'convert_amount'                => $data->convert_amount,
-                'will_get_amount'               => $data->receive_amount,
+           
+            $id                                 = DB::table('transactions')->insertGetId([
+                'agent_id'                      => auth()->user()->id,
+                'agent_wallet_id'               => $agent_wallet->id,
+                'type'                          => PaymentGatewayConst::TYPESENDREMITTANCE,
+                'remittance_data'               => json_encode([
+                    'data'                          => $data,
+                ]),
+                'trx_id'                        => $trx_id,
+                'request_amount'                => $data['amount'],
+                'exchange_rate'                 => $data['exchange_rate'],
+                'payable'                       => $data['amount'],
+                'fees'                          => $data['total_charge'],
+                'convert_amount'                => $data['convert_amount'],
+                'will_get_amount'               => $data['receive_amount'],
                 'remark'                        => 'Send Remittance Request send to Admin.',
                 'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
                 'attribute'                     => PaymentGatewayConst::SEND,
                 'created_at'                    => now(),
             ]);
-            
-            $this->updateWalletBalance($agent_wallet,$data->amount);
+           
+            $this->updateWalletBalance($agent_wallet,$data['amount']);
             $this->insertNotificationData($trx_id,$data);
+            DB::commit();
         }catch(Exception $e){
             DB::rollback();
             throw new Exception($e->getMessage());
         }
+        return $id;
     }
     /**
      * Method for update wallet balance
@@ -188,4 +204,61 @@ class SendRemittanceController extends Controller
             'balance' => $agent_wallet->balance,
         ]);
     }
+    /**
+     * Function for insert notification data
+     * @param $data
+     */
+    function insertNotificationData($trx_id,$data){
+        $basic_setting      = BasicSettings::first();
+        $user               = auth()->user();
+        if( $basic_setting->agent_email_notification == true){
+            Notification::route("mail",$user->email)->notify(new SendRemittanceNotification($user,$data,$trx_id));
+        }
+        
+        //agent notification
+        AgentNotification::create([
+            'agent_id'          => $user->id,
+            'message'           => "Send Remittance (Payable amount: ".get_amount($data['amount'])." ". $data['base_currency']['code'] .") Successfully Send.", 
+        ]);
+        // for admin notification
+        $notification_message = [
+            'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+            'time'      => Carbon::now()->diffForHumans(),
+            'image'     => get_image($user->image,'agent-profile'),
+        ];
+        AdminNotification::create([
+            'type'      => "Send Remittance",
+            'admin_id'  => 1,
+            'message'   => $notification_message,
+        ]);
+        // (new PushNotificationHelper())->prepare([1],[
+        //     'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+        //     'desc'  => "",
+        //     'user_type' => 'admin',
+        // ])->send();
+
+    }
+    /**
+     * function for save agent profits
+     * @param $transaction_id,$data
+     */
+    function agentprofits($transaction_id,$data){
+        $user           = auth()->user();
+        DB::beginTransaction();
+        try{
+            DB::table('agent_profits')->insert([
+                'agent_id'              => $user->id,
+                'transaction_id'        => $transaction_id,
+                'fixed_commissions'     => $data['agent_profit']['fixed_commission'],
+                'percent_commissions'   => $data['agent_profit']['percent_commission'],
+                'total_commissions'     => $data['agent_profit']['total_commission'],
+                'created_at'            => now()
+            ]);
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+            throw new Exception(__("Something went wrong! Please try again."));
+        }
+    }
+
 }
