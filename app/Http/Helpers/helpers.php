@@ -1684,7 +1684,13 @@ function getPaymentCredentials($credentials,$label){
 function get_intervals_data($amount,$receiving_method){
     foreach($receiving_method->intervals as $intervals){
         if($amount >= $intervals->min_limit && $amount <= $intervals->max_limit){
-            return $intervals;
+            $data = [
+                'fixed_charge'      => $intervals->fixed,
+                'percent_charge'    => $intervals->percent,
+                'min_limit'         => $intervals->min_limit,
+                'max_limit'         => $intervals->max_limit,
+            ];
+            return $data;
         }
     }
     if($amount >= $receiving_method->min_limit && $amount <= $receiving_method->max_limit){

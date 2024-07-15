@@ -23,6 +23,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::get('dashboard','index')->name('dashboard');
         Route::post('logout','logout')->name('logout');
         Route::post('get-user-data','getUserData')->name('get.user.data');
+        Route::post('get-recipient-data','getRecipientData')->name('get.recipient.data');
     });
     //agent profile 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function(){
@@ -35,13 +36,13 @@ Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
+        Route::get('preview/{identifier}','preview')->name('preview');
+        Route::post('confirm/{identifier}','confirm')->name('confirm');
     });
     //moneyin
     Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
-        Route::get('preview/{identifier}','preview')->name('preview');
-        Route::post('confirm}','confirm')->name('confirm');
 
 
         //paypal

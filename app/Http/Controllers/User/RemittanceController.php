@@ -342,6 +342,7 @@ class RemittanceController extends Controller
                 'created_at'                    => now(),
                 'callback_ref'                  => $output['callback_ref'] ?? null,
             ]);
+            
             if($data->data->coupon_id != 0){
                 if($data->data->coupon_type == GlobalConst::COUPON){
                     $coupon_id  = $data->data->coupon_id;
@@ -361,9 +362,11 @@ class RemittanceController extends Controller
                     ]);
                 }
             }
+           
             if( $basic_setting->email_notification == true){
                 Notification::route("mail",$user->email)->notify(new manualEmailNotification($user,$data,$trx_id));
             }
+            
             $notification_message = [
                 'title'     => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
                 'time'      => Carbon::now()->diffForHumans(),
@@ -374,6 +377,7 @@ class RemittanceController extends Controller
                 'admin_id'  => 1,
                 'message'   => $notification_message,
             ]);
+           
             (new PushNotificationHelper())->prepare([1],[
                 'title' => "Send Remittance from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
                 'desc'  => "",
@@ -540,8 +544,7 @@ class RemittanceController extends Controller
         ));   
     }
 
-    public function downloadPdf($trx_id)
-    {
+    public function downloadPdf($trx_id){
         $transaction             = Transaction::where('trx_id',$trx_id)->first(); 
         $coupon_transaction      = CouponTransaction::with(['coupon','user_coupon'])->where('transaction_id',$transaction->id)->first();
         

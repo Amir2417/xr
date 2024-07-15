@@ -8407,3 +8407,6 @@ input[type=number] {
   padding-top: 3px;
   color: #008000;
 }
+.input-fild .select2-container{
+  flex: auto !important;
+}

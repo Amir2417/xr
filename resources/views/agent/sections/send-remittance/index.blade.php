@@ -59,7 +59,7 @@
                                             <label>{{ __("Recipient gets") }}</label>
                                             <div class="col-12 from-cruncy">
                                                 <div class="input-group">
-                                                    <input id="receive-money" type="text" class="form--control w-100 number-input" name="receive_money" readonly>
+                                                    <input id="receive-money" type="text" class="form--control w-100 number-input" readonly>
                                                     <div class="ad-select">
                                                         <div class="custom-select">
                                                             <div class="custom-select-inner">
@@ -99,11 +99,13 @@
                                         <div class="sender-input">
                                             <label>{{ __("Sender") }}</label>
                                             <div class="input-fild">
-                                                <select class="nice-select trx-type-select" name="sender">
+                                                <select class="select2-basic trx-type-select" name="sender">
                                                     <option selected disabled>{{ __("Select Sender") }}</option>
-                                                    @foreach ($senders ?? [] as $item)
+                                                    @forelse ($senders ?? [] as $item)
                                                         <option class="custom-option" value="{{ $item->id }}">{{ $item->fullname }}</option>
-                                                    @endforeach
+                                                    @empty
+                                                        <option>{{ __("No data found") }}</option>
+                                                    @endforelse
                                                 </select>
                                                 <div class="add-sender">
                                                     <a href="{{ setRoute('agent.my.sender.create') }}" class="btn"><i class="las la-plus"></i> {{ __("Add Sender") }}</a>
@@ -116,11 +118,8 @@
                                         <div class="sender-input">
                                             <label>{{ __("Recipient") }}</label>
                                             <div class="input-fild">
-                                                <select class="nice-select trx-type-select" name="recipient">
-                                                    <option class="custom-option" selected disabled>{{ __("Select Recipient") }}</option>
-                                                    @foreach ($recipients ?? [] as $item)
-                                                        <option class="custom-option" value="{{ $item->id }}">{{ $item->fullname }}</option>
-                                                    @endforeach
+                                                <select class="select2-basic trx-type-select recipient-data-info" id="recipient-data" name="recipient">
+                                                    
                                                 </select>
                                                 <div class="add-sender">
                                                     <a href="{{ setRoute('agent.recipient.create') }}" class="btn"><i class="las la-plus"></i> {{ __("Add Recipient") }}</a>
@@ -563,6 +562,7 @@
         $(".amount").val(100);
         var amount              = $('.amount').val();
         var transactionType     = JSON.parse($("select[name=transaction_type] :selected").attr('data-item'));
+        getRecipientData(transactionType.title);
         run(amount,JSON.parse(selectedActiveItem("input[name=receiver_currency]")),transactionType);
     });
 
@@ -579,6 +579,18 @@
         if(amount == '' || amount == null){
             amount  = 0;
         }
+        getRecipientData(transactionType.title);
+        run(amount,JSON.parse(selectedActiveItem("input[name=receiver_currency]")),transactionType);
+    });
+
+    $("select[name=transaction_type]").on("change",function() {
+        
+        var transactionType     = JSON.parse($("select[name=transaction_type] :selected").attr('data-item'));
+        var amount              = $('.amount').val();
+        if(amount == '' || amount == null){
+            amount  = 0;
+        }
+        getRecipientData(transactionType.title);
         run(amount,JSON.parse(selectedActiveItem("input[name=receiver_currency]")),transactionType);
     });
     // get receiver currency data
@@ -622,6 +634,7 @@
             $('.sending-amount').text(amount + " " + baseCurrency);
             $('.total-charge').text(totalCharge + " " + baseCurrency);
             $(".receive-amount").text(parseFloat(receiveAmount.toFixed(2)) + " " + receiver.code);
+            $(".receiver_currency").val(receiver.id);
         }else{
             $("#fees").text("");
             $(".convert-amount").text("");
@@ -630,8 +643,25 @@
             $('.sending-amount').text("");
             $('.total-charge').text("");
             $(".receive-amount").text("");
+            $(".receiver_currency").val("");
         }
 
+    }
+    // get recipient data
+    function getRecipientData(transactionType){
+        var getRecipientURL     = "{{ route('agent.get.recipient.data') }}";
+        $(".recipient-data-info").val('');
+        $.post(getRecipientURL,{method:transactionType,_token:"{{ csrf_token() }}"},function(response){
+            if(response.data.recipient_data == null || response.data.recipient_data == ''){
+                $('.recipient-data-info').html('<option value="" disabled>No Recipient Aviliable</option>');
+            }else{
+                $('.recipient-data-info').html('<option value="" disabled>Select Recipient</option>');
+            }
+            
+            $.each(response.data.recipient_data, function (key, value) {
+                $(".recipient-data-info").append(`<option class="custom-option" value="${value.id}">${value.fullname}</option>`);
+            });
+        });
     }
 
 </script>

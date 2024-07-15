@@ -8,6 +8,7 @@ use App\Http\Helpers\Response;
 use App\Models\Agent\AgentWallet;
 use App\Http\Controllers\Controller;
 use App\Models\Agent\AgentProfit;
+use App\Models\Agent\AgentRecipient;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,5 +50,19 @@ class DashboardController extends Controller
         $user_data          = User::where('email',$validated['search'])->first();
         
         return Response::success(['User data get successfully.'],['user_data' => $user_data],200);
+    }
+    /**
+     * Method for get recipient data
+     * @param Illuminate\Http\Request $request
+     */
+    public function getRecipientData(Request $request){
+        $validator          = Validator::make($request->all(),[
+            'method'        => 'required'
+        ]);
+        if($validator->fails()) return Response::error($validator->errors()->all());
+        $validated          = $validator->validate();
+        $recipient_data     = AgentRecipient::where('method',$validated['method'])->get();
+        
+        return Response::success(['Recipient data get successfully.'],['recipient_data' => $recipient_data],200);
     }
 }
