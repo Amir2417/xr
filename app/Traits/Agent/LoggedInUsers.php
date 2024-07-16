@@ -11,7 +11,8 @@ use App\Models\Agent\AgentWallet;
 trait LoggedInUsers {
 
     protected function refreshUserWallets($user) {
-        if($user->wallet->count() == 0){
+        
+        if($user->wallet == null || $user->wallet->count() == 0){
             
             $currency = Currency::default();       
             $wallet= [
