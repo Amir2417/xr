@@ -153,7 +153,7 @@ Route::get('agent/pusher/beams-auth', function (Request $request) {
             "secretKey" => $notification_config->primary_key,
         )
     );
-    $publisherUserId = "agent-".$userID;
+    $publisherUserId = make_user_id_for_pusher("agent", $userID);
     try{
         $beamsToken = $beamsClient->generateToken($publisherUserId);
     }catch(Exception $e) {

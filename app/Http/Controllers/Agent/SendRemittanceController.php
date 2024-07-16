@@ -190,6 +190,7 @@ class SendRemittanceController extends Controller
             $this->insertNotificationData($trx_id,$data);
             DB::commit();
         }catch(Exception $e){
+            dd($e->getMessage());
             DB::rollback();
             throw new Exception($e->getMessage());
         }
@@ -231,11 +232,11 @@ class SendRemittanceController extends Controller
             'admin_id'  => 1,
             'message'   => $notification_message,
         ]);
-        // (new PushNotificationHelper())->prepare([1],[
-        //     'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
-        //     'desc'  => "",
-        //     'user_type' => 'admin',
-        // ])->send();
+        (new PushNotificationHelper())->prepare([$user->id],[
+            'title'         => $notification_message['title'],
+            'desc'          => $notification_message['title'],
+            'user_type'     => 'agent',
+        ])->send();
 
     }
     /**

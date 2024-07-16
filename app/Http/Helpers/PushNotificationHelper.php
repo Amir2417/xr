@@ -2,11 +2,10 @@
 
 namespace App\Http\Helpers;
 
-use App\Models\Admin\BasicSettings;
 use App\Providers\Admin\BasicSettingsProvider;
 use Exception;
 use Pusher\PushNotifications\PushNotifications;
-use Symfony\Component\CssSelector\XPath\Extension\FunctionExtension;
+
 
 class PushNotificationHelper {
 
@@ -18,11 +17,11 @@ class PushNotificationHelper {
     public $provider_config;
 
     public $user_type;
-    
+
     public $n_icon;
     public $n_title;
     public $n_desc;
-
+    
     public function __construct(array $data = [])
     {
         $this->config();
@@ -30,7 +29,7 @@ class PushNotificationHelper {
         if(isset($data['users'])){
             $this->users = $data['users'];
         }
-
+        
         if(isset($data['user_type'])){
             $this->user_type = $data['user_type'];
         }
@@ -54,25 +53,83 @@ class PushNotificationHelper {
     {
         return [
             'pusher'    => "pusherUnsubscribe"
-        ]; 
+        ];
     }
 
-    public function prepare(array $users, array $data)
+    public function prepareUnauthorize(array $users, array $data)
     {
+        try{
+            $user_guard = $data['user_guard'];
+
+            if($user_guard == "web" || $user_guard == "api"){
+                $fav = get_fav();
+            }elseif($user_guard == "agent" || $user_guard == "agent_api"){
+                $fav = get_fav_agent();
+            }else{
+                $fav = get_fav();
+            }
+            $this->data                 = $data;
+            $this->users                = $users;
+            $this->n_icon               = $fav;
+            $this->user_type            = $data['user_type'];
+            $this->n_title              = $data['title'];
+            $this->n_desc               = $data['desc'];
+
+            return $this;
+        }catch(Exception $e){}
+    }
+    public function prepareApi(array $users, array $data)
+    {
+       try{
+        $user_guard = authGuardApi()['guard'];
+        if($user_guard == "web" || $user_guard == "api"){
+            $fav = get_fav();
+        }elseif($user_guard == "agent" || $user_guard == "agent_api"){
+            $fav = get_fav_agent();
+        }else{
+            $fav = get_fav();
+        }
+
         $this->data                 = $data;
         $this->users                = $users;
-        $this->n_icon               = get_fav();
+        $this->n_icon               = $fav;
         $this->user_type            = $data['user_type'];
         $this->n_title              = $data['title'];
         $this->n_desc               = $data['desc'];
 
         return $this;
+       }catch(Exception $e){}
+    }
+    public function prepare(array $users, array $data)
+    {
+        
+        try{
+            $user_guard = userGuard()['guard'];
+            if($user_guard == "web" || $user_guard == "api" || $user_guard == "admin"){
+                $fav = get_fav();
+            }elseif($user_guard == "agent" || $user_guard == "agent_api"){
+                $fav = get_fav_agent();
+            }else{
+                $fav = get_fav();
+            }
+
+            $this->data                 = $data;
+            $this->users                = $users;
+            $this->n_icon               = $fav;
+            $this->user_type            = $data['user_type'];
+            $this->n_title              = $data['title'];
+            $this->n_desc               = $data['desc'];
+            
+            return $this;
+        }catch(Exception $e){
+            dd($e);
+        }
     }
 
     public function send()
     {
         $provider_name = $this->provider_name;
-
+        
         if(array_key_exists($provider_name, $this->registerSend())) {
             $method = $this->registerSend()[$provider_name];
             return $this->$method();
@@ -100,7 +157,7 @@ class PushNotificationHelper {
         throw new Exception(__("Oops! Notification provider [$provider_name] configuration not found!"));
     }
 
-    public function pusherConfig(array $credentials):array 
+    public function pusherConfig(array $credentials):array
     {
         $config = [
             "instanceId"    => $credentials['instance_id'],
@@ -135,6 +192,13 @@ class PushNotificationHelper {
                         'icon'      => $this->n_icon,
                     ],
                 ],
+                "fcm" => [
+                    "notification" => [
+                        'title'     => $this->n_title,
+                        'body'      => $this->n_desc,
+                        'icon'      => $this->n_icon,
+                    ]
+                ]
             ],
         );
 

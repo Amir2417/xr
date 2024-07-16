@@ -1780,7 +1780,9 @@ function get_logo_agent($basic_settings, $type = null){
     return $logo;
 }
 
-function get_fav_agent($basic_settings, $type = null){
+function get_fav_agent($basic_settings = null, $type = null)
+{
+    if($basic_settings == null) $basic_settings = BasicSettingsProvider::get();
     $fav = "";
     if ($type == 'white') {
         if (!$basic_settings->agent_site_fav) {
@@ -1844,6 +1846,10 @@ function userGuard() {
         $user = auth()->guard('agent_api')->user();
         $userType = 'AGENT';
         $guard = "agent_api";
+    }else if(auth()->guard('admin')->check()){
+        $user = auth()->guard('admin')->user();
+        $userType = 'ADMIN';
+        $guard = "admin";
     }
 
     return [
@@ -1851,4 +1857,31 @@ function userGuard() {
         'type'=> $userType,
         'guard'=>$guard
     ];
+}
+
+function authGuardApi(){
+    if (Auth::check()) {
+        $guardName = Auth::getDefaultDriver();
+        if( $guardName == 'web'){
+            $userType = 'USER';
+        } else if( $guardName == 'api'){
+            $userType = 'USER';
+        } else if( $guardName == 'agent'){
+            $userType = 'AGENT';
+        } else if($guardName == 'agent_api'){
+            $userType = 'AGENT';
+        }
+
+        if(auth()->guard($guardName)->check()){
+            $user = auth()->user();
+            $userType = $userType;
+            $guard = $guardName;
+        }
+
+        return [
+            'user'=>$user,
+            'type'=> $userType,
+            'guard'=>$guard
+        ];
+    }
 }

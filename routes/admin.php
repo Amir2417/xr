@@ -542,7 +542,7 @@ Route::get('pusher/beams-auth', function (Request $request) {
     try{
         $beamsToken = $beamsClient->generateToken($publisherUserId);
     }catch(Exception $e) {
-        return response(['Server Error. Failed to generate beams token.'], 500);
+        return response(['Server Error. Faild to generate beams token.'], 500);
     }
 
     return response()->json($beamsToken);

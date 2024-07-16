@@ -11,7 +11,7 @@
         //     .then((registration) => {
         //     messaging.useServiceWorker(registration)});
 
-        var generatePublisherId = "agent-"+"{{ auth()->user()->id }}";
+        var generatePublisherId = "{{ make_user_id_for_pusher('agent', auth()->user()->id) }}";
         const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
             url: "{{ setRoute('agent.pusher.beams.auth') }}",
         });
