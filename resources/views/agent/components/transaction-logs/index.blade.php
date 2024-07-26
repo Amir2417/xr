@@ -211,7 +211,7 @@
                         </div>
                     </div>
                 @endif
-                
+                @if (@$item->type == payment_gateway_const()::TYPESENDREMITTANCE)
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">
@@ -223,16 +223,12 @@
                             </div>
                         </div>
                     </div>
-                    @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
-                    <div class="preview-list-right">
-                        <span>{{ @$item->agent->fullname }}</span>
-                    </div>
-                    @else
+                    
                     <div class="preview-list-right">
                         <span>{{ @$item->remittance_data->data->sender->fullname }}</span>
                     </div>
-                    @endif
                 </div>
+                @endif
             </div>
         </div>
     </div>

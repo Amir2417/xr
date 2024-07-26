@@ -42,6 +42,5 @@ class TransactionLogController extends Controller
                                   
         return view('agent.components.transaction-logs.index',compact('transactions'));
 
-        
     }
 }
