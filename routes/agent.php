@@ -43,7 +43,8 @@ Route::prefix("agent")->name("agent.")->group(function(){
     Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
-
+        Route::get('preview/{identifier}','preview')->name('preview');
+        Route::post('confirm}','confirm')->name('confirm');
 
         //paypal
         Route::match('get','success/response/{gateway}','success')->name('payment.success');
@@ -102,6 +103,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //transaction logs
     Route::controller(TransactionLogController::class)->prefix('transaction-logs')->name('transaction.logs.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::post('search','search')->name('search');
     });
     //statements
     Route::controller(StatementController::class)->prefix('statement')->name('statements.')->group(function(){

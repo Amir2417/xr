@@ -22,6 +22,7 @@ use App\Models\Admin\TransactionSetting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Helpers\PushNotificationHelper;
+use App\Models\Transaction;
 use App\Notifications\Agent\SendRemittanceNotification;
 
 class SendRemittanceController extends Controller
@@ -40,6 +41,8 @@ class SendRemittanceController extends Controller
         $receiver_currency_first    = Currency::where('status',true)->where('receiver',true)->first();
         $senders                    = MySender::auth()->orderBy('id','desc')->get();
         $recipients                 = AgentRecipient::auth()->orderBy('id','desc')->get();
+        $transactions               = Transaction::agentAuth()->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+                                        ->orderBy('id','desc')->latest()->take(3)->get();
 
         return view('agent.sections.send-remittance.index',compact(
             'page_title',
@@ -47,7 +50,8 @@ class SendRemittanceController extends Controller
             'senders',
             'recipients',
             'receiver_currency',
-            'receiver_currency_first'
+            'receiver_currency_first',
+            'transactions'
         ));
     }
     /**
@@ -135,7 +139,7 @@ class SendRemittanceController extends Controller
             ],
             'transaction_type'                  => [
                 'id'                            => $transaction_settings->id,
-                'name'                          => $transaction_settings->name,
+                'name'                          => $transaction_settings->title,
             ],
             'amount'                            => floatval($amount),
             'fixed_charge'                      => floatval($fixed_charge),
@@ -190,7 +194,6 @@ class SendRemittanceController extends Controller
             $this->insertNotificationData($trx_id,$data);
             DB::commit();
         }catch(Exception $e){
-            dd($e->getMessage());
             DB::rollback();
             throw new Exception($e->getMessage());
         }

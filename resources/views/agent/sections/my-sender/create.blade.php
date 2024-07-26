@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 md-6 mb-20">
-                    <label>{{ __("Back Part") }}<span>*</span></label>
+                    <label>{{ __("Back Part") }}</label>
                     <div class="file-holder-wrapper">
                         <input type="file" class="file-holder" name="back_part" id="fileUpload" data-height="130" accept="image/*" data-max_size="20" data-file_limit="15" multiple>
                     </div>

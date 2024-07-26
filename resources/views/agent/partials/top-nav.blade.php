@@ -9,13 +9,18 @@
             @yield('breadcrumb')
         </div>
         <div class="right">
-            <form class="header-search-wrapper">
-                <div class="position-relative">
-                    <input class="form--control" type="text" placeholder="{{ __('Ex: Transactions') }}"
-                        aria-label="Search">
-                    <span class="las la-search"></span>
-                </div>
-            </form>
+            @php
+                $current_url  = URL::current();
+            @endphp
+            @if ($current_url == setRoute('agent.transaction.logs.index'))
+                <form class="header-search-wrapper">
+                    <div class="position-relative">
+                        <input class="form--control" type="text" name="search_text" placeholder="{{ __("Ex: Transactions") }}"
+                            aria-label="Search">
+                        <span class="las la-search"></span>
+                    </div>
+                </form>
+            @endif
             <div class="header-notification-wrapper">
                 <button class="notification-icon">
                     <i class="las la-bell"></i>

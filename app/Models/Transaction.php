@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Constants\PaymentGatewayConst;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\PaymentGatewayCurrency;
+use App\Models\Agent\AgentProfit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
@@ -91,6 +92,10 @@ class Transaction extends Model
     public function scopeSearch($query,$data) {
         return $query->where("trx_id",'LIKE','%'.$data.'%')
                      ->orderBy('id','desc');
+    }
+
+    public function profit() {
+        return $this->hasOne(AgentProfit::class,"transaction_id","id");
     }
     
 }

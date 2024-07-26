@@ -1,4 +1,5 @@
-@isset($transactions)
+<div class="transaction-log-results">
+    @isset($transactions)
     @forelse ($transactions as $item)
     <div class="dashboard-list-wrapper">
         <div class="dashboard-list-item-wrapper">
@@ -13,6 +14,8 @@
                                 <h4 class="title">{{ __('Money In using') }} {{ @$item->currency->name }}</h4>
                             @elseif (@$item->type == payment_gateway_const()::MONEYOUT)
                                 <h4 class="title">{{ __('Money Out using') }} {{ @$item->currency->name }}</h4>
+                            @elseif (@$item->type == payment_gateway_const()::TYPESENDREMITTANCE)
+                                <h4 class="title">{{ __('Send Remittance using') }} {{ @$item->remittance_data->data->transaction_type->name }}</h4>
                             @endif
                             <span class="sub-title text--danger">{{ @$item->attribute }} 
                                 <span class="badge badge--warning ms-2">
@@ -43,11 +46,31 @@
                     </div>
                 </div>
                 <div class="dashboard-list-right">
-                    <h4 class="main-money text--base">{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->currency) }}</h4>
-                    <h6 class="exchange-money">{{ get_amount(@$item->payable,@$item->remittance_data->data->payment_gateway->currency) }}</h6>
+                    @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
+                        <h4 class="main-money text--base">{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->currency) }}</h4>
+                        <h6 class="exchange-money">{{ get_amount(@$item->payable,@$item->remittance_data->data->payment_gateway->currency) }}</h6>
+                    @elseif (@$item->type == payment_gateway_const()::TYPESENDREMITTANCE)
+                        <h4 class="main-money text--base">{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->code) }}</h4>
+                        <h6 class="exchange-money">{{ get_amount(@$item->will_get_amount,@$item->remittance_data->data->receiver_currency->code) }}</h6>
+                    @endif
                 </div>
             </div>
             <div class="preview-list-wrapper">
+                <div class="preview-list-item">
+                    <div class="preview-list-left">
+                        <div class="preview-list-user-wrapper">
+                            <div class="preview-list-user-icon">
+                                <i class="lab la-orcid"></i>
+                            </div>
+                            <div class="preview-list-user-content">
+                                <span>{{ __("Transaction ID") }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-list-right">
+                        <span>{{ $item->trx_id }}</span>
+                    </div>
+                </div>
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">
@@ -71,12 +94,12 @@
                                     <i class="las la-university"></i>
                                 </div>
                                 <div class="preview-list-user-content">
-                                    <span>Bank Name</span>
+                                    <span>{{ __("Bank Name") }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>American Express</span>
+                            <span>{{ @$item->remittance_data->data->recipient->account_name }}</span>
                         </div>
                     </div>
                     <div class="preview-list-item">
@@ -86,15 +109,32 @@
                                     <i class="las la-user-alt"></i>
                                 </div>
                                 <div class="preview-list-user-content">
-                                    <span>IBAN Number</span>
+                                    <span>{{ __("Account Number") }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>1234 0000 56789</span>
+                            <span>{{ @$item->remittance_data->data->recipient->account_number }}</span>
                         </div>
                     </div>
                 @endif
+                @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
+                    <div class="preview-list-item">
+                        <div class="preview-list-left">
+                            <div class="preview-list-user-wrapper">
+                                <div class="preview-list-user-icon">
+                                    <i class="las la-comment-dollar"></i>
+                                </div>
+                                <div class="preview-list-user-content">
+                                    <span>{{ __("Sending Amount") }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preview-list-right">
+                            <span>{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->currency) }}</span>
+                        </div>
+                    </div>
+                @else
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">
@@ -102,14 +142,16 @@
                                 <i class="las la-comment-dollar"></i>
                             </div>
                             <div class="preview-list-user-content">
-                                <span>{{ __("Sending Amount") }}</span>
+                                <span>{{ __("Convert Amount") }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>{{ get_amount(@$item->request_amount,@$item->remittance_data->data->base_currency->currency) }}</span>
+                        <span>{{ get_amount(@$item->convert_amount,@$item->remittance_data->data->base_currency->code) }}</span>
                     </div>
                 </div>
+                @endif
+                
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">
@@ -121,9 +163,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="preview-list-right">
-                        <span>{{ get_amount(@$item->remittance_data->data->base_currency->rate,@$item->remittance_data->data->base_currency->currency) }} = {{ get_amount(@$item->remittance_data->data->payment_gateway->rate,@$item->remittance_data->data->payment_gateway->currency) }}</span>
-                    </div>
+                    @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
+                        <div class="preview-list-right">
+                            <span>{{ get_amount(@$item->remittance_data->data->base_currency->rate,@$item->remittance_data->data->base_currency->currency) }} = {{ get_amount(@$item->remittance_data->data->payment_gateway->rate,@$item->remittance_data->data->payment_gateway->currency) }}</span>
+                        </div>
+                    @else
+                        <div class="preview-list-right">
+                            <span>{{ get_amount(@$item->remittance_data->data->base_currency->rate,@$item->remittance_data->data->base_currency->currency) }} = {{ get_amount(@$item->remittance_data->data->exchange_rate,@$item->remittance_data->data->receiver_currency->code) }}</span>
+                        </div>
+                    @endif
                 </div>
                 <div class="preview-list-item">
                     <div class="preview-list-left">
@@ -136,9 +184,15 @@
                             </div>
                         </div>
                     </div>
+                    @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
+                        <div class="preview-list-right">
+                            <span>{{ get_amount(@$item->remittance_data->data->total_charge,@$item->remittance_data->data->base_currency->currency) }}</span>
+                        </div>
+                    @else
                     <div class="preview-list-right">
-                        <span>{{ get_amount(@$item->remittance_data->data->total_charge,@$item->remittance_data->data->base_currency->currency) }}</span>
+                        <span>{{ get_amount(@$item->remittance_data->data->total_charge,@$item->remittance_data->data->base_currency->code) }}</span>
                     </div>
+                    @endif
                 </div>
                 @if (@$item->type == payment_gateway_const()::MONEYIN)
                     <div class="preview-list-item">
@@ -169,9 +223,15 @@
                             </div>
                         </div>
                     </div>
+                    @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
                     <div class="preview-list-right">
                         <span>{{ @$item->agent->fullname }}</span>
                     </div>
+                    @else
+                    <div class="preview-list-right">
+                        <span>{{ @$item->remittance_data->data->sender->fullname }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -183,3 +243,4 @@
     @endforelse
     {{ get_paginate($transactions) }}
 @endisset
+</div>

@@ -37,11 +37,7 @@ class MoneyInController extends Controller
      * @return view
      */
     public function index(){
-        (new PushNotificationHelper())->prepare([1],[
-            'title'         => "test Title",
-            'desc'          => "Test Description",
-            'user_type'     => 'agent',
-        ])->send();
+        
         $page_title                 = "MoneyIn";
         $payment_gateway            = PaymentGatewayCurrency::whereHas('gateway', function ($gateway) {
             $gateway->where('slug', PaymentGatewayConst::remittance_money_slug());

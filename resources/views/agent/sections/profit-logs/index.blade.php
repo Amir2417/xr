@@ -14,120 +14,42 @@
     <div class="dashboard-list-area mt-30">
         <div class="log-type d-flex justify-content-between align-items-center mb-20">
             <div class="dashboard-header-wrapper">
-                <h4 class="title">Profitable Log</h4>
+                <h4 class="title">{{ @$page_title }}</h4>
             </div>
         </div>
         <div class="profit-log">
+            @forelse (@$transactions ?? [] as $item)
             <div class="dashboard-list-wrapper">
                 <div class="dashboard-list-item-wrapper">
                     <div class="dashboard-list-item sent">
                         <div class="dashboard-list-left">
                             <div class="dashboard-list-user-wrapper">
                                 <div class="trx-time">
-                                    <div class="date"><p>09</p></div>
-                                    <div class="month text--base"><p>February</p></div>
+                                    @php
+                                        $date       = \Carbon\Carbon::parse($item->created_at)->format('d');
+                                        $month       = \Carbon\Carbon::parse($item->created_at)->format('F');
+                                    @endphp
+                                    <div class="date"><p>{{ @$date }}</p></div>
+                                    <div class="month text--base"><p>{{ @$month }}</p></div>
                                 </div>
                                 <div class="dashboard-list-user-content">
-                                    <h4 class="title">Money In</h4>
-                                    <span class="badge badge--success">#AD2022JAN5</span></span>
+                                    <h4 class="title">{{ @$item->transaction->type }}</h4>
+                                    <span class="badge badge--success">{{ @$item->transaction->trx_id }}</span></span>
                                 </div>
                             </div>
                         </div>
                         <div class="dashboard-list-right">
-                            <h4 class="main-money text--base"><span>+</span>1.50 USD</h4>
-                            <h6 class="exchange-money">50.00 USD</h6>
+                            <h4 class="main-money text--base"><span>+</span>{{ get_amount(@$item->total_commissions,get_default_currency_code()) }}</h4>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="dashboard-list-wrapper">
-                <div class="dashboard-list-item-wrapper">
-                    <div class="dashboard-list-item sent">
-                        <div class="dashboard-list-left">
-                            <div class="dashboard-list-user-wrapper">
-                                <div class="trx-time">
-                                    <div class="date"><p>08</p></div>
-                                    <div class="month text--base"><p>February</p></div>
-                                </div>
-                                <div class="dashboard-list-user-content">
-                                    <h4 class="title">Send Remittance</h4>
-                                    <span class="badge badge--success">#AD2022JAN5</span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-list-right">
-                            <h4 class="main-money text--base"><span>+</span>1.50 USD</h4>
-                            <h6 class="exchange-money">50.00 USD</h6>
-                        </div>
-                    </div>
-                </div>
+            @empty
+            <div class="alert alert-primary text-center">
+                {{ __("No data found!") }}
             </div>
-            <div class="dashboard-list-wrapper">
-                <div class="dashboard-list-item-wrapper">
-                    <div class="dashboard-list-item sent">
-                        <div class="dashboard-list-left">
-                            <div class="dashboard-list-user-wrapper">
-                                <div class="trx-time">
-                                    <div class="date"><p>05</p></div>
-                                    <div class="month text--base"><p>February</p></div>
-                                </div>
-                                <div class="dashboard-list-user-content">
-                                    <h4 class="title">Money In</h4>
-                                    <span class="badge badge--success">#AD2022JAN5</span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-list-right">
-                            <h4 class="main-money text--base"><span>+</span>2.00 USD</h4>
-                            <h6 class="exchange-money">100.00 USD</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="dashboard-list-wrapper">
-                <div class="dashboard-list-item-wrapper">
-                    <div class="dashboard-list-item sent">
-                        <div class="dashboard-list-left">
-                            <div class="dashboard-list-user-wrapper">
-                                <div class="trx-time">
-                                    <div class="date"><p>02</p></div>
-                                    <div class="month text--base"><p>February</p></div>
-                                </div>
-                                <div class="dashboard-list-user-content">
-                                    <h4 class="title">Money Out</h4>
-                                    <span class="badge badge--success">#AD2022JAN5</span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-list-right">
-                            <h4 class="main-money text--base"><span>+</span>1.50 USD</h4>
-                            <h6 class="exchange-money">50.00 USD</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="dashboard-list-wrapper">
-                <div class="dashboard-list-item-wrapper">
-                    <div class="dashboard-list-item sent">
-                        <div class="dashboard-list-left">
-                            <div class="dashboard-list-user-wrapper">
-                                <div class="trx-time">
-                                    <div class="date"><p>01</p></div>
-                                    <div class="month text--base"><p>February</p></div>
-                                </div>
-                                <div class="dashboard-list-user-content">
-                                    <h4 class="title">Money In</h4>
-                                    <span class="badge badge--success">#AD2022JAN5</span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-list-right">
-                            <h4 class="main-money text--base"><span>+</span>2.00 USD</h4>
-                            <h6 class="exchange-money">100.00 USD</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforelse
+            {{ get_paginate($transactions) }}
         </div>
     </div>
 </div>
