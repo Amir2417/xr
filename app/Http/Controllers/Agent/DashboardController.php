@@ -33,7 +33,42 @@ class DashboardController extends Controller
                                     ->count();
         $total_canceled_transactions  = Transaction::agentAuth()->where('status',GlobalConst::REMITTANCE_STATUS_CANCEL)->count();
 
-        $transactions                   = Transaction::agentAuth()->orderBy('id','desc')->latest()->take(3)->get();         
+        $transactions                   = Transaction::agentAuth()->orderBy('id','desc')->latest()->take(3)->get();
+
+        $current_month = now()->month;
+        $categories = [];
+        for ($i = 1; $i <= $current_month; $i++) {
+            $categories[] = date("F", mktime(0, 0, 0, $i, 10));
+        }
+
+        $send_remittance = [];
+        $money_in        = [];
+        $money_out       = [];
+
+        foreach ($categories as $index => $month) {
+            $month_number = $index + 1;
+            $send_remittance[] = Transaction::where('type', PaymentGatewayConst::TYPESENDREMITTANCE)
+                                        ->whereMonth('created_at', $month_number)
+                                        ->whereYear('created_at', now()->year)
+                                        ->sum('request_amount');
+
+            $money_in[] = Transaction::where('type', PaymentGatewayConst::MONEYIN)
+                                    ->whereMonth('created_at', $month_number)
+                                    ->whereYear('created_at', now()->year)
+                                    ->sum('request_amount');
+
+            $money_out[] = Transaction::where('type', PaymentGatewayConst::MONEYOUT)
+                                    ->whereMonth('created_at', $month_number)
+                                    ->whereYear('created_at', now()->year)
+                                    ->sum('request_amount');
+        }
+
+        $data = [
+            'categories' => $categories,
+            'send_remittance' => $send_remittance,
+            'money_in' => $money_in,
+            'money_out' => $money_out,
+        ];    
 
         return view('agent.dashboard',compact(
             'page_title',
@@ -42,7 +77,8 @@ class DashboardController extends Controller
             'total_send_remittance',
             'total_confirm_send_remittance',
             'total_canceled_transactions',
-            'transactions'
+            'transactions',
+            'data'
         ));
     }
     /**

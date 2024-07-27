@@ -108,6 +108,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
     //statements
     Route::controller(StatementController::class)->prefix('statement')->name('statements.')->group(function(){
         Route::get('/','index')->name('index');
+        Route::get('filter','filter')->name('filter');
     });
     //google 2fa
     Route::controller(SecurityController::class)->name('security')->name('security.')->group(function(){

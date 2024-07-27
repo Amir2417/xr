@@ -113,17 +113,15 @@ class StatementController extends Controller
         ));
         
     }
-
     /**
      * Method for download statement in pdf format
      * @param string
-     * 
      */
     public function download($transactions){
         $total_transactions      = $transactions->count();
-        $request        = 0;
+        $request                    = 0;
         $convert        = 0;
-        $will_get = 0;
+        $will_get       = 0;
         foreach($transactions as $item){
             $currency   = Currency::where('code',$item->remittance_data->sender_currency)->first();
             

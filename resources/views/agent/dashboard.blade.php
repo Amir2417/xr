@@ -121,7 +121,7 @@
                 <div id="chart" class="chart"></div>
             </div>
         </div>
-
+        
         <div class="dashboard-list-area mt-60">
             <div class="log-type d-flex justify-content-between align-items-center mb-40">
                 <div class="dashboard-header-wrapper">
@@ -142,16 +142,17 @@
 @endsection
 @push('script')
 <script>
+    var chartData = @json($data);
     var options = {
         series: [{
-        name: 'Net Profit',
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+        name: '{{ __("Send Remittance") }}',
+        data: chartData.send_remittance
       }, {
-        name: 'Revenue',
-        data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+        name: '{{ __("Money In") }}',
+        data: chartData.money_in
       }, {
-        name: 'Free Cash Flow',
-        data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+        name: '{{ __("Money OUT") }}',
+        data: chartData.money_out
       }],
         chart: {
         type: 'bar',
@@ -177,7 +178,7 @@
       },
       yaxis: {
         title: {
-          text: '$ (thousands)'
+          text: ''
         }
       },
       fill: {
@@ -186,7 +187,7 @@
       tooltip: {
         y: {
           formatter: function (val) {
-            return "$ " + val + " thousands"
+            return "$ " + val 
           }
         }
       }

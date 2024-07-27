@@ -6,8 +6,6 @@
 <script src="{{ asset('public/frontend/js/swiper.js') }}"></script>
 <!-- lightcase js-->
 <script src="{{ asset('public/frontend/js/lightcase.js') }}"></script>
-
-
 <!-- smooth scroll js -->
 <script src="{{ asset('public/frontend/js/smoothscroll.js') }}"></script>
 <!-- apex charts js -->
