@@ -33,14 +33,14 @@ Route::prefix("agent")->name("agent.")->group(function(){
         Route::post('delete-account/{id}','delete')->name('delete')->middleware('app.mode');
     });
     //send remittance
-    Route::controller(SendRemittanceController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+    Route::controller(SendRemittanceController::class)->middleware('kyc.verification.guard.agent')->prefix('send-remittance')->name('send.remittance.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
         Route::get('preview/{identifier}','preview')->name('preview');
         Route::post('confirm/{identifier}','confirm')->name('confirm');
     });
     //moneyin
-    Route::controller(MoneyInController::class)->prefix('money-in')->name('moneyin.')->group(function(){
+    Route::controller(MoneyInController::class)->middleware('kyc.verification.guard.agent')->prefix('money-in')->name('moneyin.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
         Route::get('preview/{identifier}','preview')->name('preview');
@@ -69,7 +69,7 @@ Route::prefix("agent")->name("agent.")->group(function(){
         });
     });
     //money out
-    Route::controller(MoneyOutController::class)->prefix('money-out')->name('money.out.')->group(function(){
+    Route::controller(MoneyOutController::class)->middleware('kyc.verification.guard.agent')->prefix('money-out')->name('money.out.')->group(function(){
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
         Route::get('preview/{identifier}','preview')->name('preview');

@@ -82,7 +82,7 @@ class StatementController extends Controller
         $status = $request->input('status');
 
         
-        $query = Transaction::query();
+        $query = Transaction::whereNotNull('user_id');
 
         if ($startDate && $endDate && $status == global_const()::REMITTANCE_STATUS_ALL) {
             $query->whereBetween('created_at', [$startDate, $endDate]);

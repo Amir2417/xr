@@ -27,22 +27,28 @@
                 </button>
                 <div class="notification-wrapper">
                     <div class="notification-header">
-                        <h5 class="title">Notification</h5>
+                        <h5 class="title">{{ __("Notification") }}</h5>
                     </div>
                     <ul class="notification-list">
+                        @forelse (agent_notifications() as $item)
                         <li>
                             <div class="thumb">
-                                <img src="" alt="user">
+                                <img src="{{ auth()->user()->agentImage }}" alt="user">
                             </div>
                             <div class="content">
                                 <div class="title-area">
-                                    <h5 class="title">Send Remittance</h5>
-                                    <span class="time">Thu 3.30PM</span>
+                                    <h5 class="title">{{ $item->message ?? "" }}</h5>
+                                    <span class="time">{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$item->created_at ?? "")->format('h:i A') }}</span>
                                 </div>
-                                <span class="sub-title">Hi, How are you? What about our next
-                                    meeting</span>
+                                
                             </div>
                         </li>
+                        @empty
+                        <div class="alert alert-primary text-center">
+                            {{ __("No data found!") }}
+                        </div>
+                        @endforelse
+                        
                         
                     </ul>
                 </div>

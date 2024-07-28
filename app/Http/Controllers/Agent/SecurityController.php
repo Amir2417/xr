@@ -54,7 +54,7 @@ class SecurityController extends Controller
     public function kyc(){
         $page_title         = "KYC Verification";
         $basic_settings     = BasicSettings::first();
-        if($basic_settings['kyc_verification'] == false) return back()->with(['success' => ['Do not need to identity verification!!']]);
+        if($basic_settings['agent_kyc_verification'] == false) return back()->with(['success' => ['Do not need to identity verification!!']]);
         $agent_kyc          = SetupKyc::agentKyc()->first();
         if(!$agent_kyc) return back()->with(['success' => ['Do not need to identity verification!!']]);
             $kyc_data       = $agent_kyc->fields;
@@ -62,7 +62,6 @@ class SecurityController extends Controller
         if($kyc_data) {
             $kyc_fields     = array_reverse($kyc_data);
         }
-
         return view('agent.sections.security.verify-kyc',compact(
             'page_title',
             'agent_kyc',

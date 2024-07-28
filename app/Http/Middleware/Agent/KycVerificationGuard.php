@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Middleware\Agent;
+
+use Closure;
+use Illuminate\Http\Request;
+use App\Constants\GlobalConst;
+use App\Http\Helpers\Response;
+use App\Providers\Admin\BasicSettingsProvider;
+
+class KycVerificationGuard
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $basic_settings = BasicSettingsProvider::get();
+        
+        if($basic_settings->agent_kyc_verification) {
+            
+            $user = auth()->user();
+            if($user->kyc_verified != GlobalConst::APPROVED) {
+             
+                $smg = "Please verify your KYC information before any transactional action";
+                if($user->kyc_verified == GlobalConst::PENDING) {
+                    $smg = "Your KYC information is pending. Please wait for admin confirmation.";
+                }
+                if(request()->expectsJson()) {
+                    return Response::error([$smg],[],400);
+                }
+                if(auth()->guard("agent")->check()) {
+                    return redirect()->route("agent.security.kyc.index")->with(['warning' => [$smg]]);
+                }
+            }
+            dd("tets");
+        }
+        return $next($request);
+    }
+}

@@ -1,4 +1,4 @@
-@if ($basic_settings->kyc_verification == true && isset($agent_kyc) && $agent_kyc != null && $agent_kyc->fields != null)
+@if ($basic_settings->agent_kyc_verification == true && isset($agent_kyc) && $agent_kyc != null && $agent_kyc->fields != null)
     <h3 class="title">{{ __("KYC Information") }} &nbsp; <span class="{{ auth()->user()->kycStringStatus->class }}">{{ __(auth()->user()->kycStringStatus->value) }}</span></h3>
 
     @if (auth()->user()->kyc_verified == global_const()::PENDING)

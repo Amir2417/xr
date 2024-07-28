@@ -25,11 +25,10 @@ class RemittanceLogController extends Controller
      */
     public function index(){
         $page_title           = "All Logs";
-        $transactions         = Transaction::doesntHave('coupon_transaction')->orderBy('id','desc')->paginate(10);
+        $transactions         = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')->orderBy('id','desc')->paginate(10);
         $sender_currency      = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency    = Currency::where('status',true)->where('receiver',true)->first();
         
-
         return view('admin.sections.remittance-log.all-logs',compact(
             'page_title',
             'transactions',
@@ -44,7 +43,7 @@ class RemittanceLogController extends Controller
      */
     public function details(Request $request, $trx_id){
         $page_title        = "Log Details";
-        $transaction       = Transaction::where('trx_id',$trx_id)->first();
+        $transaction       = Transaction::whereNot('user_id',null)->where('trx_id',$trx_id)->first();
         $sender_currency   = Currency::where('status',true)->where('sender',true)->first();
         $receiver_currency = Currency::where('status',true)->where('receiver',true)->first();
 
@@ -110,7 +109,7 @@ class RemittanceLogController extends Controller
      */
     public function reviewPayment(){
         $page_title    = "Review Payment Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -126,7 +125,7 @@ class RemittanceLogController extends Controller
      */
     public function pending(){
         $page_title    = "Pending Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_PENDING)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -142,7 +141,7 @@ class RemittanceLogController extends Controller
      */
     public function confirmPayment(){
         $page_title    = "Confirm Payment Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -158,7 +157,7 @@ class RemittanceLogController extends Controller
      */
     public function hold(){
         $page_title    = "Hold Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_HOLD)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -174,7 +173,7 @@ class RemittanceLogController extends Controller
      */
     public function settled(){
         $page_title    = "Settled Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_SETTLED)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -190,7 +189,7 @@ class RemittanceLogController extends Controller
      */
     public function complete(){
         $page_title    = "Complete Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -206,7 +205,7 @@ class RemittanceLogController extends Controller
      */
     public function canceled(){
         $page_title    = "Canceled Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_CANCEL)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -222,7 +221,7 @@ class RemittanceLogController extends Controller
      */
     public function failed(){
         $page_title    = "Failed Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_FAILED)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -238,7 +237,7 @@ class RemittanceLogController extends Controller
      */
     public function refunded(){
         $page_title    = "Refunded Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_REFUND)
                             ->orderBy('id','desc')->paginate(10);
 
@@ -254,7 +253,7 @@ class RemittanceLogController extends Controller
      */
     public function delayed(){
         $page_title    = "Delayed Logs";
-        $transactions  = Transaction::doesntHave('coupon_transaction')
+        $transactions  = Transaction::whereNot('user_id',null)->doesntHave('coupon_transaction')
                             ->where('status',global_const()::REMITTANCE_STATUS_DELAYED)
                             ->orderBy('id','desc')->paginate(10);
 

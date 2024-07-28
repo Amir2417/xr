@@ -24,6 +24,8 @@ use Buglinjo\LaravelWebp\Facades\Webp;
 use App\Models\Admin\AdminNotification;
 use App\Models\Admin\BankMethodAutomatic;
 use App\Models\Admin\VirtualCardApi;
+use App\Models\AgentAuthorization;
+use App\Models\AgentNotification;
 use App\Models\CouponTransaction;
 use App\Providers\Admin\CurrencyProvider;
 
@@ -1409,6 +1411,27 @@ function mailVerificationTemplate($user) {
 
     return redirect()->route('user.authorize.mail',$data['token'])->with(['warning' => ['Please verify your mail address. Check your mail inbox to get verification code']]);
 }
+function mailVerificationTemplateAgent($user) {
+    $data = [
+        'agent_id'       => $user->id,
+        'code'          => generate_random_code(),
+        'token'         => generate_unique_string("agent_authorizations","token",200),
+        'created_at'    => now(),
+    ];
+
+    DB::beginTransaction();
+    try{
+        AgentAuthorization::where("agent_id",$user->id)->delete();
+        DB::table("agent_authorizations")->insert($data);
+        $user->notify(new SendAuthorizationCode((object) $data));
+        DB::commit();
+    }catch(Exception $e) {
+        DB::rollBack();
+        return back()->with(['error' => ['Something went wrong! Please try again']]);
+    }
+
+    return redirect()->route('agent.authorize.mail',$data['token'])->with(['warning' => ['Please verify your mail address. Check your mail inbox to get verification code']]);
+}
 
 function extension_const() {
     return ExtensionConst::class;
@@ -1884,4 +1907,9 @@ function authGuardApi(){
             'guard'=>$guard
         ];
     }
+}
+
+function agent_notifications(){
+    $notifications  = AgentNotification::auth()->orderBy('id','desc')->get();
+    return $notifications;
 }

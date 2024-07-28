@@ -74,66 +74,71 @@
         </form>
     </div>
     @if(isset($transactions))
-            <div class="table-area mt-4">
-                <div class="table-wrapper">
-                    <div class="table-header">
-                        <div class="table-responsive">
-                            <table class="custom-table">
-                                <thead>
+        @if ($transactions->isNotEmpty())
+        <div class="table-area mt-4">
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>{{ __("MTCN Number") }}</th>
+                                    <th>{{ __("Type") }}</th>
+                                    <th>{{ __("Sending Amount") }}</th>
+                                    <th>{{ __("Payable Amount") }}</th>
+                                    <th>{{ __("Status") }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($transactions as $item )
                                     <tr>
-                                        <th>{{ __("MTCN Number") }}</th>
-                                        
-                                        <th>{{ __("Type") }}</th>
-                                        <th>{{ __("Sending Amount") }}</th>
-                                        
-                                        <th>{{ __("Payable Amount") }}</th>
-                                        <th>{{ __("Status") }}</th>
+                                        <td>{{ $item->trx_id ?? ''}}</td>
+                                        <td>{{ $item->type ?? ''}}</td>
+                                        <td>{{ get_amount($item->request_amount,get_default_currency_code()) }} </td>
+                                        <td>{{ get_amount($item->payable,get_default_currency_code()) }}</td>
+                                        <td>
+                                            @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
+                                                <span>{{ __("Review Payment") }}</span> 
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_PENDING)
+                                                <span>{{ __("Pending") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
+                                                <span>{{ __("Confirm Payment") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_HOLD)
+                                                <span>{{ __("On Hold") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_SETTLED)
+                                                <span>{{ __("Settled") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_COMPLETE)
+                                                <span>{{ __("Completed") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_CANCEL)
+                                                <span>{{ __("Canceled") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_FAILED)
+                                                <span>{{ __("Failed") }}</span>
+                                            @elseif ($item->status == global_const()::REMITTANCE_STATUS_REFUND)
+                                                <span>{{ __("Refunded") }}</span>
+                                            @else
+                                                <span>{{ __("Delayed") }}</span>
+                                            @endif
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($transactions as $item )
-                                        <tr>
-                                            <td>{{ $item->trx_id ?? ''}}</td>
-                                            <td>{{ $item->type ?? ''}}</td>
-                                            
-                                            
-                                            <td>{{ get_amount($item->request_amount,get_default_currency_code()) }} </td>
-                                            
-                                            <td>{{ get_amount($item->payable,get_default_currency_code()) }}</td>
-                                            <td>
-                                                @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
-                                                    <span>{{ __("Review Payment") }}</span> 
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_PENDING)
-                                                    <span>{{ __("Pending") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
-                                                    <span>{{ __("Confirm Payment") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_HOLD)
-                                                    <span>{{ __("On Hold") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_SETTLED)
-                                                    <span>{{ __("Settled") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_COMPLETE)
-                                                    <span>{{ __("Completed") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_CANCEL)
-                                                    <span>{{ __("Canceled") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_FAILED)
-                                                    <span>{{ __("Failed") }}</span>
-                                                @elseif ($item->status == global_const()::REMITTANCE_STATUS_REFUND)
-                                                    <span>{{ __("Refunded") }}</span>
-                                                @else
-                                                    <span>{{ __("Delayed") }}</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        @include('admin.components.alerts.empty',['colspan' => 11])
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                @empty
+                                <div class="alert alert-primary text-center">
+                                    {{ __("No data found!") }}
+                                </div>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
+        @else
+            <div class="alert alert-primary text-center">
+                {{ __("No data found!") }}
+            </div>
         @endif
+        
+    
+    @endif
 </div>
 @endsection
 @push('script')

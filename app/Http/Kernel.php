@@ -78,6 +78,7 @@ class Kernel extends HttpKernel
         'agent.google.two.factor'       => \App\Http\Middleware\Agent\GoogleTwoFactor::class,
         'agent.google.two.factor.api'   => \App\Http\Middleware\Agent\GoogleTwoFactorApi::class,
         'kyc.verification.guard'        => \App\Http\Middleware\User\KycVerificationGuard::class,
+        'kyc.verification.guard.agent'  => \App\Http\Middleware\Agent\KycVerificationGuard::class,
         'agent.registration.permission' => \App\Http\Middleware\Agent\RegistrationPermission::class,
         'register.verification.guard'   => \App\Http\Middleware\User\RegisterVerificationGuard::class,
     ];
