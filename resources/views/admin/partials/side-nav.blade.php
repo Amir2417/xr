@@ -284,47 +284,47 @@
                                 'links'     => [
                                     [
                                         'title'     => __("Review Payment Logs"),
-                                        'route'     => "admin.send.remittance.review.payment",
+                                        'route'     => "admin.agent.money.in.logs.review.payment",
                                     ],
                                     [
                                         'title'     => __("Pending Logs"),
-                                        'route'     => "admin.send.remittance.pending",
+                                        'route'     => "admin.agent.money.in.logs.pending",
                                     ],
                                     [
                                         'title'     => __("Confirm Payment Logs"),
-                                        'route'     => "admin.send.remittance.confirm.payment",
+                                        'route'     => "admin.agent.money.in.logs.confirm.payment",
                                     ],
                                     [
                                         'title'     => __("On Hold Logs"),
-                                        'route'     => "admin.send.remittance.hold",
+                                        'route'     => "admin.agent.money.in.logs.hold",
                                     ],
                                     [
                                         'title'     => __("Settled Logs"),
-                                        'route'     => "admin.send.remittance.settled",
+                                        'route'     => "admin.agent.money.in.logs.settled",
                                     ],
                                     [
                                         'title'     => __("Complete Logs"),
-                                        'route'     => "admin.send.remittance.complete",
+                                        'route'     => "admin.agent.money.in.logs.complete",
                                     ],
                                     [
                                         'title'     => __("Canceled Logs"),
-                                        'route'     => "admin.send.remittance.canceled",
+                                        'route'     => "admin.agent.money.in.logs.canceled",
                                     ],
                                     [
                                         'title'     => __("Failed Logs"),
-                                        'route'     => "admin.send.remittance.failed",
+                                        'route'     => "admin.agent.money.in.logs.failed",
                                     ],
                                     [
                                         'title'     => __("Refunded Logs"),
-                                        'route'     => "admin.send.remittance.refunded",
+                                        'route'     => "admin.agent.money.in.logs.refunded",
                                     ],
                                     [
                                         'title'     => __("Delayed Logs"),
-                                        'route'     => "admin.send.remittance.delayed",
+                                        'route'     => "admin.agent.money.in.logs.delayed",
                                     ],
                                     [
                                         'title'     => __("All Logs"),
-                                        'route'     => "admin.send.remittance.index",
+                                        'route'     => "admin.agent.money.in.logs.index",
                                     ]
                                 ],
                             ],
@@ -334,57 +334,50 @@
                                 'links'     => [
                                     [
                                         'title'     => __("Review Payment Logs"),
-                                        'route'     => "admin.send.remittance.review.payment",
+                                        'route'     => "admin.agent.money.out.logs.review.payment",
                                     ],
                                     [
                                         'title'     => __("Pending Logs"),
-                                        'route'     => "admin.send.remittance.pending",
+                                        'route'     => "admin.agent.money.out.logs.pending",
                                     ],
                                     [
                                         'title'     => __("Confirm Payment Logs"),
-                                        'route'     => "admin.send.remittance.confirm.payment",
+                                        'route'     => "admin.agent.money.out.logs.confirm.payment",
                                     ],
                                     [
                                         'title'     => __("On Hold Logs"),
-                                        'route'     => "admin.send.remittance.hold",
+                                        'route'     => "admin.agent.money.out.logs.hold",
                                     ],
                                     [
                                         'title'     => __("Settled Logs"),
-                                        'route'     => "admin.send.remittance.settled",
+                                        'route'     => "admin.agent.money.out.logs.settled",
                                     ],
                                     [
                                         'title'     => __("Complete Logs"),
-                                        'route'     => "admin.send.remittance.complete",
+                                        'route'     => "admin.agent.money.out.logs.complete",
                                     ],
                                     [
                                         'title'     => __("Canceled Logs"),
-                                        'route'     => "admin.send.remittance.canceled",
+                                        'route'     => "admin.agent.money.out.logs.canceled",
                                     ],
                                     [
                                         'title'     => __("Failed Logs"),
-                                        'route'     => "admin.send.remittance.failed",
+                                        'route'     => "admin.agent.money.out.logs.failed",
                                     ],
                                     [
                                         'title'     => __("Refunded Logs"),
-                                        'route'     => "admin.send.remittance.refunded",
+                                        'route'     => "admin.agent.money.out.logs.refunded",
                                     ],
                                     [
                                         'title'     => __("Delayed Logs"),
-                                        'route'     => "admin.send.remittance.delayed",
+                                        'route'     => "admin.agent.money.out.logs.delayed",
                                     ],
                                     [
                                         'title'     => __("All Logs"),
-                                        'route'     => "admin.send.remittance.index",
+                                        'route'     => "admin.agent.money.out.logs.index",
                                     ]
                                 ],
                             ],
-                        ],
-                        
-                        [
-                            'title'             => "Statements",
-                            'icon'              => "menu-icon las la-sign-out-alt",
-                            'route'             => "admin.statements.index",
-
                         ],
                     ]
                 ])

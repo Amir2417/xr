@@ -3,10 +3,8 @@
         <thead>
             <tr>
                 <th>{{ __("MTCN ID") }}</th>
-                <th>{{ __("Sender Name") }}</th>
-                <th>{{ __("Receiver Name") }}</th>
-                <th>{{ __("Transaction Type") }}</th>
                 <th>{{ __("Amount") }}</th>
+                <th>{{ __("Payment Method") }}</th>
                 <th>{{ __("Status") }}</th>
                 <th></th>
             </tr>
@@ -15,11 +13,9 @@
             @forelse ($transactions ?? [] as $key => $item)
                 <tr>
                     <td>{{ $item->trx_id ?? '' }}</td>
-                    <td>{{ $item->remittance_data->data->sender->fullname ?? '' }}</td>
-                    <td>{{ $item->remittance_data->data->recipient->fullname ?? '' }}</td>
-                    <td>{{ $item->remittance_data->data->transaction_type->name ?? '' }}</td>
-                    <td>{{ get_amount($item->request_amount,$item->remittance_data->data->base_currency->code)}}<span>{{ get_amount($item->will_get_amount,$item->remittance_data->data->receiver_currency->code) ?? '' }}</span></td>
                     
+                    <td>{{ get_amount($item->request_amount,$item->remittance_data->data->base_currency->currency)}}</td>
+                    <td>{{ $item->remittance_data->data->payment_gateway->name ?? '' }}</td>
                     <td>
                         @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
                             <span>{{ __("Review Payment") }}</span> 
@@ -44,11 +40,11 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ setRoute('admin.agent.send.remittance.details',$item->trx_id) }}" class="btn btn--base btn--primary"><i class="las la-info-circle"></i></a>
+                        <a href="{{ setRoute('admin.agent.money.in.logs.details',$item->trx_id) }}" class="btn btn--base btn--primary"><i class="las la-info-circle"></i></a>
                     </td>
                 </tr>
             @empty
-                @include('admin.components.alerts.empty',['colspan' => 7])
+                @include('admin.components.alerts.empty',['colspan' => 5])
             @endforelse
         </tbody>
     </table>

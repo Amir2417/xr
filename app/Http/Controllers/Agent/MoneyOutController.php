@@ -259,12 +259,12 @@ class MoneyOutController extends Controller
             'image'     => get_image($user->image,'agent-profile'),
         ];
         AdminNotification::create([
-            'type'      => "Money In",
+            'type'      => "Money Out",
             'admin_id'  => 1,
             'message'   => $notification_message,
         ]);
         (new PushNotificationHelper())->prepare([1],[
-            'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+            'title' => "Money Out from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
             'desc'  => "",
             'user_type' => 'admin',
         ])->send();

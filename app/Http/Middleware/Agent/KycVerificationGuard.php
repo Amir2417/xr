@@ -37,7 +37,6 @@ class KycVerificationGuard
                     return redirect()->route("agent.security.kyc.index")->with(['warning' => [$smg]]);
                 }
             }
-            dd("tets");
         }
         return $next($request);
     }

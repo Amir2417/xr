@@ -3,23 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
-use Barryvdh\DomPDF\PDF;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
-use App\Models\Admin\Currency;
-use App\Models\UserNotification;
 use App\Models\Agent\AgentWallet;
 use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use App\Constants\PaymentGatewayConst;
+use App\Notifications\Admin\AgentMoneyOutNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
-use App\Providers\Admin\BasicSettingsProvider;
-use App\Notifications\Admin\AgentSendRemittanceNotification;
 
-class AgentSendRemittanceLogController extends Controller
+class AgentMoneyOutController extends Controller
 {
     /**
      * Method for show send remittance page
@@ -28,9 +24,9 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function index(){
         $page_title           = "All Logs";
-        $transactions         = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)->orderBy('id','desc')->paginate(10);
+        $transactions         = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)->orderBy('id','desc')->paginate(10);
         
-        return view('admin.sections.agent-logs.send-remittance.all-logs',compact(
+        return view('admin.sections.agent-logs.money-out.all-logs',compact(
             'page_title',
             'transactions',
         ));
@@ -45,7 +41,7 @@ class AgentSendRemittanceLogController extends Controller
         $transaction       = Transaction::whereNot('agent_id',null)->where('trx_id',$trx_id)->first();
         
         
-        return view('admin.sections.agent-logs.send-remittance.details',compact(
+        return view('admin.sections.agent-logs.money-out.details',compact(
             'page_title',
             'transaction',
         ));
@@ -70,12 +66,12 @@ class AgentSendRemittanceLogController extends Controller
         $validated = $validator->validate();
         $transaction   = Transaction::with(['agent'])->where('trx_id',$trx_id)->first();
         $form_data = [
-            'trx_id'         => $transaction->trx_id,
-            'payable_amount' => $transaction->payable,
-            'get_amount'     => $transaction->will_get_amount,
-            'status'         => $validated['status'],
-            'sender_currecy' => $transaction->remittance_data->data->base_currency->code,
-            'receiver_currecy' => $transaction->remittance_data->data->receiver_currency->code,
+            'trx_id'                => $transaction->trx_id,
+            'payable_amount'        => $transaction->payable,
+            'request_amount'        => $transaction->request_amount,
+            'status'                => $validated['status'],
+            'sender_currecy'        => $transaction->remittance_data->data->base_currency->currency,
+            'receiver_currecy'      => $transaction->remittance_data->data->payment_gateway->currency,
         ];
         try{
             
@@ -84,16 +80,15 @@ class AgentSendRemittanceLogController extends Controller
             ]);
            
             if($basic_settings->agent_email_notification == true){
-                Notification::route("mail",$transaction->agent->email)->notify(new AgentSendRemittanceNotification($form_data));
+                Notification::route("mail",$transaction->agent->email)->notify(new AgentMoneyOutNotification($form_data));
             }
             if($validated['status'] == GlobalConst::REMITTANCE_STATUS_CANCEL){
+                
                 $agent_wallet       = AgentWallet::where('agent_id',$transaction->agent->id)->first();
                 $agent_wallet->update([
                     'balance'   => $agent_wallet->balance + $transaction->payable,
                 ]);
             }
-
-            
         }catch(Exception $e){
             
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
@@ -107,11 +102,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function reviewPayment(){
         $page_title    = "Review Payment Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.review-payment',compact(
+        return view('admin.sections.agent-logs.money-out.review-payment',compact(
             'page_title',
             'transactions',
         ));
@@ -123,11 +118,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function pending(){
         $page_title    = "Pending Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_PENDING)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.pending',compact(
+        return view('admin.sections.agent-logs.money-out.pending',compact(
             'page_title',
             'transactions',
         ));
@@ -139,11 +134,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function confirmPayment(){
         $page_title    = "Confirm Payment Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.confirm-payment',compact(
+        return view('admin.sections.agent-logs.money-out.confirm-payment',compact(
             'page_title',
             'transactions',
         ));
@@ -155,11 +150,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function hold(){
         $page_title    = "Hold Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_HOLD)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.hold',compact(
+        return view('admin.sections.agent-logs.money-out.hold',compact(
             'page_title',
             'transactions',
         ));
@@ -171,11 +166,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function settled(){
         $page_title    = "Settled Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_SETTLED)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.settled',compact(
+        return view('admin.sections.agent-logs.money-out.settled',compact(
             'page_title',
             'transactions',
         ));
@@ -187,11 +182,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function complete(){
         $page_title    = "Complete Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.complete',compact(
+        return view('admin.sections.agent-logs.money-out.complete',compact(
             'page_title',
             'transactions',
         ));
@@ -203,11 +198,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function canceled(){
         $page_title    = "Canceled Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_CANCEL)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.cancel',compact(
+        return view('admin.sections.agent-logs.money-out.cancel',compact(
             'page_title',
             'transactions',
         ));
@@ -219,11 +214,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function failed(){
         $page_title    = "Failed Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_FAILED)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.failed',compact(
+        return view('admin.sections.agent-logs.money-out.failed',compact(
             'page_title',
             'transactions',
         ));
@@ -235,11 +230,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function refunded(){
         $page_title    = "Refunded Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_REFUND)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.refunded',compact(
+        return view('admin.sections.agent-logs.money-out.refunded',compact(
             'page_title',
             'transactions',
         ));
@@ -251,11 +246,11 @@ class AgentSendRemittanceLogController extends Controller
      */
     public function delayed(){
         $page_title    = "Delayed Logs";
-        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+        $transactions  = Transaction::whereNot('agent_id',null)->doesntHave('coupon_transaction')->where('type',PaymentGatewayConst::MONEYOUT)
                             ->where('status',global_const()::REMITTANCE_STATUS_DELAYED)
                             ->orderBy('id','desc')->paginate(10);
 
-        return view('admin.sections.agent-logs.send-remittance.delayed',compact(
+        return view('admin.sections.agent-logs.money-out.delayed',compact(
             'page_title',
             'transactions',
         ));
@@ -277,7 +272,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -297,7 +292,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -318,7 +313,7 @@ class AgentSendRemittanceLogController extends Controller
         
         
 
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -337,7 +332,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -357,7 +352,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -377,7 +372,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_HOLD)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -397,7 +392,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_SETTLED)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -417,7 +412,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_PENDING)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -437,7 +432,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_DELAYED)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -457,7 +452,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_FAILED)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
     /**
@@ -477,10 +472,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_REFUND)->search($validated['text'])->get();
        
-        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
+        return view('admin.components.data-table.agent.money-out-table',compact('transactions'));
         
     }
-
-
-    
 }
