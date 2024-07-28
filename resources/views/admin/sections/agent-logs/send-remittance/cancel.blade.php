@@ -51,6 +51,6 @@
 @endsection
 @push('script')
     <script>
-        itemSearch($("input[name=cancel_search]"),$(".cancel-search-table"),"{{ setRoute('admin.agent.send.remittance.cancel.search') }}",1);
+        itemSearch($("input[name=cancel_search]"),$(".search-table"),"{{ setRoute('admin.agent.send.remittance.cancel.search') }}",1);
     </script>
 @endpush

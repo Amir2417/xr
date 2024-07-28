@@ -51,6 +51,6 @@
 @endsection
 @push('script')
     <script>
-        itemSearch($("input[name=delayed_search]"),$(".delayed-search-table"),"{{ setRoute('admin.agent.send.remittance.delayed.search') }}",1);
+        itemSearch($("input[name=delayed_search]"),$(".search-table"),"{{ setRoute('admin.agent.send.remittance.delayed.search') }}",1);
     </script>
 @endpush

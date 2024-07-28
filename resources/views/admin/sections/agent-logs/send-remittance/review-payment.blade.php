@@ -50,6 +50,6 @@
 @endsection
 @push('script')
     <script>
-        itemSearch($("input[name=review_search]"),$(".review-search-table"),"{{ setRoute('admin.agent.send.remittance.review.search') }}",1);
+        itemSearch($("input[name=review_search]"),$(".search-table"),"{{ setRoute('admin.agent.send.remittance.review.search') }}",1);
     </script>
 @endpush

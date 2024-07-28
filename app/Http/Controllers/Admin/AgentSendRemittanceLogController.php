@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constants\GlobalConst;
+use Exception;
 use Barryvdh\DomPDF\PDF;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -10,9 +12,11 @@ use App\Models\Admin\Currency;
 use App\Models\UserNotification;
 use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
+use App\Models\Agent\AgentWallet;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Providers\Admin\BasicSettingsProvider;
+use App\Notifications\Admin\AgentSendRemittanceNotification;
 
 class AgentSendRemittanceLogController extends Controller
 {
@@ -69,22 +73,26 @@ class AgentSendRemittanceLogController extends Controller
             'payable_amount' => $transaction->payable,
             'get_amount'     => $transaction->will_get_amount,
             'status'         => $validated['status'],
+            'sender_currecy' => $transaction->remittance_data->data->base_currency->code,
+            'receiver_currecy' => $transaction->remittance_data->data->receiver_currency->code,
         ];
         try{
             
             $transaction->update([
                 'status' => $validated['status'],
             ]);
-            if($basic_settings->email_notification == true){
-                Notification::route("mail",$transaction->remittance_data->sender_email)->notify(new remittanceNotification($form_data));
+           
+            if($basic_settings->agent_email_notification == true){
+                Notification::route("mail",$transaction->agent->email)->notify(new AgentSendRemittanceNotification($form_data));
             }
-            if(auth()->check()){
-                UserNotification::create([
-                    'user_id'  => auth()->user()->id,
-                    'message'  => "Your Remittance  (Payable amount: ".get_amount($transaction->payable).",
-                    Get Amount: ".get_amount($transaction->will_get_amount).") Successfully Sended.", 
+            if($validated['status'] == GlobalConst::REMITTANCE_STATUS_CANCEL){
+                $agent_wallet       = AgentWallet::where('agent_id',$transaction->agent->id)->first();
+                $agent_wallet->update([
+                    'balance'   => $agent_wallet->balance + $transaction->payable,
                 ]);
             }
+
+            
         }catch(Exception $e){
             
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
@@ -268,7 +276,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::search($validated['text'])->get();
        
-        return view('admin.components.search.remittance-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -288,7 +296,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)->search($validated['text'])->get();
        
-        return view('admin.components.search.review-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -306,8 +314,10 @@ class AgentSendRemittanceLogController extends Controller
         $validated = $validator->validate();
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_CANCEL)->search($validated['text'])->get();
-       
-        return view('admin.components.search.cancel-search',compact('transactions'));
+        
+        
+
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -326,7 +336,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_COMPLETE)->search($validated['text'])->get();
        
-        return view('admin.components.search.complete-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -346,7 +356,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT)->search($validated['text'])->get();
        
-        return view('admin.components.search.confirm-payment-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -366,7 +376,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_HOLD)->search($validated['text'])->get();
        
-        return view('admin.components.search.hold-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -386,7 +396,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_SETTLED)->search($validated['text'])->get();
        
-        return view('admin.components.search.settled-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -406,7 +416,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_PENDING)->search($validated['text'])->get();
        
-        return view('admin.components.search.pending-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -426,7 +436,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_DELAYED)->search($validated['text'])->get();
        
-        return view('admin.components.search.delayed-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -446,7 +456,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_FAILED)->search($validated['text'])->get();
        
-        return view('admin.components.search.failed-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
     /**
@@ -466,7 +476,7 @@ class AgentSendRemittanceLogController extends Controller
         
         $transactions    = Transaction::whereNot('agent_id',null)->where('status',global_const()::REMITTANCE_STATUS_REFUND)->search($validated['text'])->get();
        
-        return view('admin.components.search.refunded-search',compact('transactions'));
+        return view('admin.components.data-table.agent.remittance-table',compact('transactions'));
         
     }
 

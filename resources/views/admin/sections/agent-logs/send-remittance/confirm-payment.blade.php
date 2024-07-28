@@ -51,6 +51,6 @@
 @endsection
 @push('script')
     <script>
-        itemSearch($("input[name=confirm_payment_search]"),$(".confirm-payment-search-table"),"{{ setRoute('admin.agent.send.remittance.confirm.payment.search') }}",1);
+        itemSearch($("input[name=confirm_payment_search]"),$(".search-table"),"{{ setRoute('admin.agent.send.remittance.confirm.payment.search') }}",1);
     </script>
 @endpush
