@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\PaymentGatewaysController;
 use App\Http\Controllers\Admin\CashPickupMethodController;
 use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AdminNotificationController;
+use App\Http\Controllers\Admin\AgentSendRemittanceLogController;
 use App\Http\Controllers\Admin\AppOnboardScreensController;
 use App\Http\Controllers\Admin\CouponTransactionController;
 use App\Http\Controllers\Admin\WebJournalCategoryController;
@@ -166,6 +167,35 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //Send Remittance
     Route::controller(RemittanceLogController::class)->prefix('send-remittance')->name('send.remittance.')->group(function(){
+        Route::get('/','index')->name('index');
+        Route::get('details/{trx_id}','details')->name('details');
+        Route::post('status/update/{trx_id}','statusUpdate')->name('status.update');
+        Route::get('review-payment','reviewPayment')->name('review.payment');
+        Route::get('pending','pending')->name('pending');
+        Route::get('confirm-payment','confirmPayment')->name('confirm.payment');
+        Route::get('hold','hold')->name('hold');
+        Route::get('settled','settled')->name('settled');
+        Route::get('complete','complete')->name('complete');
+        Route::get('canceled','canceled')->name('canceled');
+        Route::get('failed','failed')->name('failed');
+        Route::get('refunded','refunded')->name('refunded');
+        Route::get('delayed','delayed')->name('delayed');
+        Route::post('search','search')->name("search");
+        Route::post('review-search','reviewSearch')->name("review.search");
+        Route::post('cancel-search','cancelSearch')->name("cancel.search");
+        Route::post('complete-search','completeSearch')->name("complete.search");
+        Route::post('confirm-payment-search','confirmPaymentSearch')->name("confirm.payment.search");
+        Route::post('hold-search','holdSearch')->name("hold.search");
+        Route::post('settled-search','settledSearch')->name("settled.search");
+        Route::post('pending-search','pendingSearch')->name("pending.search");
+        Route::post('delayed-search','delayedSearch')->name("delayed.search");
+        Route::post('failed-search','failedSearch')->name("failed.search");
+        Route::post('refunded-search','refundedSearch')->name("refunded.search");
+
+    });
+
+    //agent send remittance
+    Route::controller(AgentSendRemittanceLogController::class)->prefix('agent-send-remittance')->name('agent.send.remittance.')->group(function(){
         Route::get('/','index')->name('index');
         Route::get('details/{trx_id}','details')->name('details');
         Route::post('status/update/{trx_id}','statusUpdate')->name('status.update');

@@ -156,7 +156,7 @@
                     </ul>
                 </li>
                 @include('admin.components.side-nav.link-group',[
-                    'group_title'       => __("Transactions & Logs"),
+                    'group_title'       => __("User Transactions & Logs"),
                     'group_links'       => [
                         'dropdown'      => [
                             [
@@ -224,6 +224,174 @@
                         ],
                     ]
                 ])
+                @include('admin.components.side-nav.link-group',[
+                    'group_title'       => __("Agent Transactions & Logs"),
+                    'group_links'       => [
+                        'dropdown'      => [
+                            [
+                                'title'     => __("Remittance"),
+                                'icon'      => "menu-icon las la-calculator",
+                                'links'     => [
+                                    [
+                                        'title'     => __("Review Payment Logs"),
+                                        'route'     => "admin.agent.send.remittance.review.payment",
+                                    ],
+                                    [
+                                        'title'     => __("Pending Logs"),
+                                        'route'     => "admin.agent.send.remittance.pending",
+                                    ],
+                                    [
+                                        'title'     => __("Confirm Payment Logs"),
+                                        'route'     => "admin.agent.send.remittance.confirm.payment",
+                                    ],
+                                    [
+                                        'title'     => __("On Hold Logs"),
+                                        'route'     => "admin.agent.send.remittance.hold",
+                                    ],
+                                    [
+                                        'title'     => __("Settled Logs"),
+                                        'route'     => "admin.agent.send.remittance.settled",
+                                    ],
+                                    [
+                                        'title'     => __("Complete Logs"),
+                                        'route'     => "admin.agent.send.remittance.complete",
+                                    ],
+                                    [
+                                        'title'     => __("Canceled Logs"),
+                                        'route'     => "admin.agent.send.remittance.canceled",
+                                    ],
+                                    [
+                                        'title'     => __("Failed Logs"),
+                                        'route'     => "admin.agent.send.remittance.failed",
+                                    ],
+                                    [
+                                        'title'     => __("Refunded Logs"),
+                                        'route'     => "admin.agent.send.remittance.refunded",
+                                    ],
+                                    [
+                                        'title'     => __("Delayed Logs"),
+                                        'route'     => "admin.agent.send.remittance.delayed",
+                                    ],
+                                    [
+                                        'title'     => __("All Logs"),
+                                        'route'     => "admin.agent.send.remittance.index",
+                                    ]
+                                ],
+                            ],
+                            [
+                                'title'     => __("Money In"),
+                                'icon'      => "menu-icon las la-calculator",
+                                'links'     => [
+                                    [
+                                        'title'     => __("Review Payment Logs"),
+                                        'route'     => "admin.send.remittance.review.payment",
+                                    ],
+                                    [
+                                        'title'     => __("Pending Logs"),
+                                        'route'     => "admin.send.remittance.pending",
+                                    ],
+                                    [
+                                        'title'     => __("Confirm Payment Logs"),
+                                        'route'     => "admin.send.remittance.confirm.payment",
+                                    ],
+                                    [
+                                        'title'     => __("On Hold Logs"),
+                                        'route'     => "admin.send.remittance.hold",
+                                    ],
+                                    [
+                                        'title'     => __("Settled Logs"),
+                                        'route'     => "admin.send.remittance.settled",
+                                    ],
+                                    [
+                                        'title'     => __("Complete Logs"),
+                                        'route'     => "admin.send.remittance.complete",
+                                    ],
+                                    [
+                                        'title'     => __("Canceled Logs"),
+                                        'route'     => "admin.send.remittance.canceled",
+                                    ],
+                                    [
+                                        'title'     => __("Failed Logs"),
+                                        'route'     => "admin.send.remittance.failed",
+                                    ],
+                                    [
+                                        'title'     => __("Refunded Logs"),
+                                        'route'     => "admin.send.remittance.refunded",
+                                    ],
+                                    [
+                                        'title'     => __("Delayed Logs"),
+                                        'route'     => "admin.send.remittance.delayed",
+                                    ],
+                                    [
+                                        'title'     => __("All Logs"),
+                                        'route'     => "admin.send.remittance.index",
+                                    ]
+                                ],
+                            ],
+                            [
+                                'title'     => __("Money Out"),
+                                'icon'      => "menu-icon las la-calculator",
+                                'links'     => [
+                                    [
+                                        'title'     => __("Review Payment Logs"),
+                                        'route'     => "admin.send.remittance.review.payment",
+                                    ],
+                                    [
+                                        'title'     => __("Pending Logs"),
+                                        'route'     => "admin.send.remittance.pending",
+                                    ],
+                                    [
+                                        'title'     => __("Confirm Payment Logs"),
+                                        'route'     => "admin.send.remittance.confirm.payment",
+                                    ],
+                                    [
+                                        'title'     => __("On Hold Logs"),
+                                        'route'     => "admin.send.remittance.hold",
+                                    ],
+                                    [
+                                        'title'     => __("Settled Logs"),
+                                        'route'     => "admin.send.remittance.settled",
+                                    ],
+                                    [
+                                        'title'     => __("Complete Logs"),
+                                        'route'     => "admin.send.remittance.complete",
+                                    ],
+                                    [
+                                        'title'     => __("Canceled Logs"),
+                                        'route'     => "admin.send.remittance.canceled",
+                                    ],
+                                    [
+                                        'title'     => __("Failed Logs"),
+                                        'route'     => "admin.send.remittance.failed",
+                                    ],
+                                    [
+                                        'title'     => __("Refunded Logs"),
+                                        'route'     => "admin.send.remittance.refunded",
+                                    ],
+                                    [
+                                        'title'     => __("Delayed Logs"),
+                                        'route'     => "admin.send.remittance.delayed",
+                                    ],
+                                    [
+                                        'title'     => __("All Logs"),
+                                        'route'     => "admin.send.remittance.index",
+                                    ]
+                                ],
+                            ],
+                        ],
+                        
+                        [
+                            'title'             => "Statements",
+                            'icon'              => "menu-icon las la-sign-out-alt",
+                            'route'             => "admin.statements.index",
+
+                        ],
+                    ]
+                ])
+                
+                
+                
+                
                 {{-- Interface Panel --}}
                 @include('admin.components.side-nav.link-group',[
                     'group_title'       => __("Interface Panel"),
