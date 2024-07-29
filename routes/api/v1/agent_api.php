@@ -7,6 +7,7 @@ use App\Providers\Admin\BasicSettingsProvider;
 use App\Http\Controllers\Api\V1\Agent\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Agent\AppSettingsController;
 use App\Http\Controllers\Api\V1\Agent\AuthorizationController;
+use App\Http\Controllers\Api\V1\Agent\Auth\ForgotPasswordController;
 
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
     Route::get('/','appSettings');
