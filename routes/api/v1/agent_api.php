@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Agent\AgentController;
 use App\Http\Helpers\Response;
 use App\Models\Admin\SetupKyc;
 use Illuminate\Support\Facades\Route;
 use App\Providers\Admin\BasicSettingsProvider;
+use App\Http\Controllers\Api\V1\Agent\SecurityController;
 use App\Http\Controllers\Api\V1\Agent\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Agent\AppSettingsController;
 use App\Http\Controllers\Api\V1\Agent\AuthorizationController;
@@ -33,13 +35,13 @@ Route::prefix('agent')->group(function(){
     });
     Route::post('login',[LoginController::class,'login']);
     Route::post('register',[LoginController::class,'register'])->middleware(['agent.registration.permission']);
+
     //forget password for email
     Route::prefix('forget')->group(function(){
         Route::post('password', [ForgotPasswordController::class,'sendCode']);
         Route::post('verify/otp', [ForgotPasswordController::class,'verifyCode']);
         Route::post('reset/password', [ForgotPasswordController::class,'resetPassword']);
     });
-
     //account re-verifications
     Route::middleware(['agent.api'])->group(function(){
         Route::post('send-code', [AuthorizationController::class,'sendMailCode']);
@@ -48,6 +50,30 @@ Route::prefix('agent')->group(function(){
     });
     Route::middleware(['agent.api'])->group(function(){
         Route::get('logout', [LoginController::class,'logout']);
+        Route::get('kyc', [AuthorizationController::class,'showKycFrom']);
+        Route::post('kyc/submit', [AuthorizationController::class,'kycSubmit']);
+        Route::middleware(['CheckStatusApiAgent','agent.google.two.factor.api'])->group(function () { 
+            //google-2fa
+            Route::controller(SecurityController::class)->prefix("security")->group(function(){
+                Route::get('/google-2fa', 'google2FA');
+                Route::post('/google-2fa/status/update', 'google2FAStatusUpdate')->middleware('app.mode.api');
+
+            });
+
+            //agent profile
+            Route::controller(AgentController::class)->group(function(){
+                Route::get('dashboard', 'dashboard');
+                Route::get('profile','profile');
+                Route::post('profile/update', 'profileUpdate')->middleware('app.mode.api');
+                Route::post('password/update', 'passwordUpdate')->middleware('app.mode.api');
+                Route::post('delete/account','deleteAccount')->middleware('app.mode.api');
+                Route::get('notifications','notifications');
+            });
+
+            
+            
+        });
+        
     });
 });
 

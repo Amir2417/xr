@@ -72,6 +72,14 @@
                                     ])
                                 </div>
                                 <div class="col-xl-6 col-lg-6 form-group">
+                                    @include('admin.components.form.input',[
+                                        'label'         => __("Store Name")."<span>*</span>",
+                                        'name'          => "store_name",
+                                        'placeholder'   => __("Enter Store Name")."...",
+                                        'value'         => old('store_name',auth()->user()->store_name)
+                                    ])
+                                </div>
+                                <div class="col-xl-6 col-lg-6 form-group">
                                     <label>{{__("Country")}}<span>*</span></label>
                                     <select class="form--control select2-auto-tokenize country-select" data-placeholder="Select Country" data-old="{{ old('country',auth()->user()->address->country ?? "") }}" name="country"></select>
                                 </div>

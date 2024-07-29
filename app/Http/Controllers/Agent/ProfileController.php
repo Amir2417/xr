@@ -34,6 +34,7 @@ class ProfileController extends Controller
         $validated = Validator::make($request->all(),[
             'firstname'     => "required|string|max:60",
             'lastname'      => "required|string|max:60",
+            'store_name'    => "required|string|max:60",
             'country'       => "nullable|string|max:50",
             'phone'         => "nullable|string|max:20",
             'state'         => "nullable|string|max:50",
@@ -54,7 +55,7 @@ class ProfileController extends Controller
         ];
 
         if($request->hasFile("image")) {
-            $image = upload_file($validated['image'],'user-profile',auth()->user()->image);
+            $image = upload_file($validated['image'],'agent-profile',auth()->user()->image);
             $upload_image = upload_files_from_path_dynamic([$image['dev_path']],'agent-profile');
             delete_file($image['dev_path']);
             $validated['image']     = $upload_image;

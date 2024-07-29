@@ -4,16 +4,21 @@ use App\Models\Admin\Admin;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Constants\GlobalConst;
+use App\Http\Helpers\Response;
 use App\Models\Admin\Language;
 use App\Constants\LanguageConst;
 use App\Constants\AdminRoleConst;
 use App\Constants\ExtensionConst;
+use App\Models\AgentNotification;
+use App\Models\CouponTransaction;
 use App\Models\UserAuthorization;
 use Illuminate\Http\UploadedFile;
 use App\Models\Admin\AdminHasRole;
+use App\Models\AgentAuthorization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Constants\NotificationConst;
+use App\Models\Admin\VirtualCardApi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Constants\SupportTicketConst;
@@ -22,16 +27,14 @@ use Intervention\Image\Facades\Image;
 use App\Constants\PaymentGatewayConst;
 use Buglinjo\LaravelWebp\Facades\Webp;
 use App\Models\Admin\AdminNotification;
-use App\Models\Admin\BankMethodAutomatic;
-use App\Models\Admin\VirtualCardApi;
-use App\Models\AgentAuthorization;
-use App\Models\AgentNotification;
-use App\Models\CouponTransaction;
-use App\Providers\Admin\CurrencyProvider;
 
+use App\Models\Admin\BankMethodAutomatic;
+use App\Providers\Admin\CurrencyProvider;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\User\Auth\SendAuthorizationCode;
+use App\Notifications\Agent\Auth\SendAuthorizationCode as AgentAuthSendAuthorizationCode;
+
 
 function setRoute($route_name, $param = null)
 {
@@ -1923,4 +1926,34 @@ function google_2fa_verify_api($secret_key,$code) {
         return false;
     }
     return true;
+}
+
+
+function agentMailVerificationTemplateApi($user) {
+    $basic_settings = BasicSettingsProvider::get();
+    $data = [
+        'agent_id'       => $user->id,
+        'code'          => generate_random_code(),
+        'token'         => generate_unique_string("agent_authorizations","token",200),
+        'created_at'    => now(),
+    ];
+
+    DB::beginTransaction();
+    try{
+        if( $basic_settings->agent_email_verification == true){
+            $user->notify(new AgentAuthSendAuthorizationCode((object) $data));
+        }
+        AgentAuthorization::where("agent_id",$user->id)->delete();
+        DB::table("agent_authorizations")->insert($data);
+        DB::commit();
+    }catch(\Exception $e) {
+        DB::rollBack();
+        return Response::error(['Something went wrong! Please try again.'],[],400);
+    }
+      return Response::error(['Email verification is required.'],[],404);
+
+}
+
+function agentGoogleTwoFactorVerificationTemplate($user) {
+    return redirect()->route('agent.authorize.google.2fa')->with(['error' => [__("Please verify two factor authentication")]]);
 }

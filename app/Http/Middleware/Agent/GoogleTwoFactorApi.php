@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware\Agent;
 
-use App\Http\Helpers\Api\Helpers;
 use Closure;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Response;
+use App\Http\Helpers\Api\Helpers;
 
 class GoogleTwoFactorApi
 {
@@ -19,8 +20,7 @@ class GoogleTwoFactorApi
     {
         $user = auth()->user();
         if($user->two_factor_status && $user->two_factor_verified == false) {
-            $error = ['errors'=>[__('2fa verification is required')]];
-                return Helpers::error($error);
+            return Response::error(['2fa verification is required.'],[],400);
         }
         return $next($request);
     }

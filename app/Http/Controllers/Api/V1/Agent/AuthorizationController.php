@@ -8,9 +8,11 @@ use App\Models\Agent;
 use Illuminate\Http\Request;
 use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
+use App\Models\Admin\SetupKyc;
 use App\Models\AgentAuthorization;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Providers\Admin\BasicSettingsProvider;
@@ -19,6 +21,7 @@ use App\Notifications\Agent\Auth\SendAuthorizationCode;
 
 class AuthorizationController extends Controller
 {
+    use ControlDynamicInputFields;
     protected $basic_settings;
 
     public function __construct()
@@ -37,7 +40,7 @@ class AuthorizationController extends Controller
         if(check_email($request->email)) $column = "email";
         $user = Agent::where($column,$request->email)->first();
         if($user){
-            return Response::error(['Agent already exist, please select another email address'],[],404);
+            return Response::error(['Agent already exist, please select another email address'],[],400);
         }
         return Response::success(['Now,You can register'],[],200);
 
@@ -50,7 +53,7 @@ class AuthorizationController extends Controller
             $agree = '';
         }
         if( $request->agree != 1){
-            return Response::error(['Terms Of Use & Privacy Policy Field Is Required!'],[],404);
+            return Response::error(['Terms Of Use & Privacy Policy Field Is Required!'],[],400);
         }
         $validator = Validator::make($request->all(), [
             'email'         => 'required|email',
@@ -67,7 +70,7 @@ class AuthorizationController extends Controller
         }
         $exist = Agent::where($field_name,$validated['email'])->active()->first();
         if( $exist){
-            return Response::error(['Agent already exist, please select another email address'],[],404);
+            return Response::error(['Agent already exist, please select another email address'],[],400);
         }
 
         $code = generate_random_code();
@@ -93,7 +96,7 @@ class AuthorizationController extends Controller
             DB::commit();
         }catch(Exception $e) {
             DB::rollBack();
-            return Response::error(['Something went wrong! Please try again.'],[],404);
+            return Response::error(['Something went wrong! Please try again.'],[],400);
         };
         return Response::success(['Verification code sended to your email address.'],[],200);
     }
@@ -109,19 +112,19 @@ class AuthorizationController extends Controller
         $otp_exp_sec = BasicSettingsProvider::get()->agent_otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
         $auth_column = AgentAuthorization::where("email",$request->email)->first();
         if(!$auth_column){
-            return Response::error(['Invalid request.'],[],404);
+            return Response::error(['Invalid request.'],[],400);
         }
         if( $auth_column->code != $code){
-            return Response::error(['The verification code does not match.'],[],404);
+            return Response::error(['The verification code does not match.'],[],400);
         }
         if($auth_column->created_at->addSeconds($otp_exp_sec) < now()) {
             $auth_column->delete();
-            return Response::error(['Verification code is expired.'],[],404);
+            return Response::error(['Verification code is expired.'],[],400);
         }
         try{
             $auth_column->delete();
         }catch(Exception $e) {
-            return Response::error(['Something went wrong! Please try again.'],[],404);
+            return Response::error(['Something went wrong! Please try again.'],[],400);
         }
         return Response::success(['Otp successfully verified.'],[],200);
     }
@@ -160,7 +163,7 @@ class AuthorizationController extends Controller
             DB::commit();
         }catch(Exception $e) {
             DB::rollBack();
-            return Response::error(['Something went wrong! Please try again.'],[],404);
+            return Response::error(['Something went wrong! Please try again.'],[],400);
         }
         return Response::success(['Verification code resend success.'],[],200);
 
@@ -170,8 +173,7 @@ class AuthorizationController extends Controller
     /**
      * Method for send email otp code.
      */
-    public function sendMailCode()
-    {
+    public function sendMailCode(){
         $user = auth()->user();
         $resend = AgentAuthorization::where("agent_id",$user->id)->first();
         if( $resend){
@@ -197,15 +199,14 @@ class AuthorizationController extends Controller
             return Response::success(['Verification code sended to your email address.'],[],200);
         }catch(Exception $e) {
             DB::rollBack();
-            return Response::error(['Something went wrong! Please try again.'],[],404);
+            return Response::error(['Something went wrong! Please try again.'],[],400);
         }
     }
     /**
      * Method for verifying email.
      * @param Illuminate\Http\Request $request
      */
-    public function mailVerify(Request $request)
-    {
+    public function mailVerify(Request $request){
         $validator = Validator::make($request->all(), [
             'code' => 'required|numeric',
         ]);
@@ -218,13 +219,13 @@ class AuthorizationController extends Controller
         $auth_column = AgentAuthorization::where("agent_id",$user->id)->first();
 
         if(!$auth_column){
-            return Response::error(['Verification code already used.'],[],404);
+            return Response::error(['Verification code already used.'],[],400);
         }
         if($auth_column->code !=  $code){
-            return Response::error(['Verification is invalid.'],[],404);
+            return Response::error(['Verification is invalid.'],[],400);
         }
         if($auth_column->created_at->addSeconds($otp_exp_sec) < now()) {
-            return Response::error(['Time expired. Please try again.'],[],404);
+            return Response::error(['Time expired. Please try again.'],[],400);
         }
         try{
             $auth_column->agent->update([
@@ -232,7 +233,7 @@ class AuthorizationController extends Controller
             ]);
             $auth_column->delete();
         }catch(Exception $e) {
-            return Response::error(['Something went wrong! Please try again.'],[],404);
+            return Response::error(['Something went wrong! Please try again.'],[],400);
         }
         return Response::success(['Account successfully verified.'],[],200);
     }
@@ -250,10 +251,11 @@ class AuthorizationController extends Controller
         }
 
         $code = $request->otp;
-        $user = authGuardApi()['user'];
+        $user = auth()->guard(get_auth_guard())->user();
+        
 
         if(!$user->two_factor_secret) {
-            return Response::error(['Your secret key is not stored properly. Please contact with system administrator.'],[],404);
+            return Response::error(['Your secret key is not stored properly. Please contact with system administrator.'],[],400);
         }
 
         if(google_2fa_verify_api($user->two_factor_secret,$code)) {
@@ -262,6 +264,69 @@ class AuthorizationController extends Controller
             ]);
             return Response::success(['Two factor verified successfully.'],[],200);
         }
-        return Response::error(['Failed to login. Please try again.'],[],404);
+        return Response::error(['Failed to login. Please try again.'],[],400);
+    }
+    /**
+     * Method for show kyc form
+     */
+    public function showKycFrom(){
+        $user = auth()->user();
+        $kyc_status = $user->kyc_verified;
+        $user_kyc = SetupKyc::agentKyc()->first();
+        $status_info = "1==verified, 2==pending, 0==unverified; 3=rejected";
+        $kyc_data = $user_kyc->fields;
+        $kyc_fields = [];
+        if($kyc_data) {
+            $kyc_fields = array_reverse($kyc_data);
+        }
+        $data =[
+            'status_info' => $status_info,
+            'kyc_status' => $kyc_status,
+            'agentKyc' => $kyc_fields
+        ];
+        return Response::success(['KYC Verification.'],$data,200);
+
+    }
+    /**
+     * Method for submit kyc data
+     * @param Illuminate\Http\Request $request
+     */
+    public function kycSubmit(Request $request){
+        $user = auth()->user();
+        if($user->kyc_verified == GlobalConst::VERIFIED){
+            return Response::error(['You are already KYC Verified User.'],[],400);
+
+        }
+        $user_kyc_fields = SetupKyc::agentKyc()->first()->fields ?? [];
+        $validation_rules = $this->generateValidationRules($user_kyc_fields);
+        $validated = Validator::make($request->all(), $validation_rules);
+
+        if ($validated->fails()) {
+            return Response::error($validated->errors()->all(),[]);
+        }
+        $validated = $validated->validate();
+        $get_values = $this->placeValueWithFields($user_kyc_fields, $validated);
+        $create = [
+            'agent_id'       => auth()->user()->id,
+            'data'          => json_encode($get_values),
+            'created_at'    => now(),
+        ];
+
+        DB::beginTransaction();
+        try{
+            DB::table('agent_kyc_data')->updateOrInsert(["agent_id" => $user->id],$create);
+            $user->update([
+                'kyc_verified'  => GlobalConst::PENDING,
+            ]);
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            $user->update([
+                'kyc_verified'  => GlobalConst::DEFAULT,
+            ]);
+            return Response::error(['Something went wrong! Please try again.'],[],400);
+        }
+        return Response::success(['KYC information successfully submitted.'],[],200);
+
     }
 }

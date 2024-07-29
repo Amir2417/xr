@@ -78,6 +78,8 @@ class Kernel extends HttpKernel
         'register.verification.guard'   => \App\Http\Middleware\User\RegisterVerificationGuard::class,
         
         'agent.api'                     => \App\Http\Middleware\Agent\ApiAuthenticator::class,
+        'app.mode.api'                  => \App\Http\Middleware\Admin\AppModeGuardApi::class,
+        'CheckStatusApiAgent'           => \App\Http\Middleware\Agent\CheckStatusApi::class,
         'agent.google.two.factor'       => \App\Http\Middleware\Agent\GoogleTwoFactor::class,
         'verification.guard.agent'      => \App\Http\Middleware\Agent\VerificationGuard::class,
         'agent.registration.permission' => \App\Http\Middleware\Agent\RegistrationPermission::class,

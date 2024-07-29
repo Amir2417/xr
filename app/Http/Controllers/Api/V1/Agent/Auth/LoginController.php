@@ -42,11 +42,11 @@ class LoginController extends Controller
         }
         $user = Agent::where('email',$request->email)->first();
         if(!$user){
-            return Response::error(["Agent doesn't exists."],[],404);
+            return Response::error(["Agent doesn't exists."],[],400);
         }
         if (Hash::check($request->password, $user->password)) {
             if($user->status == 0){
-                return Response::error(["Account Has been Suspended."],[],404);
+                return Response::error(["Account Has been Suspended."],[],400);
             }
             $user->two_factor_verified = false;
             $user->save();
@@ -58,7 +58,7 @@ class LoginController extends Controller
             return Response::success(['Login Successful'],$data,200);
 
         } else {
-            return Response::error(["Incorrect Password."],[],404);
+            return Response::error(["Incorrect Password."],[],400);
         }
 
     }
@@ -118,7 +118,7 @@ class LoginController extends Controller
 
         $check_agent = Agent::where('mobile',$mobile)->orWhere('full_mobile',$complete_phone)->orWhere('email',$data['email'])->first();
         if($check_agent){
-            return Response::error(["Agent doesn't exists."],[],404);
+            return Response::error(["Agent doesn't exists."],[],400);
         }
         $userName = make_username($data['firstname'],$data['lastname']);
         $check_user_name = Agent::where('username',$userName)->first();
@@ -166,7 +166,7 @@ class LoginController extends Controller
                 $user->update([
                     'kyc_verified'  => GlobalConst::DEFAULT,
                 ]);
-                return Response::error(["Something went wrong! Please try again."],[],404);
+                return Response::error(["Something went wrong! Please try again."],[],400);
             }
 
            }

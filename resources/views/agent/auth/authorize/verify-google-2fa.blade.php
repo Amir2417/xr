@@ -1,101 +1,113 @@
-@extends('agent.layouts.user_auth')
-@push('css')
 
-@endpush
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ $page_title ?? $basic_settings->agent_site_name }}</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{{ get_fav_agent($basic_settings) }}" type="image/x-icon">
+    <!-- fontawesome css link -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/fontawesome-all.css') }}">
+    <!-- bootstrap css link -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/bootstrap.css') }}">
+    <!-- swipper css link -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/swiper.css') }}">
+    <!-- lightcase css links -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/lightcase.css') }}">
+    <!-- line-awesome-icon css -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/line-awesome.css') }}">
+    <!-- animate.css -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/animate.css') }}">
+    <!-- Aos CSS -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/aos.css') }}">
+    <!-- nice-select -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/nice-select.css') }}">
+    <!-- country-select -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/countrySelect.css') }}">
+    <!-- select2-select css link -->
+    <link rel="stylesheet" href="{{ asset('public/backend/css/select2.css') }}">
+    <!-- main style css link -->
+    <link rel="stylesheet" href="{{ asset('public/frontend/css/style.css') }}">
+    <!-- Fileholder CSS CDN -->
+    <link rel="stylesheet" href="https://appdevs.cloud/cdn/fileholder/v1.0/css/fileholder-style.css" type="text/css">
 
-    <section class="account">
-        <div class="account-area">
-            <div class="account-wrapper">
-                <div class="account-logo text-center">
-                    <a class="site-logo" href="{{ setRoute('index') }}">
-                        <img src="{{ get_logo_agent($basic_settings) }}"  data-white_img="{{ get_logo_agent($basic_settings,'white') }}"
-                        data-dark_img="{{ get_logo_agent($basic_settings,'dark') }}"
-                            alt="site-logo">
-                    </a>
-                </div>
-                <h3 class="title">{{ __("Two Factor Authorization") }}</h3>
-                <p>{{ __("Please enter your authorization code to access dashboard") }}</p>
-                <form action="{{ setRoute('agent.authorize.google.2fa.submit') }}" class="account-form" method="POST">
-                    @csrf
-                    <div id="recaptcha-container"></div>
-                    <div class="row ml-b-20">
-                        <div class="col-lg-12 form-group">
-                            <input class="otp" name="code[]" type="text" oninput='digitValidate(this)' onkeyup='tabChange(1)'
-                            maxlength=1 required>
-                        <input class="otp" name="code[]" type="text" oninput='digitValidate(this)' onkeyup='tabChange(2)'
-                            maxlength=1 required>
-                        <input class="otp" name="code[]" type="text" oninput='digitValidate(this)' onkeyup='tabChange(3)'
-                            maxlength=1 required>
-                        <input class="otp" name="code[]" type="text" oninput='digitValidate(this)' onkeyup='tabChange(4)'
-                            maxlength=1 required>
-                        <input class="otp" name="code[]" type="text" oninput='digitValidate(this)' onkeyup='tabChange(5)'
-                            maxlength=1 required>
-                        <input class="otp" name="code[]" type="text" oninput='digitValidate(this)' onkeyup='tabChange(6)'
-                            maxlength=1 required>
-                        </div>
+    @php
+        $color = @$basic_settings->agent_base_color ?? '#723eeb';
+    @endphp
 
-                        <div class="col-lg-12 form-group text-start">
-                            <div class="forgot-item">
-                                <label><a href="{{ setRoute('agent.login') }}" class="text--base">{{ __("Back to Login") }}</a></label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 form-group text-center">
-                            <button type="submit" class="btn--base w-100">{{ __("Authorize") }}</button>
+    <style>
+        :root {
+            --primary-color: {{$color}};
+        }
+
+    </style>
+
+    @stack('css')
+</head>
+
+<body>
+    <div id="body-overlay" class="body-overlay"></div>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Start Account
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<section class="account forgot">
+    <div class="account-area">
+        <div class="account-wrapper change-form">
+            <div class="account-logo text-center">
+                <a href="{{ setRoute('index') }}" class="site-logo">
+                    <img src="{{ get_logo_agent($basic_settings) }}" alt="logo">
+                </a>
+            </div>
+            <h3 class="title">{{ __("Two Factor Authorization") }}</h3>
+            <p>{{ __("Please enter your authorization code to access dashboard") }}</p>
+            <form method="POST" class="account-form" action="{{ setRoute('agent.authorize.google.2fa.submit') }}">
+                @csrf
+                <div class="row ml-b-20">
+                    <div class="col-lg-12 form-group">
+                        <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(1)" maxlength="1" required="">
+                        <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(2)" maxlength="2" required="">
+                        <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(3)" maxlength="1" required="">
+                        <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(4)" maxlength="1" required="">
+                        <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(5)" maxlength="1" required="">
+                        <input class="otp" type="text" name="code[]" oninput="digitValidate(this)" onkeyup="tabChange(6)" maxlength="1" required="">
+                    </div>
+                    <div class="col-lg-12 form-group text-center">
+                        <button type="submit" class="btn--base w-100">{{ __("Verify Mail") }}</button>
+                    </div>
+                    <div class="col-lg-12 text-center">
+                        <div class="account-item">
+                            <label>{{ __("Already Have An Account?") }} <a href="{{ setRoute('agent.login') }}" class="account-control-btn">{{ __("Login Now") }}</a></label>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
-    </section>
-    <ul class="bg-bubbles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
-@endsection
+    </div>
+</section>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    End Account
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+@include('partials.footer-asset')
+@include('admin.partials.notify')
+</body>
+</html>
 
 @push('script')
-        <script>
+    <script>
+          let digitValidate = function (ele) {
+            ele.value = ele.value.replace(/[^0-9]/g, '');
+        }
 
-            let digitValidate = function (ele) {
-                console.log(ele.value);
-                ele.value = ele.value.replace(/[^0-9]/g, '');
+        let tabChange = function (val) {
+            let ele = document.querySelectorAll('.otp');
+            if (ele[val - 1].value != '') {
+                ele[val].focus()
+            } else if (ele[val - 1].value == '') {
+                ele[val - 2].focus()
             }
-
-            let tabChange = function (val) {
-                let ele = document.querySelectorAll('.otp');
-                if (ele[val - 1].value != '') {
-                    ele[val].focus()
-                } else if (ele[val - 1].value == '') {
-                    ele[val - 2].focus()
-                }
-            }
-
-            $(".otp").parents("form").find("input[type=submit],button[type=submit]").click(function(e){
-                // e.preventDefault();
-                var otps = $(this).parents("form").find(".otp");
-                var result = true;
-                $.each(otps,function(index,item){
-                    if($(item).val() == "" || $(item).val() == null) {
-                        result = false;
-                    }
-                });
-
-                if(result == false) {
-                    $(this).parents("form").find(".otp").addClass("required");
-                }else {
-                    $(this).parents("form").find(".otp").removeClass("required");
-                    $(this).parents("form").submit();
-                }
-            });
-        </script>
+        }
+    </script>
 @endpush

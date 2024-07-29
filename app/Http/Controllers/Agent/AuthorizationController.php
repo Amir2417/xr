@@ -111,4 +111,30 @@ class AuthorizationController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     }
+    /**
+     * Googel 2FA Form
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showGoogle2FAForm() {
+        $page_title =  "Authorize Google Two Factor";
+        return view('agent.auth.authorize.verify-google-2fa',compact('page_title'));
+    }
+    public function google2FASubmit(Request $request) {
+        $request->validate([
+            'code*'    => "required|numeric",
+        ]);
+        $code = implode($request->code);;
+        $user = auth()->user();
+        if(!$user->two_factor_secret) {
+            return back()->with(['warning' => ['Your secret key not stored properly. Please contact with system administrator']]);
+        }
+        if(google_2fa_verify($user->two_factor_secret,$code)) {
+            $user->update([
+                'two_factor_verified'   => true,
+            ]);
+            return redirect()->intended(route('agent.dashboard'));
+        }
+        return back()->with(['warning' => ['Failed to login. Please try again']]);
+    }
 }
