@@ -74,4 +74,6 @@ class GlobalConst {
     const MONEY_IN                               = "money-in";
     const MONEY_OUT                              = "money-out";
 
+    const AGENT     = "AGENT";
+
 }

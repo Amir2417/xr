@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware\Agent;
 
-use App\Http\Helpers\Api\Helpers;
-use App\Providers\Admin\BasicSettingsProvider;
 use Closure;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Response;
+use App\Http\Helpers\Api\Helpers;
+use App\Providers\Admin\BasicSettingsProvider;
 
 class RegistrationPermission
 {
@@ -21,8 +22,7 @@ class RegistrationPermission
         $basic_settings = BasicSettingsProvider::get();
         if($request->expectsJson()) {
             if($basic_settings->agent_registration != true){
-                $message = ['error'=>[__("Registration Option Currently Off")]];
-                return Helpers::error($message);
+                return Response::error(['Registration Option Currently Off.'],[],404); 
             }
             return $next($request);
         }

@@ -42,4 +42,9 @@ class Response {
     {
         return response()->json(['message' => $message, 'data' => $data], 422);
     }
+
+    public static function unauthorized($data, $message = null)
+    {
+        return response()->json(['message' => $message,'data' => $data], 401);
+    }
 }

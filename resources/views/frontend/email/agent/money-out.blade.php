@@ -91,7 +91,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <h3 style="font-size: 24px;
-                                                            font-weight: 700; clear: both; line-height: 1.3em; color: #1A043F; margin-top: 0; margin-bottom: 0.5rem;">{{ __("Money In Information") }}</h3>
+                                                            font-weight: 700; clear: both; line-height: 1.3em; color: #1A043F; margin-top: 0; margin-bottom: 0.5rem;">{{ __("Money Out Information") }}</h3>
                                                         </tr>
                                                     </tbody>
                                                 </table>

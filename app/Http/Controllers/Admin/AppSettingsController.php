@@ -31,6 +31,8 @@ class AppSettingsController extends Controller
         $validator = Validator::make($request->all(),[
             'image'         => 'nullable|image|mimes:png,jpg,jpeg,webp,svg',
             'version'       => 'required|string|max:15',
+            'agent_image'         => 'nullable|image|mimes:png,jpg,jpeg,webp,svg',
+            'agent_version'       => 'required|string|max:15',
         ]);
         $validated = $validator->validate();
         $validated = Arr::except($validated,['image']);
@@ -41,6 +43,11 @@ class AppSettingsController extends Controller
             $image = get_files_from_fileholder($request,'image');
             $upload_image = upload_files_from_path_static($image,'app-images',$app_settings->splash_screen_image,true,true);
             $validated['splash_screen_image']   = $upload_image;
+        }
+        if($request->hasFile('agent_image')) {
+            $image = get_files_from_fileholder($request,'agent_image');
+            $upload_image = upload_files_from_path_static($image,'app-images',$app_settings->agent_splash_screen_image,true,true);
+            $validated['agent_splash_screen_image']   = $upload_image;
         }
 
         try{

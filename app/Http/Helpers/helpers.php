@@ -1913,3 +1913,14 @@ function agent_notifications(){
     $notifications  = AgentNotification::auth()->orderBy('id','desc')->get();
     return $notifications;
 }
+
+function google_2fa_verify_api($secret_key,$code) {
+    $google2FA = new \PragmaRX\Google2FA\Google2FA();
+    if($google2FA->verifyKey($secret_key, $code,0) == false) {
+        // throw ValidationException::withMessages([
+        //     'code'       => "Invalid authentication code",
+        // ]);
+        return false;
+    }
+    return true;
+}

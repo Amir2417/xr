@@ -2,11 +2,12 @@
 
 namespace App\Http\Middleware\Agent;
 
-use App\Http\Helpers\Api\Helpers;
 use Closure;
-use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
+use App\Http\Helpers\Response;
+use App\Http\Helpers\Api\Helpers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Validation\UnauthorizedException;
 
 class ApiAuthenticator extends Authenticate
@@ -45,8 +46,7 @@ class ApiAuthenticator extends Authenticate
         try {
             $this->authenticate($request, $guards);
         } catch (UnauthorizedException $e) {
-            $message = ['error'=>[__("Sorry, You are unauthorized agent")]];
-            return Helpers::unauthorized($data = null, $message);
+            return Response::unauthorized(['Sorry, You are unauthorized agent.'],[],404);
         }
 
         return $next($request);

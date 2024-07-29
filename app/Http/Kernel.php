@@ -73,13 +73,15 @@ class Kernel extends HttpKernel
         'admin.delete.guard'            => \App\Http\Middleware\Admin\AdminDeleteGuard::class,
         'admin.role.delete.guard'       => \App\Http\Middleware\Admin\RoleDeleteGuard::class,
         'verification.guard'            => \App\Http\Middleware\VerificationGuard::class,
-        'verification.guard.agent'      => \App\Http\Middleware\Agent\VerificationGuard::class,
         'user.google.two.factor'        => \App\Http\Middleware\User\GoogleTwoFactor::class,
-        'agent.google.two.factor'       => \App\Http\Middleware\Agent\GoogleTwoFactor::class,
-        'agent.google.two.factor.api'   => \App\Http\Middleware\Agent\GoogleTwoFactorApi::class,
         'kyc.verification.guard'        => \App\Http\Middleware\User\KycVerificationGuard::class,
-        'kyc.verification.guard.agent'  => \App\Http\Middleware\Agent\KycVerificationGuard::class,
-        'agent.registration.permission' => \App\Http\Middleware\Agent\RegistrationPermission::class,
         'register.verification.guard'   => \App\Http\Middleware\User\RegisterVerificationGuard::class,
+        
+        'agent.api'                     => \App\Http\Middleware\Agent\ApiAuthenticator::class,
+        'agent.google.two.factor'       => \App\Http\Middleware\Agent\GoogleTwoFactor::class,
+        'verification.guard.agent'      => \App\Http\Middleware\Agent\VerificationGuard::class,
+        'agent.registration.permission' => \App\Http\Middleware\Agent\RegistrationPermission::class,
+        'kyc.verification.guard.agent'  => \App\Http\Middleware\Agent\KycVerificationGuard::class,
+        'agent.google.two.factor.api'   => \App\Http\Middleware\Agent\GoogleTwoFactorApi::class,
     ];
 }
