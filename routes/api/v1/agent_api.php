@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Agent\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Agent\AppSettingsController;
 use App\Http\Controllers\Api\V1\Agent\AuthorizationController;
 use App\Http\Controllers\Api\V1\Agent\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\Agent\TransactionLogController;
 
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
     Route::get('/','appSettings');
@@ -73,6 +74,11 @@ Route::prefix('agent')->group(function(){
 
             //profit logs
             Route::controller(AgentProfitLogController::class)->prefix('profit-logs')->group(function(){
+                Route::get('/','index');
+            });
+
+            //transactions
+            Route::controller(TransactionLogController::class)->prefix('transactions')->group(function(){
                 Route::get('/','index');
             });
 

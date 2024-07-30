@@ -94,7 +94,7 @@
                                     <i class="las la-university"></i>
                                 </div>
                                 <div class="preview-list-user-content">
-                                    <span>{{ __("Bank Name") }}</span>
+                                    <span>{{ __("Account Name") }}</span>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +165,7 @@
                     </div>
                     @if (@$item->type == payment_gateway_const()::MONEYIN || @$item->type == payment_gateway_const()::MONEYOUT)
                         <div class="preview-list-right">
-                            <span>{{ get_amount(@$item->remittance_data->data->base_currency->rate,@$item->remittance_data->data->base_currency->currency) }} = {{ get_amount(@$item->remittance_data->data->payment_gateway->rate,@$item->remittance_data->data->payment_gateway->currency) }}</span>
+                            <span>{{ get_amount(@$item->remittance_data->data->base_currency->rate,@$item->remittance_data->data->base_currency->currency) }} = {{ get_amount(@$item->exchange_rate,@$item->remittance_data->data->payment_gateway->currency) }}</span>
                         </div>
                     @else
                         <div class="preview-list-right">
@@ -226,6 +226,22 @@
                     
                     <div class="preview-list-right">
                         <span>{{ @$item->remittance_data->data->sender->fullname }}</span>
+                    </div>
+                </div>
+                <div class="preview-list-item">
+                    <div class="preview-list-left">
+                        <div class="preview-list-user-wrapper">
+                            <div class="preview-list-user-icon">
+                                <i class="las la-user"></i>
+                            </div>
+                            <div class="preview-list-user-content">
+                                <span>{{ __("Recipient Name") }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-list-right">
+                        <span>{{ @$item->remittance_data->data->recipient->fullname }}</span>
                     </div>
                 </div>
                 @endif
