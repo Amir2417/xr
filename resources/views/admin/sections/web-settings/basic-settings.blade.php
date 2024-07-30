@@ -276,7 +276,7 @@
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                             @include('admin.components.form.switcher',[
-                                'label'         => __("email Verification"),
+                                'label'         => __("Email Verification"),
                                 'name'          => 'agent_email_verification',
                                 'value'         => old('agent_email_verification',$basic_settings->agent_email_verification),
                                'options'       => [__("Activated") => 1, __("Deactivated") => 0],

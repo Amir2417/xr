@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Agent\AgentController;
+use App\Http\Controllers\Api\V1\Agent\AgentProfitLogController;
 use App\Http\Helpers\Response;
 use App\Models\Admin\SetupKyc;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,11 @@ Route::prefix('agent')->group(function(){
                 Route::post('password/update', 'passwordUpdate')->middleware('app.mode.api');
                 Route::post('delete/account','deleteAccount')->middleware('app.mode.api');
                 Route::get('notifications','notifications');
+            });
+
+            //profit logs
+            Route::controller(AgentProfitLogController::class)->prefix('profit-logs')->group(function(){
+                Route::get('/','index');
             });
 
             

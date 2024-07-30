@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Api\V1\Agent;
 
 use Exception;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
+use App\Models\Agent\AgentProfit;
+use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Constants\PaymentGatewayConst;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use App\Providers\Admin\BasicSettingsProvider;
@@ -109,6 +115,10 @@ class AgentController extends Controller
         return Response::success(["Password successfully updated!"],[],200);
 
     }
+    /**
+     * Method for agent delete account.
+     * @param Illuminate\Http\Request $request
+     */
     public function deleteAccount(Request $request) {
         $user = authGuardApi()['user'];
         $user->status = false;
@@ -124,12 +134,13 @@ class AgentController extends Controller
             return Response::success(['Something went wrong! Please try again.'],[],400);
         }
     }
+    /**
+     * Method for agent notifications.
+     */
     public function notifications(){
         $notifications = AgentNotification::auth()->latest()->get()->map(function($item){
             return[
                 'id' => $item->id,
-                'type' => $item->type,
-                'title' => $item->message->title??"",
                 'message' => $item->message->message??"",
                 'created_at' => $item->created_at,
                 'updated_at' => $item->updated_at,
@@ -138,7 +149,69 @@ class AgentController extends Controller
         $data =[
             'notifications'  => $notifications
         ];
-        $message =  ['success'=>[__('Agent Notifications')]];
-        return Helpers::success($data,$message);
+        return Response::success(['Agent Notifications data fetched successfully!'],$data,200);
     }
+    /**
+     * Method for agent dashboard
+     */
+    public function dashboard(){
+        $agent_wallet           = AgentWallet::auth()->first();
+        $profit_balance         = AgentProfit::auth()->sum('total_commissions');
+        $total_send_remittance  = Transaction::agentAuth()
+                                    ->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+                                    ->count();
+        $total_confirm_send_remittance  = Transaction::agentAuth()
+                                    ->where('type',PaymentGatewayConst::TYPESENDREMITTANCE)
+                                    ->where('status',GlobalConst::REMITTANCE_STATUS_CONFIRM_PAYMENT)
+                                    ->count();
+                                    
+        $total_canceled_transactions  = Transaction::agentAuth()->where('status',GlobalConst::REMITTANCE_STATUS_CANCEL)->count();
+
+
+        $current_month = now()->month;
+        $categories = [];
+        for ($i = 1; $i <= $current_month; $i++) {
+            $categories[] = date("F", mktime(0, 0, 0, $i, 10));
+        }
+
+        $send_remittance = [];
+        $money_in        = [];
+        $money_out       = [];
+
+        foreach ($categories as $index => $month) {
+            $month_number = $index + 1;
+            $send_remittance[] = Transaction::agentAuth()->where('type', PaymentGatewayConst::TYPESENDREMITTANCE)
+                                        ->whereMonth('created_at', $month_number)
+                                        ->whereYear('created_at', now()->year)
+                                        ->sum('request_amount');
+
+            $money_in[] = Transaction::agentAuth()->where('type', PaymentGatewayConst::MONEYIN)
+                                    ->whereMonth('created_at', $month_number)
+                                    ->whereYear('created_at', now()->year)
+                                    ->sum('request_amount');
+
+            $money_out[] = Transaction::agentAuth()->where('type', PaymentGatewayConst::MONEYOUT)
+                                    ->whereMonth('created_at', $month_number)
+                                    ->whereYear('created_at', now()->year)
+                                    ->sum('request_amount');
+        }
+
+        $data = [
+            'base_currency'         => get_default_currency_code(),
+            'agent_wallet_balance'  => floatval($agent_wallet->balance),
+            'profit_balance'        => floatval($profit_balance),
+            'total_send_remittance' => $total_send_remittance,
+            'total_confirm_send_remittance' => $total_confirm_send_remittance,
+            'total_canceled_transactions' => $total_canceled_transactions,
+            'dashboard_content' => [
+                'categories' => $categories,
+                'send_remittance' => $send_remittance,
+                'money_in' => $money_in,
+                'money_out' => $money_out,
+            ]
+        ];    
+        return Response::success(['Agent Dashboard data fetched successfully!'],$data,200);
+
+    }
+
 }

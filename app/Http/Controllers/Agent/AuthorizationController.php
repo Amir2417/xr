@@ -44,7 +44,7 @@ class AuthorizationController extends Controller
      */
     public function mailVerify(Request $request,$token)
     {
-
+        
         $request->merge(['token' => $token]);
         $request->validate([
             'token'     => "required|string|exists:agent_authorizations,token",

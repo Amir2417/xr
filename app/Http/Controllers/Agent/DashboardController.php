@@ -47,17 +47,17 @@ class DashboardController extends Controller
 
         foreach ($categories as $index => $month) {
             $month_number = $index + 1;
-            $send_remittance[] = Transaction::where('type', PaymentGatewayConst::TYPESENDREMITTANCE)
+            $send_remittance[] = Transaction::agentAuth()->where('type', PaymentGatewayConst::TYPESENDREMITTANCE)
                                         ->whereMonth('created_at', $month_number)
                                         ->whereYear('created_at', now()->year)
                                         ->sum('request_amount');
 
-            $money_in[] = Transaction::where('type', PaymentGatewayConst::MONEYIN)
+            $money_in[] = Transaction::agentAuth()->where('type', PaymentGatewayConst::MONEYIN)
                                     ->whereMonth('created_at', $month_number)
                                     ->whereYear('created_at', now()->year)
                                     ->sum('request_amount');
 
-            $money_out[] = Transaction::where('type', PaymentGatewayConst::MONEYOUT)
+            $money_out[] = Transaction::agentAuth()->where('type', PaymentGatewayConst::MONEYOUT)
                                     ->whereMonth('created_at', $month_number)
                                     ->whereYear('created_at', now()->year)
                                     ->sum('request_amount');
