@@ -17,8 +17,6 @@ use Illuminate\Validation\ValidationException;
 
 class BeneficiaryController extends Controller
 {
-
-    
     /**
      * Method for show beneficiary data
      */

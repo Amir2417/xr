@@ -68,7 +68,7 @@ class MySenderController extends Controller
             $validated['back_part'] = $this->imageValidate($request,"back_part",null);  
         }
 
-        if(MySender::auth()->where('email',$validated['email'])->where('first_name',$validated['first_name'])->where('last_name',$validated['last_name'])->exists()){
+        if(MySender::auth()->where('email',$validated['email'])->orWhere('phone',$validated['phone'])->exists()){
             throw ValidationException::withMessages([
                 'name'  => "Sender already exists!",
             ]);
@@ -130,7 +130,9 @@ class MySenderController extends Controller
             $validated['back_part'] = $this->imageValidate($request,"back_part",null);  
         }
 
-        if(MySender::auth()->whereNot('id',$my_sender->id)->where('email',$validated['email'])->where('first_name',$validated['first_name'])->where('last_name',$validated['last_name'])->exists()){
+        if(MySender::auth()->whereNot('id',$my_sender->id)->where(function($q) use($validated){
+            $q->where('email',$validated['email'])->orWhere('phone',$validated['phone']);
+        })->exists()){
             throw ValidationException::withMessages([
                 'name'  => "Sender already exists!",
             ]);

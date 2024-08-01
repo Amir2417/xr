@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Agent\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Agent\AppSettingsController;
 use App\Http\Controllers\Api\V1\Agent\AuthorizationController;
 use App\Http\Controllers\Api\V1\Agent\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\Agent\MySenderController;
 use App\Http\Controllers\Api\V1\Agent\TransactionLogController;
 
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
@@ -80,6 +81,15 @@ Route::prefix('agent')->group(function(){
             //transactions
             Route::controller(TransactionLogController::class)->prefix('transactions')->group(function(){
                 Route::get('/','index');
+            });
+
+            //my sender
+            Route::controller(MySenderController::class)->prefix('my-sender')->name('my.sender.')->group(function(){
+                Route::get('/','index');
+                Route::post('check-user','checkUser');
+                Route::post('store','store');
+                Route::post('update','update');
+                Route::post('delete','delete');
             });
 
             
