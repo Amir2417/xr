@@ -11,7 +11,9 @@ use App\Http\Controllers\Api\V1\Agent\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Agent\AppSettingsController;
 use App\Http\Controllers\Api\V1\Agent\AuthorizationController;
 use App\Http\Controllers\Api\V1\Agent\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\Agent\MoneyOutController;
 use App\Http\Controllers\Api\V1\Agent\MySenderController;
+use App\Http\Controllers\Api\V1\Agent\RecipientController;
 use App\Http\Controllers\Api\V1\Agent\TransactionLogController;
 
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
@@ -84,12 +86,32 @@ Route::prefix('agent')->group(function(){
             });
 
             //my sender
-            Route::controller(MySenderController::class)->prefix('my-sender')->name('my.sender.')->group(function(){
+            Route::controller(MySenderController::class)->prefix('my-sender')->group(function(){
                 Route::get('/','index');
                 Route::post('check-user','checkUser');
                 Route::post('store','store');
                 Route::post('update','update');
                 Route::post('delete','delete');
+            });
+
+            //recipient
+            Route::controller(RecipientController::class)->prefix('recipient')->group(function(){
+                Route::get('/','index');
+                Route::post('get-bank-list','getBankList');
+                Route::post('get-pickup-point-list','getPickupPointList');
+                Route::post('get-mobile-method-list','getMobileMethodList');
+                Route::post('check-user','checkUser');
+                Route::get('basic-data','basicData');
+                Route::post('store','store');
+                Route::post('update','update');
+                Route::post('delete','delete');
+            });
+
+            //money out
+            Route::controller(MoneyOutController::class)->prefix('money-out')->group(function(){
+                Route::get('/','index');
+                Route::post('submit','submit');
+                Route::post('confirm','confirm');
             });
 
             

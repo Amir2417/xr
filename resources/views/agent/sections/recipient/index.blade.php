@@ -24,7 +24,7 @@
                                 <i class="las la-arrow-up"></i>
                             </div>
                             <div class="dashboard-list-user-content">
-                                <h4 class="title">{{ $item->first_name }} {{ $item->last_name }}</h4>
+                                <h4 class="title">{{ $item->fullname }}</h4>
                                 <span class="badge badge--warning">{{ __($item->method) ?? '' }}</span>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="preview-list-right">
-                            <span>{{ $item->first_name ?? '' }} {{ $item->last_name ?? '' }}</span>
+                            <span>{{ $item->fullname ?? '' }}</span>
                         </div>
                     </div>
                     <div class="preview-list-item">
