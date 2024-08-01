@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\Agent\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Agent\MoneyOutController;
 use App\Http\Controllers\Api\V1\Agent\MySenderController;
 use App\Http\Controllers\Api\V1\Agent\RecipientController;
+use App\Http\Controllers\Api\V1\Agent\SendRemittanceController;
 use App\Http\Controllers\Api\V1\Agent\TransactionLogController;
 
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
@@ -114,6 +115,12 @@ Route::prefix('agent')->group(function(){
                 Route::post('confirm','confirm');
             });
 
+            //send remittance 
+            Route::controller(SendRemittanceController::class)->prefix('send-remittance')->group(function(){
+                Route::get('/','index');
+                Route::post('get-recipient','getRecipient');
+                Route::post('confirm','confirm');
+            });
             
             
         });

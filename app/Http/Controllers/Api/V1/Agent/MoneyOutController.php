@@ -48,6 +48,7 @@ class MoneyOutController extends Controller
         
 
         return Response::success(['Money out data fetch successfully.'],[
+            'base_currency'         => get_default_currency_code(),
             'payment_gateway'       => $payment_gateway,
             'transaction_data'      => $transaction_data,
         ],200);

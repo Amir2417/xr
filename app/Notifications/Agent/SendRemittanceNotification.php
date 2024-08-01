@@ -59,8 +59,8 @@ class SendRemittanceNotification extends Notification
                 ->line("Details Of Send Remittance:")
                 ->line("Transaction Id: " .$trx_id)
                 ->line("Request Amount: " . $data['amount'] . ' ' .$data['base_currency']['code'])
-                ->line("Fees: " . $data['total_charge'] . '' .$data['base_currency']['code'])
-                ->line("Receive Amount: " . $data['receive_amount'] . '' .$data['receiver_currency']['code'])
+                ->line("Fees: " . $data['total_charge'] . ' ' .$data['base_currency']['code'])
+                ->line("Receive Amount: " . $data['receive_amount'] . ' ' .$data['receiver_currency']['code'])
                 ->line("Status: ". $status)
                 ->line("Date And Time: " .$dateTime)
                 ->line('Thank you for using our application!');

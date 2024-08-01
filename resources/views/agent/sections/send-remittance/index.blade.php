@@ -104,7 +104,7 @@
                                                     @forelse ($senders ?? [] as $item)
                                                         <option class="custom-option" value="{{ $item->id }}">{{ $item->fullname }}</option>
                                                     @empty
-                                                        <option>{{ __("No data found") }}</option>
+                                                        <option disabled>{{ __("No data found") }}</option>
                                                     @endforelse
                                                 </select>
                                                 <div class="add-sender">
