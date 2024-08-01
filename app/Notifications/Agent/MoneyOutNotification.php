@@ -55,8 +55,8 @@ class MoneyOutNotification extends Notification
 
         return (new MailMessage)
                     ->greeting("Hello ".$user->fullname." !")
-                    ->subject("Money In")
-                    ->line("Details Of Money In:")
+                    ->subject("Money Out")
+                    ->line("Details Of Money Out:")
                     ->line("Transaction Id: " .$trx_id)
                     ->line("Request Amount: " . $data->data->amount . ' ' .$data->data->base_currency->currency)
                     ->line("Payabale Amount: " . $data->data->payable_amount . '' .$data->data->payment_gateway->currency)
