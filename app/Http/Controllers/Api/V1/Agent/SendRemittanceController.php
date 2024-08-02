@@ -33,21 +33,21 @@ class SendRemittanceController extends Controller
             ->whereIn('slug',[GlobalConst::BANK_TRANSFER,GlobalConst::MOBILE_MONEY,
                 GlobalConst::CASH_PICKUP
             ])->get()->map(function($data){
-                return [
-                    'id'                => $data->id,
-                    'name'              => $data->title,
-                    'min_limit'         => $data->min_limit,
-                    'max_limit'         => $data->max_limit,
-                    'fixed_charge'      => $data->fixed_charge,
-                    'percent_charge'    => $data->percent_charge,
-                    'intervals'         => $data->intervals
-                ];
-            });
-        
-        $sender             = MySender::auth()->orderBy('id','desc')->get()->map(function($data){
             return [
-                'slug'      => $data->slug,
-                'name'      => $data->fullname,
+                'id'                => $data->id,
+                'name'              => $data->title,
+                'min_limit'         => $data->min_limit,
+                'max_limit'         => $data->max_limit,
+                'fixed_charge'      => $data->fixed_charge,
+                'percent_charge'    => $data->percent_charge,
+                'intervals'         => $data->intervals
+            ];
+        });
+        
+        $sender                 = MySender::auth()->orderBy('id','desc')->get()->map(function($data){
+            return [
+                'slug'          => $data->slug,
+                'name'          => $data->fullname,
             ];
         });
 

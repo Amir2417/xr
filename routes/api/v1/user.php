@@ -101,10 +101,10 @@ Route::prefix("user")->name("api.user.")->group(function(){
             Route::get('index','index');
         });
 
-       //notification
-       Route::controller(NotificationController::class)->group(function(){
-        Route::get('notification','notification');
-       });
+        //notification
+        Route::controller(NotificationController::class)->group(function(){
+                Route::get('notification','notification');
+        });
 
     });
     

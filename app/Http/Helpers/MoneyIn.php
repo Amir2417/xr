@@ -61,11 +61,10 @@ class MoneyIn{
 
     public function gateway() {
         $request_data = $this->request_data;
-       
+        
         if(empty($request_data)) throw new Exception("Gateway Information is not available. Please provide payment gateway currency alias");
         $validated = $this->validator($request_data)->validate();
         $temporary_data     = TemporaryData::where('identifier',$validated['identifier'])->first();
-        
         $gateway_currency   = PaymentGatewayCurrency::with(['gateway'])->where("alias",$temporary_data->data->payment_gateway->alias)->first();
         
         if(!$gateway_currency || !$gateway_currency->gateway) {
@@ -232,6 +231,7 @@ class MoneyIn{
         if(empty($tempData) || empty($tempData['type'])) throw new Exception('Transaction failed. Record didn\'t saved properly. Please try again.');
         
         if($this->requestIsApiUser()) {
+            
             $creator_table = $tempData['data']->creator_table ?? null;
             $creator_id = $tempData['data']->creator_id ?? null;
             $creator_guard = $tempData['data']->creator_guard ?? null;
@@ -247,7 +247,6 @@ class MoneyIn{
             $this->output['api_login_guard'] = $api_user_login_guard;
             Auth::guard($api_user_login_guard)->loginUsingId($creator->id);
         }
-        
         $currency_id = $tempData['data']->currency ?? "";
    
         $gateway_currency = PaymentGatewayCurrency::find($currency_id->id);
@@ -282,6 +281,7 @@ class MoneyIn{
 
     public function getRedirection() {
         $redirection = PaymentGatewayConst::registerRedirectionForMoneyIn();
+        
         $guard = get_auth_guard();
         if(!array_key_exists($guard,$redirection)) {
             throw new Exception("Gateway Redirection URLs/Route Not Registered. Please Register in PaymentGatewayConst::class");
@@ -376,6 +376,7 @@ class MoneyIn{
 
     // Update Code (Need to check)
     public function createTransaction($output, $status,$temp_remove = true) {
+       
         $basic_setting = BasicSettings::first();
         $record_handler = $output['record_handler'];
         if($this->predefined_user) {
@@ -384,7 +385,7 @@ class MoneyIn{
             $user = auth()->guard(get_auth_guard())->user();
         }
         
-        $inserted_id = $this->$record_handler($output,$status);
+        $inserted_id = $this->$record_handler($user,$output,$status);
         $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
         if($data->data->agent_profit->agent_profit_status == true){
             $this->agentprofits($user,$inserted_id,$output['form_data']['identifier']);
@@ -398,6 +399,7 @@ class MoneyIn{
         
         $trx_id     = Transaction::where('id',$inserted_id)->first();
         $data       = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
+        
         if( $basic_setting->agent_email_notification == true){
             Notification::route("mail",$user->email)->notify(new MoneyInNotification($user,$data,$trx_id->trx_id));
         }
@@ -413,48 +415,38 @@ class MoneyIn{
             'admin_id'  => 1,
             'message'   => $notification_message,
         ]);
+        
         (new PushNotificationHelper())->prepare([1],[
             'title' => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id->trx_id . " created successfully.",
             'desc'  => "",
             'user_type' => 'admin',
         ])->send();
 
-        if($temp_remove == true) {
-            $this->removeTempData($output);
-        }
+        
 
-             
-
-        if($this->requestIsApiUser()) {
-            // logout user
-            $api_user_login_guard = $this->output['api_login_guard'] ?? null;
-            if($api_user_login_guard != null) {
-                auth()->guard($api_user_login_guard)->logout();
-            }
-        }
+        // if($this->requestIsApiUser()) {
+        //     // logout user
+        //     $api_user_login_guard = $this->output['api_login_guard'] ?? null;
+        //     if($api_user_login_guard != null) {
+        //         auth()->guard($api_user_login_guard)->logout();
+        //     }
+        // }
         return $this->output['trx_id'] ?? "";
         
     }
     //save information
-    public function insertRecordAgent($output, $status) {
+    public function insertRecordAgent($user,$output, $status) {
         $data  = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();
-        
-        if($this->predefined_user) {
-            $user = $this->predefined_user;
-        }else {
-            $user = auth()->guard(get_auth_guard())->user();
-        }
         $agent_wallet   = AgentWallet::where('agent_id',$user->id)->first();
         
         $trx_id = generateTrxString("transactions","trx_id","MI",8);
-       
         DB::beginTransaction();
         try{
             $id = DB::table("transactions")->insertGetId([
                 'agent_id'                      => $user->id,
                 'agent_wallet_id'               => $agent_wallet->id,
                 'payment_gateway_currency_id'   => $output['currency']->id,
-                'type'                          => $output['type'],
+                'type'                          => PaymentGatewayConst::MONEYIN,
                 'remittance_data'               => json_encode([
                     'type'                      => $data->type,
                     'data'                      => $data->data,

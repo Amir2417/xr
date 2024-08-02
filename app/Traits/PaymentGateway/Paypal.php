@@ -186,7 +186,6 @@ trait Paypal
 
     public function paypalSuccess($output = null) { 
         if(!$output) $output = $this->output;
-        
         $token = $this->output['tempData']['identifier'] ?? "";
         
         $credentials = $this->getPaypalCredentials($output);
@@ -195,7 +194,6 @@ trait Paypal
         $paypalProvider->setApiCredentials($config);
         $paypalProvider->getAccessToken();
         $response = $paypalProvider->capturePaymentOrder($token);
-        
         if(isset($response['status']) && $response['status'] == 'COMPLETED') {
             return $this->paypalPaymentCaptured($response,$output);
         }else {

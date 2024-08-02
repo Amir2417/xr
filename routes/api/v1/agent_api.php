@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Agent\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Agent\AppSettingsController;
 use App\Http\Controllers\Api\V1\Agent\AuthorizationController;
 use App\Http\Controllers\Api\V1\Agent\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\Agent\MoneyInController;
 use App\Http\Controllers\Api\V1\Agent\MoneyOutController;
 use App\Http\Controllers\Api\V1\Agent\MySenderController;
 use App\Http\Controllers\Api\V1\Agent\RecipientController;
@@ -20,7 +21,15 @@ use App\Http\Controllers\Api\V1\Agent\TransactionLogController;
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
     Route::get('/','appSettings');
 });
+Route::controller(MoneyInController::class)->name('api.agent.moneyin.')->group(function(){
+    // POST Route For Unauthenticated Request
+    Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['agent.api']);
+    Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['agent.api']);
 
+    // Automatic Gateway Response Routes
+    Route::get('success/response/{gateway}','success')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.success");
+    Route::get("cancel/response/{gateway}",'cancel')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.cancel");
+});
 Route::prefix('agent')->group(function(){
     Route::get('get/basic/data', function() {
         $basic_settings = BasicSettingsProvider::get();
@@ -119,6 +128,13 @@ Route::prefix('agent')->group(function(){
             Route::controller(SendRemittanceController::class)->prefix('send-remittance')->group(function(){
                 Route::get('/','index');
                 Route::post('get-recipient','getRecipient');
+                Route::post('confirm','confirm');
+            });
+
+            //money in
+            Route::controller(MoneyInController::class)->prefix('money-in')->group(function(){
+                Route::get('/','index');
+                Route::post('submit','submit');
                 Route::post('confirm','confirm');
             });
             

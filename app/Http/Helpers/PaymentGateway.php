@@ -389,6 +389,8 @@ class PaymentGateway {
         }else {
             $user = auth()->guard(get_auth_guard())->user();
         }
+
+        dd($user);
         $inserted_id = $this->$record_handler($output,$status);
      
         $data = TemporaryData::where('identifier',$output['form_data']['identifier'])->first();

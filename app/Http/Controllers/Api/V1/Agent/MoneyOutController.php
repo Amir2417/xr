@@ -41,16 +41,16 @@ class MoneyOutController extends Controller
             ];
         });
         $transaction_settings   = TransactionSetting::where('slug',GlobalConst::MONEY_OUT)->where('status',true)->first();
-        $transaction_data       = [
-            'min_limit'         => $transaction_settings->min_limit,
-            'max_limit'         => $transaction_settings->max_limit,
+        $limits_data       = [
+            'min_limit'         => get_amount($transaction_settings->min_limit),
+            'max_limit'         => get_amount($transaction_settings->max_limit),
         ];
         
 
         return Response::success(['Money out data fetch successfully.'],[
             'base_currency'         => get_default_currency_code(),
             'payment_gateway'       => $payment_gateway,
-            'transaction_data'      => $transaction_data,
+            'limits_data'           => $limits_data,
         ],200);
     }
     /**

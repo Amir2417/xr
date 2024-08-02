@@ -48,7 +48,7 @@ class TransactionLogController extends Controller
                 'sender_currency'       => $data->remittance_data->data->base_currency->currency,
                 'sender_rate'           => 1,
                 'payment_method'        => $data->remittance_data->data->payment_gateway->name,
-                'gateway_currency'     => $data->remittance_data->data->payment_gateway->currency,
+                'receiver_currency'     => $data->remittance_data->data->payment_gateway->currency,
                 
                 'request_amount'        => floatval($data->request_amount),
                 'total_charge'          => floatval($data->fees),
@@ -69,7 +69,7 @@ class TransactionLogController extends Controller
                 'sender_currency'       => $data->remittance_data->data->base_currency->currency,
                 'sender_rate'           => 1,
                 'payment_method'        => $data->remittance_data->data->payment_gateway->name,
-                'gateway_currency'     => $data->remittance_data->data->payment_gateway->currency,
+                'receiver_currency'     => $data->remittance_data->data->payment_gateway->currency,
                 
                 'request_amount'        => floatval($data->request_amount),
                 'total_charge'          => floatval($data->fees),

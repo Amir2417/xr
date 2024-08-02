@@ -13,7 +13,7 @@ trait Paypal
     public function paypalInit($output = null) {
        
         if(!$output) $output = $this->output;
-       
+        
         $credentials = $this->getPaypalCredentials($output);
         $config = $this->paypalConfig($credentials,$output['amount']);
         
@@ -40,11 +40,11 @@ trait Paypal
             ]
         ]);
         
-        
         if(isset($response['id']) && $response['id'] != "" && isset($response['status']) && $response['status'] == "CREATED" && isset($response['links']) && is_array($response['links'])) {
             foreach($response['links'] as $item) {
                 if($item['rel'] == "approve") {
                     $this->paypalJunkInsert($response);
+                    
                     if(request()->expectsJson()) {
                         $this->output['redirection_response']   = $response;
                         $this->output['redirect_links']         = $response['links'];
@@ -81,6 +81,7 @@ trait Paypal
             foreach($gateway->credentials ?? [] as $gatewayInput) {
                 $label = $gatewayInput->label ?? "";
                 $label = $this->paypalPlainText($label);
+                
 
                 if($label == $modify_item) {
                     $client_id = $gatewayInput->value ?? "";
@@ -208,8 +209,8 @@ trait Paypal
         // payment successfully captured record saved to database
         $output['capture'] = $response;
         $status = global_const()::REMITTANCE_STATUS_CONFIRM_PAYMENT;
-        
         try{
+            
             $transaction_response = $this->createTransaction($output,$status);
         }catch(Exception $e) {
             throw new Exception($e->getMessage());

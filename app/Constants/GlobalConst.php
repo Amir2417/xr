@@ -30,6 +30,10 @@ class GlobalConst {
     const TRANSACTION_TYPE_MOBILE               = "Mobile Money";
     const TRANSACTION_TYPE_CASHPICKUP               = "Cash Pickup";
 
+    const BENEFICIARY_METHOD_BANK_TRANSAFER                 = "Bank Transfer";
+    const BENEFICIARY_METHOD_MOBILE               = "Mobile Money";
+    const BENEFICIARY_METHOD_CASHPICKUP               = "Cash Pickup";
+
     //beneficiary
     
     const RECIPIENT_METHOD_BANK            = "Bank";

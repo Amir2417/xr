@@ -116,6 +116,7 @@ class PaymentGatewayConst {
     public static function apiAuthenticateGuard() {
         return [
             'api'   => 'web',
+            'agent_api'   => 'agent',
         ];
     }
 
@@ -144,7 +145,7 @@ class PaymentGatewayConst {
                 'callback_url'  => 'agent.moneyin.payment.callback',
                 'btn_pay'       => 'agent.moneyin.payment.btn.pay',
             ],
-            'api'       => [
+            'agent_api'       => [
                 'return_url'    => 'api.agent.moneyin.payment.success',
                 'cancel_url'    => 'api.agent.moneyin.payment.cancel',
                 'callback_url'  => 'agent.moneyin.payment.callback',

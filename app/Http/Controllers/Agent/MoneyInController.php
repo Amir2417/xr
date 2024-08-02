@@ -189,7 +189,7 @@ class MoneyInController extends Controller
             
 
             if(Transaction::where('callback_ref', $token)->exists()) {
-                if(!$temp_data) return redirect()->route('agent.moneyin.index')->with(['success' => ['Transaction request sended successfully!']]);;
+                if(!$temp_data) return redirect()->route('agent.moneyin.index')->with(['success' => ['Transaction request sended successfully!']]);
             }else {
                 if(!$temp_data) return redirect()->route('agent.moneyin.index')->with(['error' => ['Transaction failed. Record didn\'t saved properly. Please try again.']]);
             }
