@@ -31,6 +31,8 @@ Route::controller(MoneyInController::class)->name('api.agent.moneyin.')->group(f
     // Automatic Gateway Response Routes
     Route::get('success/response/{gateway}','success')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.success");
     Route::get("cancel/response/{gateway}",'cancel')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.cancel");
+
+     
 });
 Route::prefix('agent')->group(function(){
     Route::get('get/basic/data', function() {
@@ -138,6 +140,8 @@ Route::prefix('agent')->group(function(){
                 Route::get('/','index');
                 Route::post('submit','submit');
                 Route::post('confirm','confirm');
+                Route::get('manual/input-fields','manualInputFields'); 
+                Route::post("manual/submit","manualSubmit");
             });
             
             

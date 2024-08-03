@@ -410,8 +410,8 @@ class MoneyInController extends Controller
         ])->validate();
 
         $tempData = TemporaryData::search($tempDataValidate['identifier'])->first();
-        if(!$tempData || $tempData->data == null || !isset($tempData->data->gateway_currency_id)) return redirect()->route('agent.moneyin.index')->with(['error' => ['Invalid request']]);
-        $gateway_currency = PaymentGatewayCurrency::find($tempData->data->gateway_currency_id);
+        if(!$tempData || $tempData->data == null || !isset($tempData->data->payment_gateway->id)) return redirect()->route('agent.moneyin.index')->with(['error' => ['Invalid request']]);
+        $gateway_currency = PaymentGatewayCurrency::find($tempData->data->payment_gateway->id);
         if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return redirect()->route('agent.moneyin.index')->with(['error' => ['Selected gateway is invalid']]);
         $gateway = $gateway_currency->gateway;
         $amount = $tempData->data->amount ?? null;

@@ -3,23 +3,33 @@
 namespace App\Http\Controllers\Api\V1\Agent;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
 use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
+use App\Models\Agent\AgentWallet;
+use App\Models\AgentNotification;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
+use App\Models\Admin\AdminNotification;
 use App\Models\Admin\TransactionSetting;
+use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Helpers\MoneyIn as MoneyInHelper;
+use App\Notifications\Agent\MoneyInNotification;
 
 class MoneyInController extends Controller
 {
+    use ControlDynamicInputFields;
     /**
      * Method for get money in data
      */
@@ -170,7 +180,6 @@ class MoneyInController extends Controller
             
             $temp_data = TemporaryData::where("identifier",$token)->first();
             
-
             if(Transaction::where('callback_ref', $token)->exists()) {
                 if(!$temp_data) return Response::success(['Transaction request sended successfully!'],[],200);
             }else {
@@ -212,8 +221,7 @@ class MoneyInController extends Controller
     /**
      * This method for post success alert of SSL
      */
-    public function postSuccess(Request $request, $gateway)
-    {
+    public function postSuccess(Request $request, $gateway){
         try{
             
             $token = MoneyInHelper::getToken($request->all(),$gateway);
@@ -229,8 +237,7 @@ class MoneyInController extends Controller
     /**
      * This method for post cancel alert of SSL
      */
-    public function postCancel(Request $request, $gateway)
-    {
+    public function postCancel(Request $request, $gateway){
         try{
             $token = MoneyInHelper::getToken($request->all(),$gateway);
             $temp_data = TemporaryData::where("identifier",$token)->first();
@@ -246,12 +253,138 @@ class MoneyInController extends Controller
     /**
      * Redirect Users for collecting payment via Button Pay (JS Checkout)
      */
-    public function redirectBtnPay(Request $request, $gateway)
-    {
+    public function redirectBtnPay(Request $request, $gateway){
         try{
             return MoneyInHelper::init([])->type(PaymentGatewayConst::MONEYIN)->handleBtnPay($gateway, $request->all());
         }catch(Exception $e) {
             return Response::error([$e->getMessage()], [], 500);
         }
     }
+    /**
+     * Method for getting manual input fields
+     * @param Illuminate\Http\Request $request
+     */
+    public function manualInputFields(Request $request) {
+       
+        $validator = Validator::make($request->all(),[
+            'alias'         => "required|string|exists:payment_gateway_currencies",
+        ]);
+
+        if($validator->fails()) {
+            return Response::error($validator->errors()->all(),[],400);
+        }
+
+        $validated = $validator->validate();
+        $gateway_currency = PaymentGatewayCurrency::where("alias",$validated['alias'])->first();
+
+        $gateway = $gateway_currency->gateway;
+
+        if(!$gateway->isManual()) return Response::error([__('Can\'t get fields. Requested gateway is automatic')],[],400);
+
+        if(!$gateway->input_fields || !is_array($gateway->input_fields)) return Response::error([__("This payment gateway is under constructions. Please try with another payment gateway")],[],503);
+
+        try{
+            $input_fields = json_decode(json_encode($gateway->input_fields),true);
+            $input_fields = array_reverse($input_fields);
+        }catch(Exception $e) {
+            return Response::error([__("Something went wrong! Please try again")],[],500);
+        }
+        
+        return Response::success([__('Payment gateway input fields fetch successfully!')],[
+            'gateway'           => [
+                'desc'          => $gateway->desc
+            ],
+            'input_fields'      => $input_fields,
+            'currency'          => $gateway_currency->only(['alias']),
+        ],200);
+    }
+    /**
+     * Method for submit manual input fields
+     * @param Illuminate\Http\Request $request
+     */
+    /**
+     * Method for submit data in manual format
+     * @param Illuminate\Http\Request $request
+     */
+    public function manualSubmit(Request $request) {
+        $basic_setting = BasicSettings::first();
+        $user          = auth()->user();
+        $tempDataValidate = Validator::make($request->all(),[
+            'identifier'        => "required|string|exists:temporary_datas",
+        ])->validate();
+
+        $tempData = TemporaryData::where('identifier',$tempDataValidate['identifier'])->first();
+        if(!$tempData || $tempData->data == null || !isset($tempData->data->payment_gateway->id)) return Response::error(['Invalid request!'],[],400);
+        $gateway_currency = PaymentGatewayCurrency::find($tempData->data->payment_gateway->id);
+        if(!$gateway_currency || !$gateway_currency->gateway->isManual()) return Response::error(['Selected gateway is invalid.'],[],400);
+        $gateway = $gateway_currency->gateway;
+        $amount = $tempData->data->amount ?? null;
+        if(!$amount) return Response::error(['Transaction Failed. Failed to save information. Please try again'],[],400);
+        
+        $this->file_store_location  = "transaction";
+        $dy_validation_rules        = $this->generateValidationRules($gateway->input_fields);
+        
+        $validated  = Validator::make($request->all(),$dy_validation_rules)->validate();
+        $get_values = $this->placeValueWithFields($gateway->input_fields,$validated);
+       
+        $data   = TemporaryData::where('identifier',$tempData->identifier)->first();
+        
+        $agent_wallet       = AgentWallet::auth()->first();
+        $trx_id = generateTrxString("transactions","trx_id","SR",8);
+        
+        // Make Transaction
+        DB::beginTransaction();
+        try{
+            $id = DB::table("transactions")->insertGetId([
+                'agent_id'                      => auth()->user()->id,
+                'agent_wallet_id'               => $agent_wallet->id,
+                'payment_gateway_currency_id'   => $gateway_currency->id,
+                'type'                          => PaymentGatewayConst::MONEYIN,
+                'remittance_data'               => json_encode([
+                    'type'                      => $data->type,
+                    'data'                      => $data->data,
+                ]),
+                'trx_id'                        => $trx_id,
+                'request_amount'                => $data->data->amount,
+                'exchange_rate'                 => $data->data->exchange_rate,
+                'payable'                       => $data->data->payable_amount,
+                'fees'                          => $data->data->total_charge,
+                'will_get_amount'               => $data->data->receive_amount,
+                'remark'                        => 'Manual',
+                'details'                       => "MoneyIn Successfull",
+                'status'                        => global_const()::REMITTANCE_STATUS_PENDING,
+                'attribute'                     => PaymentGatewayConst::RECEIVED,
+                'created_at'                    => now(),
+                'callback_ref'                  => $output['callback_ref'] ?? null,
+            ]);
+            
+            if( $basic_setting->agent_email_notification == true){
+                Notification::route("mail",$user->email)->notify(new MoneyInNotification($user,$data,$trx_id));
+            }
+            //agent notification
+            AgentNotification::create([
+                'agent_id'          => $user->id,
+                'message'  => "Money In  (Payable amount: ".get_amount($data->data->payable_amount)." ". $data->data->payment_gateway->currency .",
+                Get Amount: ".get_amount($data->data->receive_amount)." ". $data->data->base_currency->currency .") Successfully Received.", 
+            ]);
+            // for admin notification
+            $notification_message = [
+                'title'     => "Money In from " . "(" . $user->username . ")" . "Transaction ID :". $trx_id . " created successfully.",
+                'time'      => Carbon::now()->diffForHumans(),
+                'image'     => get_image($user->image,'agent-profile'),
+            ];
+            AdminNotification::create([
+                'type'      => "Money In",
+                'admin_id'  => 1,
+                'message'   => $notification_message,
+            ]);
+            
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            return Response::success(['Something went wrong! Please try again'],[],200);
+        }
+        return Response::success(['Successfully MoneyIn'],[],200);
+    }
+    
 }
