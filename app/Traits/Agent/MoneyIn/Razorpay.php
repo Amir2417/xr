@@ -24,13 +24,11 @@ trait Razorpay  {
 
     public function razorpayInit($output) {
         if(!$output) $output = $this->output;
-
         $request_credentials = $this->getRazorpayRequestCredentials($output);
        
         try{
             if($this->razorpay_btn_pay) {
                 // create link for btn pay
-                
                 return $this->razorpayCreateLinkForBtnPay($output);
             }
             return $this->createRazorpayPaymentLink($output, $request_credentials);
@@ -52,7 +50,6 @@ trait Razorpay  {
         $temp_data = $this->razorPayJunkInsert($temp_record_token); // create temporary information
         
         $btn_link = $this->generateLinkForBtnPay($temp_record_token, PaymentGatewayConst::RAZORPAY);
-
         if(request()->expectsJson()) {
             $this->output['redirection_response']   = [];
             $this->output['redirect_links']         = [];
@@ -216,7 +213,6 @@ trait Razorpay  {
             'cancel_url'    => $this->setGatewayRoute($redirection['cancel_url'],PaymentGatewayConst::RAZORPAY,$url_parameter),
             'user_record'   => $output['form_data']['identifier'],
         ];
-
         return TemporaryData::create([
             'type'          => PaymentGatewayConst::RAZORPAY,
             'identifier'    => $temp_token,

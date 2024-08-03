@@ -243,4 +243,15 @@ class MoneyInController extends Controller
         }
         return $this->cancel($request, $gateway);
     }
+    /**
+     * Redirect Users for collecting payment via Button Pay (JS Checkout)
+     */
+    public function redirectBtnPay(Request $request, $gateway)
+    {
+        try{
+            return MoneyInHelper::init([])->type(PaymentGatewayConst::MONEYIN)->handleBtnPay($gateway, $request->all());
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()], [], 500);
+        }
+    }
 }

@@ -26,6 +26,8 @@ Route::controller(MoneyInController::class)->name('api.agent.moneyin.')->group(f
     Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api']);
     Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api']);
 
+    Route::get('redirect/btn/checkout/{gateway}', 'redirectBtnPay')->name('payment.btn.pay')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api']);
+
     // Automatic Gateway Response Routes
     Route::get('success/response/{gateway}','success')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.success");
     Route::get("cancel/response/{gateway}",'cancel')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.cancel");
