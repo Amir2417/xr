@@ -15,6 +15,9 @@ class PaymentGatewayConst {
 
     const ASSET_TYPE_WALLET         = "WALLET";
 
+    const User                  = "User";
+    const Agent                 = "Agent";
+
     const TYPESENDREMITTANCE    = "SEND-REMITTANCE";
     const CRYPTO_NATIVE             = "CRYPTO_NATIVE";
     

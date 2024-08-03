@@ -36,4 +36,8 @@ class AppOnboardScreens extends Model
 
         return json_encode($data);
     }
+    public function scopeActive($query)
+    {
+        return $query->where('status', true);
+    }
 }

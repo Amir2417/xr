@@ -509,7 +509,7 @@
                                     ],
                                     [
                                         'title'     => __("Onboard Screen"),
-                                        'route'     => "admin.app.settings.onboard.screens",
+                                        'route'     => "admin.app.settings.onboard.index",
                                     ],
                                     
                                 ],

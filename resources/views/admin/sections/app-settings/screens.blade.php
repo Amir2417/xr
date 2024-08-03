@@ -34,7 +34,7 @@
                     @include('admin.components.link.add-default',[
                         'href'          => "#onboard-screen-add",
                         'class'         => "modal-btn",
-                        'text'          => __("Add New Screen"),
+                        'text'          => "Add New Screen",
                         'permission'    => "admin.app.settings.onboard.screen.store",
                     ])
                 </div>
@@ -44,14 +44,14 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>{{ __("Title") }}</th>
+                            <th>{{__("Title")}}</th>
                             <th>{{ __("Sub Title") }}</th>
-                            <th>{{ __("Status") }}</th>
+                            <th>{{__("Status") }}</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($onboard_screens as $item)
+                        @forelse ($onboard_screens as $key=> $item)
                             <tr data-item="{{ $item->editData }}">
                                 <td>
                                     <ul class="user-list">
@@ -59,13 +59,13 @@
                                     </ul>
                                 </td>
                                 <td>{{ $item->title }}</td>
-                                <td>{{ $item->sub_title }}</td>
+                                <td>{{ textLength($item->sub_title ?? "",20) }} </td>
                                 <td>
                                     @include('admin.components.form.switcher',[
                                         'label'         => false,
                                         'name'          => 'status',
                                         'value'         => old('status',$item->status),
-                                        'options'       => [__('Enable') => 1,__('Disable') => 0],
+                                        'options'       => [__("Enable") => 1,__("Disable") => 0],
                                         'onload'        => true,
                                         'data_target'   => $item->id,
                                         'permission'    => "admin.app.settings.onboard.screen.status.update",
@@ -76,11 +76,13 @@
                                         'class'         => "onboard-screen-edit-modal-btn",
                                         'permission'    => "admin.app.settings.onboard.screen.update",
                                     ])
-
+                                    @if($key != 0 &&  $key != 1)
                                     @include('admin.components.link.delete-default',[
                                         'class'         => "onboard-screen-delete-modal-btn",
                                         'permission'    => "admin.app.settings.onboard.screen.delete",
                                     ])
+                                    @endif
+
                                 </td>
                             </tr>
                         @empty
@@ -114,7 +116,7 @@
 
                 openDeleteModal(actionRoute,target,message);
             });
-            
+
         });
     </script>
 @endpush

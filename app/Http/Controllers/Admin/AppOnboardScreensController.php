@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\AppOnboardScreens;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Constants\GlobalConst;
+use App\Constants\PaymentGatewayConst;
 use App\Http\Helpers\Response;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Admin\AppOnboardScreens;
+use Illuminate\Support\Facades\Validator;
 
 class AppOnboardScreensController extends Controller
 {
@@ -19,22 +21,31 @@ class AppOnboardScreensController extends Controller
      * 
      * @return view
      */
-    public function onboardScreens() {
+    public function index() {
         $page_title = "Onboard Screen";
-        $onboard_screens = AppOnboardScreens::orderByDesc('id')->get();
-        return view('admin.sections.app-settings.onboard-screens',compact(
+        $onboard_screens_user = AppOnboardScreens::active()->where('type',PaymentGatewayConst::User)->count();
+        $onboard_screens_agent = AppOnboardScreens::active()->where('type',PaymentGatewayConst::Agent)->count();
+        return view('admin.sections.app-settings.index',compact(
             'page_title',
-            'onboard_screens',
+            'onboard_screens_user',
+            'onboard_screens_agent'
         ));
     }
-
-    
-
-    /**
+    public function onboardScreens($type) {
+        $pre_title = __("Onboard Screen");
+        $page_title =  $pre_title." (".$type.")";
+        $onboard_screens = AppOnboardScreens::where('type',$type)->latest()->get();
+        return view('admin.sections.app-settings.screens',compact(
+            'page_title',
+            'onboard_screens',
+            'type'
+        ));
+    }
+/**
      * Function for store new onboard screen record
      * @param closer
      */
-    public function onboardScreenStore(Request $request) {
+    public function onboardScreenStore(Request $request,$type) {
         $validator = Validator::make($request->all(),[
             'image'     => 'required|image|mimes:png,jpg,webp,svg,jpeg',
             'title'     => 'nullable|string|max:120',
@@ -47,6 +58,7 @@ class AppOnboardScreensController extends Controller
 
         $validated = $validator->validate();
         $validated['last_edit_by']  = Auth::user()->id;
+        $validated['type']          = $type;
 
         if($request->hasFile('image')) {
             try{
@@ -61,14 +73,12 @@ class AppOnboardScreensController extends Controller
         try{
             AppOnboardScreens::create($validated);
         }catch(Exception $e) {
-            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            return back()->with(['error' => [__("Something went wrong! Please try again.")]]);
         }
 
-        return back()->with(['success' => ['Onboard Screen Added Successfully!']]);
+        return back()->with(['success' => [__("Onboard Screen Added Successfully!")]]);
 
     }
-
-
     /**
      * Function for update onboard screen status by AJUX request
      */
@@ -90,32 +100,27 @@ class AppOnboardScreensController extends Controller
 
         $onboard_screen = AppOnboardScreens::find($target_id);
         if(!$onboard_screen) {
-            $error = ['error' => ['Onboard screen not found!']];
+            $error = ['error' => [__("Onboard screen not found!")]];
             return Response::error($error,null,404);
         }
-
-
         // Update Status to Database
         try{
             $onboard_screen->update([
                 'status'        => ($onboard_screen->status) ? false : true,
             ]);
         }catch(Exception $e) {
-            $error = ['error' => ['Something went wrong! Please try again.']];
+            $error = ['error' => [__("Something went wrong! Please try again.")]];
             return Response::error($error,null,500);
         }
-
-        $success = ['success' => ['Onboard screen status updated successfully!.']];
+        $success = ['success' => [__("Onboard screen status updated successfully!")]];
         return Response::success($success,null,200);
-
-
     }
 
 
     /**
      * Function for update specific onboard screen information
      */
-    public function onboardScreenUpdate(Request $request) {
+    public function onboardScreenUpdate(Request $request,$type) {
         $target = $request->target ?? "";
         $onboard_screen = AppOnboardScreens::find($target);
         if(!$onboard_screen) {
@@ -135,15 +140,15 @@ class AppOnboardScreensController extends Controller
         }
 
         $validated = $validator->validate();
+        $validated['type']          = $type;
         $validated = Arr::except($validated,['target','screen_image']);
-
         if($request->hasFile('screen_image')) {
             try{
                 $image = get_files_from_fileholder($request,'screen_image');
-                $upload_image = upload_files_from_path_static($image,'app-images',$onboard_screen->image,true,true);
+                $upload_image = upload_files_from_path_static($image,'app-images',checkSeederValue($onboard_screen->image),true,true);
                 $validated['screen_image']  = $upload_image;
             }catch(Exception $e) {
-                return back()->withErrors($validator)->withInput()->with(['error' => ['Something went wrong! Please try again.']]);
+                return back()->withErrors($validator)->withInput()->with(['error' => [__("Something went wrong! Please try again.")]]);
             }
         }
 
@@ -152,10 +157,10 @@ class AppOnboardScreensController extends Controller
         try{
             $onboard_screen->update($validated);
         }catch(Exception $e) {
-            return back()->withErrors($validator)->withInput()->with(['error' => ['Something went wrong! Please try again.']]);
+            return back()->withErrors($validator)->withInput()->with(['error' => [__("Something went wrong! Please try again.")]]);
         }
 
-        return back()->with(['success' => ['Onboard screen information updated successfully!']]);
+        return back()->with(['success' => [__("Onboard screen information updated successfully!")]]);
     }
 
     /**
@@ -171,9 +176,9 @@ class AppOnboardScreensController extends Controller
         try{
             AppOnboardScreens::find($validated['target'])->delete();
         }catch(Exception $e){
-            return back()->with(['error' => ['Something went wrong! Please try again.']]);
+            return back()->with(['error' => [__("Something went wrong! Please try again.")]]);
         }
 
-        return back()->with(['success' => ['Screen deleted successfully!']]);
+        return back()->with(['success' => [__("Screen deleted successfully!")]]);
     }
 }

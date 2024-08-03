@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Agent;
 
 use Illuminate\Http\Request;
 use App\Constants\GlobalConst;
+use App\Constants\PaymentGatewayConst;
 use App\Http\Helpers\Response;
 use App\Models\Admin\AppSettings;
 use App\Models\Admin\BasicSettings;
@@ -28,6 +29,19 @@ class AppSettingsController extends Controller
                 'updated_at' => $splash_screen->updated_at,
             ];
         })->first();
+
+        $onboard_screen_agent = AppOnboardScreens::where('type',PaymentGatewayConst::Agent)->orderByDesc('id')->where('status',1)->get()->map(function($data){
+            return[
+                'id' => $data->id,
+                'title' => $data->title,
+                'sub_title' => $data->sub_title,
+                'image' => $data->image,
+                'status' => $data->status,
+                'created_at' => $data->created_at,
+                'updated_at' => $data->updated_at,
+            ];
+
+        });
         
         $basic_settings = BasicSettings::first();
         
@@ -46,6 +60,7 @@ class AppSettingsController extends Controller
        
         $agent_app_settings = [
             'splash_screen'     => $splash_screen_agent,
+            'onboard_screen'    => $onboard_screen_agent,
             'basic_settings'    => $basic_settings_agent,
         ];
         

@@ -1957,3 +1957,7 @@ function agentMailVerificationTemplateApi($user) {
 function agentGoogleTwoFactorVerificationTemplate($user) {
     return redirect()->route('agent.authorize.google.2fa')->with(['error' => [__("Please verify two factor authentication")]]);
 }
+function textLength($string, $length = 120)
+{
+    return Illuminate\Support\Str::limit($string, $length);
+}

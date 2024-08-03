@@ -421,9 +421,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         Route::controller(AppOnboardScreensController::class)->name('onboard.')->group(function () {
-            Route::get('onboard-screens', 'onboardScreens')->name('screens');
-            Route::post('onboard-screens/store', 'onboardScreenStore')->name('screen.store');
-            Route::put('onboard-screen/update', 'onboardScreenUpdate')->name('screen.update');
+            Route::get('index', 'index')->name('index');
+            Route::get('onboard-screens/{type}', 'onboardScreens')->name('screens');
+            Route::post('onboard-screens/store/{type}', 'onboardScreenStore')->name('screen.store');
+            Route::put('onboard-screen/update/{type}', 'onboardScreenUpdate')->name('screen.update');
             Route::put('onboard-screen/status/update', 'onboardScreenStatusUpdate')->name('screen.status.update');
             Route::delete('onboard-screen/delete','onboardScreenDelete')->name('screen.delete');
         });
