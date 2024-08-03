@@ -422,17 +422,7 @@ class MoneyIn{
             'user_type' => 'admin',
         ])->send();
 
-        
-
-        // if($this->requestIsApiUser()) {
-        //     // logout user
-        //     $api_user_login_guard = $this->output['api_login_guard'] ?? null;
-        //     if($api_user_login_guard != null) {
-        //         auth()->guard($api_user_login_guard)->logout();
-        //     }
-        // }
         return $this->output['trx_id'] ?? "";
-        
     }
     //save information
     public function insertRecordAgent($user,$output, $status) {

@@ -23,8 +23,8 @@ Route::controller(AppSettingsController::class)->prefix('app-settings')->group(f
 });
 Route::controller(MoneyInController::class)->name('api.agent.moneyin.')->group(function(){
     // POST Route For Unauthenticated Request
-    Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['agent.api']);
-    Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['agent.api']);
+    Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api']);
+    Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api']);
 
     // Automatic Gateway Response Routes
     Route::get('success/response/{gateway}','success')->withoutMiddleware(['agent.api','CheckStatusApiAgent','agent.google.two.factor.api'])->name("payment.success");

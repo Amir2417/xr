@@ -10,6 +10,7 @@ use App\Models\TemporaryData;
 use App\Constants\GlobalConst;
 use App\Http\Helpers\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\TransactionSetting;
@@ -192,5 +193,54 @@ class MoneyInController extends Controller
             return back()->with(['error' => [$e->getMessage()]]);
         }
         return Response::success(["Payment successful, please go back your app"],[],200);
+    }
+    /**
+     * This method for cancel alert of PayPal
+     * @method POST
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Http\Request
+     */
+    public function cancel(Request $request, $gateway) {
+        if($request->has('token')) {
+            $identifier = $request->token;
+            if($temp_data = TemporaryData::where('identifier', $identifier)->first()) {
+                $temp_data->delete();
+            }
+        }
+        return Response::success([__('Payment process cancel successfully!')],[],200);
+    }
+    /**
+     * This method for post success alert of SSL
+     */
+    public function postSuccess(Request $request, $gateway)
+    {
+        try{
+            
+            $token = MoneyInHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            if($temp_data && $temp_data->data->creator_guard != 'agent_api') {
+                Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+            }
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()]);
+        }
+        return $this->success($request, $gateway);
+    }
+    /**
+     * This method for post cancel alert of SSL
+     */
+    public function postCancel(Request $request, $gateway)
+    {
+        try{
+            $token = MoneyInHelper::getToken($request->all(),$gateway);
+            $temp_data = TemporaryData::where("identifier",$token)->first();
+            if($temp_data && $temp_data->data->creator_guard != 'agent_api') {
+                Auth::guard($temp_data->data->creator_guard)->loginUsingId($temp_data->data->creator_id);
+            }
+        }catch(Exception $e) {
+            
+            return Response::error([$e->getMessage()]);
+        }
+        return $this->cancel($request, $gateway);
     }
 }

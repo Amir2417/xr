@@ -32,7 +32,6 @@ use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\AdminNotification;
 use App\Models\Admin\CryptoTransaction;
 use App\Models\Admin\TransactionSetting;
-use App\Notifications\paypalNotification;
 use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Helpers\PushNotificationHelper;
