@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1\Agent;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Constants\GlobalConst;
-use App\Constants\PaymentGatewayConst;
 use App\Http\Helpers\Response;
 use App\Models\Admin\AppSettings;
 use App\Models\Admin\BasicSettings;
 use App\Http\Controllers\Controller;
+use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\AppOnboardScreens;
 
 class AppSettingsController extends Controller
@@ -76,5 +77,15 @@ class AppSettingsController extends Controller
             'app_settings'          => (object)$app_settings,
         ],200);
 
+    }
+    public function languages(){
+        try{
+            $api_languages = get_api_languages();
+        }catch(Exception $e) {
+            return Response::error([$e->getMessage()],[],500);
+        }
+        return Response::success([__("Language data fetch successfully!")],[
+            'languages' => $api_languages,
+        ],200);
     }
 }
