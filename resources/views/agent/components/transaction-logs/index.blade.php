@@ -17,7 +17,7 @@
                             @elseif (@$item->type == payment_gateway_const()::TYPESENDREMITTANCE)
                                 <h4 class="title">{{ __('Send Remittance using') }} {{ @$item->remittance_data->data->transaction_type->name }}</h4>
                             @endif
-                            <span class="sub-title text--danger">{{ @$item->attribute }} 
+                            <span class="sub-title text--danger">{{ __(@$item->attribute) }} 
                                 <span class="badge badge--warning ms-2">
                                     @if ($item->status == global_const()::REMITTANCE_STATUS_REVIEW_PAYMENT)
                                         <span>{{ __("Review Payment") }}</span> 
@@ -180,7 +180,7 @@
                                 <i class="las la-battery-half"></i>
                             </div>
                             <div class="preview-list-user-content">
-                                <span>{{ __("Fees & Charge") }}</span>
+                                <span>{{ __("Fees & Charges") }}</span>
                             </div>
                         </div>
                     </div>

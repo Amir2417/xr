@@ -21,7 +21,7 @@
                     <form class="card-form">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 form-group">
-                                <label>{{ __("QRCode Share") }}</label>
+                                <label>{{ __("QRcode Share") }}</label>
                                 <div class="input-group">
                                     <input type="text" class="form--control" id="referralURL" value="{{ auth()->user()->two_factor_secret }}" readonly>
                                     <div class="input-group-text copytext"><i class="las la-copy"></i></div>

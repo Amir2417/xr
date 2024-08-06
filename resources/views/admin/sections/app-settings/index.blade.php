@@ -79,7 +79,6 @@
 @endsection
 
 @push('script')
-// pie-chart
 <script>
     $(function() {
         $('#user_onboard').easyPieChart({

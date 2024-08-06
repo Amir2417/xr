@@ -58,7 +58,6 @@ class SettingController extends Controller
                 'site_fav'                    => $data->site_fav,
                 'email_verification'          => $data->email_verification,
                 'created_at'                  => $data->created_at,
-
             ];
         });
         $basic_seetings_image_paths = [

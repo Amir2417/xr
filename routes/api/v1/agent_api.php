@@ -20,7 +20,6 @@ use App\Http\Controllers\Api\V1\Agent\TransactionLogController;
 
 Route::controller(AppSettingsController::class)->prefix('app-settings')->group(function(){
     Route::get('/','appSettings');
-    Route::get("language","languages");
 });
 Route::controller(AppSettingsController::class)->prefix('v1/settings')->group(function(){
     Route::get("language","languages");

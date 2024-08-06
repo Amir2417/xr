@@ -84,7 +84,7 @@
                     <input type="text" name="city" class="form--control" placeholder="{{ __("Enter City") }}">
                 </div>
                 <div class="col-lg-6 col-md-6 mb-20">
-                    <label>{{ __("ZIP Code") }} <span>*</span></label>
+                    <label>{{ __("Zip Code") }} <span>*</span></label>
                     <input type="text" name="zip_code" class="form--control" placeholder="{{ __("Enter ZIP Code") }}">
                 </div>
                 <div class="col-lg-6 col-md-6 mb-20 bank-field">

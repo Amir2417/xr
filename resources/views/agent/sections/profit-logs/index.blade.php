@@ -33,7 +33,7 @@
                                     <div class="month text--base"><p>{{ @$month }}</p></div>
                                 </div>
                                 <div class="dashboard-list-user-content">
-                                    <h4 class="title">{{ @$item->transaction->type }}</h4>
+                                    <h4 class="title">{{ __(@$item->transaction->type) }}</h4>
                                     <span class="badge badge--success">{{ @$item->transaction->trx_id }}</span></span>
                                 </div>
                             </div>

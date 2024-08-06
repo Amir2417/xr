@@ -125,7 +125,7 @@
         <div class="dashboard-list-area mt-60">
             <div class="log-type d-flex justify-content-between align-items-center mb-40">
                 <div class="dashboard-header-wrapper">
-                    <h4 class="title">{{ __("Transaction Log") }}</h4>
+                    <h4 class="title">{{ __("Transaction Logs") }}</h4>
                 </div>
                 <div class="view-more-log">
                     <a href="{{ setRoute('agent.transaction.logs.index') }}" type="button" class="btn--base">{{ __("View More") }}</a>

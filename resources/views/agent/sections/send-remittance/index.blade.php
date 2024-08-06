@@ -16,7 +16,7 @@
             <div class="col-xl-7 col-lg-7 mb-20">
                 <div class="custom-card mt-10">
                     <div class="dashboard-header-wrapper">
-                        <h4 class="title">{{ $page_title }}</h4>
+                        <h4 class="title">{{ __($page_title) }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">

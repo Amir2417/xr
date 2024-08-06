@@ -115,7 +115,7 @@
         </div>
         @empty
         <div class="alert alert-primary text-center">
-            {{ __("My Sender Not Found!") }}
+            {{ __("Data Not Found!") }}
         </div>
         @endforelse
     </div>

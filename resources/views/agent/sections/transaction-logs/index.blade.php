@@ -13,7 +13,7 @@
 <div class="body-wrapper">
     <div class="dashboard-list-area mt-20">
         <div class="dashboard-header-wrapper">
-            <h4 class="title">{{ $page_title }}</h4>
+            <h4 class="title">{{ __($page_title) }}</h4>
         </div>
         @include('agent.components.transaction-logs.index',compact('transactions'))
     </div>

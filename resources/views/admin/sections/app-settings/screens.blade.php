@@ -24,7 +24,6 @@
         ]
     ], 'active' => __("App Settings")])
 @endsection
-
 @section('content')
     <div class="table-area">
         <div class="table-wrapper">
@@ -34,7 +33,7 @@
                     @include('admin.components.link.add-default',[
                         'href'          => "#onboard-screen-add",
                         'class'         => "modal-btn",
-                        'text'          => "Add New Screen",
+                        'text'          => __("Add New Screen"),
                         'permission'    => "admin.app.settings.onboard.screen.store",
                     ])
                 </div>

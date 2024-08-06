@@ -209,7 +209,7 @@ Back,Back,Atrás,خلف
 ID Type,ID Type,tipo de identificación,نوع الهوية
 KYC information successfully submitted,KYC information successfully submitted,La información de KYC presentó con éxito,تم تقديم معلومات KYC بنجاح
 Two Factor Authenticator,Two Factor Authenticator,Autenticador de dos factores,اثنان عامل المصادقة
-QRcode Share,QRcode Share,QRCode compartido,QRCode Share
+QRcode Share,QRcode Share,QRCode compartido,مشاركة رمز الاستجابة السريعة
 Disable,Disable,Desactivar,إبطال
 Don t forget to add this application in your google authentication app. Otherwise you can t login in your account.,Don t forget to add this application in your google authentication app. Otherwise you can t login in your account.,"No olvide agregar esta aplicación en su aplicación de autenticación de Google. De lo contrario, puede iniciar sesión en su cuenta.",لا ننسى إضافة هذا التطبيق في تطبيق مصادقة Google الخاص بك. وإلا يمكنك تسجيل الدخول في حسابك.
 Enable,Enable,Permitir,يُمكَِن
@@ -492,7 +492,7 @@ Sending Country,Sending Country,Envío de país,إرسال البلد
 Receiving Country,Receiving Country,País receptor,استلام الدولة
 receiving Method,Receiving Method,Método de recepción,استلام طريقة
 select Receiving Method,Select Receiving Method,Seleccione el método de recepción,حدد طريقة الاستلام
-cash Pickup,Cash Pickup,Recogida en efectivo,الالتقاط النقدي
+Cash Pickup,Cash Pickup,Recogida en efectivo,الالتقاط النقدي
 title Sign Up,"Smarter way to Send money anytime, anywhere with best exchange rate ","Forma más inteligente de enviar dinero en cualquier momento, en cualquier lugar con el mejor tipo de cambio",طريقة أكثر ذكاءً لإرسال الأموال في أي وقت وفي أي مكان بأفضل سعر صرف
 select Pickup Point,Select Pickup Point,Seleccionar el punto de recogida,حدد نقطة التقاط
 pickup Point,Pickup Point,Punto de recogida,نقطة التقاط
@@ -1497,3 +1497,58 @@ The current password field is required.,The current password field is required.,
 Password updated successfully!,Password updated successfully!,¡Contraseña actualizada exitosamente!,تم تحديث كلمة السر بنجاح!
 Add Source Fund,Add Source Fund,Agregar fondo fuente,إضافة صندوق المصدر
 Web Version,Web Version,Versión web,إصدار الويب
+Money In,Money In,Dinero en,المال في
+Agent Transactions & Logs,Agent Transactions & Logs,Transacciones y registros de agentes,معاملات الوكيل والسجلات
+Coupon Logs,Coupon Logs,Registros de cupones,سجلات القسيمة
+User Transactions & Logs,User Transactions & Logs,Transacciones y registros de usuario,معاملات المستخدم والسجلات
+Cash Pickup Methods,Cash Pickup Methods,Métodos de retiro de efectivo,طرق تحصيل النقود
+All Coupons,All Coupons,Todos los cupones,جميع القسائم
+New User Bonus,New User Bonus,Bono de nuevo usuario,مكافأة المستخدم الجديد
+Coupon,Coupon,Cupón,قسيمة
+Basic Settings (System & User),Basic Settings (System & User),Configuración básica (sistema y usuario),الإعدادات الأساسية (النظام والمستخدم)
+Basic Settings (Agent),Basic Settings (Agent),Configuración básica (Agente),الإعدادات الأساسية (الوكيل)
+Activation Settings (System & User),Activation Settings (System & User),Configuración de activación (sistema y usuario),إعدادات التنشيط (النظام والمستخدم)
+Activation Settings (Agent),Activation Settings (Agent),Configuración de activación (Agente),إعدادات التنشيط (الوكيل)
+Maximum Limit,Maximum Limit,Límite máximo,حد اقصي
+Coupon Name,Coupon Name,Nombre del cupón,اسم القسيمة
+Remaining,Remaining,Restante,متبقي
+Add New Coupon,Add New Coupon,Agregar nuevo cupón,إضافة قسيمة جديدة
+Enter maximum limit,Enter maximum limit,Introduzca el límite máximo,أدخل الحد الأقصى
+Image (User),Image (User),Imagen (Usuario),الصورة (المستخدم)
+App Version* (User),App Version* (User),Versión de la aplicación* (Usuario),إصدار التطبيق* (المستخدم)
+Image (Agent),Image (Agent),Imagen (Agente),صورة (الوكيل)
+App Version* (Agent),App Version* (Agent),Versión de la aplicación* (Agente),إصدار التطبيق* (الوكيل)
+Active Onboards (USER),Active Onboards (USER),Incorporaciones activas (USUARIO),اللوحات النشطة (المستخدم)
+Active Onboards (Agent),Active Onboards (Agent),Incorporaciones activas (Agente),Onboards النشطة (الوكيل)
+Receive Methods,Receive Methods,Recibir métodos,طرق الاستلام
+Mobile Methods,Mobile Methods,Métodos móviles,طرق المحمول
+My Sender,My Sender,Mi remitente,المرسل الخاص بي
+My Recipient,My Recipient,Mi destinatario,المستلم الخاص بي
+Profit Log,Profit Log,Registro de ganancias,سجل الربح
+Need Help?,Need Help?,¿Necesitas ayuda?,تحتاج مساعدة؟
+Current Balance,Current Balance,Saldo actual,الرصيد الحالي
+Profit Balance,Profit Balance,Saldo de ganancias,رصيد الربح
+Confirm Remittance,Confirm Remittance,Confirmar remesa,تأكيد التحويلات
+Canceled Transactions,Canceled Transactions,Transacciones canceladas,المعاملات الملغاة
+Transactions Overview,Transactions Overview,Resumen de transacciones,نظرة عامة على المعاملات
+Transaction Logs,Transaction Logs,Registros de transacciones,سجلات المعاملات
+Transaction ID,Transaction ID,ID de transacción,رقم المعاملة
+Amount We’ll Convert,Amount We’ll Convert,Cantidad que convertiremos,المبلغ الذي سنقوم بتحويله
+Recipient,Recipient,Recipiente,متلقي
+Enter Amount,Enter Amount,Ingrese el monto,أدخل المبلغ
+Receive Amount,Receive Amount,Recibir cantidad,استلام المبلغ
+Total Payable,Total Payable,Total a pagar,مجموع المستحق الدفع
+Are you sure to delete this Sender?,Are you sure to delete this Sender?,¿Está seguro de eliminar este remitente?,هل أنت متأكد من حذف هذا المرسل؟
+Data Not Found!,Data Not Found!,¡Datos no encontrados!,لم يتم العثور على بيانات!
+Add New Sender,Add New Sender,Agregar nuevo remitente,إضافة مرسل جديد
+Registered User,Registered User,usuario registrado,مستخدم مسجل
+Select Document,Select Document,Seleccionar documento,حدد المستند
+Add Now,Add Now,Añadir ahora,إضافة الآن
+Mobile Name,Mobile Name,Nombre del móvil,اسم الجوال
+Money In using,Money In using,Dinero en uso,المال في استخدام
+Money Out using,Money Out using,Retiro de dinero usando,استخدام الأموال
+Send Remittance using,Send Remittance using,Enviar remesa usando,إرسال التحويلات باستخدام
+RECEIVED,RECEIVED,RECIBIÓ,تلقى
+Select Status,Select Status,Seleccionar estado,حدد الحالة
+Filter Data,Filter Data,Filtrar datos,تصفية البيانات
+SEND-REMITTANCE,SEND-REMITTANCE,ENVÍO-REMESA,إرسال التحويلات

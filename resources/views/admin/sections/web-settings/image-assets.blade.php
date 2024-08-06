@@ -101,7 +101,7 @@
                 <div class="row mb-10-none">
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group" style="height: 300px">
                         @include('admin.components.form.input-file',[
-                            'label'             => __("Logo (Light Version"),
+                            'label'             => __("Logo (Light Version)"),
                             'class'             => "file-holder",
                             'name'              => "agent_site_logo",
                             'old_files'         => $basic_settings->agent_site_logo,
@@ -138,7 +138,7 @@
                     <div class="col-xl-12 col-lg-12 form-group">
                         @include('admin.components.button.form-btn',[
                             'class'         => "w-100 btn-loading",
-                            'text'          => __("update"),
+                            'text'          => __("Update"),
                             'permission'    => "admin.web.settings.image.assets.update",
                         ])
                     </div>

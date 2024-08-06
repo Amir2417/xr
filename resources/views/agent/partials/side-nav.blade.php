@@ -63,7 +63,7 @@
                     <li class="sidebar-menu-item">
                         <a href="{{ setRoute('agent.statements.index') }}">
                             <i class="menu-icon las la-file-alt"></i>
-                            <span class="menu-title">{{ __("Statement") }}</span>
+                            <span class="menu-title">{{ __("Statements") }}</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
@@ -93,7 +93,7 @@
             </div>
             <div class="sidebar-doc-content">
                 <h4 class="title">{{ __("Need Help?") }}</h4>
-                <p>{{ __("How can we help you") }}</p>
+                <p>{{ __("How can we help you?") }}</p>
                 <div class="sidebar-doc-btn">
                     <a href="{{ setRoute('agent.support.ticket.index') }}" class="btn--base w-100">{{ __("Get Support") }}</a>
                 </div>

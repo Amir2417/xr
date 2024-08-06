@@ -15,7 +15,7 @@
         <div class="row mb-20-none">
             <div class="col-lg-7 col-md-6 mb-20">
                 <div class="dashboard-header-wrapper">
-                    <h3 class="title">{{ $page_title }}</h3>
+                    <h3 class="title">{{ __($page_title) }}</h3>
                 </div>
                 <form class="card-form" action="{{ setRoute('agent.money.out.submit') }}" method="POST">
                     @csrf
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         <div class="col-lg-12 amount-input mb-20">
-                            <label>{{ __("Amount") }}</label>
+                            <label>{{ __("Enter Amount") }}</label>
                             <input type="number" name="amount" class="form--control amount" placeholder="0.00">
                             <div class="curreny">
                                 <p>{{ get_default_currency_code() }}</p>
@@ -98,7 +98,7 @@
                                             <i class="lab la-get-pocket"></i>
                                         </div>
                                         <div class="preview-list-user-content">
-                                            <span>{{ __("Will Get") }}</span>
+                                            <span>{{ __("Will Get Amount") }}</span>
                                         </div>
                                     </div>
                                 </div>

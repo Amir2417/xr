@@ -63,7 +63,7 @@
                         <div class="row">
                             <div class="col-xl-6 col-lg-2 col-md-3 col-sm-4 form-group">
                                 @include('admin.components.form.input-file',[
-                                    'label'             => __("Image (Agent):").' <span class="text--danger">(414*896)</span>',
+                                    'label'             => __("Image (Agent)").' <span class="text--danger">(414*896)</span>',
                                     'class'             => "file-holder",
                                     'name'              => "agent_image",
                                     'old_files_path'    => files_asset_path('app-images'),
@@ -85,7 +85,7 @@
                     </div>
                     
                     <div class="col-xl-12 col-lg-12 form-group">
-                        <button type="submit" class="btn--base w-100 btn-loading">{{ __("update") }}</button>
+                        <button type="submit" class="btn--base w-100 btn-loading">{{ __("Update") }}</button>
                     </div>
                 </div>
             </form>

@@ -22,7 +22,6 @@ class SecurityController extends Controller
     public function google2FA(){
         $page_title     = "Google 2FA";
         $qr_code        = generate_google_2fa_auth_qr();
-
         return view('agent.sections.security.google-2fa',compact(
             'page_title',
             'qr_code'

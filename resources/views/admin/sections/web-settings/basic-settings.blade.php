@@ -128,7 +128,7 @@
                         <label>{{ __("OTP Expiration") }}*</label>
                         <div class="input-group">
                             <input type="text" class="form--control number-input" value="{{ old('agent_otp_exp_seconds',$basic_settings->agent_otp_exp_seconds) }}" name="agent_otp_exp_seconds">
-                            <span class="input-group-text">{{ __("seconds") }}</span>
+                            <span class="input-group-text">{{ __("Seconds") }}</span>
                         </div>
                     </div>
 
