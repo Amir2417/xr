@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Constants\PaymentGatewayConst;
 use App\Http\Helpers\Response;
+use Illuminate\Support\Facades\Validator;
 
 class TransactionLogController extends Controller
 {
@@ -70,7 +71,6 @@ class TransactionLogController extends Controller
                 'sender_rate'           => 1,
                 'payment_method'        => $data->remittance_data->data->payment_gateway->name,
                 'receiver_currency'     => $data->remittance_data->data->payment_gateway->currency,
-                
                 'request_amount'        => floatval($data->request_amount),
                 'total_charge'          => floatval($data->fees),
                 'payable_amount'        => floatval($data->payable),
@@ -88,6 +88,7 @@ class TransactionLogController extends Controller
             'money_out'         => $money_out, 
         ],200);
     }
+    /** get status */
     function get_status($status){
         switch ($status) {
             case GlobalConst::REMITTANCE_STATUS_REVIEW_PAYMENT:
@@ -121,9 +122,45 @@ class TransactionLogController extends Controller
             case GlobalConst::REMITTANCE_STATUS_DELAYED:
                 $status_data = "Delayed";
                 return $status_data;
-
-            
-            
         }
+    }
+    /**
+     * Method for search transaction search
+     */
+    public function search(Request $request){
+        $validator          = Validator::make($request->all(),[
+            'transaction_id'   => 'required'
+        ]);
+        if($validator->fails()){
+            return Response::validation(['error' => $validator->errors()->all()]);
+        }
+        $validated          = $validator->validate();
+        $transaction        = Transaction::agentAuth()->where('trx_id',$validated['transaction_id'])->first();
+        $data               = [
+            'transactin_type'       => $transaction->remittance_data->data->transaction_type->name ?? '',
+            'type'                  => $transaction->type,
+            'transaction_id'        => $transaction->trx_id,
+            'account_name'          => $transaction->remittance_data->data->recipient->account_name ?? '',
+            'account_number'        => $transaction->remittance_data->data->recipient->account_number ?? '',
+            'sender_currency'       => $transaction->remittance_data->data->base_currency->code ?? $transaction->remittance_data->data->base_currency->currency,
+            'sender_rate'           => 1,
+            'receiver_currency'     => $transaction->remittance_data->data->receiver_currency->code ?? $transaction->remittance_data->data->payment_gateway->currency,
+            'payment_method'        => $transaction->remittance_data->data->payment_gateway->name ?? '',
+            'sender_name'           => $transaction->remittance_data->data->sender->fullname ?? '',
+            'recipient_name'        => $transaction->remittance_data->data->recipient->fullname ?? '',
+            'request_amount'        => floatval($transaction->request_amount),
+            'convert_amount'        => floatval($transaction->convert_amount),
+            'total_charge'          => floatval($transaction->fees),
+            'will_get_amount'       => floatval($transaction->will_get_amount),
+            'exchange_rate'         => floatval($transaction->exchange_rate),
+            'attribute'             => $transaction->attribute,
+            'remark'                => $transaction->remark,
+            'status'                => $this->get_status($transaction->status),
+            'created_at'            => $transaction->created_at->format('Y-m-d'),
+        ];
+
+        return Response::success(['Transaction data fetch successfully.'],[
+            'transaction'   => $data
+        ],200);
     }
 }

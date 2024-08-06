@@ -97,6 +97,7 @@ Route::prefix('agent')->group(function(){
             //transactions
             Route::controller(TransactionLogController::class)->prefix('transactions')->group(function(){
                 Route::get('/','index');
+                Route::post('search','search');
             });
 
             //my sender

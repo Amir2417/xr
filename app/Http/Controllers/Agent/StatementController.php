@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use PDF;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use App\Models\Admin\Currency;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Providers\Admin\BasicSettingsProvider;
