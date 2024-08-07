@@ -22,8 +22,6 @@ class AppSettingsController extends Controller
     public function appSettings(){
         //for user
         $basic_settings  = BasicSettings::orderBy("id")->get()->map(function($data){
-
-
             return [
                 'id'                          => $data->id,
                 'site_name'                   => $data->site_name,
@@ -35,7 +33,7 @@ class AppSettingsController extends Controller
                 'email_verification'          => $data->email_verification,
                 'created_at'                  => $data->created_at,
             ];
-        });
+        })->first();
         $basic_seetings_image_paths = [
             'base_url'         => url("/"),
             'path_location'    => files_asset_path_basename("image-assets"),
@@ -51,22 +49,21 @@ class AppSettingsController extends Controller
                 'splash_screen_image'         => $data->splash_screen_image,
                 'created_at'                  => $data->created_at,
             ];
-        });
+        })->first();
 
         // onboard screen
 
-        $onboard_screen   = AppOnboardScreens::where('type',PaymentGatewayConst::User)->where('status',true)->orderBy("id")->get()->map(function($data){
-
-            return [
-                'id'                           => $data->id,
-                'title'                        => $data->title,
-                'sub_title'                    => $data->sub_title,
-                'image'                        => $data->image,
-                'status'                       => $data->status,
-                'last_edit_by'                 => $data->last_edit_by,
-                'created_at'                   => $data->created_at,
-
+        $onboard_screen_user = AppOnboardScreens::where('type',PaymentGatewayConst::User)->orderByDesc('id')->where('status',1)->get()->map(function($data){
+            return[
+                'id' => $data->id,
+                'title' => $data->title,
+                'sub_title' => $data->sub_title,
+                'image' => $data->image,
+                'status' => $data->status,
+                'created_at' => $data->created_at,
+                'updated_at' => $data->updated_at,
             ];
+
         });
 
         // web links
@@ -131,9 +128,9 @@ class AppSettingsController extends Controller
 
         //basic settings user
         $basic_settings_user  = [
-            'basic_settings'               => $basic_settings,
             'splash_screen'                => $splash_screen,
-            'onboard_screen'               => $onboard_screen,
+            'onboard_screen'               => $onboard_screen_user,
+            'basic_settings'               => $basic_settings,
             'web_links'                    => $web_links,
             'basic_seetings_image_paths'   => $basic_seetings_image_paths,
             'app_image_path'               => $screen_image_path,
@@ -148,8 +145,8 @@ class AppSettingsController extends Controller
         ];
         
         $app_settings = [
+            'user'          => (object) $basic_settings_user,
             'agent'         => (object) $agent_app_settings,
-            'user'          => (object) $basic_settings_user
         ];
 
         return Response::success(['App settings data fetch successfully.'],[

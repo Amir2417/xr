@@ -42,8 +42,8 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-12 amount-input mb-20">
-                                    <label>{{ __("Amount") }}</label>
-                                    <input type="number" name="amount" class="form--control amount number-input" placeholder="{{ __("Enter amount") }}">
+                                    <label>{{ __("Enter Amount") }}</label>
+                                    <input type="number" name="amount" class="form--control amount number-input" placeholder="{{ __("Enter Amount") }}">
                                     <div class="curreny">
                                         <p>{{ __(get_default_currency_code()) }}</p>
                                     </div>

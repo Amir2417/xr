@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-lg-12 amount-input mb-20">
                             <label>{{ __("Enter Amount") }}</label>
-                            <input type="number" name="amount" class="form--control amount" placeholder="0.00">
+                            <input type="number" name="amount" class="form--control Amount" placeholder="0.00">
                             <div class="curreny">
                                 <p>{{ get_default_currency_code() }}</p>
                             </div>
